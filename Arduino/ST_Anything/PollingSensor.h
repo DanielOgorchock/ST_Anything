@@ -11,7 +11,9 @@ namespace st
 			unsigned long m_nPreviousTime; //in milliseconds
 			long m_nDeltaTime; //in milliseconds
 			unsigned int m_nInterval; //in milliseconds
-	
+			
+			bool checkInterval(); //returns true and resets dTime if interval has been reached
+			
 		public:
 			//constructor
 			PollingSensor(const String &name, unsigned int interval, int offset=0);
