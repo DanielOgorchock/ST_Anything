@@ -11,7 +11,7 @@ namespace st
 			byte m_nInterruptPin;
 			bool m_bInterruptState; //the state (HIGH/LOW) in which an interrupt has triggered
 			bool m_bStatus; //true==interrupted
-			bool m_bPullup
+			bool m_bPullup;
 			
 			bool checkIfTriggered(); //returns true if new interrupt is triggered
 			
@@ -34,7 +34,7 @@ namespace st
 			
 			
 			//sets
-			//void setInterruptPin(byte pin) {m_nInterruptPin=pin;} 
+			void setInterruptPin(byte pin);
 			void setInterruptState(bool b) {m_bInterruptState=b;}
 	
 			
