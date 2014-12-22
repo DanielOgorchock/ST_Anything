@@ -16,7 +16,7 @@ namespace st
 			
 		public:
 			//constructor
-			InterruptSensor(const String &name, byte pin, bool iState=HIGH); //(defaults to using a HIGH value as triggering interrupt)
+			InterruptSensor(const String &name, byte pin, bool iState, bool internalPullup=false); //(defaults to using a HIGH value as triggering interrupt)
 			
 			//destructor
 			virtual ~InterruptSensor();
