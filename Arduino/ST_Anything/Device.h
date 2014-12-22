@@ -1,6 +1,8 @@
 #ifndef ST_DEVICE_H
 #define ST_DEVICE_H
 
+#include <Arduino.h>
+
 namespace st
 {
 	class Device
@@ -18,14 +20,14 @@ namespace st
 			virtual ~Device();
 			
 			//gets
-			const String& getName() const {return m_Name;}
+			inline const String& getName() const {return m_Name;}
 			
 			
 			
 			//sets
-			void setName(const String &name) {m_Name=name;}
+			inline void setName(const String &name) {m_Name=name;}
 			
-	}
+	};
 
 
 }
