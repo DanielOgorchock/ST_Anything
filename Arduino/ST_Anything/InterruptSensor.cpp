@@ -34,18 +34,11 @@ namespace st
 	//constructor
 	InterruptSensor::InterruptSensor(const String &name, byte pin, bool iState, bool pullup):
 		Sensor(name),
-		m_nInterruptPin(pin),
 		m_bInterruptState(iState),
-		m_bStatus(false)
+		m_bStatus(false),
+		m_bPullup(pullup)
 		{
-			if(!pullup)
-			{
-				pinMode(m_nInterruptPin, INPUT);
-			}
-			else
-			{
-				pinMode(m_nInterruptPin, INPUT_PULLUP);
-			}
+			setInterruptPin(pin);
 		}
 	
 	//destructor
@@ -64,6 +57,18 @@ namespace st
 		checkIfTriggered();
 	}
 
+	
+	void InterruptSensor::setInterruptPin(byte pin)
+	{
+		if(!m_bPullup)
+		{
+			pinMode(m_nInterruptPin, INPUT);
+		}
+		else
+		{
+			pinMode(m_nInterruptPin, INPUT_PULLUP);
+		}
+	}
 	
 	bool InterruptSensor::DEBUG=false;
 }
