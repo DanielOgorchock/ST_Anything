@@ -9,7 +9,7 @@ namespace st
 		if(digitalRead(m_nInterruptPin)==m_bInterruptState && !m_bStatus) //new interrupt
 		{
 			m_bStatus=true;
-			if(checkIfTriggered())
+			if(DEBUG)
 			{
 			Serial.println(getName()+"'s interrupt triggered");
 			}
