@@ -11,7 +11,7 @@ namespace st
 			m_bStatus=true;
 			if(DEBUG)
 			{
-			Serial.println(getName()+"'s interrupt triggered");
+				Serial.println(getName()+"'s interrupt triggered");
 			}
 			return true;
 		}
@@ -60,6 +60,7 @@ namespace st
 	
 	void InterruptSensor::setInterruptPin(byte pin)
 	{
+		m_nInterruptPin=pin;
 		if(!m_bPullup)
 		{
 			pinMode(m_nInterruptPin, INPUT);
