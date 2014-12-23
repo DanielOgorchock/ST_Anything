@@ -11,13 +11,17 @@ namespace st
 			m_bStatus=true;
 			if(DEBUG)
 			{
-				Serial.println(getName()+"'s interrupt triggered");
+				Serial.println(getName()+"'s interrupt triggered (" + m_bInterruptState?"High)":"LOW)");
 			}
 			return true;
 		}
 		else if(digitalRead(m_nInterruptPin)!=m_bInterruptState && m_bStatus) //interrupt has ended
 		{
 			m_bStatus=false;
+			if(DEBUG)
+			{
+				Serial.println(getName()+"'s interrupt ended (" + m_bInterruptState?"LOW)":"HIGH)");
+			}
 			return false;
 		}
 		else //still in the middle of an interrupt or interrupt hasn't triggered
