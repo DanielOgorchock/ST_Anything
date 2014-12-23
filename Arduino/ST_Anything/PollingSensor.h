@@ -10,13 +10,13 @@ namespace st
 		private:
 			unsigned long m_nPreviousTime; //in milliseconds
 			long m_nDeltaTime; //in milliseconds
-			unsigned int m_nInterval; //in milliseconds
+			unsigned long m_nInterval; //in milliseconds
 			
-			bool checkInterval(); //returns true and resets dTime if interval has been reached
+			virtual bool checkInterval(); //returns true and resets dTime if interval has been reached
 			
 		public:
 			//constructor
-			PollingSensor(const String &name, unsigned int interval, int offset=0);
+			PollingSensor(const String &name, unsigned long interval, long offset=0);
 			
 			//destructor
 			virtual ~PollingSensor();
@@ -24,7 +24,9 @@ namespace st
 			virtual void init();
 			virtual void update();
 			
-			virtual void offset(int os) {m_nDeltaTime-=os;} //offset the delta time from its current value
+			virtual bool getData();
+			
+			virtual void offset(long os) {m_nDeltaTime-=os;} //offset the delta time from its current value
 	
 			static bool DEBUG;
 	

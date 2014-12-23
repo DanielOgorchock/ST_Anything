@@ -35,10 +35,10 @@ namespace st
 
 //public
 	//constructor
-	PollingSensor::PollingSensor(const String &name, unsigned int interval, int offset):
+	PollingSensor::PollingSensor(const String &name, unsigned long interval, long offset):
 		Sensor(name),
 		m_nPreviousTime(millis()),
-		m_nDeltaTime(0-offset),
+		m_nDeltaTime(-offset),
 		m_nInterval(interval)
 	{
 	
@@ -57,7 +57,18 @@ namespace st
 	
 	void PollingSensor::update()
 	{
-		checkInterval();
+		if(checkInterval())
+		{
+			if(!getData())
+			{
+				Serial.println("Error getting data for \""+getName()+"\"");
+			}
+		}
+	}
+	
+	bool PollingSensor::getData()
+	{
+		return true;
 	}
 	
 	bool PollingSensor::DEBUG=false;
