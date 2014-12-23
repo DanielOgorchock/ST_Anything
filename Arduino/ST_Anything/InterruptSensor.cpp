@@ -11,7 +11,7 @@ namespace st
 			m_bStatus=true;
 			if(DEBUG)
 			{
-				Serial.println(getName()+"'s interrupt triggered (" + m_bInterruptState?"High)":"LOW)");
+				Serial.println(getName()+"'s interrupt triggered (" + (m_bInterruptState?"HIGH)":"LOW)"));
 			}
 			return true;
 		}
@@ -20,7 +20,7 @@ namespace st
 			m_bStatus=false;
 			if(DEBUG)
 			{
-				Serial.println(getName()+"'s interrupt ended (" + m_bInterruptState?"LOW)":"HIGH)");
+				Serial.println(getName()+"'s interrupt ended (" + (m_bInterruptState?"LOW)":"HIGH)"));
 			}
 			return false;
 		}
