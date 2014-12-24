@@ -27,7 +27,7 @@ namespace st
 		if(m_nDeltaTime>=m_nInterval)
 		{
 			m_nDeltaTime=0;
-			if(DEBUG)
+			if(debug)
 			{
 				Serial.println("PollingSensor named \"" + getName() + "\" has triggered (" + m_nInterval + " millisecond interval)");
 			}
@@ -78,5 +78,5 @@ namespace st
 		return true;
 	}
 	
-	bool PollingSensor::DEBUG=false;
+	bool PollingSensor::debug=false;
 }

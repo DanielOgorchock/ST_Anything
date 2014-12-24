@@ -19,9 +19,9 @@ st::PS_Illuminance test7("illuminance", 5000, 0, A5);
 //test sketch
 void setup()
 {
-  st::Device::DEBUG=true;
-  st::PollingSensor::DEBUG=true;
-  st::InterruptSensor::DEBUG=true;
+  st::Device::debug=true;
+  st::PollingSensor::debug=true;
+  st::InterruptSensor::debug=true;
   Serial.begin(9600);
   
   sensors[0]=(st::Sensor*)&test0; //new st::PollingSensor("Temperature", 10000);

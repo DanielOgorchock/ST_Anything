@@ -33,7 +33,7 @@ namespace st
 	bool PS_Illuminance::getData()
 	{
 		int m_nSensorValue=map(analogRead(m_nAnalogInputPin), SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH);
-		if(PollingSensor::DEBUG)
+		if(PollingSensor::debug)
 		{
 			Serial.print("Illuminance sensor value (");
 			Serial.print(MAPPED_LOW);

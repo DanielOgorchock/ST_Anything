@@ -38,7 +38,7 @@ namespace st
 			void setInterruptState(bool b) {m_bInterruptState=b;}
 	
 			
-			static bool DEBUG;
+			static bool debug;
 	
 	};
 }

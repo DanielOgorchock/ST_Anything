@@ -28,7 +28,7 @@ namespace st
 			inline void setName(const String &name) {m_Name=name;}
 		
 
-			static bool DEBUG;
+			static bool debug;
 	};
 
 

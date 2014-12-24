@@ -9,7 +9,7 @@ namespace st
 		if(digitalRead(m_nInterruptPin)==m_bInterruptState && !m_bStatus) //new interrupt
 		{
 			m_bStatus=true;
-			if(DEBUG)
+			if(debug)
 			{
 				Serial.println(getName()+"'s interrupt triggered (" + (m_bInterruptState?"HIGH)":"LOW)"));
 			}
@@ -18,7 +18,7 @@ namespace st
 		else if(digitalRead(m_nInterruptPin)!=m_bInterruptState && m_bStatus) //interrupt has ended
 		{
 			m_bStatus=false;
-			if(DEBUG)
+			if(debug)
 			{
 				Serial.println(getName()+"'s interrupt ended (" + (m_bInterruptState?"LOW)":"HIGH)"));
 			}
@@ -75,5 +75,5 @@ namespace st
 		}
 	}
 	
-	bool InterruptSensor::DEBUG=false;
+	bool InterruptSensor::debug=false;
 }

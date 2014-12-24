@@ -30,7 +30,7 @@ namespace st
 			
 			virtual void offset(long os) {m_nOffset=os;} //offset the delta time from its current value
 	
-			static bool DEBUG;
+			static bool debug;
 	
 	};
 }

@@ -10,7 +10,7 @@ namespace st
 	Device::Device(const String &name):
 		m_Name(name)
 	{
-		if(DEBUG)
+		if(debug)
 		{
 			Serial.println("New device constructed with name: \"" + m_Name + "\"");
 		}
@@ -19,11 +19,11 @@ namespace st
 	//destructor
 	Device::~Device()
 	{
-		if(DEBUG)
+		if(debug)
 		{
 			Serial.println("Device destroyed with name: \"" + m_Name + "\"");
 		}
 	}
 	
-	bool Device::DEBUG=false;
+	bool Device::debug=false;
 }
