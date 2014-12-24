@@ -10,7 +10,7 @@ namespace st
 		public:
 			static const unsigned int MAX_SENSOR_COUNT=50;
 			static const unsigned int MAX_EXECUTOR_COUNT=50;
-			static const String IGNORE_STRING="IGNORE"; 
+			static const String IGNORE_STRING; 
 	};
 }
 

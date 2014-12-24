@@ -12,10 +12,10 @@ namespace st
 	class Everything
 	{
 		private:
-			Sensor* m_Sensors[10];//Constants::MAX_SENSOR_COUNT];
+			Sensor* m_Sensors[Constants::MAX_SENSOR_COUNT];
 			unsigned int m_nSensorCount;
 			
-			Executor* m_Executors[10];//Constants::MAX_EXECUTOR_COUNT];
+			Executor* m_Executors[Constants::MAX_EXECUTOR_COUNT];
 			unsigned int m_nExecutorCount;
 		
 			void updateSensors(); //simply calls update on all the sensors
