@@ -1,11 +1,12 @@
 #include "InterruptSensor.h"
 
 #include "Constants.h"
+#include "Everything.h"
 
 namespace st
 {
 //private
-	String InterruptSensor::checkIfTriggered()
+	const String& InterruptSensor::checkIfTriggered()
 	{
 		if(digitalRead(m_nInterruptPin)==m_bInterruptState && !m_bStatus) //new interrupt
 		{
@@ -29,8 +30,8 @@ namespace st
 
 //public
 	//constructor
-	InterruptSensor::InterruptSensor(const String &name, byte pin, bool iState, bool pullup):
-		Sensor(name),
+	InterruptSensor::InterruptSensor(byte id, byte pin, bool iState, bool pullup):
+		Sensor(id),
 		m_bInterruptState(iState),
 		m_bStatus(false),
 		m_bPullup(pullup)
@@ -44,21 +45,22 @@ namespace st
 	
 	}
 	
-	String InterruptSensor::init()
+	const String& InterruptSensor::init()
 	{
 		return Constants::IGNORE_STRING;
 	}
 	
-	String InterruptSensor::update()
+	const String& InterruptSensor::update()
 	{
 		return checkIfTriggered();
 	}
 
-	String InterruptSensor::runInterrupt()
+	const String& InterruptSensor::runInterrupt()
 	{
 		if(debug)
 		{
-			return "DEBUG: \""+getName()+"\"'s interrupt triggered (" + (m_bInterruptState?"HIGH)":"LOW)");
+			Everything::Return_String="DEBUG: \""+String(getId())+"\" triggered (" + (m_bInterruptState?"HIGH)":"LOW)");
+			return Everything::Return_String;
 		}
 		else
 		{
@@ -66,11 +68,12 @@ namespace st
 		}
 	}
 	
-	String InterruptSensor::runInterruptEnded()
+	const String& InterruptSensor::runInterruptEnded()
 	{
 		if(debug)
 		{
-			return "DEBUG: \""+getName()+"\"'s interrupt has ended (" + (m_bInterruptState?"LOW)":"HIGH)");
+			Everything::Return_String="DEBUG: \""+String(getId())+"\" ended (" + (m_bInterruptState?"LOW)":"HIGH)");
+			return Everything::Return_String;
 		}
 		else
 		{

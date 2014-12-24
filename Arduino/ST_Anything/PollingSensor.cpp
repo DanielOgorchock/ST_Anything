@@ -1,6 +1,7 @@
 #include "PollingSensor.h"
 
 #include "Constants.h"
+#include "Everything.h"
 
 namespace st
 {
@@ -38,8 +39,8 @@ namespace st
 
 //public
 	//constructor
-	PollingSensor::PollingSensor(const String &name, long interval, long offset):
-		Sensor(name),
+	PollingSensor::PollingSensor(byte id, long interval, long offset):
+		Sensor(id),
 		m_nPreviousTime(0),
 		m_nDeltaTime(0),
 		m_nInterval(interval),
@@ -54,12 +55,12 @@ namespace st
 		
 	}
 
-	String PollingSensor::init()
+	const String& PollingSensor::init()
 	{
 		return Constants::IGNORE_STRING;
 	}
 	
-	String PollingSensor::update()
+	const String& PollingSensor::update()
 	{
 		if(checkInterval())
 		{
@@ -69,11 +70,12 @@ namespace st
 		return Constants::IGNORE_STRING;
 	}
 	
-	String PollingSensor::getData()
+	const String& PollingSensor::getData()
 	{
 		if(debug)
 		{
-			return "DEBUG: \""+getName() + "\" has triggered (" + m_nInterval + " millisecond interval)";
+			Everything::Return_String="DEBUG: \""+String(getId()) + "\" triggered";
+			return Everything::Return_String;
 		}
 		else
 		{

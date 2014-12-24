@@ -1,6 +1,7 @@
 #include "Executor.h"
 
 #include "Constants.h"
+#include "Everything.h"
 
 namespace
 st
@@ -12,8 +13,8 @@ st
 
 //public
 	//constructor
-	Executor::Executor(const String &name):
-		Device(name)
+	Executor::Executor(byte id):
+		Device(id)
 	{
 	
 	}
@@ -24,7 +25,7 @@ st
 		
 	}
 
-	String Executor::init()
+	const String& Executor::init()
 	{
 		return Constants::IGNORE_STRING;
 	}

@@ -12,16 +12,16 @@ namespace st
 			
 		public:
 			//constructor
-			Sensor(const String &name);
+			Sensor(byte id);
 			
 			//destructor
 			virtual ~Sensor();
 			
-			virtual String beSmart(const String &str);
+			virtual const String& beSmart(const String &str);
 			
 			//all derived classes must implement these pure virtual functions
-			virtual String init()=0;
-			virtual String update()=0;
+			virtual const String& init()=0;
+			virtual const String& update()=0;
 	
 	};
 

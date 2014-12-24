@@ -1,6 +1,7 @@
 #include "PS_Illuminance.h"
 
 #include "Constants.h"
+#include "Everything.h"
 
 namespace st
 {
@@ -9,8 +10,8 @@ namespace st
 
 //public
 	//constructor
-	PS_Illuminance::PS_Illuminance(const String &name, unsigned int interval, int offset, byte analogInputPin, int s_l, int s_h, int m_l, int m_h):
-		PollingSensor(name, interval, offset),
+	PS_Illuminance::PS_Illuminance(byte id, unsigned int interval, int offset, byte analogInputPin, int s_l, int s_h, int m_l, int m_h):
+		PollingSensor(id, interval, offset),
 		m_nSensorValue(0),
 		SENSOR_LOW(s_l),
 		SENSOR_HIGH(s_h),
@@ -26,18 +27,19 @@ namespace st
 		
 	}
 
-	String PS_Illuminance::init()
+	const String& PS_Illuminance::init()
 	{
 		return Constants::IGNORE_STRING;
 	}
 	
-	String PS_Illuminance::getData()
+	const String& PS_Illuminance::getData()
 	{
 		int m_nSensorValue=map(analogRead(m_nAnalogInputPin), SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH);
 		
 		if(PollingSensor::debug)
 		{
-			return "DEBUG: Illuminance sensor value ("+String(MAPPED_LOW)+"-"+String(MAPPED_HIGH)+") = "+String(m_nSensorValue);
+			Everything::Return_String="DEBUG: \""+String(getId())+"\" "+String(m_nSensorValue);
+			return Everything::Return_String;
 		}
 		else
 		{

@@ -6,42 +6,46 @@
 #include "Sensor.h"
 #include "Executor.h"
 
+#include "SmartThings.h"
+//#include "SoftwareSerial.h"
+
 namespace st
 {
 
 	class Everything
 	{
 		private:
-			Sensor* m_Sensors[Constants::MAX_SENSOR_COUNT];
-			unsigned int m_nSensorCount;
+			static Sensor* m_Sensors[Constants::MAX_SENSOR_COUNT];
+			static unsigned int m_nSensorCount;
 			
-			Executor* m_Executors[Constants::MAX_EXECUTOR_COUNT];
-			unsigned int m_nExecutorCount;
+			static Executor* m_Executors[Constants::MAX_EXECUTOR_COUNT];
+			static unsigned int m_nExecutorCount;
+			
+			//SmartThings Object
+			static SmartThings SmartThing;
 		
-			void updateSensors(); //simply calls update on all the sensors
-			void receiveSmartString(); //act on data received from SmartThings
+			static void updateSensors(); //simply calls update on all the sensors
 		
 		public:
-			//constructor
-			Everything();
 			
-			//destructor
-			~Everything();
+			static void initSmartThings();
+			static void initDevices();
+			static void run();
 			
-			
-			void init();
-			void run();
-			
-			void sendSmartString(const String &str);
-			Device* getDeviceByName(const String &str);
+			static void sendSmartString(const String &str);
+			static Device* getDeviceByName(const String &str);
 			
 			
-			bool addSensor(Sensor *sensor);
-			bool addExecutor(Executor *executor);
+			static bool addSensor(Sensor *sensor);
+			static bool addExecutor(Executor *executor);
 		
 			static bool debug;
+			
+			static String Return_String;
+			
+			friend SmartThingsCallout_t receiveSmartString; //act on data received from SmartThings
+			
 	};
-
 }
 
 

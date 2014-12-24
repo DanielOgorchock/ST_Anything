@@ -3,6 +3,8 @@
 
 namespace st
 {
+	SmartThingsCallout_t receiveSmartString; //function prototype
+	
 //private
 
 
@@ -14,27 +16,15 @@ namespace st
 		}
 	}
 	
-	void Everything::receiveSmartString()
-	{
-		//More SmartThings code required
-	}
+	
 	
 //public
-	//constructor
-	Everything::Everything():
-		m_nSensorCount(0),
-		m_nExecutorCount(0)
-	{
-		
-	}
-	
-	//destructor
-	Everything::~Everything()
+	void Everything::initSmartThings()
 	{
 	
 	}
 	
-	void Everything::init()
+	void Everything::initDevices()
 	{
 		for(unsigned int index=0; index<m_nSensorCount; ++index)
 		{
@@ -50,7 +40,7 @@ namespace st
 	void Everything::run()
 	{
 		updateSensors();
-		receiveSmartString();
+		SmartThing.run();
 	}
 	
 	void Everything::sendSmartString(const String &str)
@@ -65,20 +55,20 @@ namespace st
 			Serial.println("Sending: "+str);
 		}
 		
-		//SmartThings code will go here.
+		SmartThing.send(str);
 	}
 	
 	Device* Everything::getDeviceByName(const String &str)
 	{
 		for(unsigned int index=0; index<m_nSensorCount; ++index)
 		{
-			if(m_Sensors[index]->getName()==str)
+			if(String(m_Sensors[index]->getId())==str)
 				return (Device*)m_Sensors[index];
 		}
 		
 		for(unsigned int index=0; index<m_nExecutorCount; ++index)
 		{
-			if(m_Executors[index]->getName()==str)
+			if(String(m_Executors[index]->getId())==str)
 				return (Device*)m_Executors[index];
 		}
 		
@@ -111,6 +101,23 @@ namespace st
 		}
 	}
 	
+	//friends!
+	void receiveSmartString(String message)
+	{
+		if(Everything::debug)
+		{
+			Serial.println("Received: "+message);
+		}
+	}
+	
+	
+	//initialize static members
+	String Everything::Return_String;
+	SmartThings Everything::SmartThing((Constants::THING_SHIELD_PINS==Constants::PINS_0_1?0:2), (Constants::THING_SHIELD_PINS==Constants::PINS_0_1?1:3), receiveSmartString);
+	Sensor* Everything::m_Sensors[Constants::MAX_SENSOR_COUNT];
+	Executor* Everything::m_Executors[Constants::MAX_EXECUTOR_COUNT];
+	unsigned int Everything::m_nSensorCount=0;
+	unsigned int Everything::m_nExecutorCount=0;
 	bool Everything::debug=false;
 	
 }

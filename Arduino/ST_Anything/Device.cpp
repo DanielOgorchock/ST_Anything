@@ -7,12 +7,12 @@ namespace st
 	
 //public
 	//constructor
-	Device::Device(const String &name):
-		m_Name(name)
+	Device::Device(byte id):
+		m_nId(id)
 	{
 		if(debug)
 		{
-			Serial.println("New device constructed with name: \"" + m_Name + "\"");
+			Serial.println("New Device ID: " + m_nId);
 		}
 	}
 	
@@ -21,7 +21,7 @@ namespace st
 	{
 		if(debug)
 		{
-			Serial.println("Device destroyed with name: \"" + m_Name + "\"");
+			Serial.println("Destroyed Device ID: " + m_nId);
 		}
 	}
 	

@@ -14,13 +14,13 @@ namespace st
 			
 		public:
 			//constructor
-			PS_Illuminance(const String &name, unsigned int interval, int offset, byte analogInputPin, int s_l=0, int s_h=1024, int m_l=1000, int m_h=0);
+			PS_Illuminance(byte id, unsigned int interval, int offset, byte analogInputPin, int s_l=0, int s_h=1024, int m_l=1000, int m_h=0);
 			
 			//destructor
 			virtual ~PS_Illuminance();
 			
-			virtual String init();
-			virtual String getData();
+			virtual const String& init();
+			virtual const String& getData();
 			
 			//gets
 			inline byte getPin() const {return m_nAnalogInputPin;}

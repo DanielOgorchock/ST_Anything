@@ -8,24 +8,24 @@ namespace st
 	class Device
 	{
 		private:
-			String m_Name;
+			byte m_nId;
 		
 		
 		
 		public:
 			//constructor
-			Device(const String &name);
+			Device(byte id);
 			
 			//destructor
 			virtual ~Device();
 			
-			virtual String beSmart(const String &str)=0; 
+			virtual const String& beSmart(const String &str)=0; 
 			
 			//gets
-			inline const String& getName() const {return m_Name;}
+			inline byte getId() const {return m_nId;}
 			
 			//sets
-			inline void setName(const String &name) {m_Name=name;}
+			inline void setId(byte id) {m_nId=id;}
 		
 
 			static bool debug;

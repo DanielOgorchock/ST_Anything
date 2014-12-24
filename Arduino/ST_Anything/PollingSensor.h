@@ -17,15 +17,15 @@ namespace st
 			
 		public:
 			//constructor
-			PollingSensor(const String &name, long interval, long offset=0);
+			PollingSensor(byte id, long interval, long offset=0);
 			
 			//destructor
 			virtual ~PollingSensor();
 			
-			virtual String init();
-			virtual String update();
+			virtual const String& init();
+			virtual const String& update();
 			
-			virtual String getData();
+			virtual const String& getData();
 			
 			
 			virtual void offset(long os) {m_nOffset=os;} //offset the delta time from its current value

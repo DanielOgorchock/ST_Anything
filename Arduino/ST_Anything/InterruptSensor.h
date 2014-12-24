@@ -13,20 +13,20 @@ namespace st
 			bool m_bStatus; //true==interrupted
 			bool m_bPullup;
 			
-			String checkIfTriggered(); //returns true if new interrupt is triggered
+			const String& checkIfTriggered(); //returns true if new interrupt is triggered
 			
 		public:
 			//constructor
-			InterruptSensor(const String &name, byte pin, bool iState, bool internalPullup=false); //(defaults to NOT using internal pullup resistors)
+			InterruptSensor(byte id, byte pin, bool iState, bool internalPullup=false); //(defaults to NOT using internal pullup resistors)
 			
 			//destructor
 			virtual ~InterruptSensor();
 			
 			
-			virtual String init();
-			String update();
-			virtual String runInterrupt();
-			virtual String runInterruptEnded();
+			virtual const String& init();
+			const String& update();
+			virtual const String& runInterrupt();
+			virtual const String& runInterruptEnded();
 			
 			
 			//gets

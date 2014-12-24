@@ -15,12 +15,12 @@ namespace st
 		
 		public:
 			//constructor
-			Executor(const String &name);
+			Executor(byte id);
 			
 			//destructor
 			virtual ~Executor();
 		
-			virtual String init();
+			virtual const String& init();
 		
 			static bool debug;
 	
