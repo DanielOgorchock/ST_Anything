@@ -1,5 +1,6 @@
 #include "Executor.h"
 
+#include "Constants.h"
 
 namespace
 st
@@ -23,6 +24,11 @@ st
 		
 	}
 
+	String Executor::init()
+	{
+		return Constants::IGNORE_STRING;
+	}
+	
 
 	bool Executor::debug=false; 
 	

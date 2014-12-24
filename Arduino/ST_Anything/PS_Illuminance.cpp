@@ -34,15 +34,15 @@ namespace st
 	String PS_Illuminance::getData()
 	{
 		int m_nSensorValue=map(analogRead(m_nAnalogInputPin), SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH);
-				
-		Serial.print("Illuminance sensor value (");
-		Serial.print(MAPPED_LOW);
-		Serial.print("-");
-		Serial.print(MAPPED_HIGH);
-		Serial.print(") = ");
-		Serial.println(m_nSensorValue);
 		
-		return "Illuminance sensor value ("+String(MAPPED_LOW)+"-"+String(MAPPED_HIGH)+") = "+String(m_nSensorValue);
+		if(PollingSensor::debug)
+		{
+			return "DEBUG: Illuminance sensor value ("+String(MAPPED_LOW)+"-"+String(MAPPED_HIGH)+") = "+String(m_nSensorValue);
+		}
+		else
+		{
+			return Constants::IGNORE_STRING;
+		}
 	}
 	
 	void PS_Illuminance::setPin(byte pin)

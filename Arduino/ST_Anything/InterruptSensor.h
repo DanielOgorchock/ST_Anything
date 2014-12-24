@@ -13,7 +13,7 @@ namespace st
 			bool m_bStatus; //true==interrupted
 			bool m_bPullup;
 			
-			bool checkIfTriggered(); //returns true if new interrupt is triggered
+			String checkIfTriggered(); //returns true if new interrupt is triggered
 			
 		public:
 			//constructor
@@ -26,6 +26,7 @@ namespace st
 			virtual String init();
 			String update();
 			virtual String runInterrupt();
+			virtual String runInterruptEnded();
 			
 			
 			//gets

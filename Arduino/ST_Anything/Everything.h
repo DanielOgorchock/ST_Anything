@@ -19,6 +19,7 @@ namespace st
 			unsigned int m_nExecutorCount;
 		
 			void updateSensors(); //simply calls update on all the sensors
+			void receiveSmartString(); //act on data received from SmartThings
 		
 		public:
 			//constructor
@@ -38,7 +39,7 @@ namespace st
 			bool addSensor(Sensor *sensor);
 			bool addExecutor(Executor *executor);
 		
-		
+			static bool debug;
 	};
 
 }

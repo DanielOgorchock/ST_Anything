@@ -20,6 +20,7 @@ namespace st
 			//destructor
 			virtual ~Executor();
 		
+			virtual String init();
 		
 			static bool debug;
 	

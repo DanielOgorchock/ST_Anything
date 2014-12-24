@@ -28,10 +28,6 @@ namespace st
 		if(m_nDeltaTime>=m_nInterval)
 		{
 			m_nDeltaTime=0;
-			if(debug)
-			{
-				Serial.println("PollingSensor named \"" + getName() + "\" has triggered (" + m_nInterval + " millisecond interval)");
-			}
 			return true;
 		}
 		else
@@ -75,7 +71,14 @@ namespace st
 	
 	String PollingSensor::getData()
 	{
-		return Constants::IGNORE_STRING;
+		if(debug)
+		{
+			return "DEBUG: \""+getName() + "\" has triggered (" + m_nInterval + " millisecond interval)";
+		}
+		else
+		{
+			return Constants::IGNORE_STRING;
+		}
 	}
 	
 	bool PollingSensor::debug=false;
