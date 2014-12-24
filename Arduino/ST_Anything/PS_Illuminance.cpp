@@ -1,5 +1,6 @@
 #include "PS_Illuminance.h"
 
+#include "Constants.h"
 
 namespace st
 {
@@ -25,24 +26,23 @@ namespace st
 		
 	}
 
-	void PS_Illuminance::init()
+	String PS_Illuminance::init()
 	{
-		
+		return Constants::IGNORE_STRING;
 	}
 	
-	bool PS_Illuminance::getData()
+	String PS_Illuminance::getData()
 	{
 		int m_nSensorValue=map(analogRead(m_nAnalogInputPin), SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH);
-		if(PollingSensor::debug)
-		{
-			Serial.print("Illuminance sensor value (");
-			Serial.print(MAPPED_LOW);
-			Serial.print("-");
-			Serial.print(MAPPED_HIGH);
-			Serial.print(") = ");
-			Serial.println(m_nSensorValue);
-		}
-		return true;
+				
+		Serial.print("Illuminance sensor value (");
+		Serial.print(MAPPED_LOW);
+		Serial.print("-");
+		Serial.print(MAPPED_HIGH);
+		Serial.print(") = ");
+		Serial.println(m_nSensorValue);
+		
+		return "Illuminance sensor value ("+String(MAPPED_LOW)+"-"+String(MAPPED_HIGH)+") = "+String(m_nSensorValue);
 	}
 	
 	void PS_Illuminance::setPin(byte pin)

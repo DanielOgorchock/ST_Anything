@@ -1,5 +1,6 @@
 #include "PollingSensor.h"
 
+#include "Constants.h"
 
 namespace st
 {
@@ -57,25 +58,24 @@ namespace st
 		
 	}
 
-	void PollingSensor::init()
+	String PollingSensor::init()
 	{
-	
+		return Constants::IGNORE_STRING;
 	}
 	
-	void PollingSensor::update()
+	String PollingSensor::update()
 	{
 		if(checkInterval())
 		{
-			if(!getData())
-			{
-				Serial.println("Error getting data for \""+getName()+"\"");
-			}
+			return getData();
 		}
+		
+		return Constants::IGNORE_STRING;
 	}
 	
-	bool PollingSensor::getData()
+	String PollingSensor::getData()
 	{
-		return true;
+		return Constants::IGNORE_STRING;
 	}
 	
 	bool PollingSensor::debug=false;

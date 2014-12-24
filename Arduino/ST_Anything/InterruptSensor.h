@@ -23,8 +23,9 @@ namespace st
 			virtual ~InterruptSensor();
 			
 			
-			virtual void init();
-			virtual void update();
+			virtual String init();
+			String update();
+			virtual String runInterrupt();
 			
 			
 			//gets

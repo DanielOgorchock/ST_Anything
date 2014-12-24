@@ -19,8 +19,8 @@ namespace st
 			//destructor
 			virtual ~PS_Illuminance();
 			
-			virtual void init();
-			virtual bool getData();
+			virtual String init();
+			virtual String getData();
 			
 			//gets
 			inline byte getPin() const {return m_nAnalogInputPin;}

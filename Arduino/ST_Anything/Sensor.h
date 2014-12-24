@@ -17,9 +17,11 @@ namespace st
 			//destructor
 			virtual ~Sensor();
 			
+			virtual String beSmart(const String &str);
+			
 			//all derived classes must implement these pure virtual functions
-			virtual void init()=0;
-			virtual void update()=0;
+			virtual String init()=0;
+			virtual String update()=0;
 	
 	};
 

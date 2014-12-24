@@ -19,10 +19,10 @@ namespace st
 			//destructor
 			virtual ~Device();
 			
+			virtual String beSmart(const String &str)=0; 
+			
 			//gets
 			inline const String& getName() const {return m_Name;}
-			
-			
 			
 			//sets
 			inline void setName(const String &name) {m_Name=name;}

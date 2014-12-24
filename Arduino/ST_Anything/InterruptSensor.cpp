@@ -1,5 +1,6 @@
 #include "InterruptSensor.h"
 
+#include "Constants.h"
 
 namespace st
 {
@@ -51,16 +52,25 @@ namespace st
 	
 	}
 	
-	void InterruptSensor::init()
+	String InterruptSensor::init()
 	{
-	
+		return Constants::IGNORE_STRING;
 	}
 	
-	void InterruptSensor::update()
+	String InterruptSensor::update()
 	{
-		checkIfTriggered();
+		if(checkIfTriggered())
+		{
+			return runInterrupt();
+		}
+		
+		return Constants::IGNORE_STRING;
 	}
 
+	String InterruptSensor::runInterrupt()
+	{
+		return Constants::IGNORE_STRING;
+	}
 	
 	void InterruptSensor::setInterruptPin(byte pin)
 	{

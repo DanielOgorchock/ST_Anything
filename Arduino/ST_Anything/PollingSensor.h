@@ -22,10 +22,10 @@ namespace st
 			//destructor
 			virtual ~PollingSensor();
 			
-			virtual void init();
-			virtual void update();
+			virtual String init();
+			virtual String update();
 			
-			virtual bool getData();
+			virtual String getData();
 			
 			
 			virtual void offset(long os) {m_nOffset=os;} //offset the delta time from its current value
