@@ -12,9 +12,15 @@ namespace st
 			Serial.println("Overflow");
 			m_nPreviousTime=0;
 		}
-	
+		
+		if(m_nPreviousTime==0) //eliminates problem of there being a delay before first update() call
+		{
+			m_nPreviousTime=millis();
+		}
+		
 		//calculate new delta time
-		m_nDeltaTime+=(millis()-m_nPreviousTime);
+		m_nDeltaTime+=(millis()-m_nPreviousTime)-m_nOffset;
+		m_nOffset=0;
 		m_nPreviousTime=millis();
 		
 		//determine interval has passed
@@ -35,11 +41,12 @@ namespace st
 
 //public
 	//constructor
-	PollingSensor::PollingSensor(const String &name, unsigned long interval, long offset):
+	PollingSensor::PollingSensor(const String &name, long interval, long offset):
 		Sensor(name),
-		m_nPreviousTime(millis()),
-		m_nDeltaTime(-offset),
-		m_nInterval(interval)
+		m_nPreviousTime(0),
+		m_nDeltaTime(0),
+		m_nInterval(interval),
+		m_nOffset(offset)
 	{
 	
 	}
