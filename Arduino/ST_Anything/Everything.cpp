@@ -6,7 +6,42 @@ namespace st
 	SmartThingsCallout_t receiveSmartString; //function prototype
 	
 //private
-
+	void Everything::updateNetworkState()
+	{
+		SmartThingsNetworkState_t tempState = SmartThing.shieldGetLastNetworkState();
+		if (tempState != stNetworkState)
+		{
+			switch (tempState)
+			{
+			  case STATE_NO_NETWORK:
+				if (debug) Serial.println(F("NO_NETWORK"));
+				SmartThing.shieldSetLED(2, 0, 0); // red
+				break;
+			  case STATE_JOINING:
+				if (debug) Serial.println(F("JOINING"));
+				SmartThing.shieldSetLED(2, 0, 0); // red
+				break;
+			  case STATE_JOINED:
+				if (debug) Serial.println(F("JOINED"));
+				SmartThing.shieldSetLED(0, 0, 0); // off
+				break;
+			  case STATE_JOINED_NOPARENT:
+				if (debug) Serial.println(F("JOINED_NOPARENT"));
+				SmartThing.shieldSetLED(2, 0, 2); // purple
+				break;
+			  case STATE_LEAVING:
+				if (debug) Serial.println(F("LEAVING"));
+				SmartThing.shieldSetLED(2, 0, 0); // red
+				break;
+			  default:
+			  case STATE_UNKNOWN:
+				if (debug) Serial.println(F("UNKNOWN"));
+				SmartThing.shieldSetLED(0, 2, 0); // green
+				break;
+			}
+			stNetworkState = tempState; 
+		}
+	}
 
 	void Everything::updateSensors()
 	{
@@ -21,7 +56,19 @@ namespace st
 //public
 	void Everything::initSmartThings()
 	{
-	
+		if(Constants::WAIT_FOR_JOIN_AT_START)
+		{
+			while(stNetworkState!=STATE_JOINED)
+			{
+				updateNetworkState();
+				SmartThing.run();
+			}
+		}
+		else
+		{
+			updateNetworkState();
+			SmartThing.run();
+		}
 	}
 	
 	void Everything::initDevices()
@@ -41,6 +88,7 @@ namespace st
 	{
 		updateSensors();
 		SmartThing.run();
+		updateNetworkState();
 	}
 	
 	void Everything::sendSmartString(const String &str)
@@ -52,7 +100,8 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.println("Sending: "+str);
+			Serial.print(F("Sending: "));
+			Serial.println(str);
 		}
 		
 		SmartThing.send(str);
@@ -106,18 +155,20 @@ namespace st
 	{
 		if(Everything::debug)
 		{
-			Serial.println("Received: "+message);
+			Serial.print(F("Received: "));
+			Serial.println(message);
 		}
 	}
 	
 	
 	//initialize static members
 	String Everything::Return_String;
-	SmartThings Everything::SmartThing((Constants::THING_SHIELD_PINS==Constants::PINS_0_1?0:2), (Constants::THING_SHIELD_PINS==Constants::PINS_0_1?1:3), receiveSmartString);
+	SmartThings Everything::SmartThing((Constants::THING_SHIELD_PINS==Constants::PINS_0_1?1:3), (Constants::THING_SHIELD_PINS==Constants::PINS_0_1?0:2), receiveSmartString);
 	Sensor* Everything::m_Sensors[Constants::MAX_SENSOR_COUNT];
 	Executor* Everything::m_Executors[Constants::MAX_EXECUTOR_COUNT];
 	unsigned int Everything::m_nSensorCount=0;
 	unsigned int Everything::m_nExecutorCount=0;
+	SmartThingsNetworkState_t Everything::stNetworkState=(SmartThingsNetworkState_t)99; //bogus value
 	bool Everything::debug=false;
 	
 }

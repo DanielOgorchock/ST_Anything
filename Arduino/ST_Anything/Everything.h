@@ -22,12 +22,15 @@ namespace st
 			static unsigned int m_nExecutorCount;
 			
 			//SmartThings Object
-			static SmartThings SmartThing;
+			
+			static SmartThingsNetworkState_t stNetworkState;
+		
+			static void updateNetworkState();
 		
 			static void updateSensors(); //simply calls update on all the sensors
 		
 		public:
-			
+			static SmartThings SmartThing;
 			static void initSmartThings();
 			static void initDevices();
 			static void run();

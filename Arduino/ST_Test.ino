@@ -10,21 +10,21 @@
 #include <Sensor.h>
 
 
-st::PollingSensor test0(0, 10000, -2000);
-st::PollingSensor test1(1, 10000, -6000);
-st::PollingSensor test2(2, 10000, -4000);
-st::PollingSensor test3(3, 10000, -1000);
-st::PollingSensor test4(4, 10000, 12000);
+st::PollingSensor test0(0, 100000, -2000);
+st::PollingSensor test1(1, 100000, -6000);
+st::PollingSensor test2(2, 100000, -4000);
+st::PollingSensor test3(3, 100000, -1000);
+st::PollingSensor test4(4, 100000, 12000);
 st::InterruptSensor test5(5, 8, HIGH);
 st::InterruptSensor test6(6, 9, HIGH);
-st::PS_Illuminance test7(7, 10000, -8000, A5);
-st::PollingSensor test8(8, 6000, 0);
-st::PollingSensor test9(9, 6000, 3000);
-st::InterruptSensor test10(5, 8, HIGH);
-st::InterruptSensor test11(6, 9, HIGH);
-st::PS_Illuminance test12(7, 10000, -4000, A5);
-st::PollingSensor test13(8, 6000, 10000);
-st::PollingSensor test14(9, 10000, 3000);
+st::PS_Illuminance test7(7, 5000, -2500, A5);
+st::PollingSensor test8(8, 600000, 0);
+st::PollingSensor test9(9, 600000, 3000);
+st::InterruptSensor test10(10, 8, HIGH);
+st::InterruptSensor test11(11, 9, HIGH);
+st::PS_Illuminance test12(12, 5000, 0, A5);
+st::PollingSensor test13(13, 600000, 10000);
+st::PollingSensor test14(14, 100000, 3000);
 
 //test sketch
 void setup()
@@ -36,7 +36,7 @@ void setup()
   st::InterruptSensor::debug=true;
   st::Everything::Return_String.reserve(250);
   
-  //st::Everything::initSmartThings();
+  st::Everything::initSmartThings();
   
   st::Everything::addSensor(&test0);
   st::Everything::addSensor(&test1); 
