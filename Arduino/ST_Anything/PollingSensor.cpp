@@ -74,7 +74,8 @@ namespace st
 	{
 		if(debug)
 		{
-			Everything::Return_String="DEBUG: \""+getName() + "\" triggered";
+			Everything::Return_String.remove(0);
+			Everything::Return_String+="DEBUG: \""+getName() + "\" triggered";
 			return Everything::Return_String;
 		}
 		else

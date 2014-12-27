@@ -41,7 +41,8 @@ namespace st
 		//Everything::Return_String="DEBUG: \""+String(getId())+"\" "+String(m_nSensorValue);
 		
 		
-		Everything::Return_String=getName()+" "+String(m_nSensorValue);
+		Everything::Return_String.remove(0);
+		Everything::Return_String+=getName()+" "+String(m_nSensorValue);
 		return Everything::Return_String;
 		
 	}

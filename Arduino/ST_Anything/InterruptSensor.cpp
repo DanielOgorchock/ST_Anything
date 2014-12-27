@@ -59,7 +59,8 @@ namespace st
 	{
 		if(debug)
 		{
-			Everything::Return_String="DEBUG: \""+getName()+"\" triggered (" + (m_bInterruptState?"HIGH)":"LOW)");
+			Everything::Return_String.remove(0);
+			Everything::Return_String+="DEBUG: \""+getName()+"\" triggered (" + (m_bInterruptState?"HIGH)":"LOW)");
 			return Everything::Return_String;
 		}
 		else
@@ -72,7 +73,8 @@ namespace st
 	{
 		if(debug)
 		{
-			Everything::Return_String="DEBUG: \""+getName()+"\" ended (" + (m_bInterruptState?"LOW)":"HIGH)");
+			Everything::Return_String.remove(0);
+			Everything::Return_String+="DEBUG: \""+getName()+"\" ended (" + (m_bInterruptState?"LOW)":"HIGH)");
 			return Everything::Return_String;
 		}
 		else
