@@ -7,12 +7,13 @@ namespace st
 	
 //public
 	//constructor
-	Device::Device(byte id):
-		m_nId(id)
+	Device::Device(const String &name):
+		m_Name(name)
 	{
 		if(debug)
 		{
-			Serial.println("New Device ID: " + m_nId);
+			Serial.print(F("New Device ID: "));
+			Serial.println(m_Name);
 		}
 	}
 	
@@ -21,7 +22,8 @@ namespace st
 	{
 		if(debug)
 		{
-			Serial.println("Destroyed Device ID: " + m_nId);
+			Serial.print(F("Destroyed Device ID: "));
+			Serial.println(m_Name);
 		}
 	}
 	

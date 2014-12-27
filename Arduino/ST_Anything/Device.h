@@ -8,13 +8,12 @@ namespace st
 	class Device
 	{
 		private:
-			byte m_nId;
-		
-		
+			String m_Name;
+			
 		
 		public:
 			//constructor
-			Device(byte id);
+			Device(const String &name);
 			
 			//destructor
 			virtual ~Device();
@@ -22,10 +21,10 @@ namespace st
 			virtual const String& beSmart(const String &str)=0; 
 			
 			//gets
-			inline byte getId() const {return m_nId;}
+			inline const String& getName() const {return m_Name;}
 			
 			//sets
-			inline void setId(byte id) {m_nId=id;}
+			inline void setName(const String &str) {m_Name=str;}
 		
 
 			static bool debug;

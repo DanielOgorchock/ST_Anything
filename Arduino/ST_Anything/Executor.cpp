@@ -13,8 +13,8 @@ st
 
 //public
 	//constructor
-	Executor::Executor(byte id):
-		Device(id)
+	Executor::Executor(const String &name):
+		Device(name)
 	{
 	
 	}

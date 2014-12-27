@@ -17,7 +17,7 @@ namespace st
 			
 		public:
 			//constructor
-			PollingSensor(byte id, long interval, long offset=0);
+			PollingSensor(const String &name, long interval, long offset=0);
 			
 			//destructor
 			virtual ~PollingSensor();

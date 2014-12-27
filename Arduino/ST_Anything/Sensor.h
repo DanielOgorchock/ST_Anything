@@ -12,7 +12,7 @@ namespace st
 			
 		public:
 			//constructor
-			Sensor(byte id);
+			Sensor(const String &name);
 			
 			//destructor
 			virtual ~Sensor();

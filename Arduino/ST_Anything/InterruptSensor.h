@@ -17,7 +17,7 @@ namespace st
 			
 		public:
 			//constructor
-			InterruptSensor(byte id, byte pin, bool iState, bool internalPullup=false); //(defaults to NOT using internal pullup resistors)
+			InterruptSensor(const String &name, byte pin, bool iState, bool internalPullup=false); //(defaults to NOT using internal pullup resistors)
 			
 			//destructor
 			virtual ~InterruptSensor();

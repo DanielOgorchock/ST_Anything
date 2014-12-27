@@ -39,8 +39,8 @@ namespace st
 
 //public
 	//constructor
-	PollingSensor::PollingSensor(byte id, long interval, long offset):
-		Sensor(id),
+	PollingSensor::PollingSensor(const String &name, long interval, long offset):
+		Sensor(name),
 		m_nPreviousTime(0),
 		m_nDeltaTime(0),
 		m_nInterval(interval),
@@ -74,7 +74,7 @@ namespace st
 	{
 		if(debug)
 		{
-			Everything::Return_String="DEBUG: \""+String(getId()) + "\" triggered";
+			Everything::Return_String="DEBUG: \""+getName() + "\" triggered";
 			return Everything::Return_String;
 		}
 		else

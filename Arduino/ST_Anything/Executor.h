@@ -15,7 +15,7 @@ namespace st
 		
 		public:
 			//constructor
-			Executor(byte id);
+			Executor(const String &name);
 			
 			//destructor
 			virtual ~Executor();

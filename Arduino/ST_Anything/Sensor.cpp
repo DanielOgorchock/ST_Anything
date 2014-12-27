@@ -9,8 +9,8 @@ namespace st
 
 //public
 	//constructor
-	Sensor::Sensor(byte id):
-		Device(id)
+	Sensor::Sensor(const String &name):
+		Device(name)
 	{
 	
 	}

@@ -30,8 +30,8 @@ namespace st
 
 //public
 	//constructor
-	InterruptSensor::InterruptSensor(byte id, byte pin, bool iState, bool pullup):
-		Sensor(id),
+	InterruptSensor::InterruptSensor(const String &name, byte pin, bool iState, bool pullup):
+		Sensor(name),
 		m_bInterruptState(iState),
 		m_bStatus(false),
 		m_bPullup(pullup)
@@ -59,7 +59,7 @@ namespace st
 	{
 		if(debug)
 		{
-			Everything::Return_String="DEBUG: \""+String(getId())+"\" triggered (" + (m_bInterruptState?"HIGH)":"LOW)");
+			Everything::Return_String="DEBUG: \""+getName()+"\" triggered (" + (m_bInterruptState?"HIGH)":"LOW)");
 			return Everything::Return_String;
 		}
 		else
@@ -72,7 +72,7 @@ namespace st
 	{
 		if(debug)
 		{
-			Everything::Return_String="DEBUG: \""+String(getId())+"\" ended (" + (m_bInterruptState?"LOW)":"HIGH)");
+			Everything::Return_String="DEBUG: \""+getName()+"\" ended (" + (m_bInterruptState?"LOW)":"HIGH)");
 			return Everything::Return_String;
 		}
 		else

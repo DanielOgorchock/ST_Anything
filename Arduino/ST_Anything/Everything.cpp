@@ -93,7 +93,7 @@ namespace st
 	
 	void Everything::sendSmartString(const String &str)
 	{
-		if(str==Constants::IGNORE_STRING)
+		if(&str==&Constants::IGNORE_STRING)
 		{
 			return;
 		}
@@ -111,13 +111,13 @@ namespace st
 	{
 		for(unsigned int index=0; index<m_nSensorCount; ++index)
 		{
-			if(String(m_Sensors[index]->getId())==str)
+			if(m_Sensors[index]->getName()==str)
 				return (Device*)m_Sensors[index];
 		}
 		
 		for(unsigned int index=0; index<m_nExecutorCount; ++index)
 		{
-			if(String(m_Executors[index]->getId())==str)
+			if(m_Executors[index]->getName()==str)
 				return (Device*)m_Executors[index];
 		}
 		
