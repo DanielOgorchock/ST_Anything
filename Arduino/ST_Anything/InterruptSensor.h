@@ -12,7 +12,8 @@ namespace st
 			bool m_bInterruptState; //the state (HIGH/LOW) in which an interrupt has triggered
 			bool m_bStatus; //true==interrupted
 			bool m_bPullup;
-			
+			bool m_bInitRequired;
+
 			const String& checkIfTriggered(); //returns true if new interrupt is triggered
 			
 		public:

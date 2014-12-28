@@ -10,6 +10,7 @@
 #include <dht.h>
 #include <PS_TemperatureHumidity.h>
 #include <PS_Water.h>
+#include <IS_Motion.h>
 #include <Sensor.h>
 
 int freeRam () 
@@ -23,10 +24,9 @@ long lastmillis=0;
 
 //Declare each sensor
 st::PS_Illuminance sensor1("illuminance", 30000, -30000, A5);
-st::PS_TemperatureHumidity sensor2("TempHumid", 30000, -20000, 5);
+st::PS_TemperatureHumidity sensor2("temphumid", 30000, -20000, 5);
 st::PS_Water sensor3("water", 30000, -10000, A4);
-
-//st::InterruptSensor test5("bogus_name__", 8, HIGH);
+st::IS_Motion sensor4("motion", 4, HIGH);
 
 //test sketch
 void setup()
@@ -49,7 +49,8 @@ void setup()
   st::Everything::addSensor(&sensor1);
   st::Everything::addSensor(&sensor2);
   st::Everything::addSensor(&sensor3);
-  
+  st::Everything::addSensor(&sensor4); 
+
   Serial.print(F("Setup Added Sensors: Free Ram = "));  
   Serial.println(freeRam());
   st::Everything::initDevices();

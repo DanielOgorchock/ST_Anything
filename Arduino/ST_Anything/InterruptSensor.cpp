@@ -11,19 +11,19 @@ namespace st
 		if(digitalRead(m_nInterruptPin)==m_bInterruptState && !m_bStatus) //new interrupt
 		{
 			m_bStatus=true;
+			m_bInitRequired = false;
 			return runInterrupt();
 		}
-		else if(digitalRead(m_nInterruptPin)!=m_bInterruptState && m_bStatus) //interrupt has ended
+		else if ((digitalRead(m_nInterruptPin) != m_bInterruptState && m_bStatus) || m_bInitRequired) //interrupt has ended OR Init called us
 		{
 			m_bStatus=false;
+			m_bInitRequired = false;
 			return runInterruptEnded();
 		}
 		else //still in the middle of an interrupt or interrupt hasn't triggered
 		{
 			return Constants::IGNORE_STRING;
 		}
-		
-	
 	}
 
 
@@ -34,7 +34,8 @@ namespace st
 		Sensor(name),
 		m_bInterruptState(iState),
 		m_bStatus(false),
-		m_bPullup(pullup)
+		m_bPullup(pullup),
+		m_bInitRequired(true)
 		{
 			setInterruptPin(pin);
 		}
@@ -47,7 +48,7 @@ namespace st
 	
 	const String& InterruptSensor::init()
 	{
-		return Constants::IGNORE_STRING;
+		return checkIfTriggered();
 	}
 	
 	const String& InterruptSensor::update()
