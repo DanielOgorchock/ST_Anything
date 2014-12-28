@@ -98,13 +98,33 @@ namespace st
 			return;
 		}
 		
-		if(debug)
+		if (str.indexOf('|') == -1) 
 		{
-			Serial.print(F("Sending: "));
-			Serial.println(str);
+			if (debug)
+			{
+				Serial.print(F("Sending: "));
+				Serial.println(str);
+			}
+			SmartThing.send(str);
+		}
+		else
+		{
+			if (debug)
+			{
+				Serial.print(F("Sending: "));
+				Serial.println(str.substring(0, str.indexOf('|')));
+			}
+			SmartThing.send(str.substring(0, str.indexOf('|')));	//Send first half to ST Cloud
+
+			if (debug)
+			{
+				Serial.print(F("Sending: "));
+				Serial.println(str.substring(str.indexOf('|') + 1));
+			}
+			SmartThing.send(str.substring(str.indexOf('|') + 1));	//Send second half to ST Cloud
+
 		}
 		
-		SmartThing.send(str);
 	}
 	
 	Device* Everything::getDeviceByName(const String &str)
@@ -163,7 +183,7 @@ namespace st
 	
 	//initialize static members
 	String Everything::Return_String;
-	SmartThings Everything::SmartThing((Constants::THING_SHIELD_PINS==Constants::PINS_0_1?1:3), (Constants::THING_SHIELD_PINS==Constants::PINS_0_1?0:2), receiveSmartString, "GenericShield", true);
+	SmartThings Everything::SmartThing((Constants::THING_SHIELD_PINS==Constants::PINS_0_1?1:3), (Constants::THING_SHIELD_PINS==Constants::PINS_0_1?0:2), receiveSmartString);
 	Sensor* Everything::m_Sensors[Constants::MAX_SENSOR_COUNT];
 	Executor* Everything::m_Executors[Constants::MAX_EXECUTOR_COUNT];
 	unsigned int Everything::m_nSensorCount=0;
