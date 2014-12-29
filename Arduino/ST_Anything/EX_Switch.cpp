@@ -1,5 +1,6 @@
 #include "EX_Switch.h"
 
+#include "Constants.h"
 
 namespace st
 {
@@ -36,16 +37,20 @@ namespace st
 		}
 		else if(s=="off")
 		{
-			m_bCurrentState==LOW;
+			m_bCurrentState=LOW;
 		}
 		
 		writeStateToPin();
+		
+		
+		return Constants::IGNORE_STRING;
 	}
 	
 	
 	void EX_Switch::setPin(byte pin)
 	{
 		m_nPin=pin;
+		pinMode(m_nPin, OUTPUT);
 		writeStateToPin();
 	}
 
