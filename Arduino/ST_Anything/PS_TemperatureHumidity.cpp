@@ -11,10 +11,11 @@ namespace st
 
 //public
 	//constructor
-	PS_TemperatureHumidity::PS_TemperatureHumidity(const String &name, unsigned int interval, int offset, byte digitalInputPin) :
+	PS_TemperatureHumidity::PS_TemperatureHumidity(const String &name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType) :
 		PollingSensor(name, interval, offset),
 		m_nTemperatureSensorValue(0),
-		m_nHumiditySensorValue(0)	
+		m_nHumiditySensorValue(0),
+		m_bDHTSensorType(DHTSensorType)
 	{
 		setPin(digitalInputPin);
 	}
@@ -27,16 +28,39 @@ namespace st
 
 	const String& PS_TemperatureHumidity::init()
 	{
-		return Constants::IGNORE_STRING;
+		delay(1000);		//Needed to prevent "Unknown Error" on first read of DHT Sensor
+		return getData();
 	}
 	
 	const String& PS_TemperatureHumidity::getData()
 	{
 		// READ DATA
+		int chk;
+		switch (m_bDHTSensorType) {
+			case DHT11:
+				//Serial.println(F("PS_TemperatureHumidity: DTH11 Read"));
+				chk = DHT.read11(m_nDigitalInputPin);
+				break;
+			case DHT21:
+				//Serial.println(F("PS_TemperatureHumidity: DTH21 Read"));
+				chk = DHT.read21(m_nDigitalInputPin);
+				break;
+			case DHT22:
+				//Serial.println(F("PS_TemperatureHumidity: DTH22 Read"));
+				chk = DHT.read22(m_nDigitalInputPin);
+				break;
+			case DHT33:
+				//Serial.println(F("PS_TemperatureHumidity: DTH33 Read"));
+				chk = DHT.read33(m_nDigitalInputPin);
+				break;
+			case DHT44:
+				//Serial.println(F("PS_TemperatureHumidity: DTH44 Read"));
+				chk = DHT.read44(m_nDigitalInputPin);
+				break;
+			default:
+				Serial.println(F("PS_TemperatureHumidity: Invalid DHT Sensor Type"));
+			}
 
-		//Serial.print(F("DHT22, \t"));
-		int chk = DHT.read22(m_nDigitalInputPin);		//DHT22 Sensor
-		//int chk = DHT.read11(m_nDigitalInputPin);		//DHT11 Sensor
 
 		switch (chk)
 		{
@@ -46,13 +70,13 @@ namespace st
 			m_nTemperatureSensorValue = (DHT.temperature * 1.8) + 32.0;		//Scale from Celsius to Farenheit
 			break;
 		case DHTLIB_ERROR_CHECKSUM:
-			Serial.print(F("Checksum error,\t"));
+			Serial.println(F("DHT Checksum error"));
 			break;
 		case DHTLIB_ERROR_TIMEOUT:
-			Serial.print(F("Time out error,\t"));
+			Serial.println(F("DHT Time out error"));
 			break;
 		default:
-			Serial.print(F("Unknown error,\t"));
+			Serial.println(F("DHT Unknown error"));
 			break;
 		}
 		// DISPLAY DATA

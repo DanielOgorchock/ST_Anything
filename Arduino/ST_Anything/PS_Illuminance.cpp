@@ -27,10 +27,10 @@ namespace st
 		
 	}
 
-	const String& PS_Illuminance::init()
-	{
-		return Constants::IGNORE_STRING;
-	}
+	//const String& PS_Illuminance::init()
+	//{
+	//	return getData();
+	//}
 	
 	const String& PS_Illuminance::getData()
 	{

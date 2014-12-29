@@ -18,7 +18,7 @@ namespace st
 			//destructor
 			virtual ~PS_Water();
 			
-			virtual const String& init();
+			//virtual const String& init();
 			virtual const String& getData();
 			
 			//gets

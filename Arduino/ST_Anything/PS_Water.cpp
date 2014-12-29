@@ -23,10 +23,10 @@ namespace st
 		
 	}
 
-	const String& PS_Water::init()
-	{
-		return Constants::IGNORE_STRING;
-	}
+	//const String& PS_Water::init()
+	//{
+	//	return getData();
+	//}
 	
 	const String& PS_Water::getData()
 	{

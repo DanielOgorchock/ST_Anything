@@ -13,10 +13,12 @@ namespace st
 			int m_nTemperatureSensorValue;
 			int m_nHumiditySensorValue;
 			dht DHT;
+			byte m_bDHTSensorType;
 			
 		public:
+			enum DHT_SENSOR { DHT11, DHT21, DHT22, DHT33, DHT44 };
 			//constructor
-			PS_TemperatureHumidity(const String &name, unsigned int interval, int offset, byte digitalInputPin);
+			PS_TemperatureHumidity(const String &name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType);
 			
 			//destructor
 			virtual ~PS_TemperatureHumidity();
