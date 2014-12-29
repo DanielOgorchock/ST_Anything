@@ -11,12 +11,14 @@ namespace st
 			bool m_bCurrentState; //HIGH or LOW
 			byte m_nPin;
 		
+			void writeStateToPin();
+		
 		public:
 			//constructor
 			EX_Switch(const String &name, byte pin, bool startingState);
 			
 			//destructor
-			virtual void ~EX_Switch();
+			virtual ~EX_Switch();
 			
 			virtual const String& beSmart(const String &str);
 			
@@ -27,7 +29,7 @@ namespace st
 			//sets
 			virtual void setPin(byte pin);
 		
-	}
+	};
 }
 
 #endif

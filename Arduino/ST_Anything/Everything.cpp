@@ -270,7 +270,7 @@ namespace st
 		Device *p=Everything::getDeviceByName(message.substring(0, message.indexOf(' ')));
 		if(p!=0)
 		{
-			sendSmartString(p->beSmart(message));
+			Everything::sendSmartString(p->beSmart(message));
 		}
 	}
 	

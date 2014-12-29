@@ -13,9 +13,9 @@ namespace st
 
 //public
 	//constructor
-	EX_Switch::EX_Switch(const String &name, byte pin, bool statingState):
+	EX_Switch::EX_Switch(const String &name, byte pin, bool startingState):
 		Executor(name),
-		m_bState=startingState
+		m_bCurrentState(startingState)
 	{
 		setPin(pin);
 	}
@@ -29,12 +29,12 @@ namespace st
 	
 	const String& EX_Switch::beSmart(const String &str)
 	{
-		str=str.substring(str.indexof(' ')+1);
-		if(str=="on")
+		String s=str.substring(str.indexOf(' ')+1);
+		if(s=="on")
 		{
 			m_bCurrentState=HIGH;
 		}
-		else if(str=="off")
+		else if(s=="off")
 		{
 			m_bCurrentState==LOW;
 		}
