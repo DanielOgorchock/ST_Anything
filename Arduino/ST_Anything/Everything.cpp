@@ -152,7 +152,7 @@ namespace st
 			readSerial();
 		#endif
 		
-		if(debug && millis()%5000==0 && millis()!=lastmillis)
+		if(debug && millis()%30000==0 && millis()!=lastmillis)
 		{
 			lastmillis = millis();
 			Serial.print(F("Loop: Free Ram = "));  

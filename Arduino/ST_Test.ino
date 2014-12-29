@@ -13,11 +13,18 @@
 #include <IS_Motion.h>
 #include <Sensor.h>
 
+#define PIN_ILLUMINANCE          A5
+#define PIN_TEMPERATUREHUMIDITY  5
+#define PIN_WATER                A4
+#define PIN_MOTION               4
+
+long lastmillis=0;
+
 //Declare each sensor
-st::PS_Illuminance sensor1("illuminance", 30000, -30000, A5);
-//st::PS_TemperatureHumidity sensor2("temphumid", 30000, -20000, 5);
-st::PS_Water sensor3("water", 30000, -10000, A4);
-//st::IS_Motion sensor4("motion", 4, HIGH);
+st::PS_Illuminance sensor1("illuminance", 60000, 1000, PIN_ILLUMINANCE);
+st::PS_TemperatureHumidity sensor2("temphumid", 60000, 2000, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
+st::PS_Water sensor3("water", 60000, 3000, PIN_WATER);
+st::IS_Motion sensor4("motion", PIN_MOTION, HIGH);
 
 //test sketch
 void setup()
@@ -26,14 +33,14 @@ void setup()
   st::Device::debug=true;
   st::PollingSensor::debug=true;
   st::InterruptSensor::debug=true;
-  
-  st::Everything::init(); //serial initialized internally
+ 
+  st::Everything::init();
   
   //Add each sensor to the "Everything Class"
   st::Everything::addSensor(&sensor1);
-  //st::Everything::addSensor(&sensor2);
+  st::Everything::addSensor(&sensor2);
   st::Everything::addSensor(&sensor3);
-  //st::Everything::addSensor(&sensor4); 
+  st::Everything::addSensor(&sensor4); 
 
   st::Everything::initDevices();
 }
