@@ -269,7 +269,9 @@ namespace st
 		
 		Device *p=Everything::getDeviceByName(message.substring(0, message.indexOf(' ')));
 		if(p!=0)
-			p->beSmart(message);
+		{
+			sendSmartString(p->beSmart(message));
+		}
 	}
 	
 	
