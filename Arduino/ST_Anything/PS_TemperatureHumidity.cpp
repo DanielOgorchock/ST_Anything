@@ -26,6 +26,26 @@ namespace st
 		
 	}
 
+	const String& PS_TemperatureHumidity::beSmart(const String &str)
+	{
+		String s = str.substring(str.indexOf(' ') + 1);
+
+		if (s.toInt() != 0) {
+			st::PollingSensor::setInterval(s.toInt() * 1000);
+			if (st::PollingSensor::debug) {
+				Serial.print(F("PS_TemperatureHumidity::beSmart set polling interval to "));
+				Serial.println(s.toInt() * 1000);
+			}
+		}
+		else {
+			Serial.print(F("PS_TemperatureHumidity::beSmart cannot convert "));
+			Serial.print(s);
+			Serial.println(F(" to an Integer."));
+		}
+
+		return Constants::IGNORE_STRING;
+	}
+
 	const String& PS_TemperatureHumidity::init()
 	{
 		delay(1000);		//Needed to prevent "Unknown Error" on first read of DHT Sensor

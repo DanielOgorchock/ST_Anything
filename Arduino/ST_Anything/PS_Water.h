@@ -18,7 +18,8 @@ namespace st
 			//destructor
 			virtual ~PS_Water();
 			
-			//virtual const String& init();
+			virtual const String& beSmart(const String &str);
+
 			virtual const String& getData();
 			
 			//gets

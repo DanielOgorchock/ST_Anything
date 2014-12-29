@@ -22,6 +22,8 @@ namespace st
 			
 			//destructor
 			virtual ~PS_TemperatureHumidity();
+
+			virtual const String& beSmart(const String &str);
 			
 			virtual const String& init();
 			virtual const String& getData();

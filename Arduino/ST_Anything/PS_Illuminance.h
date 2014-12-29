@@ -19,7 +19,8 @@ namespace st
 			//destructor
 			virtual ~PS_Illuminance();
 			
-			//virtual const String& init();
+			virtual const String& beSmart(const String &str);
+
 			virtual const String& getData();
 			
 			//gets
