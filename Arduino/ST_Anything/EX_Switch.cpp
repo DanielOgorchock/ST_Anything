@@ -31,6 +31,7 @@ namespace st
 	const String& EX_Switch::beSmart(const String &str)
 	{
 		String s=str.substring(str.indexOf(' ')+1);
+
 		if(s=="on")
 		{
 			m_bCurrentState=HIGH;

@@ -18,9 +18,7 @@
 #define PIN_TEMPERATUREHUMIDITY  5
 #define PIN_WATER                A4
 #define PIN_MOTION               4
-#define PIN_SWITCH               6
-
-long lastmillis=0;
+#define PIN_SWITCH               7
 
 //Declare each sensor
 st::PS_Illuminance sensor1("illuminance", 60000, 1000, PIN_ILLUMINANCE);

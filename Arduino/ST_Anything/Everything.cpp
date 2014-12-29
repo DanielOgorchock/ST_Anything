@@ -63,7 +63,7 @@ namespace st
 			{
 				char c=Serial.read();
 				message+=c;
-				delay(1);
+				delay(10);
 			}
 			if(message.length()>0)
 			{
@@ -261,6 +261,7 @@ namespace st
 	//friends!
 	void receiveSmartString(String message)
 	{
+		message.trim();
 		if(Everything::debug)
 		{
 			Serial.print(F("Received: "));
