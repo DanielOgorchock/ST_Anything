@@ -29,6 +29,7 @@ namespace st
 			
 			
 			virtual void offset(long os) {m_nOffset=os;} //offset the delta time from its current value
+			virtual void setInterval(long interval) {m_nInterval=interval;}
 	
 			static bool debug;
 	

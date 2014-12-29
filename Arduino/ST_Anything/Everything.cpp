@@ -1,6 +1,8 @@
 #include "Everything.h"
 
 
+int freeRam(); //function prototype
+
 namespace st
 {
 	SmartThingsCallout_t receiveSmartString; //function prototype
@@ -8,39 +10,41 @@ namespace st
 //private
 	void Everything::updateNetworkState()
 	{
-		SmartThingsNetworkState_t tempState = SmartThing.shieldGetLastNetworkState();
-		if (tempState != stNetworkState)
-		{
-			switch (tempState)
+		#ifndef DISABLE_SMARTTHINGS
+			SmartThingsNetworkState_t tempState = SmartThing.shieldGetLastNetworkState();
+			if (tempState != stNetworkState)
 			{
-			  case STATE_NO_NETWORK:
-				if (debug) Serial.println(F("NO_NETWORK"));
-				SmartThing.shieldSetLED(2, 0, 0); // red
-				break;
-			  case STATE_JOINING:
-				if (debug) Serial.println(F("JOINING"));
-				SmartThing.shieldSetLED(2, 0, 0); // red
-				break;
-			  case STATE_JOINED:
-				if (debug) Serial.println(F("JOINED"));
-				SmartThing.shieldSetLED(0, 0, 0); // off
-				break;
-			  case STATE_JOINED_NOPARENT:
-				if (debug) Serial.println(F("JOINED_NOPARENT"));
-				SmartThing.shieldSetLED(2, 0, 2); // purple
-				break;
-			  case STATE_LEAVING:
-				if (debug) Serial.println(F("LEAVING"));
-				SmartThing.shieldSetLED(2, 0, 0); // red
-				break;
-			  default:
-			  case STATE_UNKNOWN:
-				if (debug) Serial.println(F("UNKNOWN"));
-				SmartThing.shieldSetLED(0, 2, 0); // green
-				break;
+				switch (tempState)
+				{
+				  case STATE_NO_NETWORK:
+					if (debug) Serial.println(F("NO_NETWORK"));
+					SmartThing.shieldSetLED(2, 0, 0); // red
+					break;
+				  case STATE_JOINING:
+					if (debug) Serial.println(F("JOINING"));
+					SmartThing.shieldSetLED(2, 0, 0); // red
+					break;
+				  case STATE_JOINED:
+					if (debug) Serial.println(F("JOINED"));
+					SmartThing.shieldSetLED(0, 0, 0); // off
+					break;
+				  case STATE_JOINED_NOPARENT:
+					if (debug) Serial.println(F("JOINED_NOPARENT"));
+					SmartThing.shieldSetLED(2, 0, 2); // purple
+					break;
+				  case STATE_LEAVING:
+					if (debug) Serial.println(F("LEAVING"));
+					SmartThing.shieldSetLED(2, 0, 0); // red
+					break;
+				  default:
+				  case STATE_UNKNOWN:
+					if (debug) Serial.println(F("UNKNOWN"));
+					SmartThing.shieldSetLED(0, 2, 0); // green
+					break;
+				}
+				stNetworkState = tempState; 
 			}
-			stNetworkState = tempState; 
-		}
+		#endif
 	}
 
 	void Everything::updateSensors()
@@ -51,28 +55,72 @@ namespace st
 		}
 	}
 	
+	#if defined(ENABLE_SERIAL)
+		void Everything::readSerial()
+		{
+			String message;
+			while(Serial.available()>0)
+			{
+				char c=Serial.read();
+				message+=c;
+				delay(1);
+			}
+			if(message.length()>0)
+			{
+				receiveSmartString(message);
+			}
+		}
+	#endif
+	
 	
 	
 //public
-	void Everything::initSmartThings()
+	void Everything::init()
 	{
-		if(Constants::WAIT_FOR_JOIN_AT_START)
+		Serial.begin(Constants::SERIAL_BAUDRATE);
+		Return_String.reserve(st::Constants::RETURN_STRING_RESERVE);
+		
+		if(debug)
 		{
-			while(stNetworkState!=STATE_JOINED)
+			Serial.println(F("init started"));
+			Serial.print(F("Free RAM = "));
+			Serial.println(freeRam());
+		}
+		
+		#ifndef DISABLE_SMARTTHINGS
+			if(Constants::WAIT_FOR_JOIN_AT_START)
+			{
+				while(stNetworkState!=STATE_JOINED)
+				{
+					updateNetworkState();
+					SmartThing.run();
+				}
+			}
+			else
 			{
 				updateNetworkState();
 				SmartThing.run();
 			}
-		}
-		else
+		#endif
+		
+		
+		if(debug)
 		{
-			updateNetworkState();
-			SmartThing.run();
+			Serial.println(F("init ended"));
+			Serial.print(F("Free RAM = "));
+			Serial.println(freeRam());
 		}
 	}
 	
 	void Everything::initDevices()
 	{
+		if(debug)
+		{
+			Serial.println(F("init devices started"));
+			Serial.print(F("Free RAM = "));
+			Serial.println(freeRam());
+		}
+		
 		for(unsigned int index=0; index<m_nSensorCount; ++index)
 		{
 			sendSmartString(m_Sensors[index]->init());
@@ -82,13 +130,34 @@ namespace st
 		{
 			sendSmartString(m_Executors[index]->init());
 		}
+		
+		if(debug)
+		{
+			Serial.println(F("init devices ended"));
+			Serial.print(F("Free RAM = "));
+			Serial.println(freeRam());
+		}
 	}
 	
 	void Everything::run()
 	{
 		updateSensors();
-		SmartThing.run();
-		updateNetworkState();
+		
+		#ifndef DISABLE_SMARTTHINGS
+			SmartThing.run();
+			updateNetworkState();
+		#endif
+		
+		#if defined(ENABLE_SERIAL)
+			readSerial();
+		#endif
+		
+		if(debug && millis()%5000==0 && millis()!=lastmillis)
+		{
+			lastmillis = millis();
+			Serial.print(F("Loop: Free Ram = "));  
+			Serial.println(freeRam());
+		}
 	}
 	
 	void Everything::sendSmartString(const String &str)
@@ -98,33 +167,36 @@ namespace st
 			return;
 		}
 		
-		if (str.indexOf('|') == -1) 
+		if(debug)
 		{
-			if (debug)
-			{
-				Serial.print(F("Sending: "));
-				Serial.println(str);
-			}
-			SmartThing.send(str);
-		}
-		else
-		{
-			if (debug)
-			{
-				Serial.print(F("Sending: "));
-				Serial.println(str.substring(0, str.indexOf('|')));
-			}
-			SmartThing.send(str.substring(0, str.indexOf('|')));	//Send first half to ST Cloud
-
-			if (debug)
-			{
-				Serial.print(F("Sending: "));
-				Serial.println(str.substring(str.indexOf('|') + 1));
-			}
-			SmartThing.send(str.substring(str.indexOf('|') + 1));	//Send second half to ST Cloud
-
+			Serial.print(F("Sending: "));
+			Serial.println(str);
 		}
 		
+		if(str.indexOf('|') == -1)
+		{
+			#ifndef DISABLE_SMARTTHINGS
+				SmartThing.send(str);
+			#endif
+			
+			#if defined(ENABLE_SERIAL)
+				Serial.println(str);
+			#endif
+		}
+		
+		else
+		{
+			byte index=str.indexOf('|');
+			#ifndef DISABLE_SMARTTHINGS
+				SmartThing.send(str.substring(0, index));
+			#endif
+			
+			#if defined(ENABLE_SERIAL)
+				Serial.println(str.substring(0, index));
+			#endif
+			
+			sendSmartString(str.substring(index+1));
+		}
 	}
 	
 	Device* Everything::getDeviceByName(const String &str)
@@ -155,6 +227,14 @@ namespace st
 			m_Sensors[m_nSensorCount]=sensor;
 			++m_nSensorCount;
 		}
+		
+		if(debug)
+		{
+			Serial.print(F("adding sensor named "));
+			Serial.println(sensor->getName());
+			Serial.print(F("Free RAM = "));
+			Serial.println(freeRam());
+		}
 	}
 	
 	bool Everything::addExecutor(Executor *executor)
@@ -168,6 +248,14 @@ namespace st
 			m_Executors[m_nExecutorCount]=executor;
 			++m_nExecutorCount;
 		}
+		
+		if(debug)
+		{
+			Serial.print(F("adding executor named "));
+			Serial.println(executor->getName());
+			Serial.print(F("Free RAM = "));
+			Serial.println(freeRam());
+		}
 	}
 	
 	//friends!
@@ -178,17 +266,34 @@ namespace st
 			Serial.print(F("Received: "));
 			Serial.println(message);
 		}
+		
+		Device *p=Everything::getDeviceByName(message.substring(0, message.indexOf(' ')));
+		if(p!=0)
+			p->beSmart(message);
 	}
 	
 	
 	//initialize static members
 	String Everything::Return_String;
-	SmartThings Everything::SmartThing((Constants::THING_SHIELD_PINS==Constants::PINS_0_1?1:3), (Constants::THING_SHIELD_PINS==Constants::PINS_0_1?0:2), receiveSmartString);
 	Sensor* Everything::m_Sensors[Constants::MAX_SENSOR_COUNT];
 	Executor* Everything::m_Executors[Constants::MAX_EXECUTOR_COUNT];
 	unsigned int Everything::m_nSensorCount=0;
 	unsigned int Everything::m_nExecutorCount=0;
-	SmartThingsNetworkState_t Everything::stNetworkState=(SmartThingsNetworkState_t)99; //bogus value
+	unsigned long Everything::lastmillis=0;
 	bool Everything::debug=false;
 	
+	//SmartThings static members
+	#ifndef DISABLE_SMARTTHINGS
+		SmartThings Everything::SmartThing((Constants::THING_SHIELD_PINS==Constants::PINS_0_1?1:3), (Constants::THING_SHIELD_PINS==Constants::PINS_0_1?0:2), receiveSmartString);
+		SmartThingsNetworkState_t Everything::stNetworkState=(SmartThingsNetworkState_t)99; //bogus value
+	#endif
 }
+
+int freeRam()
+{
+	extern int __heap_start, *__brkval; 
+	int v; 
+	return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+}
+	
+	

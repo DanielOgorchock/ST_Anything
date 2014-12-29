@@ -3,6 +3,9 @@
 
 #include "Arduino.h"
 
+#define ENABLE_SERIAL
+//#define DISABLE_SMARTTHINGS
+
 namespace st
 {
 	class Constants
@@ -10,12 +13,13 @@ namespace st
 		public:
 			enum PINS_CHOICE {PINS_0_1, PINS_2_3};
 			
+			static const unsigned int SERIAL_BAUDRATE=9600;
 			static const byte MAX_SENSOR_COUNT=10;
 			static const byte MAX_EXECUTOR_COUNT=10;
 			static const String IGNORE_STRING; //definition in Constants.cpp 
 			static const byte RETURN_STRING_RESERVE=50;
 			static const Constants::PINS_CHOICE THING_SHIELD_PINS=PINS_2_3; //can change to PINS_0_1
-			static const bool WAIT_FOR_JOIN_AT_START=true; //if true, the sketch will stall until the shield has joined the hub
+			static const bool WAIT_FOR_JOIN_AT_START=false; //if true, the sketch will stall until the shield has joined the hub
 	};
 }
 

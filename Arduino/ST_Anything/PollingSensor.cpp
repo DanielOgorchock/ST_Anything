@@ -57,7 +57,7 @@ namespace st
 
 	const String& PollingSensor::init()
 	{
-		return Constants::IGNORE_STRING;
+		return getData();
 	}
 	
 	const String& PollingSensor::update()
