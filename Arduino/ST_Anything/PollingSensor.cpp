@@ -11,7 +11,7 @@ namespace st
 		//check for time overflow
 		if(millis()<m_nPreviousTime)
 		{
-			Serial.println("Overflow");
+			Serial.println(F("Overflow"));
 			m_nPreviousTime=0;
 		}
 		
@@ -75,7 +75,7 @@ namespace st
 		if(debug)
 		{
 			Everything::Return_String.remove(0);
-			Everything::Return_String+="DEBUG: \""+getName() + "\" triggered";
+			Everything::Return_String+=getName() + F(" triggered");
 			return Everything::Return_String;
 		}
 		else

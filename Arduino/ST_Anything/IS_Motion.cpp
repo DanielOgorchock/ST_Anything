@@ -21,10 +21,14 @@ namespace st
 	
 	const String& IS_Motion::init()
 	{
-		Serial.println(F("Motion Sensor Calibration Started..."));
+		if (debug){
+			Serial.println(F("Motion Sensor Calibration Started..."));
+		}
 		digitalWrite(getInterruptPin(), LOW); 
 		delay(30000);
-		Serial.println(F("Motion Sensor Calibration Finished"));
+		if (debug){
+			Serial.println(F("Motion Sensor Calibration Finished"));
+		}
 
 		return InterruptSensor::init();
 	}
@@ -32,14 +36,14 @@ namespace st
 	const String& IS_Motion::runInterrupt()
 	{
 		Everything::Return_String.remove(0);
-		Everything::Return_String += getName() + " active";
+		Everything::Return_String += getName() + F(" active");
 		return Everything::Return_String;
 	}
 	
 	const String& IS_Motion::runInterruptEnded()
 	{
 		Everything::Return_String.remove(0);
-		Everything::Return_String += getName() + " inactive";
+		Everything::Return_String += getName() + F(" inactive");
 		return Everything::Return_String;
 	}
 

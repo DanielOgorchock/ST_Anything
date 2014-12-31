@@ -1,0 +1,32 @@
+ --------------------------------------------------------------------------------------------------
+| Setup Instructions                                                                               |
+ --------------------------------------------------------------------------------------------------
+1) Copy the entire SmartThings directory into the 'libraries' directory in your sketchbook location.
+    Windows: 'My Documents\Arduino\libraries\SmartThings'
+    OSX: '~/Documents/Arduino/libraries/SmartThings'
+
+ --------------------------------------------------------------------------------------------------
+| Notes                                                                                            |
+ --------------------------------------------------------------------------------------------------
+
+
+ --------------------------------------------------------------------------------------------------
+| ChangeLog:                                                                                       |
+ --------------------------------------------------------------------------------------------------
+02/11/2012 (v0.0.5)      db + shieldGetLastNetworkStatus to public Class
+                            + example/stLEDwithNetworkStatus
+                            ~ renamed SmartThingsLED to stLED
+                            + ascii diagram for each example documenting pins & usage
+02/08/2012 (v0.0.4)      db + Add docs/Doxygen
+                            + Begin Framework for working on Leonardo (incomplete)
+                            ~ Minor format cleanup
+02/08/2012 (v0.0.3)      db ! Fixed regression in last commit with rgb 
+02/07/2012 (v0.0.2)      db ! Fixed typo in send functions
+                            ! Changed write to print for maximal compatibility with serial code
+                         dm ! Point Library to Absolute Path, Add documentation
+02/06/2012 (v0.0.1)      db ! Lowered Baud to 2400 due to softwareSerial rxBuffer size issue
+                            + Add shield Commands(SetLED, Leave, Find, NetworkStatus)
+                            + Updated Example to also SetLED with on/off control
+                            + Add Doxygen comments & Version to Lib 
+02/04/2012 (unversioned) db + Initial Commit (currently depends on SoftwareSerial)
+

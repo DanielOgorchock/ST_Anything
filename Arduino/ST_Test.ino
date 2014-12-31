@@ -1,4 +1,4 @@
-#include <SoftwareSerial.h>
+#include <SoftwareSerial.h>  //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Librarysa
 #include <SmartThings.h>
 #include <Constants.h>
 #include <Device.h>
@@ -21,20 +21,28 @@
 #define PIN_SWITCH               7
 
 //Declare each sensor
-st::PS_Illuminance sensor1("illuminance", 60000, 1000, PIN_ILLUMINANCE);
-st::PS_TemperatureHumidity sensor2("temphumid", 60000, 2000, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
-st::PS_Water sensor3("water", 60000, 3000, PIN_WATER);
+st::PS_Illuminance sensor1("illuminance", 15000, 0, PIN_ILLUMINANCE);
+st::PS_TemperatureHumidity sensor2("temphumid", 15000, 3000, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
+st::PS_Water sensor3("water", 15000, 6000, PIN_WATER);
 st::IS_Motion sensor4("motion", PIN_MOTION, HIGH);
+
 st::EX_Switch executor1("switch", PIN_SWITCH, LOW);
 
 //test sketch
 void setup()
 {
   st::Everything::debug=true;
+  st::Executor::debug=true;
   st::Device::debug=true;
   st::PollingSensor::debug=true;
   st::InterruptSensor::debug=true;
- 
+// 
+//  st::Everything::debug=false;
+//  st::Executor::debug=false;
+//  st::Device::debug=false;
+//  st::PollingSensor::debug=false;
+//  st::InterruptSensor::debug=false;
+  
   st::Everything::init();
   
   //Add each sensor to the "Everything Class"

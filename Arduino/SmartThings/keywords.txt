@@ -1,0 +1,10 @@
+#######################################
+# Data Types
+#######################################
+SmartThingsCallout_t KEYWORD1 
+
+#######################################
+# Public Methods / Functions 
+#######################################
+update      KEYWORD2
+send        KEYWORD2

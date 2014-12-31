@@ -1,5 +1,5 @@
+#include <arduino.h>
 #include "Everything.h"
-
 
 int freeRam(); //function prototype
 
@@ -284,11 +284,28 @@ namespace st
 	unsigned int Everything::m_nExecutorCount=0;
 	unsigned long Everything::lastmillis=0;
 	bool Everything::debug=false;
-	
+
+	//Select whether to use Hardware or Software Serial Communications
+	#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__)  //use Software Serial for UNO or LEONARDO
+	#define ST_SOFTWARE_SERIAL
+	//#define ST_HARDWARE_SERIAL
+	#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)	//use Hardware Serial for MEGA
+	#define ST_HARDWARE_SERIAL
+	#else
+	#define ST_SOFTWARE_SERIAL
+	#endif
+
 	//SmartThings static members
 	#ifndef DISABLE_SMARTTHINGS
-		SmartThings Everything::SmartThing((Constants::THING_SHIELD_PINS==Constants::PINS_0_1?1:3), (Constants::THING_SHIELD_PINS==Constants::PINS_0_1?0:2), receiveSmartString);
+
+		#if defined(ST_SOFTWARE_SERIAL)  //use Software Serial
+			SmartThings Everything::SmartThing(Constants::pinRX, Constants::pinTX, receiveSmartString);
+		#elif defined(ST_HARDWARE_SERIAL) //use Hardware Serial
+			SmartThings Everything::SmartThing(Constants::SERIAL_TYPE, receiveSmartString);
+		#endif
+
 		SmartThingsNetworkState_t Everything::stNetworkState=(SmartThingsNetworkState_t)99; //bogus value
+
 	#endif
 }
 

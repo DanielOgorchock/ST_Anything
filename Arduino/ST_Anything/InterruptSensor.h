@@ -14,6 +14,8 @@ namespace st
 			bool m_bPullup;
 			bool m_bInitRequired;
 
+			//unsigned long m_lnglastmillis;
+
 			const String& checkIfTriggered(); //returns true if new interrupt is triggered
 			
 		public:

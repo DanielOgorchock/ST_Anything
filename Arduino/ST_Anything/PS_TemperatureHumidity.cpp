@@ -38,9 +38,12 @@ namespace st
 			}
 		}
 		else {
-			Serial.print(F("PS_TemperatureHumidity::beSmart cannot convert "));
-			Serial.print(s);
-			Serial.println(F(" to an Integer."));
+			if (st::PollingSensor::debug) 
+			{
+				Serial.print(F("PS_TemperatureHumidity::beSmart cannot convert "));
+				Serial.print(s);
+				Serial.println(F(" to an Integer."));
+			}
 		}
 
 		return Constants::IGNORE_STRING;
@@ -106,7 +109,7 @@ namespace st
 		//Serial.println();
 		
 		Everything::Return_String.remove(0);
-		Everything::Return_String += "temperature " + String(m_nTemperatureSensorValue) + "|humidity " + String(m_nHumiditySensorValue);
+		Everything::Return_String += "temperature " + String(m_nTemperatureSensorValue) + F("|humidity ") + String(m_nHumiditySensorValue);
 		return Everything::Return_String;
 	}
 	

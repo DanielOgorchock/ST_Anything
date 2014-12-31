@@ -39,9 +39,12 @@ namespace st
 			}
 		}
 		else {
-			Serial.print(F("PS_Illuminance::beSmart cannot convert "));
-			Serial.print(s);
-			Serial.println(F(" to an Integer."));
+			if (st::PollingSensor::debug)
+			{
+				Serial.print(F("PS_Illuminance::beSmart cannot convert "));
+				Serial.print(s);
+				Serial.println(F(" to an Integer."));
+			}
 		}
 
 		return Constants::IGNORE_STRING;
@@ -51,15 +54,9 @@ namespace st
 	{
 		int m_nSensorValue=map(analogRead(m_nAnalogInputPin), SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH);
 		
-		
-		
-		//Everything::Return_String="DEBUG: \""+String(getId())+"\" "+String(m_nSensorValue);
-		
-		
 		Everything::Return_String.remove(0);
-		Everything::Return_String+=getName()+" "+String(m_nSensorValue);
+		Everything::Return_String+=getName() + " " + String(m_nSensorValue);
 		return Everything::Return_String;
-		
 	}
 	
 	void PS_Illuminance::setPin(byte pin)

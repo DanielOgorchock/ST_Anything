@@ -35,9 +35,12 @@ namespace st
 			}
 		}
 		else {
-			Serial.print(F("PS_Water::beSmart cannot convert "));
-			Serial.print(s);
-			Serial.println(F(" to an Integer."));
+			if (st::PollingSensor::debug)
+			{
+				Serial.print(F("PS_Water::beSmart cannot convert "));
+				Serial.print(s);
+				Serial.println(F(" to an Integer."));
+			}
 		}
 		
 		return Constants::IGNORE_STRING;
@@ -48,7 +51,7 @@ namespace st
 		int m_nSensorValue = analogRead(m_nAnalogInputPin);
 		
 		Everything::Return_String.remove(0);
-		Everything::Return_String+=getName() + " " + (m_nSensorValue<100?"dry":"wet");
+		Everything::Return_String+=getName() + (m_nSensorValue<100?F(" dry"):F(" wet"));
 		return Everything::Return_String;
 		
 	}

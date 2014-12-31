@@ -19,7 +19,9 @@ namespace st
 			
 			//destructor
 			virtual ~EX_Switch();
-			
+
+			virtual const String& init();
+
 			virtual const String& beSmart(const String &str);
 			
 			

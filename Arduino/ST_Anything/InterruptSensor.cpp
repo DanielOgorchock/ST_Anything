@@ -8,22 +8,31 @@ namespace st
 //private
 	const String& InterruptSensor::checkIfTriggered()
 	{
-		if(digitalRead(m_nInterruptPin)==m_bInterruptState && !m_bStatus) //new interrupt
-		{
-			m_bStatus=true;
-			m_bInitRequired = false;
-			return runInterrupt();
-		}
-		else if ((digitalRead(m_nInterruptPin) != m_bInterruptState && m_bStatus) || m_bInitRequired) //interrupt has ended OR Init called us
-		{
-			m_bStatus=false;
-			m_bInitRequired = false;
-			return runInterruptEnded();
-		}
-		else //still in the middle of an interrupt or interrupt hasn't triggered
-		{
-			return Constants::IGNORE_STRING;
-		}
+		//if ((millis() % 10 == 0) && (millis() != m_lnglastmillis))
+		//{
+		//	m_lnglastmillis = millis();
+
+			if (digitalRead(m_nInterruptPin) == m_bInterruptState && !m_bStatus) //new interrupt
+			{
+				m_bStatus = true;
+				m_bInitRequired = false;
+				return runInterrupt();
+			}
+			else if ((digitalRead(m_nInterruptPin) != m_bInterruptState && m_bStatus) || m_bInitRequired) //interrupt has ended OR Init called us
+			{
+				m_bStatus = false;
+				m_bInitRequired = false;
+				return runInterruptEnded();
+			}
+			else //still in the middle of an interrupt or interrupt hasn't triggered
+			{
+				return Constants::IGNORE_STRING;
+			}
+		//}
+		//else //not time to check the digital input pin
+		//{
+		//	return Constants::IGNORE_STRING;
+		//}
 	}
 
 
@@ -35,7 +44,8 @@ namespace st
 		m_bInterruptState(iState),
 		m_bStatus(false),
 		m_bPullup(pullup),
-		m_bInitRequired(true)
+		m_bInitRequired(true)//,
+		//m_lnglastmillis(0)
 		{
 			setInterruptPin(pin);
 		}
