@@ -46,7 +46,7 @@ void SmartThings::debugPrintBuffer(String prefix, uint8_t * pBuf, uint_fast8_t n
 bool SmartThings::isRxLine(uint8_t * pLine)
 {
 	// line starts with "T00000000:RX"
-	int validRxLineLength = 12; // TODO: What is a real value for this length?
+	//int validRxLineLength = 12; // TODO: What is a real value for this length?
 
 	//  return line.length > validRxLineLength && line[0] == 'T' && line[9] = ':' && line[10] == 'R' && line[11] == 'X';
 	return ((pLine[0] == 'T') && (pLine[9] == ':') && (pLine[10] == 'R') && (pLine[11] == 'X'));
@@ -289,10 +289,10 @@ SmartThings::SmartThings(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *cal
 	_SerialPort(SW_SERIAL),
 	_calloutFunction(callout),
 	_isDebugEnabled(enableDebug),
-	_nBufRX(0),
 	_lastPingMS(0xFFFFFF00),
 	_lastShieldMS(0xFFFFFF00),
-	_networkState(STATE_UNKNOWN)
+	_networkState(STATE_UNKNOWN),
+	_nBufRX(0)
 {
 	//uint_fast8_t i;
 	uint_fast8_t i = shieldType.length();
@@ -316,10 +316,10 @@ SmartThings::SmartThings(SmartThingsSerialType_t hwSerialPort, SmartThingsCallou
 	_SerialPort(hwSerialPort),
 	_calloutFunction(callout),
 	_isDebugEnabled(hwSerialPort != HW_SERIAL ? enableDebug : false),	//Do not allow debug print statements if using Hardware Serial (pins 0,1) for ST Communications
-	_nBufRX(0),
 	_lastPingMS(0xFFFFFF00),
 	_lastShieldMS(0xFFFFFF00),
-	_networkState(STATE_UNKNOWN)
+	_networkState(STATE_UNKNOWN),
+	_nBufRX(0)
 {
 	//uint_fast8_t i;
 	uint_fast8_t i = shieldType.length();
@@ -536,6 +536,8 @@ int SmartThings::st_available()
 		return Serial3.available();
 		break;
 #endif
+	default:
+		return 0;
 	}
 }
 //*****************************************************************************
@@ -560,6 +562,8 @@ int SmartThings::st_read()
 		return Serial3.read();
 		break;
 #endif
+	default:
+		return 0;
 	}
 }
 //*****************************************************************************
@@ -584,6 +588,8 @@ long SmartThings::st_print(String str)
 		return Serial3.print(str);
 		break;
 #endif
+	default:
+		return 0;
 	}
 }
 
@@ -609,6 +615,9 @@ long SmartThings::st_print(char c)
 		return Serial3.print(c);
 		break;
 #endif
+	default:
+		return 0;
+
 	}
 }
 
@@ -634,6 +643,8 @@ long SmartThings::st_print(char c, int i)
 		return Serial3.print(c, i);
 		break;
 #endif
+	default:
+		return 0;
 	}
 }
 
@@ -659,6 +670,8 @@ byte SmartThings::st_write(uint8_t i)
 		return Serial3.write(i);
 		break;
 #endif
+	default:
+		return 0;
 	}
 }
 

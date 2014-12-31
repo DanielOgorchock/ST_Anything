@@ -37,7 +37,7 @@
 
 //#define DISABLE_SOFTWARESERIAL  // uncomment to disable SoftwareSerial to save space if using HW Serial
 
-//#include <inttypes.h>
+#include <inttypes.h>
 #include <Arduino.h>
 #ifndef DISABLE_SOFTWARESERIAL
 #include <SoftwareSerial.h>

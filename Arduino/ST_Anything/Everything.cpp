@@ -235,6 +235,7 @@ namespace st
 			Serial.print(F("Free RAM = "));
 			Serial.println(freeRam());
 		}
+		return true;
 	}
 	
 	bool Everything::addExecutor(Executor *executor)
@@ -256,6 +257,7 @@ namespace st
 			Serial.print(F("Free RAM = "));
 			Serial.println(freeRam());
 		}
+		return true;
 	}
 	
 	//friends!

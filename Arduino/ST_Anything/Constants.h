@@ -53,10 +53,10 @@ namespace st
 			static const uint8_t pinTX = 2;		//Tx Pin2 - works for UNO R3, Leonardo, and Mega
 
 			//--- if using HardwareSerial - set the following based on the pins you desire (HW_SERIAL, Mega Only(HW_SERIAL1, HW_SERIAL2, HW_SERIAL3)) - you must use the HardwareSerial SmartThings Constructor					
-			static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL; //Uno, (Leonardo?), Mega - You MUST move ThingShield switch to D0/D1 position after loading program and then reset the Arduino
+			//static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL; //Uno, (Leonardo?), Mega - You MUST move ThingShield switch to D0/D1 position after loading program and then reset the Arduino
 			//static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL1; //Mega - You MUST jumper Pin18 to Pin2 AND Pin19 to Pin3 - do not use Pin2 or Pin3 in your sketch!!!
 			//static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL2; //Mega - You MUST jumper Pin16 to Pin2 AND Pin17 to Pin3 - do not use Pin2 or Pin3 in your sketch!!!
-			//static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL3; //Mega - You MUST jumper Pin14 to Pin2 AND Pin15 to Pin3 - do not use Pin2 or Pin3 in your sketch!!!
+			static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL3; //Mega - You MUST jumper Pin14 to Pin2 AND Pin15 to Pin3 - do not use Pin2 or Pin3 in your sketch!!!
 			// -------------------------------------------------------------------------------
 	};
 }

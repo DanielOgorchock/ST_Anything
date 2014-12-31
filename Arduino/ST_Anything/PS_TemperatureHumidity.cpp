@@ -58,7 +58,7 @@ namespace st
 	const String& PS_TemperatureHumidity::getData()
 	{
 		// READ DATA
-		int chk;
+		int chk =0;
 		switch (m_bDHTSensorType) {
 			case DHT11:
 				//Serial.println(F("PS_TemperatureHumidity: DTH11 Read"));
