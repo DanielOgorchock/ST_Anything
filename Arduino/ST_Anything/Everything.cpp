@@ -277,7 +277,6 @@ namespace st
 		}
 	}
 	
-	
 	//initialize static members
 	String Everything::Return_String;
 	Sensor* Everything::m_Sensors[Constants::MAX_SENSOR_COUNT];
@@ -287,19 +286,9 @@ namespace st
 	unsigned long Everything::lastmillis=0;
 	bool Everything::debug=false;
 
-	//Select whether to use Hardware or Software Serial Communications
-	#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__)  //use Software Serial for UNO or LEONARDO
-	#define ST_SOFTWARE_SERIAL
-	//#define ST_HARDWARE_SERIAL
-	#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)	//use Hardware Serial for MEGA
-	#define ST_HARDWARE_SERIAL
-	#else
-	#define ST_SOFTWARE_SERIAL
-	#endif
-
 	//SmartThings static members
 	#ifndef DISABLE_SMARTTHINGS
-
+		// Please refer to Constants.h for settings that affect whether a board uses Software or Hardware Serial calls
 		#if defined(ST_SOFTWARE_SERIAL)  //use Software Serial
 			SmartThings Everything::SmartThing(Constants::pinRX, Constants::pinTX, receiveSmartString);
 		#elif defined(ST_HARDWARE_SERIAL) //use Hardware Serial

@@ -294,16 +294,16 @@ SmartThings::SmartThings(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *cal
 	_networkState(STATE_UNKNOWN),
 	_nBufRX(0)
 {
-	//uint_fast8_t i;
-	uint_fast8_t i = shieldType.length();
-	if (i > 32)
-		i = 32;
-	_shieldTypeLen = i;
+	//Removed for now to save SRAM space - Not sure why ST included this as it is never used in the library
+	//uint_fast8_t i = shieldType.length();
+	//if (i > 32)
+	//	i = 32;
+	//_shieldTypeLen = i;
 
-	while (i--)
-	{
-		_shieldTypeBuf[i] = (uint8_t)shieldType[i];
-	}
+	//while (i--)
+	//{
+	//	_shieldTypeBuf[i] = (uint8_t)shieldType[i];
+	//}
 
 	st_begin(2400);
 }
@@ -311,7 +311,7 @@ SmartThings::SmartThings(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *cal
 //Hardware Serial Constructor
 SmartThings::SmartThings(SmartThingsSerialType_t hwSerialPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug) :
 #ifndef DISABLE_SOFTWARESERIAL
-	_mySerial(254, 255),		//This is a hack to get past a compiler error - TODO - Fix this the correct way...
+	_mySerial(254, 255),		//Needed unless you uncomment the "#define DISABLE_SOFTWARESERIAL" to prevent compiler error (SmartThings.h)
 #endif
 	_SerialPort(hwSerialPort),
 	_calloutFunction(callout),
@@ -321,22 +321,22 @@ SmartThings::SmartThings(SmartThingsSerialType_t hwSerialPort, SmartThingsCallou
 	_networkState(STATE_UNKNOWN),
 	_nBufRX(0)
 {
-	//uint_fast8_t i;
-	uint_fast8_t i = shieldType.length();
-	if (i > 32)
-		i = 32;
-	_shieldTypeLen = i;
+	//Removed for now to save SRAM space - Not sure why ST included this as it is never used in the library
+	//uint_fast8_t i = shieldType.length();
+	//if (i > 32)
+	//	i = 32;
+	//_shieldTypeLen = i;
 
-	while (i--)
-	{
-		_shieldTypeBuf[i] = (uint8_t)shieldType[i];
-	}
+	//while (i--)
+	//{
+	//	_shieldTypeBuf[i] = (uint8_t)shieldType[i];
+	//}
 
 	st_begin(2400);
 }
 
 //*****************************************************************************
-//SmartThings::~SmartThings() : ~SoftwareSerial()
+//SmartThings::~SmartThings()
 SmartThings::~SmartThings()
 {
 }

@@ -7,6 +7,6 @@ namespace st
 
 
 //public
-	const String Constants::IGNORE_STRING="IGNORE";
+	const String Constants::IGNORE_STRING="";
 
 }

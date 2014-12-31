@@ -47,6 +47,17 @@ namespace st
 			//--- if true, the sketch will stall until the ST ThingShield has joined the ST Hub (set to false for debugging without a ST ThingShield)
 			static const bool WAIT_FOR_JOIN_AT_START = true;
 
+			//Select whether to use Hardware or Software Serial Communications
+			#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__)  //use Software Serial for UNO or LEONARDO
+				#define ST_SOFTWARE_SERIAL
+				//#define ST_HARDWARE_SERIAL
+			#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)	//use Hardware Serial for MEGA
+				//#define ST_SOFTWARE_SERIAL
+				#define ST_HARDWARE_SERIAL
+			#else
+				#define ST_SOFTWARE_SERIAL
+			#endif
+
 			//--- if using SoftwareSerial - set the following based on the pins you desire - you must use the SoftwareSerial SmartThings Constructor			
 			static const uint8_t pinRX = 3;		//Rx Pin3 - works for UNO R3, but not for Leonardo or Mega
 			//static const uint8_t pinRX = 10;	//Rx Pin10 - works for Leonardo or Mega - You MUST jumper Pin10 to Pin3 - do not use Pin3 in your sketch!!!
@@ -57,6 +68,7 @@ namespace st
 			//static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL1; //Mega - You MUST jumper Pin18 to Pin2 AND Pin19 to Pin3 - do not use Pin2 or Pin3 in your sketch!!!
 			//static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL2; //Mega - You MUST jumper Pin16 to Pin2 AND Pin17 to Pin3 - do not use Pin2 or Pin3 in your sketch!!!
 			static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL3; //Mega - You MUST jumper Pin14 to Pin2 AND Pin15 to Pin3 - do not use Pin2 or Pin3 in your sketch!!!
+
 			// -------------------------------------------------------------------------------
 	};
 }

@@ -104,6 +104,7 @@ typedef enum
 	HW_SERIAL2,
 	HW_SERIAL3
 } SmartThingsSerialType_t;
+
 //*******************************************************************************
 
 class SmartThings
@@ -122,14 +123,12 @@ private:
 	uint8_t _eui64[8];
 	uint16_t _nodeID;
 
-	uint8_t _shieldTypeBuf[SMARTTHINGS_SHIELDTYPE_SIZE];
-	uint8_t _shieldTypeLen;
+	//Removed for now to save SRAM space - Not sure why ST included this as it is never used in the library
+	//uint8_t _shieldTypeBuf[SMARTTHINGS_SHIELDTYPE_SIZE];
+	//uint8_t _shieldTypeLen;
 
 	uint8_t _pBufRX[SMARTTHINGS_RX_BUFFER_SIZE];
 	uint_fast8_t _nBufRX;
-
-	//void debugPrintString(String prefix, String s);
-	//void debugPrintBuffer(String prefix, byte* b, int len);
 
 	void _shieldGetNetworkInfo(void);
 	void _process(void);
