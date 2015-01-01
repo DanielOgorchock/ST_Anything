@@ -25,13 +25,13 @@
 //Declare each sensor
 
 //Polling Sensors
-st::PS_Illuminance sensor1("illuminance", 15000, 0, PIN_ILLUMINANCE);
-st::PS_TemperatureHumidity sensor2("temphumid", 15000, 3000, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
-st::PS_Water sensor3("water", 15000, 6000, PIN_WATER);
-st::PS_Alarm sensor4("alarm", 15000, 9000, PIN_ALARM, LOW, true);
+st::PS_Illuminance sensor1("illuminance", 60000, 0, PIN_ILLUMINANCE);
+st::PS_TemperatureHumidity sensor2("temphumid", 60000, 3000, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
+st::PS_Water sensor3("water", 60000, 6000, PIN_WATER);
+st::PS_Alarm sensor4("alarm", 60000, 9000, PIN_ALARM, LOW, true);
 
 //Interrupt Sensors 
-//st::IS_Motion sensor5("motion", PIN_MOTION, HIGH);
+st::IS_Motion sensor5("motion", PIN_MOTION, HIGH);
 
 //Executors
 st::EX_Switch executor1("switch", PIN_SWITCH, LOW, true);
@@ -58,7 +58,7 @@ void setup()
   st::Everything::addSensor(&sensor2);
   st::Everything::addSensor(&sensor3);
   st::Everything::addSensor(&sensor4); 
-  //st::Everything::addSensor(&sensor5); 
+  st::Everything::addSensor(&sensor5); 
   
   //Add each executor to the "Everything Class"
   st::Everything::addExecutor(&executor1);

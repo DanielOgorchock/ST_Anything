@@ -111,7 +111,7 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.println(F("init started"));
+			Serial.println(F("st::Everything: init started"));
 			Serial.print(F("Free RAM = "));
 			Serial.println(freeRam());
 		}
@@ -135,7 +135,7 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.println(F("init ended"));
+			Serial.println(F("st::Everything: init ended"));
 			Serial.print(F("Free RAM = "));
 			Serial.println(freeRam());
 		}
@@ -145,7 +145,7 @@ namespace st
 	{
 		if(debug)
 		{
-			Serial.println(F("init devices started"));
+			Serial.println(F("st::Everything: initDevices started"));
 			Serial.print(F("Free RAM = "));
 			Serial.println(freeRam());
 		}
@@ -164,7 +164,7 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.println(F("init devices ended"));
+			Serial.println(F("st::Everything: initDevices ended"));
 			Serial.print(F("Free RAM = "));
 			Serial.println(freeRam());
 		}
@@ -215,7 +215,7 @@ namespace st
 		
 		if(Return_String.length()+str.length()>=Constants::RETURN_STRING_RESERVE)
 		{
-			Serial.print(F("ERROR: \""));
+			Serial.print(F("st::Everything: ERROR: \""));
 			Serial.print(str);
 			Serial.println(F("\" would overflow the Return_String 'buffer'"));
 			return false;
@@ -258,7 +258,7 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.print(F("adding sensor named "));
+			Serial.print(F("st::Everything: adding sensor named "));
 			Serial.println(sensor->getName());
 			Serial.print(F("Free RAM = "));
 			Serial.println(freeRam());
