@@ -55,32 +55,24 @@ namespace st
 		
 	}
 
-	const String& PollingSensor::init()
+	void PollingSensor::init()
 	{
-		return getData();
+		getData();
 	}
 	
-	const String& PollingSensor::update()
+	void PollingSensor::update()
 	{
 		if(checkInterval())
 		{
-			return getData();
+			getData();
 		}
-		
-		return Constants::IGNORE_STRING;
 	}
 	
-	const String& PollingSensor::getData()
+	void PollingSensor::getData()
 	{
 		if(debug)
 		{
-			Everything::Return_String.remove(0);
-			Everything::Return_String+=getName() + F(" triggered");
-			return Everything::Return_String;
-		}
-		else
-		{
-			return Constants::IGNORE_STRING;
+			Everything::sendSmartString(getName() + F(" triggered"));
 		}
 	}
 	

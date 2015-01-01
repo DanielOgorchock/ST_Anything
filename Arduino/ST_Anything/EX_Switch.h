@@ -20,10 +20,11 @@ namespace st
 			//destructor
 			virtual ~EX_Switch();
 
-			virtual const String& init();
+			virtual void init();
 
-			virtual const String& beSmart(const String &str);
+			virtual void beSmart(const String &str);
 			
+			virtual void refresh();
 			
 			//gets
 			virtual byte getPin() const {return m_nPin;}

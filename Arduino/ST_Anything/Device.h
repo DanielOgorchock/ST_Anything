@@ -18,7 +18,7 @@ namespace st
 			//destructor
 			virtual ~Device();
 			
-			virtual const String& beSmart(const String &str)=0; 
+			virtual void beSmart(const String &str)=0; 
 			
 			//gets
 			inline const String& getName() const {return m_Name;}

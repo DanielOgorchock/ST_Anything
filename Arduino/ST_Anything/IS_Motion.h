@@ -18,9 +18,9 @@ namespace st
 			virtual ~IS_Motion();
 			
 			
-			virtual const String& init();
-			virtual const String& runInterrupt();
-			virtual const String& runInterruptEnded();
+			virtual void init();
+			virtual void runInterrupt();
+			virtual void runInterruptEnded();
 	
 	};
 }

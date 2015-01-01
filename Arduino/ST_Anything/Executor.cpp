@@ -25,12 +25,16 @@ st
 		
 	}
 
-	const String& Executor::init()
+	void Executor::init()
 	{
-		return Constants::IGNORE_STRING;
+		
 	}
 	
-
+	void Executor::refresh()
+	{
+	
+	}
+	
 	bool Executor::debug=false; 
 	
 }

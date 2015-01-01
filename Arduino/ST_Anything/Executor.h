@@ -20,7 +20,9 @@ namespace st
 			//destructor
 			virtual ~Executor();
 		
-			virtual const String& init();
+			virtual void init();
+			
+			virtual void refresh(); //called periodically by Everything class
 		
 			static bool debug;
 	

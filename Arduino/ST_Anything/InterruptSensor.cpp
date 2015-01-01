@@ -6,7 +6,7 @@
 namespace st
 {
 //private
-	const String& InterruptSensor::checkIfTriggered()
+	void InterruptSensor::checkIfTriggered()
 	{
 		//if ((millis() % 10 == 0) && (millis() != m_lnglastmillis))
 		//{
@@ -16,17 +16,13 @@ namespace st
 			{
 				m_bStatus = true;
 				m_bInitRequired = false;
-				return runInterrupt();
+				runInterrupt();
 			}
 			else if ((digitalRead(m_nInterruptPin) != m_bInterruptState && m_bStatus) || m_bInitRequired) //interrupt has ended OR Init called us
 			{
 				m_bStatus = false;
 				m_bInitRequired = false;
-				return runInterruptEnded();
-			}
-			else //still in the middle of an interrupt or interrupt hasn't triggered
-			{
-				return Constants::IGNORE_STRING;
+				runInterruptEnded();
 			}
 		//}
 		//else //not time to check the digital input pin
@@ -56,41 +52,29 @@ namespace st
 	
 	}
 	
-	const String& InterruptSensor::init()
+	void InterruptSensor::init()
 	{
-		return checkIfTriggered();
+		checkIfTriggered();
 	}
 	
-	const String& InterruptSensor::update()
+	void InterruptSensor::update()
 	{
-		return checkIfTriggered();
+		checkIfTriggered();
 	}
 
-	const String& InterruptSensor::runInterrupt()
+	void InterruptSensor::runInterrupt()
 	{
 		if(debug)
 		{
-			Everything::Return_String.remove(0);
-			Everything::Return_String+="DEBUG: \""+getName()+"\" triggered (" + (m_bInterruptState?"HIGH)":"LOW)");
-			return Everything::Return_String;
-		}
-		else
-		{
-			return Constants::IGNORE_STRING;
+			Everything::sendSmartString("DEBUG: \""+getName()+"\" triggered (" + (m_bInterruptState?"HIGH)":"LOW)"));
 		}
 	}
 	
-	const String& InterruptSensor::runInterruptEnded()
+	void InterruptSensor::runInterruptEnded()
 	{
 		if(debug)
 		{
-			Everything::Return_String.remove(0);
-			Everything::Return_String+="DEBUG: \""+getName()+"\" ended (" + (m_bInterruptState?"LOW)":"HIGH)");
-			return Everything::Return_String;
-		}
-		else
-		{
-			return Constants::IGNORE_STRING;
+			Everything::sendSmartString("DEBUG: \""+getName()+"\" ended (" + (m_bInterruptState?"LOW)":"HIGH)"));
 		}
 	}
 	

@@ -23,7 +23,7 @@ namespace st
 		
 	}
 
-	const String& PS_Water::beSmart(const String &str)
+	void PS_Water::beSmart(const String &str)
 	{
 		String s = str.substring(str.indexOf(' ') + 1);
 		
@@ -42,18 +42,13 @@ namespace st
 				Serial.println(F(" to an Integer."));
 			}
 		}
-		
-		return Constants::IGNORE_STRING;
 	}
 	
-	const String& PS_Water::getData()
+	void PS_Water::getData()
 	{
 		int m_nSensorValue = analogRead(m_nAnalogInputPin);
 		
-		Everything::Return_String.remove(0);
-		Everything::Return_String+=getName() + (m_nSensorValue<100?F(" dry"):F(" wet"));
-		return Everything::Return_String;
-		
+		Everything::sendSmartString(getName() + (m_nSensorValue<100?F(" dry"):F(" wet")));
 	}
 	
 	void PS_Water::setPin(byte pin)

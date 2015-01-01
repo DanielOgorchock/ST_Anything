@@ -51,7 +51,7 @@ namespace st
 	{
 		for(unsigned int index=0; index<m_nSensorCount; ++index)
 		{
-			sendSmartString(m_Sensors[index]->update());
+			m_Sensors[index]->update();
 		}
 	}
 	
@@ -72,7 +72,35 @@ namespace st
 		}
 	#endif
 	
+	void Everything::sendStrings()
+	{
+		while(Return_String.length()>=1 && Return_String[0]!='|')
+		{
+			unsigned int index=Return_String.indexOf("|");
+			if(debug)
+			{
+				Serial.print(F("Sending: "));
+				Serial.println(Return_String.substring(0, index));
+			}
+			#ifndef DISABLE_SMARTTHINGS
+				SmartThing.send(Return_String.substring(0, index));
+			#endif
+			#if defined(ENABLE_SERIAL)
+				Serial.println(Return_String.substring(0, index));
+			#endif
+			
+			Return_String=Return_String.substring(index+1);
+		}
+		Return_String.remove(0);
+	}
 	
+	void Everything::refreshExecutors()
+	{
+		for(unsigned int i=0; i<m_nExecutorCount; ++i)
+		{
+			m_Executors[i]->refresh();
+		}
+	}
 	
 //public
 	void Everything::init()
@@ -123,12 +151,12 @@ namespace st
 		
 		for(unsigned int index=0; index<m_nSensorCount; ++index)
 		{
-			sendSmartString(m_Sensors[index]->init());
+			m_Sensors[index]->init();
 		}
 		
 		for(unsigned int index=0; index<m_nExecutorCount; ++index)
 		{
-			sendSmartString(m_Executors[index]->init());
+			m_Executors[index]->init();
 		}
 		
 		if(debug)
@@ -137,6 +165,8 @@ namespace st
 			Serial.print(F("Free RAM = "));
 			Serial.println(freeRam());
 		}
+		
+		exLastMillis=millis(); //avoid immediately refreshing after initialization
 	}
 	
 	void Everything::run()
@@ -152,6 +182,14 @@ namespace st
 			readSerial();
 		#endif
 		
+		sendStrings();
+		
+		if(millis()-exLastMillis >= Constants::EX_REFRESH_INTERVAL)
+		{
+			exLastMillis=millis();
+			refreshExecutors();
+		}
+		
 		if(debug && millis()%30000==0 && millis()!=lastmillis)
 		{
 			lastmillis = millis();
@@ -160,42 +198,28 @@ namespace st
 		}
 	}
 	
-	void Everything::sendSmartString(const String &str)
+	bool Everything::sendSmartString(String &str)
 	{
-		if(&str==&Constants::IGNORE_STRING)
+		while(str.length()>1 && str[0]=='|') //get rid of leading pipes (messes up sendStrings()'s parsing technique)
 		{
-			return;
+			str=str.substring(1);
+		}
+		if((str.length()==1 && str[0]=='|') || str.length()==0)
+		{
+			return false;
 		}
 		
-		if(debug)
+		if(Return_String.length()+str.length()>=Constants::RETURN_STRING_RESERVE)
 		{
-			Serial.print(F("Sending: "));
-			Serial.println(str);
+			Serial.print(F("ERROR: \""));
+			Serial.print(str);
+			Serial.println(F("\" would overflow the Return_String 'buffer'"));
+			return false;
 		}
-		
-		if(str.indexOf('|') == -1)
-		{
-			#ifndef DISABLE_SMARTTHINGS
-				SmartThing.send(str);
-			#endif
-			
-			#if defined(ENABLE_SERIAL)
-				Serial.println(str);
-			#endif
-		}
-		
 		else
 		{
-			byte index=str.indexOf('|');
-			#ifndef DISABLE_SMARTTHINGS
-				SmartThing.send(str.substring(0, index));
-			#endif
-			
-			#if defined(ENABLE_SERIAL)
-				Serial.println(str.substring(0, index));
-			#endif
-			
-			sendSmartString(str.substring(index+1));
+			Return_String+=str+"|";
+			return true;
 		}
 	}
 	
@@ -273,7 +297,7 @@ namespace st
 		Device *p=Everything::getDeviceByName(message.substring(0, message.indexOf(' ')));
 		if(p!=0)
 		{
-			Everything::sendSmartString(p->beSmart(message));
+			p->beSmart(message);
 		}
 	}
 	
@@ -284,6 +308,7 @@ namespace st
 	unsigned int Everything::m_nSensorCount=0;
 	unsigned int Everything::m_nExecutorCount=0;
 	unsigned long Everything::lastmillis=0;
+	unsigned long Everything::exLastMillis=0;
 	bool Everything::debug=false;
 
 	//SmartThings static members

@@ -23,10 +23,10 @@ namespace st
 			//destructor
 			virtual ~PS_TemperatureHumidity();
 
-			virtual const String& beSmart(const String &str);
+			virtual void beSmart(const String &str);
 			
-			virtual const String& init();
-			virtual const String& getData();
+			virtual void init();
+			virtual void getData();
 			
 			//gets
 			inline byte getPin() const { return m_nDigitalInputPin; }

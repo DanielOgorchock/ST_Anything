@@ -28,14 +28,12 @@ namespace st
 	
 	}
 	
-	const String& EX_Switch::init()
+	void EX_Switch::init()
 	{
-		Everything::Return_String.remove(0);
-		Everything::Return_String += getName() + " " + (m_bCurrentState == HIGH ? F("on") : F("off"));
-		return Everything::Return_String;
+		Everything::sendSmartString(getName() + " " + (m_bCurrentState == HIGH ? F("on") : F("off")));
 	}
 
-	const String& EX_Switch::beSmart(const String &str)
+	void EX_Switch::beSmart(const String &str)
 	{
 		String s=str.substring(str.indexOf(' ')+1);
 		if (st::Executor::debug) {
@@ -53,12 +51,13 @@ namespace st
 		
 		writeStateToPin();
 		
-		Everything::Return_String.remove(0);
-		Everything::Return_String += getName() + " " + (m_bCurrentState == HIGH?F("on"):F("off"));
-		return Everything::Return_String;
-		//return Constants::IGNORE_STRING;
+		Everything::sendSmartString(getName() + " " + (m_bCurrentState == HIGH?F("on"):F("off")));
 	}
 	
+	void EX_Switch::refresh()
+	{
+		Everything::sendSmartString(getName() + " " + (m_bCurrentState == HIGH?F("on"):F("off")));
+	}
 	
 	void EX_Switch::setPin(byte pin)
 	{

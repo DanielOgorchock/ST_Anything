@@ -29,14 +29,20 @@ namespace st
 			static SmartThingsNetworkState_t stNetworkState;
 		
 			static void updateNetworkState();
-		
 			static void updateSensors(); //simply calls update on all the sensors
+			static void sendStrings(); //sends everything in Return_String
 			
 			static unsigned long lastmillis;
+			
+			//stuff for refreshing executors
+			static unsigned long exLastMillis;
+			static void refreshExecutors();
 			
 			#ifdef ENABLE_SERIAL
 				static void readSerial();
 			#endif
+		
+			static String Return_String; //essentially acts as a buffer
 		
 		public:
 			
@@ -44,7 +50,8 @@ namespace st
 			static void initDevices();
 			static void run();
 			
-			static void sendSmartString(const String &str);
+			static bool sendSmartString(String &str); //sendSmartString() may edit the string reference passed to it
+			
 			static Device* getDeviceByName(const String &str);
 			
 			
@@ -52,8 +59,6 @@ namespace st
 			static bool addExecutor(Executor *executor);
 		
 			static bool debug;
-			
-			static String Return_String;
 			
 			friend SmartThingsCallout_t receiveSmartString; //act on data received from SmartThings
 			

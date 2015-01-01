@@ -16,7 +16,7 @@ namespace st
 
 			//unsigned long m_lnglastmillis;
 
-			const String& checkIfTriggered(); //returns true if new interrupt is triggered
+			void checkIfTriggered(); 
 			
 		public:
 			//constructor
@@ -26,10 +26,10 @@ namespace st
 			virtual ~InterruptSensor();
 			
 			
-			virtual const String& init();
-			const String& update();
-			virtual const String& runInterrupt();
-			virtual const String& runInterruptEnded();
+			virtual void init();
+			void update();
+			virtual void runInterrupt();
+			virtual void runInterruptEnded();
 			
 			
 			//gets

@@ -27,7 +27,7 @@ namespace st
 		
 	}
 
-	const String& PS_Illuminance::beSmart(const String &str)
+	void PS_Illuminance::beSmart(const String &str)
 	{
 		String s = str.substring(str.indexOf(' ') + 1);
 
@@ -46,17 +46,13 @@ namespace st
 				Serial.println(F(" to an Integer."));
 			}
 		}
-
-		return Constants::IGNORE_STRING;
 	}
 
-	const String& PS_Illuminance::getData()
+	void PS_Illuminance::getData()
 	{
 		int m_nSensorValue=map(analogRead(m_nAnalogInputPin), SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH);
 		
-		Everything::Return_String.remove(0);
-		Everything::Return_String+=getName() + " " + String(m_nSensorValue);
-		return Everything::Return_String;
+		Everything::sendSmartString(getName() + " " + String(m_nSensorValue));
 	}
 	
 	void PS_Illuminance::setPin(byte pin)

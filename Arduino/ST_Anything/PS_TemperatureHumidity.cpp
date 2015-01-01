@@ -26,7 +26,7 @@ namespace st
 		
 	}
 
-	const String& PS_TemperatureHumidity::beSmart(const String &str)
+	void PS_TemperatureHumidity::beSmart(const String &str)
 	{
 		String s = str.substring(str.indexOf(' ') + 1);
 
@@ -45,17 +45,15 @@ namespace st
 				Serial.println(F(" to an Integer."));
 			}
 		}
-
-		return Constants::IGNORE_STRING;
 	}
 
-	const String& PS_TemperatureHumidity::init()
+	void PS_TemperatureHumidity::init()
 	{
 		delay(1000);		//Needed to prevent "Unknown Error" on first read of DHT Sensor
-		return getData();
+		getData();
 	}
 	
-	const String& PS_TemperatureHumidity::getData()
+	void PS_TemperatureHumidity::getData()
 	{
 		// READ DATA
 		int chk =0;
@@ -108,9 +106,7 @@ namespace st
 		//Serial.print(m_nTemperatureSensorValue, 1);
 		//Serial.println();
 		
-		Everything::Return_String.remove(0);
-		Everything::Return_String += "temperature " + String(m_nTemperatureSensorValue) + F("|humidity ") + String(m_nHumiditySensorValue);
-		return Everything::Return_String;
+		Everything::sendSmartString("temperature " + String(m_nTemperatureSensorValue) + F("|humidity ") + String(m_nHumiditySensorValue));
 	}
 	
 	void PS_TemperatureHumidity::setPin(byte pin)

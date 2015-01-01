@@ -21,7 +21,7 @@
 #include "Arduino.h"
 #include "SmartThings.h"
 
-//#define ENABLE_SERIAL
+#define ENABLE_SERIAL
 //#define DISABLE_SMARTTHINGS
 
 namespace st
@@ -35,17 +35,17 @@ namespace st
 			static const byte MAX_SENSOR_COUNT=10;
 			//Maximum number of EXECUTOR objects
 			static const byte MAX_EXECUTOR_COUNT=10;
-			//String to return if nothing to do
-			static const String IGNORE_STRING; //definition in Constants.cpp 
 			//Size of reserved return string
-			static const byte RETURN_STRING_RESERVE=50;
+			static const byte RETURN_STRING_RESERVE=128;
+			//Interval on which executors' refresh methods are called (in milliseconds)
+			static const long EX_REFRESH_INTERVAL=30000;
 			
 			// ------------------------------------------------------------------------------- 
 			// --- SmartThings specific items 
 			// -------------------------------------------------------------------------------
 
 			//--- if true, the sketch will stall until the ST ThingShield has joined the ST Hub (set to false for debugging without a ST ThingShield)
-			static const bool WAIT_FOR_JOIN_AT_START = true;
+			static const bool WAIT_FOR_JOIN_AT_START = false;
 
 			//Select whether to use Hardware or Software Serial Communications
 			#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__)  //use Software Serial for UNO or LEONARDO
