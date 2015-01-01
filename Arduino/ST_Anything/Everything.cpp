@@ -52,6 +52,7 @@ namespace st
 		for(unsigned int index=0; index<m_nSensorCount; ++index)
 		{
 			m_Sensors[index]->update();
+			sendStrings();
 		}
 	}
 	
@@ -152,11 +153,13 @@ namespace st
 		for(unsigned int index=0; index<m_nSensorCount; ++index)
 		{
 			m_Sensors[index]->init();
+			sendStrings();
 		}
 		
 		for(unsigned int index=0; index<m_nExecutorCount; ++index)
 		{
 			m_Executors[index]->init();
+			sendStrings();
 		}
 		
 		if(debug)
@@ -172,8 +175,9 @@ namespace st
 	void Everything::run()
 	{
 		updateSensors();
-		
+
 		#ifndef DISABLE_SMARTTHINGS
+
 			SmartThing.run();
 			updateNetworkState();
 		#endif

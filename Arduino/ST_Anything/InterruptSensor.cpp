@@ -66,7 +66,7 @@ namespace st
 	{
 		if(debug)
 		{
-			Everything::sendSmartString("DEBUG: \""+getName()+"\" triggered (" + (m_bInterruptState?"HIGH)":"LOW)"));
+			Everything::sendSmartString(getName()+F(" triggered ") + (m_bInterruptState?F("HIGH"):F("LOW)")));
 		}
 	}
 	
@@ -74,7 +74,7 @@ namespace st
 	{
 		if(debug)
 		{
-			Everything::sendSmartString("DEBUG: \""+getName()+"\" ended (" + (m_bInterruptState?"LOW)":"HIGH)"));
+			Everything::sendSmartString(getName()+F(" ended ") + (m_bInterruptState?F("LOW)"):F("HIGH)")));
 		}
 	}
 	

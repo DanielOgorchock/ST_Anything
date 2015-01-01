@@ -8,16 +8,17 @@ namespace st
 //private
 	void EX_Switch::writeStateToPin()
 	{
-		digitalWrite(m_nPin, m_bCurrentState);
+		digitalWrite(m_nPin, m_bInvertLogic ? !m_bCurrentState : m_bCurrentState);
 	}
 	
 
 
 //public
 	//constructor
-	EX_Switch::EX_Switch(const String &name, byte pin, bool startingState):
+	EX_Switch::EX_Switch(const String &name, byte pin, bool startingState, bool invertLogic) :
 		Executor(name),
-		m_bCurrentState(startingState)
+		m_bCurrentState(startingState),
+		m_bInvertLogic(invertLogic)
 	{
 		setPin(pin);
 	}

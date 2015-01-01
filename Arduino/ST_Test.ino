@@ -10,6 +10,7 @@
 #include <dht.h>
 #include <PS_TemperatureHumidity.h>
 #include <PS_Water.h>
+#include <PS_Alarm.h>
 #include <IS_Motion.h>
 #include <Sensor.h>
 #include <EX_Switch.h>
@@ -18,15 +19,22 @@
 #define PIN_TEMPERATUREHUMIDITY  5
 #define PIN_WATER                A4
 #define PIN_MOTION               4
-#define PIN_SWITCH               7
+#define PIN_SWITCH               8
+#define PIN_ALARM                9
 
 //Declare each sensor
+
+//Polling Sensors
 st::PS_Illuminance sensor1("illuminance", 15000, 0, PIN_ILLUMINANCE);
 st::PS_TemperatureHumidity sensor2("temphumid", 15000, 3000, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
 st::PS_Water sensor3("water", 15000, 6000, PIN_WATER);
-st::IS_Motion sensor4("motion", PIN_MOTION, HIGH);
+st::PS_Alarm sensor4("alarm", 15000, 9000, PIN_ALARM, LOW, true);
 
-st::EX_Switch executor1("switch", PIN_SWITCH, LOW);
+//Interrupt Sensors 
+//st::IS_Motion sensor5("motion", PIN_MOTION, HIGH);
+
+//Executors
+st::EX_Switch executor1("switch", PIN_SWITCH, LOW, true);
 
 //test sketch
 void setup()
@@ -36,7 +44,7 @@ void setup()
   st::Device::debug=true;
   st::PollingSensor::debug=true;
   st::InterruptSensor::debug=true;
-// 
+ 
 //  st::Everything::debug=false;
 //  st::Executor::debug=false;
 //  st::Device::debug=false;
@@ -50,6 +58,7 @@ void setup()
   st::Everything::addSensor(&sensor2);
   st::Everything::addSensor(&sensor3);
   st::Everything::addSensor(&sensor4); 
+  //st::Everything::addSensor(&sensor5); 
   
   //Add each executor to the "Everything Class"
   st::Everything::addExecutor(&executor1);
