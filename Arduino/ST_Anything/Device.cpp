@@ -1,5 +1,21 @@
-#include "Device.h"
+//******************************************************************************************
+//  File: Device.cpp
+//  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son)
+//
+//  Summary:  st::Device is the highest level generic class for either a st::Sensor or 
+//			  st::Executor subclass.  
+//			  In general, this file should not need to be modified.   
+//
+//  Change History:
+//
+//    Date        Who            What
+//    ----        ---            ----
+//    2015-01-03  Dan & Daniel   Original Creation
+//
+//
+//******************************************************************************************
 
+#include "Device.h"
 
 namespace st
 {
@@ -12,7 +28,7 @@ namespace st
 	{
 		if(debug)
 		{
-			Serial.print(F("New Device ID: "));
+			Serial.print(F("st::Device: New Device ID: "));
 			Serial.println(m_Name);
 		}
 	}
@@ -22,10 +38,11 @@ namespace st
 	{
 		if(debug)
 		{
-			Serial.print(F("Destroyed Device ID: "));
+			Serial.print(F("st::Device: Destroyed Device ID: "));
 			Serial.println(m_Name);
 		}
 	}
-	
+
+	//debug flag to determine if debug print statements are executed (set value in your sketch)
 	bool Device::debug=false;
 }

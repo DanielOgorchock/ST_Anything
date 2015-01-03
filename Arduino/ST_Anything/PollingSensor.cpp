@@ -1,3 +1,20 @@
+//******************************************************************************************
+//  File: PollingSensor.cpp
+//  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son)
+//
+//  Summary:  st::PollingSensor is a generic class which inherits from st::Sensor.  This is the
+//			  parent class for the st::PS_Illuminace, st::PS_Water, and PS_TemperatureHumidity classes.
+//			  In general, this file should not need to be modified.   
+//
+//  Change History:
+//
+//    Date        Who            What
+//    ----        ---            ----
+//    2015-01-03  Dan & Daniel   Original Creation
+//
+//
+//******************************************************************************************
+
 #include "PollingSensor.h"
 
 #include "Constants.h"
@@ -76,5 +93,6 @@ namespace st
 		}
 	}
 	
+	//debug flag to determine if debug print statements are executed (set value in your sketch)
 	bool PollingSensor::debug=false;
 }

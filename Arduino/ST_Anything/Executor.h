@@ -1,3 +1,20 @@
+//******************************************************************************************
+//  File: Executor.h
+//  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son)
+//
+//  Summary:  st::Executor is a generic class which inherits from st::Device.  This is the
+//			  parent class for the st::EX_Switch class.
+//			  In general, this file should not need to be modified.   
+//
+//  Change History:
+//
+//    Date        Who            What
+//    ----        ---            ----
+//    2015-01-03  Dan & Daniel   Original Creation
+//
+//
+//******************************************************************************************
+
 #ifndef ST_EXECUTOR_H
 #define ST_EXECUTOR_H
 
@@ -8,10 +25,7 @@ namespace st
 	class Executor: public Device
 	{
 		private:
-			
-		
-		
-		
+			//Inherits private members from parent st::Device class
 		
 		public:
 			//constructor
@@ -20,10 +34,13 @@ namespace st
 			//destructor
 			virtual ~Executor();
 		
-			virtual void init();
+			//initialiazation routine
+			virtual void init();	
 			
-			virtual void refresh(); //called periodically by Everything class
+			//called periodically by Everything class to ensure ST Cloud is kept consistent with the state of each Executor subclass object
+			virtual void refresh(); 
 		
+			//debug flag to determine if debug print statements are executed (set value in your sketch)
 			static bool debug;
 	
 	};
