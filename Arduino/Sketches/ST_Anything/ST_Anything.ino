@@ -56,10 +56,10 @@
 #include <dht.h>             //DHT Temperature and Humidity Library 
 #include <PS_TemperatureHumidity.h>  //Implements a Polling Sensor (PS) to measure Temperature and Humidity via DHT library
 #include <PS_Water.h>        //Implements a Polling Sensor (PS) to measure presence of water (i.e. leak detector)
-#include <PS_Alarm.h>        //Implements an Alarm Siren capability via a digital output to a relay
 #include <IS_Motion.h>       //Implements an Interrupt Sensor (IS) to detect motion via a PIR sensor
 #include <IS_Contact.h>      //Implements an Interrupt Sensor (IS) to monitor the status of a digital input pin
 #include <EX_Switch.h>       //Implements an Executor (EX) via a digital output to a relay
+#include <EX_Alarm.h>        //Implements Executor (EX)as an Alarm Siren capability via a digital output to a relay
 
 //******************************************************************************************
 //Define which Arduino Pins will be used for each device
@@ -92,14 +92,14 @@
 st::PS_Illuminance sensor1("illuminance", 120000, 0, PIN_ILLUMINANCE);
 st::PS_TemperatureHumidity sensor2("temphumid", 120000, 3000, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
 st::PS_Water sensor3("water", 60000, 6000, PIN_WATER);
-st::PS_Alarm sensor4("alarm", 60000, 9000, PIN_ALARM, LOW, true);
 
 //Interrupt Sensors 
-st::IS_Motion sensor5("motion", PIN_MOTION, HIGH, false);
-st::IS_Contact sensor6("contact", PIN_CONTACT, LOW, true);
+st::IS_Motion sensor4("motion", PIN_MOTION, HIGH, false);
+st::IS_Contact sensor5("contact", PIN_CONTACT, LOW, true);
 
 //Executors
 st::EX_Switch executor1("switch", PIN_SWITCH, LOW, true);
+st::EX_Alarm executor2("alarm", PIN_ALARM, LOW, true);
 
 
 //******************************************************************************************
@@ -131,13 +131,13 @@ void setup()
   st::Everything::addSensor(&sensor3);
   st::Everything::addSensor(&sensor4); 
   st::Everything::addSensor(&sensor5); 
-  st::Everything::addSensor(&sensor6);
   
   //*****************************************************************************
   //Add each executor to the "Everything" Class
   //*****************************************************************************
   st::Everything::addExecutor(&executor1);
-
+  st::Everything::addExecutor(&executor2);
+  
   //*****************************************************************************
   //Initialize each of the devices which were added to the Everything Class
   st::Everything::initDevices();
