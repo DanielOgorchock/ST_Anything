@@ -12,7 +12,7 @@ ST_Anything consists of four parts:
 - A modified, more efficient version of the SmartThings (ThingShield) library
 - The ST_Anything.groovy DeviceType
 
-##ST_ANything Arduino Setup Instructions
+##ST_Anything Arduino Setup Instructions
 - Download the ST_Anything repository.
 - This folder structure should mirror that of your local Arduino directory. Copy all the files in the repo to the corresponding local directories (detailed instructions of this process are below if needed).
   - Look inside the 'Arduino\Sketches' folder of the repo.
