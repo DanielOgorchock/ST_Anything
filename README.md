@@ -21,6 +21,7 @@ ST_Anything consists of three parts:
 - Open the ST_Anything.ino (the IDE should automatically create a new folder for it), and see if it successfully compiles.
 
 More instructions coming soon:
+
 For now, reference the header files of the ST_Anything library for explanation of specific classes. 
 
 Look at the documentation in the 'ST_Anything.ino' file for explanation of general use of the library.  
