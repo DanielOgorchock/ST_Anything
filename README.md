@@ -22,4 +22,5 @@ ST_Anything consists of three parts:
 
 More instructions coming soon:
 For now, reference the header files of the ST_Anything library for explanation of specific classes. 
+
 Look at the documentation in the 'ST_Anything.ino' file for explanation of general use of the library.  
