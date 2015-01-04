@@ -36,9 +36,6 @@ namespace st
 		
 			//initialiazation routine
 			virtual void init();	
-			
-			//called periodically by Everything class to ensure ST Cloud is kept consistent with the state of each Executor subclass object
-			virtual void refresh(); 
 		
 			//debug flag to determine if debug print statements are executed (set value in your sketch)
 			static bool debug;

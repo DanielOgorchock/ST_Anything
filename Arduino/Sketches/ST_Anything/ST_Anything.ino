@@ -58,6 +58,7 @@
 #include <PS_Water.h>        //Implements a Polling Sensor (PS) to measure presence of water (i.e. leak detector)
 #include <PS_Alarm.h>        //Implements an Alarm Siren capability via a digital output to a relay
 #include <IS_Motion.h>       //Implements an Interrupt Sensor (IS) to detect motion via a PIR sensor
+#include <IS_Contact.h>      //Implements an Interrupt Sensor (IS) to monitor the status of a digital input pin
 #include <EX_Switch.h>       //Implements an Executor (EX) via a digital output to a relay
 
 //******************************************************************************************
@@ -73,6 +74,7 @@
 #define PIN_TEMPERATUREHUMIDITY  5
 #define PIN_SWITCH               8
 #define PIN_ALARM                9
+#define PIN_CONTACT              10
 
 //******************************************************************************************
 //Declare each Device that is attached to the Arduino
@@ -93,7 +95,8 @@ st::PS_Water sensor3("water", 60000, 6000, PIN_WATER);
 st::PS_Alarm sensor4("alarm", 60000, 9000, PIN_ALARM, LOW, true);
 
 //Interrupt Sensors 
-st::IS_Motion sensor5("motion", PIN_MOTION, HIGH);
+st::IS_Motion sensor5("motion", PIN_MOTION, HIGH, false);
+st::IS_Contact sensor6("contact", PIN_CONTACT, LOW, true);
 
 //Executors
 st::EX_Switch executor1("switch", PIN_SWITCH, LOW, true);
@@ -128,6 +131,7 @@ void setup()
   st::Everything::addSensor(&sensor3);
   st::Everything::addSensor(&sensor4); 
   st::Everything::addSensor(&sensor5); 
+  st::Everything::addSensor(&sensor6);
   
   //*****************************************************************************
   //Add each executor to the "Everything" Class

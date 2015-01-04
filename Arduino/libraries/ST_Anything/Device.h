@@ -37,6 +37,9 @@ namespace st
 			//function used by all devices to process data from SmartThings Shield - all derived classes must implement this pure virtual function
 			virtual void beSmart(const String &str)=0; 
 			
+			//called periodically by Everything class to ensure ST Cloud is kept consistent with the state of each Device subclass object
+			virtual void refresh();
+
 			//gets
 			inline const String& getName() const {return m_Name;}
 			

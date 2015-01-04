@@ -26,7 +26,7 @@ namespace st
 	{
 		private:
 			byte m_nInterruptPin;	//pin that will be monitored for change of state
-			bool m_bInterruptState; //the state (HIGH/LOW) in which an interrupt has triggered
+			bool m_bInterruptState; //LOW or HIGH - determines which value indicates the interrupt is true (i.e. LOW=Falling Edge, HIGH=Rising Edge)
 			bool m_bStatus;			//true == interrupted
 			bool m_bPullup;			//true == Internal Pullup resistor required, set in constructor call in your sketch
 			bool m_bInitRequired;

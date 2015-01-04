@@ -58,9 +58,9 @@ namespace st
 			
 			static unsigned long lastmillis;	//used to keep track of last time run() has output freeRam() info
 			
-			//stuff for refreshing executors
-			static unsigned long exLastMillis;	//used to keep track of last time run() has called refreshExecutors()
-			static void refreshExecutors();		//simply calls refresh on all the executors
+			//stuff for refreshing Devices
+			static unsigned long refLastMillis;	//used to keep track of last time run() has called refreshDevices()
+			static void refreshDevices();		//simply calls refresh on all the Devices
 			
 			#ifdef ENABLE_SERIAL
 				static void readSerial();		//reads data from Arduino IDE Serial Monitor, if enabled in Constants.h

@@ -119,11 +119,16 @@ namespace st
 		Return_String.remove(0);	//clear the Return_String buffer
 	}
 	
-	void Everything::refreshExecutors()
+	void Everything::refreshDevices()
 	{
 		for(unsigned int i=0; i<m_nExecutorCount; ++i)
 		{
 			m_Executors[i]->refresh();
+		}
+
+		for (unsigned int i = 0; i<m_nSensorCount; ++i)
+		{
+			m_Sensors[i]->refresh();
 		}
 	}
 	
@@ -193,7 +198,7 @@ namespace st
 			Serial.println(freeRam());
 		}
 		
-		exLastMillis=millis(); //avoid immediately refreshing after initialization
+		refLastMillis = millis(); //avoid immediately refreshing after initialization
 	}
 	
 	void Everything::run()
@@ -211,10 +216,10 @@ namespace st
 		
 		sendStrings();
 		
-		if(millis()-exLastMillis >= Constants::EX_REFRESH_INTERVAL)  //EX_REFRESH_INTERVAL is set in Constants.h
+		if (millis() - refLastMillis >= Constants::DEV_REFRESH_INTERVAL)  //DEV_REFRESH_INTERVAL is set in Constants.h
 		{
-			exLastMillis=millis();
-			refreshExecutors();	//call each st::Executor object to refresh data (this is just a safeguard to ensure the state of the Arduino and the ST Cloud stay in synch should an event be missed)
+			refLastMillis = millis();
+			refreshDevices();	//call each st::Device object to refresh data (this is just a safeguard to ensure the state of the Arduino and the ST Cloud stay in synch should an event be missed)
 
 		}
 		
@@ -322,10 +327,13 @@ namespace st
 			Serial.println(message);
 		}
 		
-		Device *p=Everything::getDeviceByName(message.substring(0, message.indexOf(' ')));
-		if(p!=0)
+		if (message.length() > 1)		//ignore empty string messages from the ST Hub
 		{
-			p->beSmart(message);	//pass the SmartThings Shield data to the correct Device's beSMart() routine
+			Device *p = Everything::getDeviceByName(message.substring(0, message.indexOf(' ')));
+			if (p != 0)
+			{
+				p->beSmart(message);	//pass the incoming SmartThings Shield message to the correct Device's beSMart() routine
+			}
 		}
 	}
 	
@@ -336,7 +344,7 @@ namespace st
 	unsigned int Everything::m_nSensorCount=0;
 	unsigned int Everything::m_nExecutorCount=0;
 	unsigned long Everything::lastmillis=0;
-	unsigned long Everything::exLastMillis=0;
+	unsigned long Everything::refLastMillis=0;
 	bool Everything::debug=false;
 
 	//SmartThings static members

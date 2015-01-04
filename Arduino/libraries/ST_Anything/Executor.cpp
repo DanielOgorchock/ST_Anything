@@ -47,11 +47,6 @@ st
 		
 	}
 	
-	void Executor::refresh()
-	{
-	
-	}
-	
 	//debug flag to determine if debug print statements are executed (set value in your sketch)
 	bool Executor::debug=false; 
 	

@@ -70,8 +70,8 @@ namespace st
 			static const byte MAX_EXECUTOR_COUNT=10;				//Used to limit the number of executor devices allowed.  Be careful on Arduino UNO due to 2K SRAM limitation 
 			//Size of reserved return string
 			static const byte RETURN_STRING_RESERVE = (MAX_SENSOR_COUNT + MAX_EXECUTOR_COUNT) * 5;	//Do not make too large due to UNO's 2K SRAM limitation
-			//Interval on which executors' refresh methods are called (in milliseconds)
-			static const long EX_REFRESH_INTERVAL=30000;			//Used to make sure the ST Cloud is kept current with Executor device status (in case of missed updates to the ST Cloud)
+			//Interval on which Device's refresh methods are called (in milliseconds) - most useful for Executors and InterruptSensors
+			static const long DEV_REFRESH_INTERVAL=30000;			//Used to make sure the ST Cloud is kept current with device status (in case of missed updates to the ST Cloud)
 			
 			// ------------------------------------------------------------------------------- 
 			// --- SmartThings specific items 

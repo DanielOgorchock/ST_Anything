@@ -12,7 +12,7 @@
 //			  Create an instance of this class in your sketch's global variable section
 //			  For Example:  st::PS_Alarm sensor4("alarm", 60000, 9000, PIN_ALARM, LOW, true);
 //
-//			  st::EX_Switch() constructor requires the following arguments
+//			  st::PS_Alarm() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
 //				- long interval - REQUIRED - the polling interval in milliseconds
 //				- long offset - REQUIRED - the polling interval offset in milliseconds - used to prevent all polling sensors from executing at the same time

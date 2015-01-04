@@ -9,11 +9,11 @@
 //			  Create an instance of this class in your sketch's global variable section
 //			  For Example:  st::PS_Water sensor3("water", 60000, 6000, PIN_WATER);
 //
-//			  st::EX_Switch() constructor requires the following arguments
+//			  st::PS_Water() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
 //				- long interval - REQUIRED - the polling interval in milliseconds
 //				- long offset - REQUIRED - the polling interval offset in milliseconds - used to prevent all polling sensors from executing at the same time
-//				- byte pin - REQUIRED - the Arduino Pin to be used as a digital output
+//				- byte pin - REQUIRED - the Arduino Pin to be used as an analog input
 //
 //			  This class supports receiving configuiration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 

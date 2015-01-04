@@ -43,6 +43,11 @@ namespace st
 		}
 	}
 
+	void Device::refresh()
+	{
+
+	}
+
 	//debug flag to determine if debug print statements are executed (set value in your sketch)
 	bool Device::debug=false;
 }

@@ -100,6 +100,11 @@ metadata {
 			state "configure", label:'', action:"configuration.configure", icon:"st.secondary.configure"
 		}
 
+		standardTile("contact", "device.contact", width: 1, height: 1) {
+			state("open", label:'${name}', icon:"st.contact.contact.open", backgroundColor:"#ffa81e")
+			state("closed", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#79b821")
+		}
+
 		standardTile("alarm", "device.alarm", width: 1, height: 1) {
 			state "off", label:'off', action:'alarm.strobe', icon:"st.alarm.alarm.alarm", backgroundColor:"#ffffff"
 			state "both", label:'alarm!', action:'alarmoff', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
@@ -112,8 +117,8 @@ metadata {
 			state "default", label:'', action:"alarmoff", icon:"st.secondary.off"
 		}
 
-        main(["motion","temperature","humidity","illuminance", "water", "switch","alarm"])
-        details(["motion","temperature","humidity","illuminance","water","switch","alarm","test","off","configure"])
+        main(["motion","temperature","humidity","illuminance", "water", "switch","contact","alarm"])
+        details(["motion","temperature","humidity","illuminance","water","switch","contact","alarm","test","off","configure"])
 	}
 }
 
