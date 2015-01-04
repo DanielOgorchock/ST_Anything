@@ -21,7 +21,8 @@ ST_Anything consists of four parts:
   - Copy and paste both the 'ST_Anything' and 'SmartThings' folders into your local 'Arduino\libraries' directory. (Note: it may be wise to rename your existing 'SmartThings' library to prevent any overwriting if you have already downloaded the official release.)
 - Open the ST_Anything.ino and see if it successfully compiles.
 
-##ST_Anything SmartThings Device Type Installation Instructions•Create and account or log into the SmartThings Web IDE.
+##ST_Anything SmartThings Device Type Installation Instructions
+•Create and account or log into the SmartThings Web IDE.
 •Click on  My Device Types  from the navigation menu.
 •Click on  + New SmartDevice  button.
 •Fill in the  Name  field and click on the  Create  button. Don't worry about filling out everything else.
