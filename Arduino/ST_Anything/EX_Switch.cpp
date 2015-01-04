@@ -1,3 +1,28 @@
+//******************************************************************************************
+//  File: EX_Switch.cpp
+//  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son)
+//
+//  Summary:  EX_Switch is a class which implements the SmartThings "Switch" device capability.
+//			  It inherits from the st::Executor class.
+//
+//			  Create an instance of this class in your sketch's global variable section
+//			  For Example:  st::EX_Switch executor1("switch", PIN_SWITCH, LOW, true);
+//
+//			  st::EX_Switch() constructor requires the following arguments
+//				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
+//				- byte pin - REQUIRED - the Arduino Pin to be used as a digital output
+//				- bool startingState - OPTIONAL - the value desired for the initial state of the switch.  LOW = "off", HIGH = "on"
+//				- bool invertLogic - OPTIONAL - determines whether the Arduino Digital Ouput should use inverted logic
+//
+//  Change History:
+//
+//    Date        Who            What
+//    ----        ---            ----
+//    2015-01-03  Dan & Daniel   Original Creation
+//
+//
+//******************************************************************************************
+
 #include "EX_Switch.h"
 
 #include "Constants.h"
@@ -66,6 +91,4 @@ namespace st
 		pinMode(m_nPin, OUTPUT);
 		writeStateToPin();
 	}
-
-
 }

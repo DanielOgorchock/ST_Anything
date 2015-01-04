@@ -78,8 +78,13 @@
 //Declare each Device that is attached to the Arduino
 //  Notes: - For each device, there is typically a corresponding "tile" defined in your 
 //           SmartThings DeviceType Groovy code
-//         - For details on each device's arguments below, please refer to the corresponding
-//           header (.h) file.
+//         - For details on each device's constructor arguments below, please refer to the 
+//           corresponding header (.h) and program (.cpp) files.
+//         - The name assigned to each device (1st argument below) must match the Groovy
+//           DeviceType Tile name.  (Note: "temphumid" below is the exception to this rule
+//           as the DHT sensors produce both "temperature" and "humidity".  Data from that
+//           particular sensor is sent to the ST Shield in two separate updates, one for 
+//           "temperature" and one for "humidity")
 //******************************************************************************************
 //Polling Sensors
 st::PS_Illuminance sensor1("illuminance", 120000, 0, PIN_ILLUMINANCE);
