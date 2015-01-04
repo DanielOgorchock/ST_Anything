@@ -12,15 +12,24 @@ ST_Anything consists of four parts:
 - A modified, more efficient version of the SmartThings (ThingShield) library
 - The ST_Anything.groovy DeviceType
 
-## Setup Instructions
+##ST_ANything Arduino Setup Instructions
 - Download the ST_Anything repository.
 - This folder structure should mirror that of your local Arduino directory. Copy all the files in the repo to the corresponding local directories (detailed instructions of this process are below if needed).
   - Look inside the 'Arduino\Sketches' folder of the repo.
   - Copy and paste the 'ST_Anything' sketch folder into your local 'Arduino\Sketches' directory.
   - Look inside the 'Arduino\libraries' folder of the repo.
   - Copy and paste both the 'ST_Anything' and 'SmartThings' folders into your local 'Arduino\libraries' directory. (Note: it may be wise to rename your existing 'SmartThings' library to prevent any overwriting if you have already downloaded the official release.)
-- Add the groovy file ('Groovy\ST_Anything.groovy') to your SmartThings Developer IDE DeviceTypes.
 - Open the ST_Anything.ino and see if it successfully compiles.
+
+##ST_Anything SmartThings Device Type Installation Instructions•Create and account or log into the SmartThings Web IDE.
+•Click on  My Device Types  from the navigation menu.
+•Click on  + New SmartDevice  button.
+•Fill in the  Name  field and click on the  Create  button. Don't worry about filling out everything else.
+•Paste the code from the ST_Anything.groovy file.
+•Click on  Save  in the IDE.
+•Click on  Publish -> For Me  in the IDE.
+
+
 
 More instructions coming soon:
 
