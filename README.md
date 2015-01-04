@@ -17,7 +17,7 @@ ST_Anything consists of three parts:
 - Copy and paste the 'ST_Anything.ino' file into your local Arduino directory.
 - Look inside the 'Arduino/libraries' folder of the repo.
 - Copy and paste both the 'ST_Anything' and 'SmartThings' folders into your local 'Arduino/libraries' directory. (Note: it may be wise to rename your existing 'SmartThings' library to prevent any overwriting if you have already downloaded the official release)
-- Add the groovy file ('Groovy/ST_Anything.groovy) to your SmartThings account online.
+- Add the groovy file ('Groovy/ST_Anything.groovy') to your SmartThings account online.
 - Open the ST_Anything.ino (the IDE should automatically create a new folder for it), and see if it successfully compiles.
 
 More instructions coming soon:
