@@ -9,7 +9,7 @@ namespace st
 	
 
 //public
-	//constructor
+	//constructor - called in your sketch's global variable declaration section
 	PS_Water::PS_Water(const String &name, unsigned int interval, int offset, byte analogInputPin):
 		PollingSensor(name, interval, offset),
 		m_nSensorValue(0)
@@ -23,6 +23,7 @@ namespace st
 		
 	}
 
+	//SmartThings Shield data handler (receives configuration data from ST - polling interval, and adjusts on the fly)
 	void PS_Water::beSmart(const String &str)
 	{
 		String s = str.substring(str.indexOf(' ') + 1);
@@ -44,10 +45,12 @@ namespace st
 		}
 	}
 	
+	//function to get data from sensor and queue results for transfer to ST Cloud
 	void PS_Water::getData()
 	{
 		int m_nSensorValue = analogRead(m_nAnalogInputPin);
 		
+		//check to see if the sensor's value is < 100.  If so send "dry", otherwise send "wet".  Adjust the 100 as needed for your sensor.
 		Everything::sendSmartString(getName() + (m_nSensorValue<100?F(" dry"):F(" wet")));
 	}
 	

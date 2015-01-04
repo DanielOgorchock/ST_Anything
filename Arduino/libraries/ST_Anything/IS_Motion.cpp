@@ -46,13 +46,13 @@ namespace st
 	void IS_Motion::init()
 	{
 		if (debug){
-			Serial.println(F("st::IS_Motion: Motion Sensor Calibration Started..."));
+			Serial.println(F("IS_Motion: Motion Sensor Calibration Started..."));
 		}
 		//calibrate the PIR Motion Sensor
 		digitalWrite(getInterruptPin(), LOW); 
 		delay(30000);
 		if (debug){
-			Serial.println(F("st::IS_Motion: Motion Sensor Calibration Finished"));
+			Serial.println(F("IS_Motion: Motion Sensor Calibration Finished"));
 		}
 
 		//get current status of motion sensor by calling parent class's init() routine - no need to duplicate it here!

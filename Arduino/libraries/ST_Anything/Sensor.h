@@ -34,6 +34,7 @@ namespace st
 			//destructor
 			virtual ~Sensor();
 			
+			//SmartThings Shield data handler
 			virtual void beSmart(const String &str);
 			
 			//all derived classes must implement these pure virtual functions

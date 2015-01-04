@@ -40,28 +40,28 @@ namespace st
 				switch (tempState)
 				{
 				  case STATE_NO_NETWORK:
-					if (debug) Serial.println(F("NO_NETWORK"));
+					if (debug) Serial.println(F("Everything: NO_NETWORK"));
 					SmartThing.shieldSetLED(2, 0, 0); // red
 					break;
 				  case STATE_JOINING:
-					if (debug) Serial.println(F("JOINING"));
+					if (debug) Serial.println(F("Everything: JOINING"));
 					SmartThing.shieldSetLED(2, 0, 0); // red
 					break;
 				  case STATE_JOINED:
-					if (debug) Serial.println(F("JOINED"));
+					if (debug) Serial.println(F("Everything: JOINED"));
 					SmartThing.shieldSetLED(0, 0, 0); // off
 					break;
 				  case STATE_JOINED_NOPARENT:
-					if (debug) Serial.println(F("JOINED_NOPARENT"));
+					if (debug) Serial.println(F("Everything: JOINED_NOPARENT"));
 					SmartThing.shieldSetLED(2, 0, 2); // purple
 					break;
 				  case STATE_LEAVING:
-					if (debug) Serial.println(F("LEAVING"));
+					if (debug) Serial.println(F("Everything: LEAVING"));
 					SmartThing.shieldSetLED(2, 0, 0); // red
 					break;
 				  default:
 				  case STATE_UNKNOWN:
-					if (debug) Serial.println(F("UNKNOWN"));
+					if (debug) Serial.println(F("Everything: UNKNOWN"));
 					SmartThing.shieldSetLED(0, 2, 0); // green
 					break;
 				}
@@ -104,7 +104,7 @@ namespace st
 			unsigned int index=Return_String.indexOf("|");
 			if(debug)
 			{
-				Serial.print(F("Sending: "));
+				Serial.print(F("Everything: Sending: "));
 				Serial.println(Return_String.substring(0, index));
 			}
 			#ifndef DISABLE_SMARTTHINGS
@@ -135,8 +135,8 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.println(F("st::Everything: init started"));
-			Serial.print(F("Free RAM = "));
+			Serial.println(F("Everything: init started"));
+			Serial.print(F("Everything: Free RAM = "));
 			Serial.println(freeRam());
 		}
 		
@@ -159,8 +159,8 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.println(F("st::Everything: init ended"));
-			Serial.print(F("Free RAM = "));
+			Serial.println(F("Everything: init ended"));
+			Serial.print(F("Everything: Free RAM = "));
 			Serial.println(freeRam());
 		}
 	}
@@ -169,8 +169,8 @@ namespace st
 	{
 		if(debug)
 		{
-			Serial.println(F("st::Everything: initDevices started"));
-			Serial.print(F("Free RAM = "));
+			Serial.println(F("Everything: initDevices started"));
+			Serial.print(F("Everything: Free RAM = "));
 			Serial.println(freeRam());
 		}
 		
@@ -188,8 +188,8 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.println(F("st::Everything: initDevices ended"));
-			Serial.print(F("Free RAM = "));
+			Serial.println(F("Everything: initDevices ended"));
+			Serial.print(F("Everything: Free RAM = "));
 			Serial.println(freeRam());
 		}
 		
@@ -221,7 +221,7 @@ namespace st
 		if(debug && millis()%30000==0 && millis()!=lastmillis)
 		{
 			lastmillis = millis();
-			Serial.print(F("Loop: Free Ram = "));  
+			Serial.print(F("Everything: Free Ram = "));  
 			Serial.println(freeRam());
 		}
 	}
@@ -239,7 +239,7 @@ namespace st
 		
 		if(Return_String.length()+str.length()>=Constants::RETURN_STRING_RESERVE)
 		{
-			Serial.print(F("st::Everything: ERROR: \""));
+			Serial.print(F("Everything: ERROR: \""));
 			Serial.print(str);
 			Serial.println(F("\" would overflow the Return_String 'buffer'"));
 			return false;
@@ -282,9 +282,9 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.print(F("st::Everything: adding sensor named "));
+			Serial.print(F("Everything: adding sensor named "));
 			Serial.println(sensor->getName());
-			Serial.print(F("Free RAM = "));
+			Serial.print(F("Everything: Free RAM = "));
 			Serial.println(freeRam());
 		}
 		return true;
@@ -304,9 +304,9 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.print(F("adding executor named "));
+			Serial.print(F("Everything: adding executor named "));
 			Serial.println(executor->getName());
-			Serial.print(F("Free RAM = "));
+			Serial.print(F("Everything: Free RAM = "));
 			Serial.println(freeRam());
 		}
 		return true;
@@ -316,9 +316,9 @@ namespace st
 	void receiveSmartString(String message)
 	{
 		message.trim();
-		if(Everything::debug)
+		if(Everything::debug && message.length()>1)
 		{
-			Serial.print(F("Received: "));
+			Serial.print(F("Everything: Received: "));
 			Serial.println(message);
 		}
 		

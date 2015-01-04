@@ -28,7 +28,7 @@ namespace st
 	{
 		if(debug)
 		{
-			Serial.print(F("st::Device: New Device ID: "));
+			Serial.print(F("Device: New Device ID: "));
 			Serial.println(m_Name);
 		}
 	}
@@ -38,7 +38,7 @@ namespace st
 	{
 		if(debug)
 		{
-			Serial.print(F("st::Device: Destroyed Device ID: "));
+			Serial.print(F("Device: Destroyed Device ID: "));
 			Serial.println(m_Name);
 		}
 	}

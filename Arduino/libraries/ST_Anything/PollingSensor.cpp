@@ -28,8 +28,12 @@ namespace st
 		//check for time overflow
 		if(millis()<m_nPreviousTime)
 		{
-			Serial.println(F("Overflow"));
-			m_nPreviousTime=0;
+			if (debug)
+			{
+				Serial.println(F("PollingSensor: millis() Overflow handled"));
+			}
+			
+			m_nPreviousTime = 0;
 		}
 		
 		if(m_nPreviousTime==0) //eliminates problem of there being a delay before first update() call
