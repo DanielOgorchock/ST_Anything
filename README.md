@@ -2,7 +2,21 @@ ST_Anything
 ===========
 Turn your Arduino into an AnyThing. ST_Anything is an Arduino library, sketch, and DeviceType that works with your SmartThings ThingShield to create an all-in-one SmartThings device.
 
+
 ![screenshot](https://cloud.githubusercontent.com/assets/5153370/5604859/5da9edda-93a7-11e4-8e43-ce7a6d9cfa42.png)
+
+
+This package, currently implements the following SmartThings Devce Capabilities:
+- Alarm
+- Configuration
+- Illuminance Measurement
+- Motion Sensor
+- Relative Humidity Measurement
+- Switch
+- Temperature Measurement
+- Water Sensor
+
+Note: Attempting to use all of these at once on an Arduino UNO is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.
 
 
 ## Overview
