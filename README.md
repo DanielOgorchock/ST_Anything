@@ -22,13 +22,13 @@ ST_Anything consists of four parts:
 - Open the ST_Anything.ino and see if it successfully compiles.
 
 ##ST_Anything SmartThings Device Type Installation Instructions
-•Create and account or log into the SmartThings Web IDE.
-•Click on  My Device Types  from the navigation menu.
-•Click on  + New SmartDevice  button.
-•Fill in the  Name  field and click on the  Create  button. Don't worry about filling out everything else.
-•Paste the code from the ST_Anything.groovy file.
-•Click on  Save  in the IDE.
-•Click on  Publish -> For Me  in the IDE.
+- Create and account or log into the SmartThings Web IDE.
+- Click on  My Device Types  from the navigation menu.
+- Click on  + New SmartDevice  button.
+- Fill in the  Name  field and click on the  Create  button. Don't worry about filling out everything else.
+- Paste the code from the ST_Anything.groovy file.
+- Click on  Save  in the IDE.
+- Click on  Publish -> For Me  in the IDE.
 
 
 
