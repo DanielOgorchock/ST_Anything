@@ -74,7 +74,7 @@
 #define PIN_TEMPERATUREHUMIDITY  5
 #define PIN_SWITCH               8
 #define PIN_ALARM                9
-#define PIN_CONTACT              10
+#define PIN_CONTACT              11
 
 //******************************************************************************************
 //Declare each Device that is attached to the Arduino
@@ -89,9 +89,9 @@
 //           "temperature" and one for "humidity")
 //******************************************************************************************
 //Polling Sensors
-st::PS_Illuminance sensor1("illuminance", 120000, 0, PIN_ILLUMINANCE);
-st::PS_TemperatureHumidity sensor2("temphumid", 120000, 3000, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
-st::PS_Water sensor3("water", 60000, 6000, PIN_WATER);
+st::PS_Illuminance sensor1("illuminance", 120, 0, PIN_ILLUMINANCE);
+st::PS_TemperatureHumidity sensor2("temphumid", 120, 10, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
+st::PS_Water sensor3("water", 60, 20, PIN_WATER);
 
 //Interrupt Sensors 
 st::IS_Motion sensor4("motion", PIN_MOTION, HIGH, false);

@@ -11,8 +11,8 @@
 //
 //			  st::PS_Water() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
-//				- long interval - REQUIRED - the polling interval in milliseconds
-//				- long offset - REQUIRED - the polling interval offset in milliseconds - used to prevent all polling sensors from executing at the same time
+//				- long interval - REQUIRED - the polling interval in seconds
+//				- long offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
 //				- byte pin - REQUIRED - the Arduino Pin to be used as an analog input
 //
 //			  This class supports receiving configuiration data from the SmartThings cloud via the ST App.  A user preference
@@ -64,7 +64,7 @@ namespace st
 			st::PollingSensor::setInterval(s.toInt() * 1000);
 			if (st::PollingSensor::debug) {
 				Serial.print(F("PS_Water::beSmart set polling interval to "));
-				Serial.println(s.toInt() * 1000);
+				Serial.println(s.toInt());
 			}
 		}
 		else {

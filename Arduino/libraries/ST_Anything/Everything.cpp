@@ -216,7 +216,7 @@ namespace st
 		
 		sendStrings();
 		
-		if (millis() - refLastMillis >= Constants::DEV_REFRESH_INTERVAL)  //DEV_REFRESH_INTERVAL is set in Constants.h
+		if (millis() - refLastMillis >= Constants::DEV_REFRESH_INTERVAL*1000)  //DEV_REFRESH_INTERVAL is set in Constants.h
 		{
 			refLastMillis = millis();
 			refreshDevices();	//call each st::Device object to refresh data (this is just a safeguard to ensure the state of the Arduino and the ST Cloud stay in synch should an event be missed)

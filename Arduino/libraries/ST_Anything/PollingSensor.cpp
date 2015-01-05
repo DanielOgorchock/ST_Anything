@@ -4,7 +4,13 @@
 //
 //  Summary:  st::PollingSensor is a generic class which inherits from st::Sensor.  This is the
 //			  parent class for the st::PS_Illuminace, st::PS_Water, and PS_TemperatureHumidity classes.
+//
 //			  In general, this file should not need to be modified.   
+//
+//			  st::PollingSensor() constructor requires the following arguments
+//				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
+//				- long interval - REQUIRED - the polling interval in seconds
+//				- long offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
 //
 //  Change History:
 //
@@ -64,8 +70,8 @@ namespace st
 		Sensor(name),
 		m_nPreviousTime(0),
 		m_nDeltaTime(0),
-		m_nInterval(interval),
-		m_nOffset(offset)
+		m_nInterval(interval*1000),
+		m_nOffset(offset*1000)
 	{
 	
 	}

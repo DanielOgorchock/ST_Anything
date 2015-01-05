@@ -47,7 +47,7 @@ namespace st
 	void IS_Motion::init()
 	{
 		if (debug){
-			Serial.println(F("IS_Motion: Motion Sensor Calibration Started..."));
+			Serial.println(F("IS_Motion: 30 second Motion Sensor Calibration Started..."));
 		}
 		//calibrate the PIR Motion Sensor
 		digitalWrite(getInterruptPin(), LOW); 

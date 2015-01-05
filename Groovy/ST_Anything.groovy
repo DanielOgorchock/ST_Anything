@@ -24,18 +24,18 @@ metadata {
 	definition (name: "ST_AnyThing", namespace: "ogiewon", author: "Daniel Ogorchock") {
 		capability "Configuration"
 		capability "Illuminance Measurement"
-        capability "Temperature Measurement"
-        capability "Relative Humidity Measurement"
-        capability "Water Sensor"
-        capability "Motion Sensor"
-        capability "Switch"
-        capability "Sensor"
- 		capability "Alarm"
-        capability "Polling"
+		capability "Temperature Measurement"
+		capability "Relative Humidity Measurement"
+		capability "Water Sensor"
+		capability "Motion Sensor"
+		capability "Switch"
+		capability "Sensor"
+		capability "Alarm"
+		capability "Contact Sensor"
+		capability "Polling"
 
 		command "test"
-        command "alarmoff"
-        command "alarmon"
+		command "alarmoff"
 
 	}
 
@@ -46,9 +46,9 @@ metadata {
 
     // Preferences
 	preferences {
-    	input "illuminanceSampleRate", "number", title: "Light Sensor Inputs", description: "Sampling Interval (seconds)", defaultValue: 30, required: true, displayDuringSetup: true
-    	input "temphumidSampleRate", "number", title: "Temperature/Humidity Sensor Inputs", description: "Sampling Interval (seconds)", defaultValue: 30, required: true, displayDuringSetup: true
-    	input "waterSampleRate", "number", title: "Water Sensor Inputs", description: "Sampling Interval (seconds)", defaultValue: 30, required: true, displayDuringSetup: true
+    	input "illuminanceSampleRate", "number", title: "Light Sensor Sampling Interval (seconds)", description: "Sampling Interval (seconds)", defaultValue: 30, required: true, displayDuringSetup: true
+    	input "temphumidSampleRate", "number", title: "Temperature/Humidity Sensor Sampling Interval (seconds)", description: "Sampling Interval (seconds)", defaultValue: 30, required: true, displayDuringSetup: true
+    	input "waterSampleRate", "number", title: "Water Sensor Sampling Interval (seconds)", description: "Sampling Interval (seconds)", defaultValue: 30, required: true, displayDuringSetup: true
 	}
 
 	// Tile Definitions
@@ -106,19 +106,25 @@ metadata {
 		}
 
 		standardTile("alarm", "device.alarm", width: 1, height: 1) {
-			state "off", label:'off', action:'alarm.strobe', icon:"st.alarm.alarm.alarm", backgroundColor:"#ffffff"
+			state "off", label:'off', action:'alarm.siren', icon:"st.alarm.alarm.alarm", backgroundColor:"#ffffff"
+            state "strobe", label:'', action:'alarmoff', icon:"st.secondary.strobe", backgroundColor:"#cccccc"
+            state "siren", label:'siren!', action:'alarmoff', icon:"st.alarm.beep.beep", backgroundColor:"#e86d13"
 			state "both", label:'alarm!', action:'alarmoff', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
 		}
 
 		standardTile("test", "device.alarm", inactiveLabel: false, decoration: "flat") {
 			state "default", label:'', action:"test", icon:"st.secondary.test"
 		}
-		standardTile("off", "device.alarm", inactiveLabel: false, decoration: "flat") {
-			state "default", label:'', action:"alarmoff", icon:"st.secondary.off"
+        
+		standardTile("off", "device.alarm", , width: 1, height: 1) {
+			state "default", label:'Alarm', action:"alarmoff", icon:"st.secondary.off"
 		}
+		//standardTile("off", "device.alarm", inactiveLabel: false, decoration: "flat") {
+		//	state "default", label:'', action:"alarmoff", icon:"st.secondary.off"
+		//}
 
-        main(["motion","temperature","humidity","illuminance", "water", "switch","contact","alarm"])
-        details(["motion","temperature","humidity","illuminance","water","switch","contact","alarm","test","off","configure"])
+        main(["motion","temperature","humidity","illuminance","switch","contact","alarm","water"])
+        details(["motion","temperature","humidity","illuminance","switch","contact","alarm","test","off","water","configure"])
 	}
 }
 
@@ -153,14 +159,24 @@ def off() {
 	zigbee.smartShield(text: "switch off").format()
 }
 
-def alarmon() {
-	log.debug "Executing 'alarm both'"
-	zigbee.smartShield(text: "alarm both").format()
-}
-
 def alarmoff() {
 	log.debug "Executing 'alarm off'"
 	zigbee.smartShield(text: "alarm off").format()
+}
+
+def strobe() {
+	log.debug "Executing 'alarm strobe'"
+	zigbee.smartShield(text: "alarm strobe").format()
+}
+
+def siren() {
+	log.debug "Executing 'alarm siren'"
+	zigbee.smartShield(text: "alarm siren").format()
+}
+
+def both() {
+	log.debug "Executing 'alarm both'"
+	zigbee.smartShield(text: "alarm both").format()
 }
 
 def test() {
@@ -172,22 +188,8 @@ def test() {
 	]
 }
 
-def strobe() {
-	log.debug "Executing 'alarm strobe'"
-	zigbee.smartShield(text: "alarm both").format()
-}
-
-def siren() {
-	log.debug "Executing 'alarm siren'"
-	zigbee.smartShield(text: "alarm both").format()
-}
-
-def both() {
-	log.debug "Executing 'alarm both'"
-	zigbee.smartShield(text: "alarm both").format()
-}
-
 def poll() {
+	//temporarily implement poll() to issue a configure() command to send the polling interval settings to the arduino
 	configure()
 }
 
