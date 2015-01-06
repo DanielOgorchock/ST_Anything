@@ -72,7 +72,7 @@ Improvements to the SmartThings ThingShield library include:
 If you choose to use the complete ST_Anything package (i.e. ST_Anything.ino, ST_Anything library, and ST_Anything.groovy) the following choices are automatically made:
 - If using an Arduino UNO - SoftwareSerial is used on pins 2/3
 - If using an Arduino Leonardo - SoftwareSerial is used on pins 2/10 (add jumper from pin 10 to pin 2)
-- If using as Arduino MEGA, Hardware Serial is used on pins 14/15 (add jumpers from Pin14 to Pin2 and another from Pin15 to Pin3)
+- If using an Arduino MEGA, Hardware Serial is used on pins 14/15 (add jumpers from Pin14 to Pin2 and another from Pin15 to Pin3)
 
 .
 .
