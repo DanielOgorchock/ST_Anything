@@ -1,6 +1,6 @@
 ST_Anything
 ===========
-Turn your Arduino into an AnyThing. ST_Anything is an Arduino library, sketch, and DeviceType that works with your SmartThings ThingShield to create an all-in-one SmartThings device.
+Turn your Arduino into an AnyThing. ST_Anything is an Arduino library, sketch, and Device Type that works with your SmartThings ThingShield to create an all-in-one SmartThings device.
 
 
 ![screenshot](https://cloud.githubusercontent.com/assets/5206084/5608219/53df3d16-944a-11e4-9791-ce42f7334990.PNG)
@@ -38,7 +38,7 @@ ST_Anything consists of four parts:
 - WARNING:  If you are using an Arduino UNO, you will most likely need to comment out some of the devices in the sketch (both in the global variable declaration section as well as the setup() function) due to the UNO's limited 2 kilobytes of SRAM.  Failing to do so will most likely result in unpredictable behavior. The Arduino MEGA 2560 has 8k of SRAM and has four Hardware Serial ports (UARTs).  If you plan on using lots of devices, get the MEGA 2560.
 
 ##ST_Anything SmartThings Device Type Installation Instructions
-- Join your Arduino/ThingShield to your hub using your phone's SmartThings App.  It will show us as an "Arduino ThingShield"
+- Join your Arduino/ThingShield to your hub using your phone's SmartThings App.  It will show up as a generic "Arduino ThingShield"
 - Create an account and/or log into the SmartThings Developers Web IDE.
 - Click on My Device Types from the navigation menu.
 - Click on  + New SmartDevice button.
@@ -56,6 +56,77 @@ ST_Anything consists of four parts:
 - Your Arduino Device Tile should now look like the image above in this ReadMe
 - Be sure to go into the Preferences section to set the polling rates for the sensors.  These are sent to the Arduino if you press the Configure tile.  (Note:  Currently, these settings do not persist after an Arduino reboot.  I am hoping to figure out a method to have SmartThings send the Configure() command each time the Arduino starts up.  Gotta leave something for the future! :) )
 
+
+##Updated SmarthThings ThingShield Library
+While developing the ST_Anything library and Arduino sketch, it was discovered that the Arduino UNO R3's 2 kilobytes of SRAM was quickly limiting the number of devices that could be hosted simultaneously.  Numerous optimizations were made to the ST_Anything library which resulted in significant savings.  Focus was then turned to the SmartThings ThingShield library.
+ 
+Improvements to the SmartThings ThingShield library include:
+- 100% backwards compatible for use with your existing Arduino code
+- Performance improvements
+- SRAM memory optimizations (~150 bytes saved)
+- Elimination of unnecessary temporary dynamic memory allocations (255 bytes per send command)
+- Elimination of unused variables and dead code paths
+- The additon of a Hardware Serial communications constructor
+- Support for the 3 additional hardware UARTS on the Arduino MEGA 2560
+
+If you choose to use the complete ST_Anything package (i.e. ST_Anything.ino, ST_Anything library, and ST_Anything.groovy) the following choices are automatically made:
+- If using an Arduino UNO - SoftwareSerial is used on pins 2/3
+- If using an Arduino Leonardo - SoftwareSerial is used on pins 2/10 (add jumper from pin 10 to pin 2)
+- If using as Arduino MEGA, Hardware Serial is used on pins 14/15 (add jumpers from Pin14 to Pin2 and another from Pin15 to Pin3)
+
+.
+.
+.
+
+###WARNING - Geeky Material Ahead!!!
+
+.
+.
+.
+
+If you want to use the new SmartThings libary with your existing sketches (or to just learn more about how all this stuff works, keep reading...) 
+
+The Arduino UNO should typically use the SoftwareSerial library Constructor since the UNO has only one Hardware UART port ("Serial") which is used by the USB port for programming and debugging.
+To use SoftwareSerial:
+- Use the original SoftwareSerial constructor passing in pinRX=3 and pinTX=2 
+-   SmartThings(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *callout);
+- Make sure the ThingShield's switch in the "D2/D3" position
+- Be certain to not use Pins 2 & 3 in your Arduino sketch for I/O since they are electrically connected to the ThingShield. Pin6 is also reserved by the ThingShield. Best to avoid using it. 
+
+The Arduino Leonardo and Mega can use SoftwareSerial BUT cannot use Pin3 for Rx since that pin does not support interrupts on these boards.
+To use SoftwareSerial:
+- Use Pin 10 for Rx and add a wire jumper from Pin10 to Pin3. Use Pin 2 for Tx as usual
+- Use the original SoftwareSerial constructor passing in pinRX=10 and pinTX=2 
+-   SmartThings(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *callout);
+- Make sure the ThingShield's switch in the "D2/D3" position
+- Be certain to not use Pins 2 & 3 in your Arduino sketch for I/O since they are electrically connected to the ThingShield. Pin6 is also reserved by the ThingShield. Best to avoid using it.
+
+The Arduino UNO, Leonardo, and MEGA can use the Hardware "Serial" (pins 0,1) if desired, but USB programming and debug will be troublesome. 
+To use Hardware Serial:
+- Use the new Hardware Serial constructor passing in the Arduino's pin 0/1 UART (i.e "HW_SERIAL")
+-   SmartThings(SmartThingsSerialType_t hwSerialPort, SmartThingsCallout_t *callout);
+-   Note: SmartThingsSerialType_t is a new enum declared in SmartThings.h.  For the pin 0/1 UART, pass in "HW_SERIAL"
+- Download your sketch from the IDE with the ThingShield's switch in the "D2/D3" position
+- After the download is complete, move the switch to the "D0/D1" position and press RESET to allow the program to restart
+- You must suppress any and all "Serial.begin(), Serial.print(), Serial.println(), Serial.write(), Serial.read(), Serial.end(), Serial..." commands from your code when using Hardware Serial on pins 0/1 to avoid conflicts with the ThingShield's communication with the SmartThings library.
+- Pin6 is also reserved by the ThingShield. Best to avoid using it.
+ 
+The Arduino MEGA should use the new Hardware Serial Constructor since it has 4 UARTs. 
+To use Hardware Serial on "Serial3":
+- The "Serial3" port uses pins 14(Tx) and 15(Rx).  Wire a jumper Pin14 to Pin2 and another from Pin15 to Pin3.
+- Use the new Hardware Serial constructor passing in the Arduino's pin 14/15 UART (i.e "HW_SERIAL3")
+-   SmartThings(SmartThingsSerialType_t hwSerialPort, SmartThingsCallout_t *callout);
+-   Note: SmartThingsSerialType_t is a new enum declared in SmartThings.h.  For the pin 14/15 UART, pass in "HW_SERIAL3"
+- Make sure the ThingShield's switch in the "D2/D3" position 
+- Be certain to not use Pins 2 & 3 in your Arduino sketch for I/O since they are electrically connected to the ThingShield. Pin6 is also reserved by the ThingShield. Best to avoid using it.
+
+Additional Information:
+The SoftwareSerial library has the following known limitations: 
+- If using multiple software serial ports, only one can receive data at a time.
+- Not all pins on the Mega and Mega 2560 support change interrupts, so only the following can be used for RX: 10, 11, 12, 13, 14, 15, 50, 51, 52, 53, A8(62), A9(63), A10(64), A11(65), A12(66), A13(67), A14(68), A15(69).
+- Not all pins on the Leonardo and Micro support change interrupts, so only the following can be used for RX : 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI).
+
+For more details on the methods used in ST_Anything to measure and optimize the amount of free RAM, please refer to https://learn.adafruit.com/memories-of-an-arduino/measuring-free-memory and  https://learn.adafruit.com/memories-of-an-arduino/optimizing-sram.  This is a great site for any Arduino programmer.
 
 More instructions coming soon:
 
