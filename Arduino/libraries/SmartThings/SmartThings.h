@@ -8,7 +8,7 @@
 /// Updates by Daniel Ogorchock 12/30/2014 - Arduino Mega 2560 HW Serial support
 ///		-Numerous performance and size optimizations (helpful on UNO with only 2K SRAM)
 ///		-Arduino UNO should use the SoftwareSerial library Constructor since the UNO has
-///		 only one Hardware UART poart ("Serial") which is used by the USB port for 
+///		 only one Hardware UART port ("Serial") which is used by the USB port for 
 ///		 programming and debugging typically.  UNO can use the Hardware "Serial"
 ///		 if desired, but USB programming and debug will be troublesome.
 ///		 Leonardo and Mega can use SoftwareSerial BUT cannot use Pin3 for Rx - use
