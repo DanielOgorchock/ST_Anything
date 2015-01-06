@@ -7,15 +7,15 @@ Turn your Arduino into an AnyThing. ST_Anything is an Arduino library, sketch, a
 
 
 This package currently implements the following SmartThings Device Capabilities:
-- Alarm (Siren only currently)
+- Alarm (Siren only currently) (HoneyWell Wave 2 Siren (http://amzn.com/B0006BCCAE) + relay)
 - Configuration
-- Illuminance Measurement
-- Motion Sensor
-- Relative Humidity Measurement
-- Switch
-- Temperature Measurement
-- Water Sensor
-- Contact Sensor
+- Illuminance Measurement (photo resistor)
+- Motion Sensor (HC-SR501 Infrared PIR)
+- Relative Humidity Measurement (DHT22)
+- Switch (Sunfounder Relay - http://amzn.com/B00E0NTPP4)
+- Temperature Measurement (DHT22)
+- Water Sensor (http://amzn.com/B00HTSL7QC)
+- Contact Sensor  (Magnetic Door Switch)
 
 Note: Attempting to use all of these at once on an Arduino UNO is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.
 
