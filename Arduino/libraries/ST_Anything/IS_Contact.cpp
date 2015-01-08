@@ -10,8 +10,8 @@
 //
 //			  st::IS_Contact() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
-//				- byte pin - REQUIRED - the Arduino Pin to be used as a digital output
-//				- bool iState - OPTIONAL - LOW or HIGH - determines which value indicates the interrupt is true
+//				- byte pin - REQUIRED - the Arduino Pin to be used as a digital input
+//				- bool iState - REQUIRED - LOW or HIGH - determines which value indicates the interrupt is true
 //				- bool internalPullup - OPTIONAL - true == INTERNAL_PULLUP
 //
 //  Change History:
@@ -50,7 +50,7 @@ namespace st
 		InterruptSensor::init();
 	}
 
-	//called periodically by Everything class to ensure ST Cloud is kept consistent with the state of the motion sensor
+	//called periodically by Everything class to ensure ST Cloud is kept consistent with the state of the contact sensor
 	void IS_Contact::refresh()
 	{
 		Everything::sendSmartString(getName() + (getStatus() ? F(" closed") : F(" open")));
