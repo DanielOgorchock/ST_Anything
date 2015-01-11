@@ -1,3 +1,7 @@
+History:
+- v1.0 2015-01-05 Initial Release
+- v1.1 2015-01-11 Added st::IS_DoorControl device class & ST_Anything_Doors example code (sketch + groovy)
+
 ST_Anything
 ===========
 Turn your Arduino into an AnyThing. ST_Anything is an Arduino library, sketch, and Device Type that works with your SmartThings ThingShield to create an all-in-one SmartThings device.
@@ -16,6 +20,7 @@ This package currently implements the following SmartThings Device Capabilities:
 - Temperature Measurement (DHT22 - requires DHT Library, see below)
 - Water Sensor (http://amzn.com/B00HTSL7QC)
 - Contact Sensor  (Magnetic Door Switch)
+- Door Control (i.e. Garage Door Contact Sensor + Relay Output) - New! See 'ST_Anything_Doors' example
 
 Note: Attempting to use all of these at once on an Arduino UNO is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.
 
