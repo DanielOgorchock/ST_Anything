@@ -17,6 +17,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
+//	  2015-01-10  Dan Ogorchock	 Minor improvements to support Door Control Capability
 //
 //
 //******************************************************************************************
@@ -79,22 +80,22 @@ namespace st
 		}
 	}
 	
-	#if defined(ENABLE_SERIAL)
-		void Everything::readSerial()
+#if defined(ENABLE_SERIAL)
+	void Everything::readSerial()
+	{
+		String message;
+		while(Serial.available()>0)
 		{
-			String message;
-			while(Serial.available()>0)
-			{
-				char c=Serial.read();
-				message+=c;
-				delay(10);
-			}
-			if(message.length()>0)
-			{
-				receiveSmartString(message);
-			}
+			char c=Serial.read();
+			message+=c;
+			delay(10);
 		}
-	#endif
+		if(message.length()>0)
+		{
+			receiveSmartString(message);
+		}
+	}
+#endif
 	
 	void Everything::sendStrings()
 	{
@@ -110,7 +111,7 @@ namespace st
 			#ifndef DISABLE_SMARTTHINGS
 				SmartThing.send(Return_String.substring(0, index));
 			#endif
-			#if defined(ENABLE_SERIAL)
+			#if defined(ENABLE_SERIAL) && defined(DISABLE_SMARTTHINGS)
 				Serial.println(Return_String.substring(0, index));
 			#endif
 			
@@ -124,11 +125,13 @@ namespace st
 		for(unsigned int i=0; i<m_nExecutorCount; ++i)
 		{
 			m_Executors[i]->refresh();
+			sendStrings();
 		}
 
 		for (unsigned int i = 0; i<m_nSensorCount; ++i)
 		{
 			m_Sensors[i]->refresh();
+			sendStrings();
 		}
 	}
 	
@@ -137,7 +140,7 @@ namespace st
 	{
 		Serial.begin(Constants::SERIAL_BAUDRATE);
 		Return_String.reserve(st::Constants::RETURN_STRING_RESERVE);	//allocate Return_String buffer one time to prevent Heap Fragmentation.  RETURN_STRING_RESERVE is set in Constants.h
-		
+
 		if(debug)
 		{
 			Serial.println(F("Everything: init started"));
@@ -214,9 +217,9 @@ namespace st
 			readSerial();			//read data from the Arduino IDE Serial Monitor window (useful for debugging sometimes)
 		#endif
 		
-		sendStrings();
+		sendStrings();				//send any pending updates to ST Cloud
 		
-		if (millis() - refLastMillis >= Constants::DEV_REFRESH_INTERVAL*1000)  //DEV_REFRESH_INTERVAL is set in Constants.h
+		if ((bTimersPending == 0) && (millis() - refLastMillis >= Constants::DEV_REFRESH_INTERVAL * 1000))  //DEV_REFRESH_INTERVAL is set in Constants.h
 		{
 			refLastMillis = millis();
 			refreshDevices();	//call each st::Device object to refresh data (this is just a safeguard to ensure the state of the Arduino and the ST Cloud stay in synch should an event be missed)
@@ -244,9 +247,12 @@ namespace st
 		
 		if(Return_String.length()+str.length()>=Constants::RETURN_STRING_RESERVE)
 		{
-			Serial.print(F("Everything: ERROR: \""));
-			Serial.print(str);
-			Serial.println(F("\" would overflow the Return_String 'buffer'"));
+			if (debug)
+			{
+				Serial.print(F("Everything: ERROR: \""));
+				Serial.print(str);
+				Serial.println(F("\" would overflow the Return_String 'buffer'"));
+			}
 			return false;
 		}
 		else
@@ -255,7 +261,12 @@ namespace st
 			return true;
 		}
 	}
-	
+
+	bool Everything::sendSmartStringNow(String &str)
+	{
+		if (sendSmartString(str)) sendStrings(); //send any pending updates to ST Cloud immediately
+	}
+
 	Device* Everything::getDeviceByName(const String &str)
 	{
 		for(unsigned int index=0; index<m_nSensorCount; ++index)
@@ -346,6 +357,7 @@ namespace st
 	unsigned long Everything::lastmillis=0;
 	unsigned long Everything::refLastMillis=0;
 	bool Everything::debug=false;
+	byte Everything::bTimersPending = 0;	//initialize variable
 
 	//SmartThings static members
 	#ifndef DISABLE_SMARTTHINGS

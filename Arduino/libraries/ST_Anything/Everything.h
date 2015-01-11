@@ -19,6 +19,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
+//	  2015-01-10  Dan Ogorchock	 Minor improvements to support Door Control Capability
 //
 //
 //******************************************************************************************
@@ -73,15 +74,18 @@ namespace st
 			static void initDevices();			//calls the init() routine of every object added to st::Everything in your sketch setup() routine 
 			static void run();					//st::Everything initialization routine called in your sketch loop() routine 
 			
-			static bool sendSmartString(String &str); //sendSmartString() may edit the string reference passed to it
-			
+			static bool sendSmartString(String &str); //sendSmartString() may edit the string reference passed to it - queues messages - preferable
+			static bool sendSmartStringNow(String &str); //sendSmartStringNow() may edit the string reference passed to it - sends messages immediate - only for special curcumstances
+
 			static Device* getDeviceByName(const String &str);	//returns pointer to Device object by name
 			
 			static bool addSensor(Sensor *sensor);		//adds a Sensor object to st::Everything's m_Sensors[] array - called in your sketch setup() routine
 			static bool addExecutor(Executor *executor);//adds a Executor object to st::Everything's m_Executors[] array - called in your sketch setup() routine
 		
+			static byte bTimersPending;	//number of time critical events in progress - if > 0, do NOT perform refreshDevices() routine 
+
 			static bool debug;	//debug flag to determine if debug print statements are executed - set value in your sketch's setup() routine
-			
+
 			friend SmartThingsCallout_t receiveSmartString; //callback function to act on data received from SmartThings Shield - called from SmartThings Shield Library		
 	};
 }

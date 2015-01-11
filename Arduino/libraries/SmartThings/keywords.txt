@@ -1,10 +1,18 @@
 #######################################
 # Data Types
 #######################################
-SmartThingsCallout_t KEYWORD1 
+SmartThings	KEYWORD1
+SmartThingsCallout_t	KEYWORD1 
+SmartThingsNetworkState_t	KEYWORD1
+SmartThingsSerialType_t	KEYWORD1
 
 #######################################
 # Public Methods / Functions 
 #######################################
-update      KEYWORD2
-send        KEYWORD2
+run	KEYWORD2
+send	KEYWORD2
+shieldSetLED	KEYWORD2
+shieldFindNetwork	KEYWORD2
+shieldLeaveNetwork	KEYWORD2
+shieldGetLastNetworkState	KEYWORD2
+shieldGetNetworkState	KEYWORD2
