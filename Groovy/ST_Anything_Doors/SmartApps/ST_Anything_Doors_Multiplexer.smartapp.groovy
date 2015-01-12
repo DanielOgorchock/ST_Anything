@@ -17,7 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2015-01-10  Dan Ogorchock  Original Creation
- *
+ *    2015-01-11  Dan Ogorchock	 Reduced unnecessary chatter to the virtual devices	
  *
  */
  
@@ -90,27 +90,35 @@ def subscribe() {
 // --- Left Garage Door --- 
 def leftDoorOpen(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    leftdoor.open()
+    if (leftdoor.currentValue("contact") != "open") {
+    	log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+    	leftdoor.open()
+	}
 }
 
 def leftDoorOpening(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    leftdoor.opening()
-}    
-  
+    if (leftdoor.currentValue("contact") != "opening") {
+	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+    	leftdoor.opening()
+	}    
+}
+
 def leftDoorClosing(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    leftdoor.closing()
+    if (leftdoor.currentValue("contact") != "closing") {
+	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+    	leftdoor.closing()
+	}
 }
 
 def leftDoorClosed(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    leftdoor.close()
-}
+    if (leftdoor.currentValue("contact") != "closed") {
+	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+    	leftdoor.close()
+	}
+}    
 
 def leftDoorPushButton(evt)
 {
@@ -121,26 +129,34 @@ def leftDoorPushButton(evt)
 // --- Right Garage Door --- 
 def rightDoorOpen(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    rightdoor.open()
+    if (rightdoor.currentValue("contact") != "open") {
+	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+		rightdoor.open()
+	}
 }
 
 def rightDoorOpening(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    rightdoor.opening()
-}    
-  
+    if (rightdoor.currentValue("contact") != "opening") {
+	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+    	rightdoor.opening()
+	}    
+}
+
 def rightDoorClosing(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    rightdoor.closing()
+    if (rightdoor.currentValue("contact") != "closing") {
+	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+    	rightdoor.closing()
+	}
 }
 
 def rightDoorClosed(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    rightdoor.close()
+    if (rightdoor.currentValue("contact") != "closed") {
+	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+    	rightdoor.close()
+	}
 }
 
 def rightDoorPushButton(evt)
@@ -152,56 +168,71 @@ def rightDoorPushButton(evt)
 // --- Front Door --- 
 def frontDoorOpen(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    frontdoor.openme()
+    if (frontdoor.currentValue("contact") != "open") {
+    	log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+    	frontdoor.openme()
+    }
 }
 
 def frontDoorClosed(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    frontdoor.closeme()
+    if (frontdoor.currentValue("contact") != "closed") {
+		log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+    	frontdoor.closeme()
+    }
 }
 
 // --- back Door --- 
 def backDoorOpen(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    backdoor.openme()
+    if (backdoor.currentValue("contact") != "open") {
+		log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+    	backdoor.openme()
+    }
 }
 
 def backDoorClosed(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    backdoor.closeme()
+    if (backdoor.currentValue("contact") != "closed") {
+		log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+    	backdoor.closeme()
+	}
 }
 
 // --- Kitchen Door --- 
 def kitchenDoorOpen(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    kitchendoor.openme()
+    if (kitchendoor.currentValue("contact") != "open") {
+		log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+    	kitchendoor.openme()
+	}
 }
 
 def kitchenDoorClosed(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    kitchendoor.closeme()
+    if (kitchendoor.currentValue("contact") != "closed") {
+		log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+    	kitchendoor.closeme()
+	}
 }
 
 
 // --- Garage Side Door --- 
 def garagesideDoorOpen(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    garagesidedoor.openme()
+    if (garagesidedoor.currentValue("contact") != "open") {
+	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+ 	   garagesidedoor.openme()
+	}
 }
 
 def garagesideDoorClosed(evt)
 {
-    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-    garagesidedoor.closeme()
+    if (garagesidedoor.currentValue("contact") != "closed") {
+	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
+	    garagesidedoor.closeme()
+	}
 }
-
 
 def initialize() {
 	// TODO: subscribe to attributes, devices, locations, etc.
