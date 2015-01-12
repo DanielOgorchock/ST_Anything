@@ -83,17 +83,16 @@
 #define PIN_TEMPERATUREHUMIDITY      A1
 
 //Garage Door Pins 
-#define PIN_CONTACT_LEFTGARAGE_DOOR  5
-#define PIN_CONTACT_RIGHTGARAGE_DOOR 7
-#define PIN_RELAY_LEFTGARAGE_DOOR    8
-#define PIN_RELAY_RIGHTGARAGE_DOOR   9
+#define PIN_RELAY_LEFTGARAGE_DOOR    5
+#define PIN_RELAY_RIGHTGARAGE_DOOR   7
+#define PIN_CONTACT_RIGHTGARAGE_DOOR 8
+#define PIN_CONTACT_LEFTGARAGE_DOOR  9
 
 //House Door Pins
-#define PIN_CONTACT_SIDEGARAGE_DOOR  10
-#define PIN_CONTACT_FRONT_DOOR       11
-#define PIN_CONTACT_BACK_DOOR        12
-#define PIN_CONTACT_KITCHEN_DOOR     13
-
+#define PIN_CONTACT_FRONT_DOOR       10
+#define PIN_CONTACT_BACK_DOOR        11
+#define PIN_CONTACT_KITCHEN_DOOR     12
+#define PIN_CONTACT_SIDEGARAGE_DOOR  13
 
 //******************************************************************************************
 //Declare each Device that is attached to the Arduino
