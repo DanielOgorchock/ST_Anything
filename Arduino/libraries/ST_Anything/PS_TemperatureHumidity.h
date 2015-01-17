@@ -16,6 +16,8 @@
 //				- long offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
 //				- byte pin - REQUIRED - the Arduino Pin to be used as a digital output
 //				- DHT_SENSOR DHTSensorType - REQUIRED - the type of DHT sensor (DHT11, DHT21, DHT22, DHT33, or DHT44)
+//				- String strTemp - OPTIONAL - name of temperature sensor to send to ST Cloud (defaults to "temperature")
+//				- String strHumid - OPTIONAL - name of humidity sensor to send to ST Cloud (defaults to "humidity")
 //
 //			  This class supports receiving configuiration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
@@ -28,6 +30,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
+//	  2015-01-17  Dan Ogorchock	 Added optional temperature and humidity device names in constructor to allow multiple Temp/Humidity sesnsors
 //
 //
 //******************************************************************************************
@@ -48,13 +51,15 @@ namespace st
 			int m_nHumiditySensorValue;		//current Humidity Value
 			dht DHT;						//DHT library object
 			byte m_bDHTSensorType;			//DHT Sensor Type
-			
+			String m_strTemperature;			//name of temparature sensor to use when transferring data to ST Cloud
+			String m_strHumidity;			//name of temparature sensor to use when transferring data to ST Cloud		
+
 		public:
 			//types of DHT sensors supported by the dht library
 			enum DHT_SENSOR { DHT11, DHT21, DHT22, DHT33, DHT44 };
 
 			//constructor - called in your sketch's global variable declaration section
-			PS_TemperatureHumidity(const String &name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType);
+			PS_TemperatureHumidity(const String &name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp="temperature", String strHumid="humidity");
 			
 			//destructor
 			virtual ~PS_TemperatureHumidity();

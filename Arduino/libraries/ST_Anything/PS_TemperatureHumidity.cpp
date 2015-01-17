@@ -16,6 +16,8 @@
 //				- long offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
 //				- byte pin - REQUIRED - the Arduino Pin to be used as a digital output
 //				- DHT_SENSOR DHTSensorType - REQUIRED - the type of DHT sensor (DHT11, DHT21, DHT22, DHT33, or DHT44)
+//				- String strTemp - OPTIONAL - name of temperature sensor to send to ST Cloud (defaults to "temperature")
+//				- String strHumid - OPTIONAL - name of humidity sensor to send to ST Cloud (defaults to "humidity")
 //
 //			  This class supports receiving configuiration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
@@ -28,6 +30,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
+//	  2015-01-17  Dan Ogorchock	 Added optional temperature and humidity device names in constructor to allow multiple Temp/Humidity sesnsors
 //
 //
 //******************************************************************************************
@@ -45,11 +48,13 @@ namespace st
 
 //public
 	//constructor - called in your sketch's global variable declaration section
-	PS_TemperatureHumidity::PS_TemperatureHumidity(const String &name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType) :
+	PS_TemperatureHumidity::PS_TemperatureHumidity(const String &name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp, String strHumid) :
 		PollingSensor(name, interval, offset),
 		m_nTemperatureSensorValue(0),
 		m_nHumiditySensorValue(0),
-		m_bDHTSensorType(DHTSensorType)
+		m_bDHTSensorType(DHTSensorType),
+		m_strTemperature(strTemp),
+		m_strHumidity(strHumid)
 	{
 		setPin(digitalInputPin);
 	}
@@ -143,7 +148,8 @@ namespace st
 		//Serial.print(m_nTemperatureSensorValue, 1);
 		//Serial.println();
 		
-		Everything::sendSmartString("temperature " + String(m_nTemperatureSensorValue) + F("|humidity ") + String(m_nHumiditySensorValue));
+		Everything::sendSmartString(m_strTemperature + " " + String(m_nTemperatureSensorValue));
+		Everything::sendSmartString(m_strHumidity + " " + String(m_nHumiditySensorValue));
 	}
 	
 	void PS_TemperatureHumidity::setPin(byte pin)
