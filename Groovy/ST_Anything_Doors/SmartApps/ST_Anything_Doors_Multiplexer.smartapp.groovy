@@ -17,7 +17,8 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2015-01-10  Dan Ogorchock  Original Creation
- *    2015-01-11  Dan Ogorchock	 Reduced unnecessary chatter to the virtual devices	
+ *    2015-01-11  Dan Ogorchock  Reduced unnecessary chatter to the virtual devices
+ *    2015-01-18  Dan Ogorchock  Added support for Virtual Temperature/Humidity Device
  *
  */
  
@@ -42,6 +43,10 @@ preferences {
 		input "backdoor", title: "Virtual Contact Sensor for Back Door", "capability.contactSensor"
 		input "kitchendoor", title: "Virtual Contact Sensor for Kitchen Door", "capability.contactSensor"
 		input "garagesidedoor", title: "Virtual Contact Sensor for Garage Side Door", "capability.contactSensor"
+	}
+
+	section("Select the Virtual Temperature/Humidity devices") {
+		input "temphumid_1", title: "1st Temp-Humidity Sensor", "capability.temperatureMeasurement", required: false
 	}
 
 	section("Select the Arduino ST_Anything_Doors device") {
@@ -85,6 +90,9 @@ def subscribe() {
     
     subscribe(arduino, "garagesideDoor.open", garagesideDoorOpen)
     subscribe(arduino, "garagesideDoor.closed", garagesideDoorClosed)
+
+	subscribe(arduino, "temperature", temphumid_1_UpdateTemp)
+   	subscribe(arduino, "humidity", temphumid_1_UpdateHumid)
 }
 
 // --- Left Garage Door --- 
@@ -232,6 +240,19 @@ def garagesideDoorClosed(evt)
 	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
 	    garagesidedoor.closeme()
 	}
+}
+
+// --- Temperature/Humidity ---
+def temphumid_1_UpdateTemp(evt)
+{
+    log.debug "temperature: $evt.value, $evt"
+    temphumid_1.updateTemperature(evt.value)
+}
+
+def temphumid_1_UpdateHumid(evt)
+{
+    log.debug "humidity: $evt.value, $evt"
+    temphumid_1.updateHumidity(evt.value)
 }
 
 def initialize() {
