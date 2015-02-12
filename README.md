@@ -1,6 +1,7 @@
 History:
 - v1.0 2015-01-05 Initial Release
 - v1.1 2015-01-11 Added st::IS_DoorControl device class & ST_Anything_Doors example code (sketch + groovy)
+- v1.2 2015-02-12 Added st::EX_RCSwitch device class & ST_Anything_RCSwitch example code (sketch and groovy)
 
 ST_Anything
 ===========
@@ -21,6 +22,7 @@ This package currently implements the following SmartThings Device Capabilities:
 - Water Sensor (http://amzn.com/B00HTSL7QC)
 - Contact Sensor  (Magnetic Door Switch)
 - Door Control (i.e. Garage Door Contact Sensor + Relay Output) - New! See 'ST_Anything_Doors' example
+- RCSwitch Control (i.e. Radio Control Switch) - New! See 'ST_Anything_RCSwitch' example (Requires RCSwitch library, see below)
 
 Note: Attempting to use all of these at once on an Arduino UNO is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.
 
@@ -39,7 +41,8 @@ ST_Anything consists of four parts:
   - Copy and paste the 'ST_Anything' sketch folder into your local 'Arduino\Sketches' directory.
   - Look inside the 'Arduino\libraries' folder of the repo.
   - Copy and paste both the 'ST_Anything' and 'SmartThings' folders into your local 'Arduino\libraries' directory. (Note: it may be wise to rename your existing 'SmartThings' library to prevent any overwriting if you have already downloaded the official release.)
-- Download DHT library from https://github.com/RobTillaart/Arduino/tree/master/libraries/DHTlib and copy dht.h, dht.cpp, and ReadMe.txt to your 'Arduino\libraries\DHT' folder. 
+- Download DHT library from https://github.com/RobTillaart/Arduino/tree/master/libraries/DHTlib and copy dht.h, dht.cpp, and ReadMe.txt to your 'Arduino\libraries\DHT' folder.
+- Download the RCSwitch library from http://code.google.com/p/rc-switch/downloads/list?can=3&q= and copy it to your 'Arduino\libraries\RCSwitch' folder
 - Open the ST_Anything.ino and see if it successfully compiles.
 - WARNING:  If you are using an Arduino UNO, you will most likely need to comment out some of the devices in the sketch (both in the global variable declaration section as well as the setup() function) due to the UNO's limited 2 kilobytes of SRAM.  Failing to do so will most likely result in unpredictable behavior. The Arduino MEGA 2560 has 8k of SRAM and has four Hardware Serial ports (UARTs).  If you plan on using lots of devices, get the MEGA 2560.
 
