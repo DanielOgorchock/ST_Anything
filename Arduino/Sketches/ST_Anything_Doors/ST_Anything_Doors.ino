@@ -47,7 +47,8 @@
 //******************************************************************************************
 #include <SoftwareSerial.h> //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Library
 #include <SmartThings.h>    //Library to provide API to the SmartThings Shield
-
+#include <dht.h>            //DHT Temperature and Humidity Library 
+#include <RCSwitch.h>       //Library to provide support for RCSwitch devices
 //******************************************************************************************
 // ST_Anything Library 
 //******************************************************************************************
@@ -58,7 +59,7 @@
 #include <PollingSensor.h>   //Generic Polling "Sensor" Class, polls Arduino pins periodically
 #include <Everything.h>      //Master Brain of ST_Anything library that ties everything together and performs ST Shield communications
 
-#include <dht.h>             //DHT Temperature and Humidity Library 
+
 #include <PS_TemperatureHumidity.h>  //Implements a Polling Sensor (PS) to measure Temperature and Humidity via DHT library
 #include <IS_Motion.h>       //Implements an Interrupt Sensor (IS) to detect motion via a PIR sensor
 #include <IS_Contact.h>      //Implements an Interrupt Sensor (IS) to monitor the status of a digital input pin
