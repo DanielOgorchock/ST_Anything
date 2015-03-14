@@ -87,6 +87,8 @@ namespace st
 			static bool debug;	//debug flag to determine if debug print statements are executed - set value in your sketch's setup() routine
 
 			friend SmartThingsCallout_t receiveSmartString; //callback function to act on data received from SmartThings Shield - called from SmartThings Shield Library		
+
+			static void setLED(uint8_t red, uint8_t green, uint8_t blue) {SmartThing.shieldSetLED(red, green, blue);}
 	};
 }
 #endif

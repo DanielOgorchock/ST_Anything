@@ -32,6 +32,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2015-03-10  Dan            Modified to monitor furnace alarm
+//    2015-03-14  Dan            Added LED capability for visual status of the FurnaceAlarm
 //
 //
 //******************************************************************************************
@@ -80,9 +81,13 @@
 //Polling Sensors
 
 //Interrupt Sensors 
-st::IS_Contact sensor1("contact", PIN_CONTACT, LOW, true);
+st::IS_Contact sensor1("contact", PIN_CONTACT, HIGH, true);
 
 //Executors
+
+
+//Global Variables
+bool lastStatus;  //Hold the last status of the Furnace Alarm to prevent updating the LED too frequently
 
 //******************************************************************************************
 //Arduino Setup() routine
@@ -118,6 +123,10 @@ void setup()
   //Initialize each of the devices which were added to the Everything Class
   st::Everything::initDevices();
   //*****************************************************************************
+  
+  //Set the lastStatus variable to force the LED update the first time through the loop()
+  lastStatus = !sensor1.getStatus();
+  
 }
 
 //******************************************************************************************
@@ -129,4 +138,21 @@ void loop()
   //Execute the Everything run method which takes care of "Everything"
   //*****************************************************************************
   st::Everything::run();
+  
+  //Check to see if the Furnace is in Alarm.  If true, set the Smart Thing Shield
+  //LED to Red.  If false, set the LED to Green.
+  if (sensor1.getStatus() && !lastStatus)
+  {
+      //ALARM!!! (Red)
+      st::Everything::setLED(0,2,0);
+      lastStatus = true;
+
+  }
+  else if (!sensor1.getStatus() && lastStatus)
+  {
+      //NORMAL (Green)
+      st::Everything::setLED(2,0,0);
+      lastStatus = false;
+  }
+  
 }
