@@ -20,6 +20,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //	  2015-01-10  Dan Ogorchock	 Minor improvements to support Door Control Capability
+//	  2015-03-14  Dan Ogorchock	 Added public setLED() function to control ThingShield LED
 //
 //
 //******************************************************************************************
@@ -88,7 +89,10 @@ namespace st
 
 			friend SmartThingsCallout_t receiveSmartString; //callback function to act on data received from SmartThings Shield - called from SmartThings Shield Library		
 
-			static void setLED(uint8_t red, uint8_t green, uint8_t blue) {SmartThing.shieldSetLED(red, green, blue);}
+			//SmartThings Object
+			#ifndef DISABLE_SMARTTHINGS
+			  static void setLED(uint8_t red, uint8_t green, uint8_t blue) {SmartThing.shieldSetLED(red, green, blue);}
+			#endif
 	};
 }
 #endif
