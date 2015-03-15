@@ -143,14 +143,14 @@ void loop()
   //LED to Red.  If false, set the LED to Green.
   if (sensor1.getStatus() && !lastStatus)
   {
-      //NORMAL (Green)
+      //ALARM!!! (Red)
       st::Everything::setLED(2,0,0);
       lastStatus = true;
 
   }
   else if (!sensor1.getStatus() && lastStatus)
   {
-      //ALARM!!! (Red)
+      //NORMAL (Green)
       st::Everything::setLED(0,2,0);  
       lastStatus = false;
   }
