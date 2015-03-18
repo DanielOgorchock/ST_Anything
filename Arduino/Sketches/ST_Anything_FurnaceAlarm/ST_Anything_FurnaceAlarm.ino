@@ -81,7 +81,7 @@
 //Polling Sensors
 
 //Interrupt Sensors 
-st::IS_Contact sensor1("contact", PIN_CONTACT, LOW, true);
+st::IS_Contact sensor1("contact", PIN_CONTACT, LOW, true, 20000);
 
 //Executors
 

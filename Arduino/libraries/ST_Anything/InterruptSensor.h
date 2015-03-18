@@ -3,7 +3,7 @@
 //  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son)
 //
 //  Summary:  st::InterruptSensor is a generic class which inherits from st::Sensor.  This is the
-//			  parent class for the st::IS_Motion class.
+//			  parent class for the st::IS_Motion, IS_Contact, and IS_DoorControl classes.
 //			  In general, this file should not need to be modified.   
 //
 //  Change History:
@@ -11,6 +11,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
+//	  2015-03-17  Dan			 Added optional "numReqCounts" constructor argument/capability
 //
 //
 //******************************************************************************************
@@ -29,13 +30,16 @@ namespace st
 			bool m_bInterruptState; //LOW or HIGH - determines which value indicates the interrupt is true (i.e. LOW=Falling Edge, HIGH=Rising Edge)
 			bool m_bStatus;			//true == interrupted
 			bool m_bPullup;			//true == Internal Pullup resistor required, set in constructor call in your sketch
-			bool m_bInitRequired;
+			bool m_bInitRequired;	//
+			long m_nRequiredCounts;	//Number of required counts (checks of the pin) before believeing the pin is high/low
+			long m_nCurrentUpCount;
+			long m_nCurrentDownCount;
 
 			void checkIfTriggered(); 
 			
 		public:
 			//constructor
-			InterruptSensor(const String &name, byte pin, bool iState, bool internalPullup=false); //(defaults to NOT using internal pullup resistors)
+			InterruptSensor(const String &name, byte pin, bool iState, bool internalPullup=false, long numReqCounts=0); //(defaults to NOT using internal pullup resistors, and required counts = 0)
 			
 			//destructor
 			virtual ~InterruptSensor();

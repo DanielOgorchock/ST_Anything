@@ -13,12 +13,14 @@
 //				- byte pin - REQUIRED - the Arduino Pin to be used as a digital input
 //				- bool iState - REQUIRED - LOW or HIGH - determines which value indicates the interrupt is true
 //				- bool internalPullup - OPTIONAL - true == INTERNAL_PULLUP
+//				- long numReqCounts - OPTIONAL - number of counts before changing state of input (prevent false alarms)
 //
 //  Change History:
 //
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
+//	  2015-03-17  Dan			 Added optional "numReqCounts" constructor argument/capability
 //
 //
 //******************************************************************************************
@@ -37,7 +39,7 @@ namespace st
 			
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			IS_Contact(const String &name, byte pin, bool iState, bool internalPullup = false); //(defaults to NOT using internal pullup resistors)
+			IS_Contact(const String &name, byte pin, bool iState, bool internalPullup = false, long numReqCounts = 0); //(defaults to NOT using internal pullup resistors, and required counts = 0)
 			
 			//destructor
 			virtual ~IS_Contact();
