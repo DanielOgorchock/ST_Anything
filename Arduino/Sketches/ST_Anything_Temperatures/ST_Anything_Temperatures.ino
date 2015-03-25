@@ -39,10 +39,10 @@
 ///           --| 5V         9 |--X CS
 ///           --| GND        8 |--THING_RX ------------------|
 ///           --| GND          |                             |
-///           --| Vin        7 |--X CLK                      |
+///           --| Vin        7 |--X SCLK                     |
 ///             |            6 |--reserved by ThingShield    |
-///           --| A0         5 |--X DO for Broiler           |
-///           --| A1    ( )  4 |--X DO for Oven              |
+///           --| A0         5 |--X DO for Broiler MISO      |
+///           --| A1    ( )  4 |--X DO for Oven MISO         |
 ///           --| A2         3 |--X THING_RX ----------------|
 ///           --| A3  ____   2 |--X THING_TX
 ///           --| A4 |    |  1 |--
@@ -80,7 +80,7 @@
 #include <Everything.h>      //Master Brain of ST_Anything library that ties everything together and performs ST Shield communications
 
 #include <PS_TemperatureHumidity.h>  //Implements a Polling Sensor (PS) to measure Temperature and Humidity via DHT library
-
+#include <PS_AdafruitThermocouple.h> //Implements a Polling Sensor (PS) to measure Temperature via Adafruit_MAX31855 library
 
 //******************************************************************************************
 //Define which Arduino Pins will be used for each device
@@ -89,10 +89,18 @@
 //         -Always avoid Pin 6 as it is reserved by the SmartThings Shield
 //
 //******************************************************************************************
+
+//DHT Pin Assignments
 #define PIN_TEMPHUMID_FREEZER     10
 #define PIN_TEMPHUMID_FRIDGE      11
 #define PIN_TEMPHUMID_MOISTCRISP  12
 #define PIN_TEMPHUMID_OTHERCRISP  13
+
+//Thermocouple Pi Assignments
+#define PIN_SCLK                  7
+#define PIN_CS                    9
+#define PIN_MISO_OVEN             4
+#define PIN_MISO_BROILER          5
 
 //******************************************************************************************
 //Declare each Device that is attached to the Arduino
@@ -110,10 +118,12 @@
 //
 //******************************************************************************************
 //Polling Sensors
-st::PS_TemperatureHumidity sensor1("th_freezer", 10, 0, PIN_TEMPHUMID_FREEZER, st::PS_TemperatureHumidity::DHT22, "t_Freezer", "h_Freezer");
-st::PS_TemperatureHumidity sensor2("th_fridge", 10, 2, PIN_TEMPHUMID_FRIDGE, st::PS_TemperatureHumidity::DHT22, "t_Fridge", "h_Fridge");
-st::PS_TemperatureHumidity sensor3("th_moistcrisp", 10, 4, PIN_TEMPHUMID_MOISTCRISP, st::PS_TemperatureHumidity::DHT22, "t_Moistcrisp", "h_Moistcrisp");
-st::PS_TemperatureHumidity sensor4("th_othercrisp", 10, 6, PIN_TEMPHUMID_OTHERCRISP, st::PS_TemperatureHumidity::DHT22, "t_Othercrisp", "h_Othercrisp");
+st::PS_TemperatureHumidity sensor1("th_Freezer", 30, 3, PIN_TEMPHUMID_FREEZER, st::PS_TemperatureHumidity::DHT22, "t_Freezer", "h_Freezer");
+st::PS_TemperatureHumidity sensor2("th_Fridge", 30, 5, PIN_TEMPHUMID_FRIDGE, st::PS_TemperatureHumidity::DHT22, "t_Fridge", "h_Fridge");
+st::PS_TemperatureHumidity sensor3("th_Moistcrisp", 30, 7, PIN_TEMPHUMID_MOISTCRISP, st::PS_TemperatureHumidity::DHT22, "t_Moistcrisp", "h_Moistcrisp");
+st::PS_TemperatureHumidity sensor4("th_Othercrisp", 30, 9, PIN_TEMPHUMID_OTHERCRISP, st::PS_TemperatureHumidity::DHT22, "t_Othercrisp", "h_Othercrisp");
+st::PS_AdafruitThermocouple sensor5("t_Oven", 10, 0, PIN_SCLK, PIN_CS, PIN_MISO_OVEN);
+st::PS_AdafruitThermocouple sensor6("t_Broiler", 10, 2, PIN_SCLK, PIN_CS, PIN_MISO_BROILER);
 
 //Interrupt Sensors 
 
@@ -148,6 +158,8 @@ void setup()
   st::Everything::addSensor(&sensor2);
   st::Everything::addSensor(&sensor3);
   st::Everything::addSensor(&sensor4); 
+  st::Everything::addSensor(&sensor5);
+  st::Everything::addSensor(&sensor6);
   
   //*****************************************************************************
   //Add each executor to the "Everything" Class

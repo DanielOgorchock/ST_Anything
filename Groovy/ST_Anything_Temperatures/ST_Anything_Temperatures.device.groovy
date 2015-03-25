@@ -197,16 +197,16 @@ def configure() {
 	log.debug "temphumid SampleRate = " + temphumidSampleRate
     log.debug "thermocouple SampleRate = " + thermocoupleSampleRate
 	[
-        zigbee.smartShield(text: "th_freezer " + temphumidSampleRate).format(),
+        zigbee.smartShield(text: "th_Freezer " + temphumidSampleRate).format(),
         "delay 1000",
-        zigbee.smartShield(text: "th_fridge " + temphumidSampleRate).format(),
+        zigbee.smartShield(text: "th_Fridge " + temphumidSampleRate).format(),
         "delay 1000",
-        zigbee.smartShield(text: "th_moistcrisp " + temphumidSampleRate).format(),
+        zigbee.smartShield(text: "th_Moistcrisp " + temphumidSampleRate).format(),
         "delay 1000",
-        zigbee.smartShield(text: "th_othercrisp " + temphumidSampleRate).format(),
+        zigbee.smartShield(text: "th_Othercrisp " + temphumidSampleRate).format(),
         "delay 1000",
-        zigbee.smartShield(text: "t_broiler " + thermocoupleSampleRate).format(),
+        zigbee.smartShield(text: "t_Broiler " + thermocoupleSampleRate).format(),
         "delay 1000",
-        zigbee.smartShield(text: "t_oven " + thermocoupleSampleRate).format()
+        zigbee.smartShield(text: "t_Oven " + thermocoupleSampleRate).format()
 	]
 }
