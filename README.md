@@ -44,7 +44,7 @@ ST_Anything (original example) consists of four parts:
 - Look inside the `Arduino/Sketches` folder of the repo.
 - Copy and paste the `ST_Anything` sketch folder into your local Arduino sketches directory. If you haven't created any sketches, you may not see the folder. In this case, feel free to create it.
 - Look inside the `Arduino/libraries` folder of the repo.
-- Copy and paste both the `ST_Anything` and `SmartThings` folders into your local Arduino libraries directory. (Note: it may be wise to rename your existing 'SmartThings' library to prevent any overwriting if you have already downloaded the official release.)
+- Copy and paste both the `ST_Anything` and `SmartThings`  (as well as all of the other new libraries from v1.2 and v1.3) folders into your local Arduino libraries directory. (Note: it may be wise to rename your existing 'SmartThings' library to prevent any overwriting if you have already downloaded the official release.)
 - Download DHT library from https://github.com/RobTillaart/Arduino/tree/master/libraries/DHTlib and copy dht.h, dht.cpp, and ReadMe.txt to your 'Arduino\libraries\DHT' folder. NOTE:  This library is now included in my github repo (v1.2)
 - Download the RCSwitch library from http://code.google.com/p/rc-switch/downloads/list?can=3&q= and copy it to your 'Arduino\libraries\RCSwitch' folder. NOTE:  This library is now included in my github repo (v1.2)
 - Open the ST_Anything.ino and see if it successfully compiles.
