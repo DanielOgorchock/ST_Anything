@@ -57,6 +57,8 @@ namespace st
 			//gets
 			virtual byte getPin() const {return m_nPin;}
 			
+			virtual bool getStatus() const { return m_bCurrentState; }	//whether the switch is HIGH or LOW
+
 			//sets
 			virtual void setPin(byte pin);
 		

@@ -31,6 +31,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
+//    2015-03-28  Dan Ogorchock  Removed RCSwitch #include now that the libraries are split up
 //
 //
 //******************************************************************************************
@@ -41,7 +42,7 @@
 #include <SoftwareSerial.h> //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Library
 #include <SmartThings.h>    //Library to provide API to the SmartThings Shield
 #include <dht.h>            //DHT Temperature and Humidity Library 
-#include <RCSwitch.h>       //Library to provide support for RCSwitch devices
+
 //******************************************************************************************
 // ST_Anything Library 
 //******************************************************************************************
@@ -69,6 +70,13 @@
 //         -Always avoid Pin 6 as it is reserved by the SmartThings Shield
 //
 //******************************************************************************************
+//"RESERVED" pins for SmartThings ThingShield - best to avoid
+#define PIN_O_RESERVED               0  //reserved by ThingShield for Serial communications OR USB Serial Monitor
+#define PIN_1_RESERVED               1  //reserved by ThingShield for Serial communications OR USB Serial Monitor
+#define PIN_2_RESERVED               2  //reserved by ThingShield for Serial communications
+#define PIN_3_RESERVED               3  //reserved by ThingShield for Serial communications
+#define PIN_6_RESERVED               6  //reserved by ThingShield (possible future use?)
+
 #define PIN_WATER                A4
 #define PIN_ILLUMINANCE          A5
 #define PIN_MOTION               4

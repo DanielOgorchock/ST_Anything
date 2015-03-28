@@ -33,7 +33,10 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
-//
+//    2015-03-28  Dan Ogorchock  Change the default DEV_REFRESH_INTERVAL to 300 seconds.  Was interfering with normal operations.
+//                               Added SENDSTRINGS_INTERVAL to throttle the rate at which data is sent to the ThingShield.  Events were being missed.
+//                               Added DISABLE_REFRESH feature - commented out by default.  Allows user to disable the automatic refresh feature as it can interfere with normal operations.
+//                               Adjusted MAX Sensor and Executor counts for the Arduino MEGA to allow 16 relay system to function properly.
 //
 //******************************************************************************************
 
@@ -45,6 +48,7 @@
 
 //#define ENABLE_SERIAL			//If uncommented, will allow you to type in commands via the Arduino Serial Console Window (useful for debugging)
 //#define DISABLE_SMARTTHINGS	//If uncommented, will disable all ST Shield Library calls (e.g. you want to use this library without SmartThings for a different application)
+//#define DISABLE_REFRESH		//If uncommented, will disable periodic refresh of the sensors and executors states to the ST Cloud - improves performance, but may reduce data integrity
 
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) 
 #define BOARD_UNO
@@ -62,17 +66,25 @@ namespace st
 	{
 		public:
 			//Serial debug console baud rate
-			static const unsigned int SERIAL_BAUDRATE=9600;			//Uncomment If NOT using pins 0,1 for ST Shield communications (default)
-			//static const unsigned int SERIAL_BAUDRATE=2400;		//Uncomment if using Pins 0,1 for ST Shield Communications
-			//Maximum number of SENSOR objects
-			static const byte MAX_SENSOR_COUNT=10;					//Used to limit the number of sensor devices allowed.  Be careful on Arduino UNO due to 2K SRAM limitation 
-			//Maximum number of EXECUTOR objects
-			static const byte MAX_EXECUTOR_COUNT=10;				//Used to limit the number of executor devices allowed.  Be careful on Arduino UNO due to 2K SRAM limitation 
+			static const unsigned int SERIAL_BAUDRATE=9600;				//Uncomment If NOT using pins 0,1 for ST Shield communications (default)
+			//static const unsigned int SERIAL_BAUDRATE=2400;			//Uncomment if using Pins 0,1 for ST Shield Communications
+			#if defined(BOARD_MEGA)
+				//Maximum number of SENSOR objects
+				static const byte MAX_SENSOR_COUNT=20;					//Used to limit the number of sensor devices allowed.  Be careful on Arduino UNO due to 2K SRAM limitation 
+				//Maximum number of EXECUTOR objects
+				static const byte MAX_EXECUTOR_COUNT=20;				//Used to limit the number of executor devices allowed.  Be careful on Arduino UNO due to 2K SRAM limitation 
+			#else
+				//Maximum number of SENSOR objects
+				static const byte MAX_SENSOR_COUNT = 10;				//Used to limit the number of sensor devices allowed.  Be careful on Arduino UNO due to 2K SRAM limitation 
+				//Maximum number of EXECUTOR objects
+				static const byte MAX_EXECUTOR_COUNT = 10;				//Used to limit the number of executor devices allowed.  Be careful on Arduino UNO due to 2K SRAM limitation 
+			#endif
 			//Size of reserved return string
 			static const byte RETURN_STRING_RESERVE = (MAX_SENSOR_COUNT + MAX_EXECUTOR_COUNT) * 5;	//Do not make too large due to UNO's 2K SRAM limitation
-			//Interval on which Device's refresh methods are called (in milliseconds) - most useful for Executors and InterruptSensors
-			static const long DEV_REFRESH_INTERVAL=60;				//seconds - Used to make sure the ST Cloud is kept current with device status (in case of missed updates to the ST Cloud) - primarily for Executors and InterruptSensors
-			
+			//Interval on which Device's refresh methods are called (in seconds) - most useful for Executors and InterruptSensors - only works if DISABLE_REFRESH is not defined above
+			static const int DEV_REFRESH_INTERVAL=300;				//seconds - Used to make sure the ST Cloud is kept current with device status (in case of missed updates to the ST Cloud) - primarily for Executors and InterruptSensors - only works if DISABLE_REFRESH is not defined above
+			//Minumum interval between sending packets of data to ThingShield (in milliseconds) - noticed issue where ST Hub/Cloud could not keep up with rapid data transfer
+			static const int SENDSTRINGS_INTERVAL = 1000;
 			// ------------------------------------------------------------------------------- 
 			// --- SmartThings specific items 
 			// -------------------------------------------------------------------------------

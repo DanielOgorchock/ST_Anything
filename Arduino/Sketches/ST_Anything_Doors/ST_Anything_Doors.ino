@@ -38,6 +38,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2015-01-07  Dan Ogorchock  Modified for Door Monitoring and Garage Door Control
+//    2015-03-28  Dan Ogorchock  Removed RCSwitch #include now that the libraries are split up
 //
 //
 //******************************************************************************************
@@ -48,7 +49,7 @@
 #include <SoftwareSerial.h> //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Library
 #include <SmartThings.h>    //Library to provide API to the SmartThings Shield
 #include <dht.h>            //DHT Temperature and Humidity Library 
-#include <RCSwitch.h>       //Library to provide support for RCSwitch devices
+
 //******************************************************************************************
 // ST_Anything Library 
 //******************************************************************************************

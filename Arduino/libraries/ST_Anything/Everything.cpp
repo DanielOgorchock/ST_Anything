@@ -18,6 +18,8 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //	  2015-01-10  Dan Ogorchock	 Minor improvements to support Door Control Capability
+//	  2015-03-14  Dan Ogorchock	 Added public setLED() function to control ThingShield LED
+//    2015-03-28  Dan Ogorchock  Added throttling cability to sendStrings to improve success rate of ST Cloud getting the data ("SENDSTRINGS_INTERVAL" is in CONSTANTS.H)
 //
 //
 //******************************************************************************************
@@ -99,7 +101,7 @@ namespace st
 	
 	void Everything::sendStrings()
 	{
-		//Loop through the Return_String buffer and send each "|" delimted string to ST Shield
+		//Loop through the Return_String buffer and send each "|" delimited string to ST Shield
 		while(Return_String.length()>=1 && Return_String[0]!='|')
 		{
 			unsigned int index=Return_String.indexOf("|");
@@ -109,7 +111,12 @@ namespace st
 				Serial.println(Return_String.substring(0, index));
 			}
 			#ifndef DISABLE_SMARTTHINGS
+			if (millis() - sendstringsLastMillis < Constants::SENDSTRINGS_INTERVAL)
+				{
+					delay(1000 - (millis() - sendstringsLastMillis)); //Added due to slow ST Hub/Cloud Processing.  Events were being missed.  DGO 2015-03-28
+				}
 				SmartThing.send(Return_String.substring(0, index));
+				sendstringsLastMillis = millis();
 			#endif
 			#if defined(ENABLE_SERIAL) && defined(DISABLE_SMARTTHINGS)
 				Serial.println(Return_String.substring(0, index));
@@ -140,7 +147,7 @@ namespace st
 	{
 		Serial.begin(Constants::SERIAL_BAUDRATE);
 		Return_String.reserve(st::Constants::RETURN_STRING_RESERVE);	//allocate Return_String buffer one time to prevent Heap Fragmentation.  RETURN_STRING_RESERVE is set in Constants.h
-
+		
 		if(debug)
 		{
 			Serial.println(F("Everything: init started"));
@@ -219,14 +226,16 @@ namespace st
 		
 		sendStrings();				//send any pending updates to ST Cloud
 		
+		#ifndef DISABLE_REFRESH		//Added new check to allow user to disable REFRESH feature - setting is in Constants.h)
 		if ((bTimersPending == 0) && (millis() - refLastMillis >= Constants::DEV_REFRESH_INTERVAL * 1000))  //DEV_REFRESH_INTERVAL is set in Constants.h
 		{
 			refLastMillis = millis();
 			refreshDevices();	//call each st::Device object to refresh data (this is just a safeguard to ensure the state of the Arduino and the ST Cloud stay in synch should an event be missed)
 
 		}
+		#endif
 		
-		if(debug && millis()%30000==0 && millis()!=lastmillis)
+		if(debug && millis()%60000==0 && millis()!=lastmillis)
 		{
 			lastmillis = millis();
 			Serial.print(F("Everything: Free Ram = "));  
@@ -356,6 +365,7 @@ namespace st
 	unsigned int Everything::m_nExecutorCount=0;
 	unsigned long Everything::lastmillis=0;
 	unsigned long Everything::refLastMillis=0;
+	unsigned long Everything::sendstringsLastMillis = 0;
 	bool Everything::debug=false;
 	byte Everything::bTimersPending = 0;	//initialize variable
 

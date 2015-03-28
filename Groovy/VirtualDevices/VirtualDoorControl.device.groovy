@@ -36,18 +36,20 @@ metadata {
 		// TODO: define status and reply messages here
 	}
 
-	standardTile("doorControl", "device.doorControl", width: 2, height: 2, canChangeIcon: true) {
-		state "closed", label: 'Closed', action: "actuate", icon: "st.doors.garage.garage-closed", backgroundColor: "#79b821", nextState: "closed"
-        state "open", label: 'Open', action: "actuate", icon: "st.doors.garage.garage-open", backgroundColor: "#ffa81e", nextState: "open"
-        state "opening", label: 'Opening', action: "actuate", icon: "st.doors.garage.garage-opening", backgroundColor: "89C2E8", nextState: "opening"
-        state "closing", label: 'Closing', action: "actuate", icon: "st.doors.garage.garage-closing", backgroundColor: "89C2E8", nextState: "closing"
- 	}
-	standardTile("contact", "device.contact", width: 1, height: 1) {
-		state("open", label:'${name}', icon:"st.contact.contact.open", backgroundColor:"#ffa81e")
-		state("closed", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#79b821")
-	}
+	tiles {
+		standardTile("doorControl", "device.doorControl", width: 2, height: 2, canChangeIcon: true) {
+			state "closed", label: 'Closed', action: "actuate", icon: "st.doors.garage.garage-closed", backgroundColor: "#79b821", nextState: "closed"
+        	state "open", label: 'Open', action: "actuate", icon: "st.doors.garage.garage-open", backgroundColor: "#ffa81e", nextState: "open"
+        	state "opening", label: 'Opening', action: "actuate", icon: "st.doors.garage.garage-opening", backgroundColor: "89C2E8", nextState: "opening"
+        	state "closing", label: 'Closing', action: "actuate", icon: "st.doors.garage.garage-closing", backgroundColor: "89C2E8", nextState: "closing"
+ 		}
+		standardTile("contact", "device.contact", width: 1, height: 1) {
+			state("open", label:'${name}', icon:"st.contact.contact.open", backgroundColor:"#ffa81e")
+			state("closed", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#79b821")
+		}
  	main (["doorControl", "contact"])
 	details (["doorControl", "contact"])
+    }
 }
 
 // parse events into attributes
@@ -59,8 +61,8 @@ def parse(String description) {
 
 // handle commands
 def open() {
-	sendEvent(name: "doorControl", value: "open", isStateChange: true)
     sendEvent(name: "contact", value: "open", isStateChange: true)
+	sendEvent(name: "doorControl", value: "open", isStateChange: true)
 }
 
 def opening() {
@@ -72,8 +74,8 @@ def closing() {
 }
 
 def close() {
-	sendEvent(name: "doorControl", value: "closed", isStateChange: true)
     sendEvent(name: "contact", value: "closed", isStateChange: true)
+	sendEvent(name: "doorControl", value: "closed", isStateChange: true)
 }
 
 def actuate() {

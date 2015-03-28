@@ -21,6 +21,8 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //	  2015-01-10  Dan Ogorchock	 Minor improvements to support Door Control Capability
 //	  2015-03-14  Dan Ogorchock	 Added public setLED() function to control ThingShield LED
+//    2015-03-28  Dan Ogorchock  Added throttling cability to sendStrings to improve success rate of ST Cloud getting the data ("SENDSTRINGS_INTERVAL" is in CONSTANTS.H)
+
 //
 //
 //******************************************************************************************
@@ -57,13 +59,14 @@ namespace st
 			static void updateNetworkState();	//keeps track of the current ST Shield to Hub network status
 			static void updateSensors();		//simply calls update on all the sensors
 			static void sendStrings();			//sends all updates from the devices in Return_String
-			
+			static unsigned long sendstringsLastMillis;	//keep track of how long since last time we sent data to ST Cloud, to enable throttling
+
 			static unsigned long lastmillis;	//used to keep track of last time run() has output freeRam() info
 			
 			//stuff for refreshing Devices
 			static unsigned long refLastMillis;	//used to keep track of last time run() has called refreshDevices()
 			static void refreshDevices();		//simply calls refresh on all the Devices
-			
+
 			#ifdef ENABLE_SERIAL
 				static void readSerial();		//reads data from Arduino IDE Serial Monitor, if enabled in Constants.h
 			#endif

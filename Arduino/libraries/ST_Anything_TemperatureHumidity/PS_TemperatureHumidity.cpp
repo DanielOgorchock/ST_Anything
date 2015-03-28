@@ -30,7 +30,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
-//	  2015-01-17  Dan Ogorchock	 Added optional temperature and humidity device names in constructor to allow multiple Temp/Humidity sesnsors
+//	  2015-01-17  Dan Ogorchock	 Added optional temperature and humidity device names in constructor to allow multiple Temp/Humidity sensors
 //
 //
 //******************************************************************************************

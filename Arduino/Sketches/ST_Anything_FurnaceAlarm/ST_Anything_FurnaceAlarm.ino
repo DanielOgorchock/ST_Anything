@@ -63,6 +63,12 @@
 //         -Always avoid Pin 6 as it is reserved by the SmartThings Shield
 //
 //******************************************************************************************
+//"RESERVED" pins for SmartThings ThingShield - best to avoid
+#define PIN_O_RESERVED               0  //reserved by ThingShield for Serial communications OR USB Serial Monitor
+#define PIN_1_RESERVED               1  //reserved by ThingShield for Serial communications OR USB Serial Monitor
+#define PIN_2_RESERVED               2  //reserved by ThingShield for Serial communications
+#define PIN_3_RESERVED               3  //reserved by ThingShield for Serial communications
+#define PIN_6_RESERVED               6  //reserved by ThingShield (possible future use?)
 
 #define PIN_CONTACT              11
 
