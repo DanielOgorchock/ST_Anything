@@ -70,7 +70,7 @@ ST_Anything (original example) consists of four parts:
 - Be sure to go into the Preferences section to set the polling rates for the sensors.  These are sent to the Arduino if you press the Configure tile.  (Note:  Currently, these settings do not persist after an Arduino reboot.  I am hoping to figure out a method to have SmartThings send the Configure() command each time the Arduino starts up.  Gotta leave something for the future! :) )
 
 
-##Updated SmarthThings ThingShield Library
+##Updated SmartThings ThingShield Library
 While developing the ST_Anything library and Arduino sketch, it was discovered that the Arduino UNO R3's 2 kilobytes of SRAM was quickly limiting the number of devices that could be hosted simultaneously.  Numerous optimizations were made to the ST_Anything library which resulted in significant savings.  Focus was then turned to the SmartThings ThingShield library.
  
 Improvements to the SmartThings ThingShield library include:
