@@ -31,6 +31,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //	  2015-01-17  Dan Ogorchock	 Added optional temperature and humidity device names in constructor to allow multiple Temp/Humidity sensors
+//    2015-03-29  Dan Ogorchock	 Optimized use of the DHT library (made it static) to reduce SRAM memory usage at runtime.
 //
 //
 //******************************************************************************************
@@ -98,7 +99,7 @@ namespace st
 	void PS_TemperatureHumidity::getData()
 	{
 		// READ DATA
-		int chk =0;
+		int8_t chk = 0;
 		switch (m_bDHTSensorType) {
 			case DHT11:
 				//Serial.println(F("PS_TemperatureHumidity: DTH11 Read"));
@@ -156,4 +157,8 @@ namespace st
 	{
 		m_nDigitalInputPin=pin;
 	}
+
+
+	//initialize static members
+	dht PS_TemperatureHumidity::DHT;					//DHT library object
 }
