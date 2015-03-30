@@ -128,8 +128,8 @@ The Arduino MEGA should use the new Hardware Serial Constructor since it has 4 U
 To use Hardware Serial on "Serial3":
 - The "Serial3" port uses pins 14(Tx) and 15(Rx).  Wire a jumper Pin14 to Pin2 and another from Pin15 to Pin3.
 - Use the new Hardware Serial constructor passing in the Arduino's pin 14/15 UART (i.e "HW_SERIAL3")
--   SmartThings(SmartThingsSerialType_t hwSerialPort, SmartThingsCallout_t *callout);
--   Note: SmartThingsSerialType_t is a new enum declared in SmartThings.h.  For the pin 14/15 UART, pass in "HW_SERIAL3"
+  - SmartThings(SmartThingsSerialType_t hwSerialPort, SmartThingsCallout_t *callout);
+  - Note: SmartThingsSerialType_t is a new enum declared in SmartThings.h.  For the pin 14/15 UART, pass in "HW_SERIAL3"
 - Make sure the ThingShield's switch in the "D2/D3" position 
 - Be certain to not use Pins 2 & 3 in your Arduino sketch for I/O since they are electrically connected to the ThingShield. Pin6 is also reserved by the ThingShield. Best to avoid using it.
 
