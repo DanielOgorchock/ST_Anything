@@ -101,8 +101,7 @@ If you want to use the new SmartThings libary with your existing sketches (or to
 
 The Arduino UNO should typically use the SoftwareSerial library Constructor since the UNO has only one Hardware UART port ("Serial") which is used by the USB port for programming and debugging.
 To use SoftwareSerial:
-- Use the original SoftwareSerial constructor passing in pinRX=3 and pinTX=2 
--   SmartThings(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *callout);
+- Use the original SoftwareSerial constructor passing in pinRX=3 and pinTX=2 to the SmartThings(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *callout) call.
 - Make sure the ThingShield's switch in the "D2/D3" position
 - Be certain to not use Pins 2 & 3 in your Arduino sketch for I/O since they are electrically connected to the ThingShield. Pin6 is also reserved by the ThingShield. Best to avoid using it. 
 
