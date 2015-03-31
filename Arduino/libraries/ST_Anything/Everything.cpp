@@ -2,8 +2,8 @@
 //  File: Everything.cpp
 //  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son)
 //
-//  Summary:  st::Everything is a generic class which essentially acts as the main() rotuine.
-//			  All st::Device type objects are managed by st::Everything.  It is resposible for
+//  Summary:  st::Everything is a generic class which essentially acts as the main() routine.
+//			  All st::Device type objects are managed by st::Everything.  It is responsible for
 //			  for calling the correct functions within each object it is responsible for at the
 //			  proper time.  It handles all initialization of and use of the SmarThings Shield library.
 //			  
@@ -19,7 +19,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //	  2015-01-10  Dan Ogorchock	 Minor improvements to support Door Control Capability
 //	  2015-03-14  Dan Ogorchock	 Added public setLED() function to control ThingShield LED
-//    2015-03-28  Dan Ogorchock  Added throttling cability to sendStrings to improve success rate of ST Cloud getting the data ("SENDSTRINGS_INTERVAL" is in CONSTANTS.H)
+//    2015-03-28  Dan Ogorchock  Added throttling capability to sendStrings to improve success rate of ST Cloud getting the data ("SENDSTRINGS_INTERVAL" is in CONSTANTS.H)
 //
 //
 //******************************************************************************************
