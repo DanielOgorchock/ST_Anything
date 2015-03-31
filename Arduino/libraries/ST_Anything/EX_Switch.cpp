@@ -12,7 +12,7 @@
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
 //				- byte pin - REQUIRED - the Arduino Pin to be used as a digital output
 //				- bool startingState - OPTIONAL - the value desired for the initial state of the switch.  LOW = "off", HIGH = "on"
-//				- bool invertLogic - OPTIONAL - determines whether the Arduino Digital Ouput should use inverted logic
+//				- bool invertLogic - OPTIONAL - determines whether the Arduino Digital Output should use inverted logic
 //
 //  Change History:
 //

@@ -15,7 +15,7 @@
 //				- long offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
 //				- byte pin - REQUIRED - the Arduino Pin to be used as an analog input
 //
-//			  This class supports receiving configuiration data from the SmartThings cloud via the ST App.  A user preference
+//			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
 //			  the ST Shield.  For PollingSensors, this data is handled in the beSMart() function.
 //

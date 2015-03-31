@@ -4,7 +4,7 @@
 //
 //  Summary:  This file contains a number of user-definable settings that affect the 
 //			  ST_Anything library.  This is the main file where user specific settings
-//			  should be made to adjust the behavior of SmartThings Shield communcations.
+//			  should be made to adjust the behavior of SmartThings Shield communications.
 //
 //	Notes:
 //		-The SmartThings Shield uses Pins 0,1 or Pins 2,3 for serial communications based

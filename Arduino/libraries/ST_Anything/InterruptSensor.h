@@ -31,7 +31,7 @@ namespace st
 			bool m_bStatus;			//true == interrupted
 			bool m_bPullup;			//true == Internal Pullup resistor required, set in constructor call in your sketch
 			bool m_bInitRequired;	//
-			long m_nRequiredCounts;	//Number of required counts (checks of the pin) before believeing the pin is high/low
+			long m_nRequiredCounts;	//Number of required counts (checks of the pin) before believing the pin is high/low
 			long m_nCurrentUpCount;
 			long m_nCurrentDownCount;
 

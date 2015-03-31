@@ -21,7 +21,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //	  2015-01-10  Dan Ogorchock	 Minor improvements to support Door Control Capability
 //	  2015-03-14  Dan Ogorchock	 Added public setLED() function to control ThingShield LED
-//    2015-03-28  Dan Ogorchock  Added throttling cability to sendStrings to improve success rate of ST Cloud getting the data ("SENDSTRINGS_INTERVAL" is in CONSTANTS.H)
+//    2015-03-28  Dan Ogorchock  Added throttling capability to sendStrings to improve success rate of ST Cloud getting the data ("SENDSTRINGS_INTERVAL" is in CONSTANTS.H)
 
 //
 //
@@ -44,7 +44,7 @@ namespace st
 	{
 		private:
 			static Sensor* m_Sensors[Constants::MAX_SENSOR_COUNT];		//array of Sensor objects that st::Everything will keep track of
-			static unsigned int m_nSensorCount;	//number of st::Sensor objetcs added to st::Everything in your sketch Setup() routine
+			static unsigned int m_nSensorCount;	//number of st::Sensor objects added to st::Everything in your sketch Setup() routine
 			
 			static Executor* m_Executors[Constants::MAX_EXECUTOR_COUNT]; //array of Executor objects that st::Everything will keep track of
 			static unsigned int m_nExecutorCount;//number of st::Executor objects added to st::Everything in your sketch Setup() routine
@@ -79,7 +79,7 @@ namespace st
 			static void run();					//st::Everything initialization routine called in your sketch loop() routine 
 			
 			static bool sendSmartString(String &str); //sendSmartString() may edit the string reference passed to it - queues messages - preferable
-			static bool sendSmartStringNow(String &str); //sendSmartStringNow() may edit the string reference passed to it - sends messages immediate - only for special curcumstances
+			static bool sendSmartStringNow(String &str); //sendSmartStringNow() may edit the string reference passed to it - sends messages immediate - only for special circumstances
 
 			static Device* getDeviceByName(const String &str);	//returns pointer to Device object by name
 			

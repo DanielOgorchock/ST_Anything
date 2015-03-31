@@ -34,7 +34,7 @@ namespace st
 			//destructor
 			virtual ~Executor();
 		
-			//initialiazation routine
+			//initialization routine
 			virtual void init();	
 		
 			//debug flag to determine if debug print statements are executed (set value in your sketch)

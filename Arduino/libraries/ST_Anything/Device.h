@@ -34,7 +34,7 @@ namespace st
 			//destructor
 			virtual ~Device();
 			
-			//initialiazation routine - This pure virtual function must be implemented by all derived classes
+			//initialization routine - This pure virtual function must be implemented by all derived classes
 			virtual void init()=0;
 
 			//function used by all devices to process data from SmartThings Shield - all derived classes must implement this pure virtual function

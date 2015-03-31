@@ -19,7 +19,7 @@
 //				- bool internalPullup - REQUIRED - true == INTERNAL_PULLUP
 //				- byte pinOutput - REQUIRED - the Arduino Pin to be used as a digital output
 //				- bool startingState - REQUIRED - the value desired for the initial state of the switch.  LOW = "off", HIGH = "on"
-//				- bool invertLogic - REQUIRED - determines whether the Arduino Digital Ouput should use inverted logic
+//				- bool invertLogic - REQUIRED - determines whether the Arduino Digital Output should use inverted logic
 //				- long delayTime - REQUIRED - the number of milliseconds to keep the output on
 //
 //  Change History:
@@ -45,7 +45,7 @@ namespace st
 
 			//following are for the digital output
 			bool m_bCurrentState;	//HIGH or LOW
-			bool m_bInvertLogic;	//determines whether the Arduino Digital Ouput should use inverted logic
+			bool m_bInvertLogic;	//determines whether the Arduino Digital Output should use inverted logic
 			byte m_nOutputPin;		//Arduino Pin used as a Digital Output for the switch - often connected to a relay or an LED
 			unsigned long m_lDelayTime;		//number of milliseconds to keep digital output active before automatically turning off
 			unsigned long m_lTimeTurnedOn;	//time when the digital output was turned on

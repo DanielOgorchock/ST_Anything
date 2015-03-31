@@ -23,7 +23,7 @@
 //				- int m_l - OPTIONAL - third argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
 //				- int m_h - OPTIONAL - fourth argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
 //
-//			  This class supports receiving configuiration data from the SmartThings cloud via the ST App.  A user preference
+//			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
 //			  the ST Shield.  For PollingSensors, this data is handled in the beSMart() function.
 //

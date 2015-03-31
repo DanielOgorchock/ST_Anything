@@ -34,7 +34,7 @@ namespace st
 			unsigned long m_nPreviousTime; //in milliseconds - time of last poll
 			long m_nDeltaTime;			   //in milliseconds - elapsed time since last poll
 			long m_nInterval;			   //in milliseconds - polling interval for the sensor
-			long m_nOffset;				   //in milliseconds - offset to prevent all Polling sensore from running at the same time
+			long m_nOffset;				   //in milliseconds - offset to prevent all Polling sensors from running at the same time
 			
 			virtual bool checkInterval(); //returns true and resets m_nDeltaTime if m_nInterval has been reached
 			
