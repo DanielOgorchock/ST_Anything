@@ -91,7 +91,7 @@ namespace st
 	//initialization routine - get first set of readings and send to ST cloud
 	void PS_TemperatureHumidity::init()
 	{
-		delay(1000);		//Needed to prevent "Unknown Error" on first read of DHT Sensor
+		delay(1500);		//Needed to prevent "Unknown Error" on first read of DHT Sensor
 		getData();
 	}
 	
@@ -129,26 +129,51 @@ namespace st
 		switch (chk)
 		{
 		case DHTLIB_OK:
-			//Serial.print(F("OK,\t"));
+			//if (st::PollingSensor::debug) {
+			//	Serial.print("OK,\t");
+			//}
 			m_nHumiditySensorValue = DHT.humidity;
 			m_nTemperatureSensorValue = (DHT.temperature * 1.8) + 32.0;		//Scale from Celsius to Farenheit
 			break;
 		case DHTLIB_ERROR_CHECKSUM:
-			Serial.println(F("PS_TemperatureHumidity: DHT Checksum error"));
+			if (st::PollingSensor::debug) {
+				Serial.println(F("PS_TemperatureHumidity: DHT Checksum error"));
+			}
 			break;
 		case DHTLIB_ERROR_TIMEOUT:
-			Serial.println(F("PS_TemperatureHumidity: DHT Time out error"));
+			if (st::PollingSensor::debug) {
+				Serial.println(F("PS_TemperatureHumidity: DHT Time out error"));
+			}
+			break;
+		case DHTLIB_ERROR_CONNECT:
+			if (st::PollingSensor::debug) {
+				Serial.println(F("PS_TemperatureHumidity: DHT Connect error"));
+			}
+			break;
+		case DHTLIB_ERROR_ACK_L:
+			if (st::PollingSensor::debug) {
+				Serial.println(F("PS_TemperatureHumidity: DHT Ack Low error"));
+			}
+			break;
+		case DHTLIB_ERROR_ACK_H:
+			if (st::PollingSensor::debug) {
+				Serial.println(F("PS_TemperatureHumidity: DHT Ack High error"));
+			}
 			break;
 		default:
-			Serial.println(F("PS_TemperatureHumidity: DHT Unknown error"));
+			if (st::PollingSensor::debug) {
+				Serial.println(F("PS_TemperatureHumidity: DHT Unknown error"));
+			}
 			break;
+
+
 		}
 		// DISPLAY DATA
 		//Serial.print(m_nHumiditySensorValue, 1);
 		//Serial.print(F(",\t\t"));
 		//Serial.print(m_nTemperatureSensorValue, 1);
 		//Serial.println();
-		
+
 		Everything::sendSmartString(m_strTemperature + " " + String(m_nTemperatureSensorValue));
 		Everything::sendSmartString(m_strHumidity + " " + String(m_nHumiditySensorValue));
 	}
