@@ -44,10 +44,10 @@ namespace st
 	{
 		private:
 			static Sensor* m_Sensors[Constants::MAX_SENSOR_COUNT];		//array of Sensor objects that st::Everything will keep track of
-			static unsigned int m_nSensorCount;	//number of st::Sensor objects added to st::Everything in your sketch Setup() routine
+			static byte m_nSensorCount;	//number of st::Sensor objects added to st::Everything in your sketch Setup() routine
 			
 			static Executor* m_Executors[Constants::MAX_EXECUTOR_COUNT]; //array of Executor objects that st::Everything will keep track of
-			static unsigned int m_nExecutorCount;//number of st::Executor objects added to st::Everything in your sketch Setup() routine
+			static byte m_nExecutorCount;//number of st::Executor objects added to st::Everything in your sketch Setup() routine
 			
 			//SmartThings Object
 			#ifndef DISABLE_SMARTTHINGS

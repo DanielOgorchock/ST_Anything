@@ -35,6 +35,9 @@ namespace st
 		private:
 			//inherits everything necessary from parent InterruptSensor Class
 			
+			unsigned int timer; 
+			bool calibrated;
+			
 		public:
 			//constructor - called in your sketch's global variable declaration section
 			IS_Motion(const String &name, byte pin, bool iState, bool internalPullup = false); //(defaults to NOT using internal pullup resistors)
@@ -53,6 +56,9 @@ namespace st
 
 			//handles what to do when interrupt is ended 
 			virtual void runInterruptEnded();
+	
+			//override update method
+			virtual void update();
 	
 	};
 }

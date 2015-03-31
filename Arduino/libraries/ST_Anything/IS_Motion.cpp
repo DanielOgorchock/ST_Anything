@@ -35,7 +35,8 @@ namespace st
 //public
 	//constructor
 	IS_Motion::IS_Motion(const String &name, byte pin, bool iState, bool pullup) :
-		InterruptSensor(name, pin, iState, pullup)  //use parent class' constructor
+		InterruptSensor(name, pin, iState, pullup),  //use parent class' constructor
+		calibrated(false)
 		{
 		}
 	
@@ -51,13 +52,8 @@ namespace st
 		}
 		//calibrate the PIR Motion Sensor
 		digitalWrite(getInterruptPin(), LOW); 
-		delay(30000);
-		if (debug){
-			Serial.println(F("IS_Motion: Motion Sensor Calibration Finished"));
-		}
-
-		//get current status of motion sensor by calling parent class's init() routine - no need to duplicate it here!
-		InterruptSensor::init();
+		timer=millis();
+		//delay(30000);
 	}
 
 	//called periodically by Everything class to ensure ST Cloud is kept consistent with the state of the motion sensor
@@ -76,6 +72,25 @@ namespace st
 	{
 		//add the "inactive" event to the buffer to be queued for transfer to the ST Shield
 		Everything::sendSmartString(getName() + F(" inactive"));
+	}
+	
+	void IS_Motion::update()
+	{
+		if(calibrated)
+			InterruptSensor::update();
+		else
+			if(millis()>timer+30000)
+			{
+				calibrated=true;
+				
+				//get current status of motion sensor by calling parent class's init() routine - no need to duplicate it here!
+				InterruptSensor::init();
+				
+				if (debug)
+				{
+					Serial.println(F("IS_Motion: Motion Sensor Calibration Finished"));
+				}
+			}
 	}
 
 }

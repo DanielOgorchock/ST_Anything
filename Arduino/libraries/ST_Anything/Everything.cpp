@@ -361,8 +361,8 @@ namespace st
 	String Everything::Return_String;
 	Sensor* Everything::m_Sensors[Constants::MAX_SENSOR_COUNT];
 	Executor* Everything::m_Executors[Constants::MAX_EXECUTOR_COUNT];
-	unsigned int Everything::m_nSensorCount=0;
-	unsigned int Everything::m_nExecutorCount=0;
+	byte Everything::m_nSensorCount=0;
+	byte Everything::m_nExecutorCount=0;
 	unsigned long Everything::lastmillis=0;
 	unsigned long Everything::refLastMillis=0;
 	unsigned long Everything::sendstringsLastMillis = 0;
