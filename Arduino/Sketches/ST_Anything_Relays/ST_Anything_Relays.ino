@@ -87,7 +87,7 @@
 
 //---Begin Push Button declarations---
 #define MAX_PUSHBUTTONS 16
-#define MIN_DEBOUNCE_TIME 500 //push-buttons must be held for 50ms to prevent chattering input
+#define MIN_DEBOUNCE_TIME 50 //push-buttons must be held for 50ms to prevent chattering input
 
 #define PIN_BUTTON1   38
 #define PIN_BUTTON2   39
