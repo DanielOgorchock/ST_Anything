@@ -30,11 +30,8 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
-<<<<<<< HEAD
 //	  2015-01-17  Dan Ogorchock	 Added optional temperature and humidity device names in constructor to allow multiple Temp/Humidity sensors
-=======
 //    2015-01-17  Dan Ogorchock	 Added optional temperature and humidity device names in constructor to allow multiple Temp/Humidity sensors
->>>>>>> origin/master
 //    2015-03-29  Dan Ogorchock	 Optimized use of the DHT library (made it static) to reduce SRAM memory usage at runtime.
 //
 //
@@ -54,11 +51,7 @@ namespace st
 			byte m_nDigitalInputPin;		//digital pin connected to the DHT sensor
 			int m_nTemperatureSensorValue;	//current Temperature value
 			int m_nHumiditySensorValue;		//current Humidity Value
-<<<<<<< HEAD
 			static dht DHT;					//DHT library object
-=======
-			static dht DHT;						//DHT library object
->>>>>>> origin/master
 			byte m_bDHTSensorType;			//DHT Sensor Type
 			String m_strTemperature;			//name of temparature sensor to use when transferring data to ST Cloud
 			String m_strHumidity;			//name of temparature sensor to use when transferring data to ST Cloud		
@@ -92,7 +85,4 @@ namespace st
 	
 	};
 }
-
-
-
 #endif
