@@ -52,7 +52,10 @@ namespace st
 	
 	const String Device::getName() const
 	{
-			return Everything::progmemToString(m_pName);	
+		char tmp[Constants::MAX_NAME_LENGTH];
+		strcpy_P(tmp, (const char*)m_pName);
+		
+		return String(tmp);	
 	}
 	
 

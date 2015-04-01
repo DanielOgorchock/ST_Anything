@@ -338,15 +338,6 @@ namespace st
 		return true;
 	}
 	
-	String Everything::progmemToString(const __FlashStringHelper *s)
-	{
-		char tmp[Constants::MAX_NAME_LENGTH];
-		strcpy_P(tmp, (const char*)s);
-		
-		String rStr(tmp);
-		return rStr;
-	}
-	
 	//friends!
 	void receiveSmartString(String message)
 	{
