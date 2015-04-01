@@ -47,7 +47,7 @@ namespace st
 
 //public
 	//constructor - called in your sketch's global variable declaration section
-	PS_AdafruitThermocouple::PS_AdafruitThermocouple(const String &name, unsigned int interval, int offset, int8_t pinSCLK, int8_t pinCS, int8_t pinMISO):
+	PS_AdafruitThermocouple::PS_AdafruitThermocouple(const char *name, unsigned int interval, int offset, int8_t pinSCLK, int8_t pinCS, int8_t pinMISO):
 		PollingSensor(name, interval, offset),
 		m_dblTemperatureSensorValue(0.0),
 		m_Adafruit_MAX31855(Adafruit_MAX31855(pinSCLK, pinCS, pinMISO))

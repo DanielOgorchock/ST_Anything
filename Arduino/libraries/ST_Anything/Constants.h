@@ -65,6 +65,9 @@ namespace st
 	class Constants
 	{
 		public:
+			//Max name length (including null terminator!)
+			static const byte MAX_NAME_LENGTH=30;
+			
 			//Serial debug console baud rate
 			static const unsigned int SERIAL_BAUDRATE=9600;				//Uncomment If NOT using pins 0,1 for ST Shield communications (default)
 			//static const unsigned int SERIAL_BAUDRATE=2400;			//Uncomment if using Pins 0,1 for ST Shield Communications

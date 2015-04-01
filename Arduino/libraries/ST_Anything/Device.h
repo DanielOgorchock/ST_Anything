@@ -25,11 +25,13 @@ namespace st
 	class Device
 	{
 		private:
-			String m_Name;
+			//String m_Name;
+			unsigned short m_pEeprom;
 			
 		public:
 			//constructor
-			Device(const String &name);
+			Device(const char *name);
+			Device(const __FlashStringHelper *name);
 			
 			//destructor
 			virtual ~Device();
@@ -44,11 +46,8 @@ namespace st
 			virtual void refresh();
 
 			//gets
-			inline const String& getName() const {return m_Name;}
-			
-			//sets
-			inline void setName(const String &str) {m_Name=str;}
-			
+			const String getName() const;
+				
 			//debug flag to determine if debug print statements are executed (set value in your sketch)
 			static bool debug;
 	};

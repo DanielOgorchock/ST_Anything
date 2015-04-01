@@ -36,7 +36,7 @@ namespace st
 
 //public
 	//constructor
-	IS_Contact::IS_Contact(const String &name, byte pin, bool iState, bool pullup, long numReqCounts) :
+	IS_Contact::IS_Contact(const char *name, byte pin, bool iState, bool pullup, long numReqCounts) :
 		InterruptSensor(name, pin, iState, pullup, numReqCounts)  //use parent class' constructor
 		{
 		}

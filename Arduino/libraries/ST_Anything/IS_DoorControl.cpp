@@ -46,7 +46,7 @@ namespace st
 
 //public
 	//constructor
-	IS_DoorControl::IS_DoorControl(const String &name, byte pinInput, bool iState, bool pullup, byte pinOutput, bool startingState, bool invertLogic, unsigned long delayTime) :
+	IS_DoorControl::IS_DoorControl(const char *name, byte pinInput, bool iState, bool pullup, byte pinOutput, bool startingState, bool invertLogic, unsigned long delayTime) :
 		InterruptSensor(name, pinInput, iState, pullup),  //use parent class' constructor
 		m_bCurrentState(startingState),
 		m_bInvertLogic(invertLogic),

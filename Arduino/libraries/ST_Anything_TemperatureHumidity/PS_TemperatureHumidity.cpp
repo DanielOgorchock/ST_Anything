@@ -49,7 +49,7 @@ namespace st
 
 //public
 	//constructor - called in your sketch's global variable declaration section
-	PS_TemperatureHumidity::PS_TemperatureHumidity(const String &name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp, String strHumid) :
+	PS_TemperatureHumidity::PS_TemperatureHumidity(const char *name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp, String strHumid) :
 		PollingSensor(name, interval, offset),
 		m_nTemperatureSensorValue(0),
 		m_nHumiditySensorValue(0),

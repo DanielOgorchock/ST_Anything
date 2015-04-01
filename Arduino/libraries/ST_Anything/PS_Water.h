@@ -45,7 +45,7 @@ namespace st
 			
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			PS_Water(const String &name, unsigned int interval, int offset, byte analogInputPin);
+			PS_Water(const char *name, unsigned int interval, int offset, byte analogInputPin);
 			
 			//destructor
 			virtual ~PS_Water();

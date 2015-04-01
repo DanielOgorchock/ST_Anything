@@ -29,7 +29,7 @@ namespace st
 		
 		public:
 			//constructor
-			Executor(const String &name);
+			Executor(const char *name);
 			
 			//destructor
 			virtual ~Executor();

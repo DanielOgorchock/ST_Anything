@@ -368,7 +368,8 @@ namespace st
 	unsigned long Everything::sendstringsLastMillis = 0;
 	bool Everything::debug=false;
 	byte Everything::bTimersPending = 0;	//initialize variable
-
+	unsigned short Everything::EepromPointer = 0;
+	
 	//SmartThings static members
 	#ifndef DISABLE_SMARTTHINGS
 		// Please refer to Constants.h for settings that affect whether a board uses SoftwareSerial or Hardware Serial calls

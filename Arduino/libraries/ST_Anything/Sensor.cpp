@@ -26,7 +26,7 @@ namespace st
 
 //public
 	//constructor
-	Sensor::Sensor(const String &name):
+	Sensor::Sensor(const char *name):
 		Device(name)
 	{
 	

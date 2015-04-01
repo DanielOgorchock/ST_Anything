@@ -29,7 +29,7 @@ namespace st
 			
 		public:
 			//constructor
-			Sensor(const String &name);
+			Sensor(const char *name);
 			
 			//destructor
 			virtual ~Sensor();

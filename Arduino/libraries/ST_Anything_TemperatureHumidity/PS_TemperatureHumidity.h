@@ -61,7 +61,7 @@ namespace st
 			enum DHT_SENSOR { DHT11, DHT21, DHT22, DHT33, DHT44 };
 
 			//constructor - called in your sketch's global variable declaration section
-			PS_TemperatureHumidity(const String &name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp="temperature", String strHumid="humidity");
+			PS_TemperatureHumidity(const char *name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp="temperature", String strHumid="humidity");
 			
 			//destructor
 			virtual ~PS_TemperatureHumidity();

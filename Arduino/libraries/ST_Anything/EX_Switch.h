@@ -40,7 +40,7 @@ namespace st
 		
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			EX_Switch(const String &name, byte pin, bool startingState = LOW, bool invertLogic = false);
+			EX_Switch(const char *name, byte pin, bool startingState = LOW, bool invertLogic = false);
 			
 			//destructor
 			virtual ~EX_Switch();

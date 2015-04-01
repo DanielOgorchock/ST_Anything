@@ -54,7 +54,7 @@ namespace st
 			
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			PS_Illuminance(const String &name, unsigned int interval, int offset, byte analogInputPin, int s_l=0, int s_h=1024, int m_l=1000, int m_h=0);
+			PS_Illuminance(const char *name, unsigned int interval, int offset, byte analogInputPin, int s_l=0, int s_h=1024, int m_l=1000, int m_h=0);
 			
 			//destructor
 			virtual ~PS_Illuminance();
