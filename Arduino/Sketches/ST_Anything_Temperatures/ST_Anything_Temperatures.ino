@@ -56,7 +56,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2015-03-24  Dan Ogorchock  Modified to just monitor multiple DTHT Temp/Humid sensors
-//
+//    2015-03-31  Daniel O.      Memory optimizations utilizing progmem
 //
 //******************************************************************************************
 
@@ -81,7 +81,7 @@
 
 #include <PS_TemperatureHumidity.h>  //Implements a Polling Sensor (PS) to measure Temperature and Humidity via DHT library
 #include <PS_AdafruitThermocouple.h> //Implements a Polling Sensor (PS) to measure Temperature via Adafruit_MAX31855 library
-
+#include <avr/pgmspace.h> 
 //******************************************************************************************
 //Define which Arduino Pins will be used for each device
 //  Notes: -Serial Communications Pins are defined in Constants.h (avoid pins 0,1,2,3
@@ -124,12 +124,12 @@
 //
 //******************************************************************************************
 //Polling Sensors
-st::PS_TemperatureHumidity sensor1("th_Freezer", 30, 3, PIN_TEMPHUMID_FREEZER, st::PS_TemperatureHumidity::DHT22, "t_Freezer", "h_Freezer");
-st::PS_TemperatureHumidity sensor2("th_Fridge", 30, 5, PIN_TEMPHUMID_FRIDGE, st::PS_TemperatureHumidity::DHT22, "t_Fridge", "h_Fridge");
-st::PS_TemperatureHumidity sensor3("th_Moistcrisp", 30, 7, PIN_TEMPHUMID_MOISTCRISP, st::PS_TemperatureHumidity::DHT22, "t_Moistcrisp", "h_Moistcrisp");
-st::PS_TemperatureHumidity sensor4("th_Othercrisp", 30, 9, PIN_TEMPHUMID_OTHERCRISP, st::PS_TemperatureHumidity::DHT22, "t_Othercrisp", "h_Othercrisp");
-st::PS_AdafruitThermocouple sensor5("t_Oven", 10, 0, PIN_SCLK, PIN_CS, PIN_MISO_OVEN);
-st::PS_AdafruitThermocouple sensor6("t_Broiler", 10, 2, PIN_SCLK, PIN_CS, PIN_MISO_BROILER);
+;
+;
+;
+;
+;
+;
 
 //Interrupt Sensors 
 
@@ -160,12 +160,12 @@ void setup()
   //Add each sensor to the "Everything" Class   
   // TODO: Customize based on sensors defined in global section above
   //*****************************************************************************
-  st::Everything::addSensor(&sensor1);
-  st::Everything::addSensor(&sensor2);
-  st::Everything::addSensor(&sensor3);
-  st::Everything::addSensor(&sensor4); 
-  st::Everything::addSensor(&sensor5);
-  st::Everything::addSensor(&sensor6);
+  st::Everything::addSensor(new st::PS_TemperatureHumidity(F("th_Freezer"), 30, 3, PIN_TEMPHUMID_FREEZER, st::PS_TemperatureHumidity::DHT22, "t_Freezer", "h_Freezer"));
+  st::Everything::addSensor(new st::PS_TemperatureHumidity(F("th_Fridge"), 30, 5, PIN_TEMPHUMID_FRIDGE, st::PS_TemperatureHumidity::DHT22, "t_Fridge", "h_Fridge"));
+  st::Everything::addSensor(new st::PS_TemperatureHumidity(F("th_Moistcrisp"), 30, 7, PIN_TEMPHUMID_MOISTCRISP, st::PS_TemperatureHumidity::DHT22, "t_Moistcrisp", "h_Moistcrisp"));
+  st::Everything::addSensor(new st::PS_TemperatureHumidity(F("th_Othercrisp"), 30, 9, PIN_TEMPHUMID_OTHERCRISP, st::PS_TemperatureHumidity::DHT22, "t_Othercrisp", "h_Othercrisp")); 
+  st::Everything::addSensor(new st::PS_AdafruitThermocouple(F("t_Oven"), 10, 0, PIN_SCLK, PIN_CS, PIN_MISO_OVEN));
+  st::Everything::addSensor(new st::PS_AdafruitThermocouple(F("t_Broiler"), 10, 2, PIN_SCLK, PIN_CS, PIN_MISO_BROILER));
   
   //*****************************************************************************
   //Add each executor to the "Everything" Class
