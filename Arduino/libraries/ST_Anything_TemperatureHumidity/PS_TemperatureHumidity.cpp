@@ -19,7 +19,7 @@
 //				- String strTemp - OPTIONAL - name of temperature sensor to send to ST Cloud (defaults to "temperature")
 //				- String strHumid - OPTIONAL - name of humidity sensor to send to ST Cloud (defaults to "humidity")
 //
-//			  This class supports receiving configuiration data from the SmartThings cloud via the ST App.  A user preference
+//			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
 //			  the ST Shield.  For PollingSensors, this data is handled in the beSMart() function.
 //
@@ -49,7 +49,7 @@ namespace st
 
 //public
 	//constructor - called in your sketch's global variable declaration section
-	PS_TemperatureHumidity::PS_TemperatureHumidity(const char *name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp, String strHumid) :
+	PS_TemperatureHumidity::PS_TemperatureHumidity(const __FlashStringHelper *name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp, String strHumid) :
 		PollingSensor(name, interval, offset),
 		m_nTemperatureSensorValue(0),
 		m_nHumiditySensorValue(0),

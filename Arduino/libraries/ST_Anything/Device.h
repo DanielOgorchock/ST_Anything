@@ -19,18 +19,17 @@
 #define ST_DEVICE_H
 
 #include <Arduino.h>
+#include <avr/pgmspace.h>
 
 namespace st
 {
 	class Device
 	{
 		private:
-			//String m_Name;
-			unsigned short m_pEeprom;
+			const __FlashStringHelper *m_pName;
 			
 		public:
 			//constructor
-			Device(const char *name);
 			Device(const __FlashStringHelper *name);
 			
 			//destructor

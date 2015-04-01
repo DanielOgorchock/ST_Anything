@@ -29,7 +29,7 @@ namespace st
 		
 		public:
 			//constructor
-			Executor(const char *name);
+			Executor(const __FlashStringHelper *name);
 			
 			//destructor
 			virtual ~Executor();

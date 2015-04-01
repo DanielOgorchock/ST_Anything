@@ -18,7 +18,7 @@
 //				- int8_t pinCS - REQUIRED - the Arduino Pin to be used as the MAX31855 CS
 //				- int8_t pinMISO - REQUIRED - the Arduino Pin to be used as the MAX31855 MISO
 //
-//			  This class supports receiving configuiration data from the SmartThings cloud via the ST App.  A user preference
+//			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
 //			  the ST Shield.  For PollingSensors, this data is handled in the beSMart() function.
 //
@@ -51,7 +51,7 @@ namespace st
 		public:
 
 			//constructor - called in your sketch's global variable declaration section
-			PS_AdafruitThermocouple(const char *name, unsigned int interval, int offset, int8_t pinSCLK, int8_t pinCS, int8_t pinMISO);
+			PS_AdafruitThermocouple(const __FlashStringHelper *name, unsigned int interval, int offset, int8_t pinSCLK, int8_t pinCS, int8_t pinMISO);
 			
 			//destructor
 			virtual ~PS_AdafruitThermocouple();

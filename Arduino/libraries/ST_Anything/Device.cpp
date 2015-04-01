@@ -18,7 +18,6 @@
 #include "Device.h"
 #include "Everything.h"
 #include "Constants.h"
-#include <EEPROM.h>
 
 namespace st
 {
@@ -26,20 +25,9 @@ namespace st
 	
 //public
 	//constructor
-	Device::Device(const char *name):
-		m_pEeprom(Everything::EepromPointer)
+	Device::Device(const __FlashStringHelper *name):
+		m_pName(name)
 	{
-		String nameStr(name);
-		Everything::EepromPointer+=nameStr.length()+2;
-		
-		//write string into EEPROM
-		int i;
-		for(i=0; i<nameStr.length() && i<Constants::MAX_NAME_LENGTH-1; ++i)
-		{
-			EEPROM.update(i+m_pEeprom, nameStr.charAt(i));
-		}
-		EEPROM.update(i+m_pEeprom, 0);
-		
 		if(debug)
 		{
 			Serial.print(F("Device: New Device ID: "));
@@ -64,21 +52,7 @@ namespace st
 	
 	const String Device::getName() const
 	{
-			String name;
-			name.reserve(Constants::MAX_NAME_LENGTH-1);
-			
-			//populate string from EEPROM
-			int i=1;
-			char c=EEPROM.read(m_pEeprom);
-			while(c!=0)
-			{
-				name.concat(c);
-				c=EEPROM.read(m_pEeprom+i);
-				++i;
-			}
-			
-			return name;
-			
+			return Everything::progmemToString(m_pName);	
 	}
 	
 

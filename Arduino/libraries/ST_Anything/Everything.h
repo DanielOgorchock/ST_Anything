@@ -87,14 +87,14 @@ namespace st
 			static bool addExecutor(Executor *executor);//adds a Executor object to st::Everything's m_Executors[] array - called in your sketch setup() routine
 		
 			static byte bTimersPending;	//number of time critical events in progress - if > 0, do NOT perform refreshDevices() routine 
-			
-			static unsigned short EepromPointer;
 
 			static bool debug;	//debug flag to determine if debug print statements are executed - set value in your sketch's setup() routine
+			
+			static String progmemToString(const __FlashStringHelper *s); //conveniently converts a string stored in progmem into a String object
 
 			friend SmartThingsCallout_t receiveSmartString; //callback function to act on data received from SmartThings Shield - called from SmartThings Shield Library		
 
-			//static String progmemToString(const __FlashStringHelper *s);
+			
 			
 			//SmartThings Object
 			#ifndef DISABLE_SMARTTHINGS

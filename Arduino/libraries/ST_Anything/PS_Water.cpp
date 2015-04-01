@@ -42,7 +42,7 @@ namespace st
 
 //public
 	//constructor - called in your sketch's global variable declaration section
-	PS_Water::PS_Water(const char *name, unsigned int interval, int offset, byte analogInputPin):
+	PS_Water::PS_Water(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin):
 		PollingSensor(name, interval, offset),
 		m_nSensorValue(0)
 	{

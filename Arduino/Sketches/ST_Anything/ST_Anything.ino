@@ -42,6 +42,7 @@
 #include <SoftwareSerial.h> //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Library
 #include <SmartThings.h>    //Library to provide API to the SmartThings Shield
 #include <dht.h>            //DHT Temperature and Humidity Library 
+#include <avr/pgmspace.h>
 
 //******************************************************************************************
 // ST_Anything Library 
@@ -98,18 +99,17 @@
 //           "temperature" and one for "humidity")
 //******************************************************************************************
 //Polling Sensors
-st::PS_Illuminance sensor1("illuminance", 120, 0, PIN_ILLUMINANCE);
-st::PS_TemperatureHumidity sensor2("temphumid", 120, 10, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
-st::PS_Water sensor3("water", 60, 20, PIN_WATER);
+//st::PS_Illuminance sensor1("illuminance", 120, 0, PIN_ILLUMINANCE);
+//st::PS_TemperatureHumidity sensor2("temphumid", 120, 10, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
+//st::PS_Water sensor3("water", 60, 20, PIN_WATER);
 
 //Interrupt Sensors 
-st::IS_Motion sensor4("motion", PIN_MOTION, HIGH, false);
-st::IS_Contact sensor5("contact", PIN_CONTACT, LOW, true);
+//st::IS_Motion sensor4("motion", PIN_MOTION, HIGH, false);
+//st::IS_Contact sensor5("contact", PIN_CONTACT, LOW, true);
 
 //Executors
-st::EX_Switch executor1("switch", PIN_SWITCH, LOW, true);
-st::EX_Alarm executor2("alarm", PIN_ALARM, LOW, true);
-
+//st::EX_Switch executor1("switch", PIN_SWITCH, LOW, true);
+//st::EX_Alarm executor2("alarm", PIN_ALARM, LOW, true);
 
 //******************************************************************************************
 //Arduino Setup() routine
@@ -126,7 +126,6 @@ void setup()
   st::Device::debug=true;
   st::PollingSensor::debug=true;
   st::InterruptSensor::debug=true;
-  
   //*****************************************************************************
   //Initialize the "Everything" Class
   //*****************************************************************************
@@ -135,17 +134,19 @@ void setup()
   //*****************************************************************************
   //Add each sensor to the "Everything" Class
   //*****************************************************************************
-  st::Everything::addSensor(&sensor1);
-  st::Everything::addSensor(&sensor2);
-  st::Everything::addSensor(&sensor3);
-  st::Everything::addSensor(&sensor4); 
-  st::Everything::addSensor(&sensor5); 
+  //polling sensors
+  st::Everything::addSensor(new st::PS_Illuminance(F("illuminance"), 120, 0, PIN_ILLUMINANCE));
+  st::Everything::addSensor(new st::PS_TemperatureHumidity(F("temphumid"), 120, 10, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22));
+  st::Everything::addSensor(new st::PS_Water(F("water"), 60, 20, PIN_WATER));
+  //interrupt sensors
+  st::Everything::addSensor(new st::IS_Motion(F("motion"), PIN_MOTION, HIGH, false)); 
+  st::Everything::addSensor(new st::IS_Contact(F("contact"), PIN_CONTACT, LOW, true)); 
   
   //*****************************************************************************
   //Add each executor to the "Everything" Class
   //*****************************************************************************
-  st::Everything::addExecutor(&executor1);
-  st::Everything::addExecutor(&executor2);
+  st::Everything::addExecutor(new st::EX_Switch(F("switch"), PIN_SWITCH, LOW, true));
+  st::Everything::addExecutor(new st::EX_Alarm(F("alarm"), PIN_ALARM, LOW, true));
   
   //*****************************************************************************
   //Initialize each of the devices which were added to the Everything Class

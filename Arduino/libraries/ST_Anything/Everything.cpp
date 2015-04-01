@@ -25,6 +25,7 @@
 //******************************************************************************************
 
 #include <arduino.h>
+#include <avr/pgmspace.h>
 #include "Everything.h"
 
 int freeRam();	//freeRam() function prototype - useful in determining how much SRAM is available on Arduino
@@ -337,6 +338,15 @@ namespace st
 		return true;
 	}
 	
+	String Everything::progmemToString(const __FlashStringHelper *s)
+	{
+		char tmp[Constants::MAX_NAME_LENGTH];
+		strcpy_P(tmp, (const char*)s);
+		
+		String rStr(tmp);
+		return rStr;
+	}
+	
 	//friends!
 	void receiveSmartString(String message)
 	{
@@ -368,7 +378,6 @@ namespace st
 	unsigned long Everything::sendstringsLastMillis = 0;
 	bool Everything::debug=false;
 	byte Everything::bTimersPending = 0;	//initialize variable
-	unsigned short Everything::EepromPointer = 0;
 	
 	//SmartThings static members
 	#ifndef DISABLE_SMARTTHINGS

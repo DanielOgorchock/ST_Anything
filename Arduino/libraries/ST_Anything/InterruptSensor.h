@@ -39,7 +39,7 @@ namespace st
 			
 		public:
 			//constructor
-			InterruptSensor(const char *name, byte pin, bool iState, bool internalPullup=false, long numReqCounts=0); //(defaults to NOT using internal pullup resistors, and required counts = 0)
+			InterruptSensor(const __FlashStringHelper *name, byte pin, bool iState, bool internalPullup=false, long numReqCounts=0); //(defaults to NOT using internal pullup resistors, and required counts = 0)
 			
 			//destructor
 			virtual ~InterruptSensor();

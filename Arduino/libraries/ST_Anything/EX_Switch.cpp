@@ -40,7 +40,7 @@ namespace st
 
 //public
 	//constructor
-	EX_Switch::EX_Switch(const char *name, byte pin, bool startingState, bool invertLogic) :
+	EX_Switch::EX_Switch(const __FlashStringHelper *name, byte pin, bool startingState, bool invertLogic) :
 		Executor(name),
 		m_bCurrentState(startingState),
 		m_bInvertLogic(invertLogic)

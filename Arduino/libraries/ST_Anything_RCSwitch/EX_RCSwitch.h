@@ -48,7 +48,7 @@ namespace st
 		
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			EX_RCSwitch(const char *name, byte transmitterPin, unsigned long onCode, unsigned int onLength, unsigned long offCode, unsigned int offLength, bool startingState = LOW);
+			EX_RCSwitch(const __FlashStringHelper *name, byte transmitterPin, unsigned long onCode, unsigned int onLength, unsigned long offCode, unsigned int offLength, bool startingState = LOW);
 			
 			//destructor
 			virtual ~EX_RCSwitch();

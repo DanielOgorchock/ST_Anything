@@ -26,7 +26,7 @@ namespace st
 
 //public
 	//constructor
-	Sensor::Sensor(const char *name):
+	Sensor::Sensor(const __FlashStringHelper *name):
 		Device(name)
 	{
 	

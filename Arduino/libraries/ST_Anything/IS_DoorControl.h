@@ -56,7 +56,7 @@ namespace st
 			
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			IS_DoorControl(const char *name, byte pinInput, bool iState, bool pullup, byte pinOutput, bool startingState, bool invertLogic, unsigned long delayTime);
+			IS_DoorControl(const __FlashStringHelper *name, byte pinInput, bool iState, bool pullup, byte pinOutput, bool startingState, bool invertLogic, unsigned long delayTime);
 			
 			//destructor
 			virtual ~IS_DoorControl();
