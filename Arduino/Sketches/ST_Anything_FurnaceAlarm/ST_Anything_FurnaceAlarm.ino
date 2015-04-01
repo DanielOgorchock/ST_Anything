@@ -33,7 +33,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2015-03-10  Dan            Modified to monitor furnace alarm
 //    2015-03-14  Dan            Added LED capability for visual status of the FurnaceAlarm
-//
+//    2015-03-31  Daniel O.      Memory optimizations utilizing progmem
 //
 //******************************************************************************************
 
@@ -42,6 +42,7 @@
 //******************************************************************************************
 #include <SoftwareSerial.h> //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Library
 #include <SmartThings.h>    //Library to provide API to the SmartThings Shield
+#include <avr/pgmspace.h> 
 
 //******************************************************************************************
 // ST_Anything Library 
@@ -87,9 +88,7 @@
 //Polling Sensors
 
 //Interrupt Sensors 
-st::IS_Contact sensor1("contact", PIN_CONTACT, LOW, true, 20000);
-
-//Executors
+st::IS_Contact *sensor1;
 
 
 //Global Variables
@@ -100,6 +99,8 @@ bool lastStatus;  //Hold the last status of the Furnace Alarm to prevent updatin
 //******************************************************************************************
 void setup()
 {
+  sensor1=new st::IS_Contact(F("contact"), PIN_CONTACT, LOW, true, 20000);
+  
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //  -Note: Set these to "false" if using Hardware Serial on pins 0 & 1
@@ -119,7 +120,7 @@ void setup()
   //*****************************************************************************
   //Add each sensor to the "Everything" Class
   //*****************************************************************************
-  st::Everything::addSensor(&sensor1);
+  st::Everything::addSensor(sensor1);
   
   //*****************************************************************************
   //Add each executor to the "Everything" Class
@@ -131,7 +132,7 @@ void setup()
   //*****************************************************************************
   
   //Set the lastStatus variable to force the LED update the first time through the loop()
-  lastStatus = !sensor1.getStatus();
+  lastStatus = !sensor1->getStatus();
   
 }
 
@@ -147,14 +148,14 @@ void loop()
   
   //Check to see if the Furnace is in Alarm.  If true, set the Smart Thing Shield
   //LED to Red.  If false, set the LED to Green.
-  if (sensor1.getStatus() && !lastStatus)
+  if (sensor1->getStatus() && !lastStatus)
   {
       //ALARM!!! (Red)
       st::Everything::setLED(2,0,0);
       lastStatus = true;
 
   }
-  else if (!sensor1.getStatus() && lastStatus)
+  else if (!sensor1->getStatus() && lastStatus)
   {
       //NORMAL (Green)
       st::Everything::setLED(0,2,0);  
