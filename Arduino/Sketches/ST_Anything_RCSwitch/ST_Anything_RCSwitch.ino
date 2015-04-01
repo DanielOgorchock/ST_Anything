@@ -27,7 +27,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2015-01-26  Dan            Added RCSwitch support/example
 //    2015-01-30  Dan            Cleaned up specificailly for RCSwitch use exclusively for size
-//
+//    2015-03-31  Daniel O.      Memory optimizations utilizing progmem
 //
 //******************************************************************************************
 
@@ -37,6 +37,7 @@
 #include <SoftwareSerial.h>  //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Library
 #include <SmartThings.h>     //Library to provide API to the SmartThings Shield
 #include <RCSwitch.h>        //Library to provide support for RCSwitch devices
+#include <avr/pgmspace.h> 
 
 //******************************************************************************************
 // ST_Anything Library 
@@ -74,14 +75,7 @@
 //         - The name assigned to each device (1st argument below) must match the Groovy
 //           DeviceType Tile name in your custom DeviceType code. 
 //******************************************************************************************
-//Polling Sensors
 
-//Interrupt Sensors 
-
-//Executors
-st::EX_RCSwitch executor1("rcswitch1", PIN_RCSWITCH, 35754004, 26, 18976788, 26);
-st::EX_RCSwitch executor2("rcswitch2", PIN_RCSWITCH, 35751956, 26, 18974740, 26);
-st::EX_RCSwitch executor3("rcswitch3", PIN_RCSWITCH, 35756052, 26, 18978836, 26);
 
 //******************************************************************************************
 //Arduino Setup() routine
@@ -109,9 +103,9 @@ void setup()
   //*****************************************************************************
   //Add each executor to the "Everything" Class
   //*****************************************************************************
-  st::Everything::addExecutor(&executor1);
-  st::Everything::addExecutor(&executor2);
-  st::Everything::addExecutor(&executor3);
+  st::Everything::addExecutor(new st::EX_RCSwitch(F("rcswitch1"), PIN_RCSWITCH, 35754004, 26, 18976788, 26));
+  st::Everything::addExecutor(new st::EX_RCSwitch(F("rcswitch2"), PIN_RCSWITCH, 35751956, 26, 18974740, 26));
+  st::Everything::addExecutor(new st::EX_RCSwitch(F("rcswitch3"), PIN_RCSWITCH, 35756052, 26, 18978836, 26));
   
   //*****************************************************************************
   //Initialize each of the devices which were added to the Everything Class
