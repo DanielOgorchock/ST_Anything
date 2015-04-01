@@ -39,7 +39,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2015-01-07  Dan Ogorchock  Modified for Door Monitoring and Garage Door Control
 //    2015-03-28  Dan Ogorchock  Removed RCSwitch #include now that the libraries are split up
-//
+//    2015-03-31  Daniel O.      Memory optimizations utilizing progmem
 //
 //******************************************************************************************
 
@@ -49,6 +49,7 @@
 #include <SoftwareSerial.h> //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Library
 #include <SmartThings.h>    //Library to provide API to the SmartThings Shield
 #include <dht.h>            //DHT Temperature and Humidity Library 
+#include <avr/pgmspace.h>
 
 //******************************************************************************************
 // ST_Anything Library 
@@ -108,20 +109,7 @@
 //           particular sensor is sent to the ST Shield in two separate updates, one for 
 //           "temperature" and one for "humidity")
 //******************************************************************************************
-//Polling Sensors
-st::PS_TemperatureHumidity sensor1("temphumid", 120, 10, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
 
-//Interrupt Sensors 
-st::IS_Motion sensor2("motion", PIN_MOTION, HIGH, false);
-st::IS_DoorControl sensor3("leftDoor", PIN_CONTACT_LEFTGARAGE_DOOR, LOW, true, PIN_RELAY_LEFTGARAGE_DOOR, LOW, true, 1000);
-st::IS_DoorControl sensor4("rightDoor", PIN_CONTACT_RIGHTGARAGE_DOOR, LOW, true, PIN_RELAY_RIGHTGARAGE_DOOR, LOW, true, 1000);
-st::IS_Contact sensor5("garagesideDoor", PIN_CONTACT_SIDEGARAGE_DOOR, LOW, true);
-st::IS_Contact sensor6("frontDoor", PIN_CONTACT_FRONT_DOOR, LOW, true);
-st::IS_Contact sensor7("backDoor", PIN_CONTACT_BACK_DOOR, LOW, true);
-st::IS_Contact sensor8("kitchenDoor", PIN_CONTACT_KITCHEN_DOOR, LOW, true);
-
-//Executors
-//st::EX_Switch executor1("sampleEX", PIN_sampleEX, LOW, true);
 
 
 //******************************************************************************************
@@ -148,14 +136,16 @@ void setup()
   //*****************************************************************************
   //Add each sensor to the "Everything" Class
   //*****************************************************************************
-  st::Everything::addSensor(&sensor1);
-  st::Everything::addSensor(&sensor2);
-  st::Everything::addSensor(&sensor3);
-  st::Everything::addSensor(&sensor4); 
-  st::Everything::addSensor(&sensor5); 
-  st::Everything::addSensor(&sensor6);
-  st::Everything::addSensor(&sensor7); 
-  st::Everything::addSensor(&sensor8);
+  //polling sensors
+  st::Everything::addSensor(new st::PS_TemperatureHumidity(F("temphumid"), 120, 10, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22));
+  //interrupt sensors
+  st::Everything::addSensor(new st::IS_Motion(F("motion"), PIN_MOTION, HIGH, false));
+  st::Everything::addSensor(new st::IS_DoorControl(F("leftDoor"), PIN_CONTACT_LEFTGARAGE_DOOR, LOW, true, PIN_RELAY_LEFTGARAGE_DOOR, LOW, true, 1000));
+  st::Everything::addSensor(new st::IS_DoorControl(F("rightDoor"), PIN_CONTACT_RIGHTGARAGE_DOOR, LOW, true, PIN_RELAY_RIGHTGARAGE_DOOR, LOW, true, 1000)); 
+  st::Everything::addSensor(new st::IS_Contact(F("garagesideDoor"), PIN_CONTACT_SIDEGARAGE_DOOR, LOW, true)); 
+  st::Everything::addSensor(new st::IS_Contact(F("frontDoor"), PIN_CONTACT_FRONT_DOOR, LOW, true));
+  st::Everything::addSensor(new st::IS_Contact(F("backDoor"), PIN_CONTACT_BACK_DOOR, LOW, true)); 
+  st::Everything::addSensor(new st::IS_Contact(F("kitchenDoor"), PIN_CONTACT_KITCHEN_DOOR, LOW, true));
   
   //*****************************************************************************
   //Add each executor to the "Everything" Class
