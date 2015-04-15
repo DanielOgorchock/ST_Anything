@@ -97,19 +97,6 @@
 #define PIN_CONTACT_KITCHEN_DOOR     12
 #define PIN_CONTACT_SIDEGARAGE_DOOR  13
 
-//******************************************************************************************
-//Declare each Device that is attached to the Arduino
-//  Notes: - For each device, there is typically a corresponding "tile" defined in your 
-//           SmartThings DeviceType Groovy code
-//         - For details on each device's constructor arguments below, please refer to the 
-//           corresponding header (.h) and program (.cpp) files.
-//         - The name assigned to each device (1st argument below) must match the Groovy
-//           DeviceType Tile name.  (Note: "temphumid" below is the exception to this rule
-//           as the DHT sensors produce both "temperature" and "humidity".  Data from that
-//           particular sensor is sent to the ST Shield in two separate updates, one for 
-//           "temperature" and one for "humidity")
-//******************************************************************************************
-
 
 
 //******************************************************************************************
@@ -117,6 +104,34 @@
 //******************************************************************************************
 void setup()
 {
+  //******************************************************************************************
+  //Declare each Device that is attached to the Arduino
+  //  Notes: - For each device, there is typically a corresponding "tile" defined in your 
+  //           SmartThings DeviceType Groovy code
+  //         - For details on each device's constructor arguments below, please refer to the 
+  //           corresponding header (.h) and program (.cpp) files.
+  //         - The name assigned to each device (1st argument below) must match the Groovy
+  //           DeviceType Tile name.  (Note: "temphumid" below is the exception to this rule
+  //           as the DHT sensors produce both "temperature" and "humidity".  Data from that
+  //           particular sensor is sent to the ST Shield in two separate updates, one for 
+  //           "temperature" and one for "humidity")
+  //******************************************************************************************
+  //Polling Sensors
+  static st::PS_TemperatureHumidity sensor1(F("temphumid"), 120, 10, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
+  
+  //Interrupt Sensors 
+  static st::IS_Motion sensor2(F("motion"), PIN_MOTION, HIGH, false);
+  static st::IS_DoorControl sensor3(F("leftDoor"), PIN_CONTACT_LEFTGARAGE_DOOR, LOW, true, PIN_RELAY_LEFTGARAGE_DOOR, LOW, true, 1000);
+  static st::IS_DoorControl sensor4(F("rightDoor"), PIN_CONTACT_RIGHTGARAGE_DOOR, LOW, true, PIN_RELAY_RIGHTGARAGE_DOOR, LOW, true, 1000);
+  static st::IS_Contact sensor5(F("garagesideDoor"), PIN_CONTACT_SIDEGARAGE_DOOR, LOW, true);
+  static st::IS_Contact sensor6(F("frontDoor"), PIN_CONTACT_FRONT_DOOR, LOW, true);
+  static st::IS_Contact sensor7(F("backDoor"), PIN_CONTACT_BACK_DOOR, LOW, true);
+  static st::IS_Contact sensor8(F("kitchenDoor"), PIN_CONTACT_KITCHEN_DOOR, LOW, true);
+  
+  //Executors
+  //static st::EX_Switch executor1(F("sampleEX"), PIN_sampleEX, LOW, true);
+
+  
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //  -Note: Set these to "false" if using Hardware Serial on pins 0 & 1
@@ -136,16 +151,14 @@ void setup()
   //*****************************************************************************
   //Add each sensor to the "Everything" Class
   //*****************************************************************************
-  //polling sensors
-  st::Everything::addSensor(new st::PS_TemperatureHumidity(F("temphumid"), 120, 10, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22));
-  //interrupt sensors
-  st::Everything::addSensor(new st::IS_Motion(F("motion"), PIN_MOTION, HIGH, false));
-  st::Everything::addSensor(new st::IS_DoorControl(F("leftDoor"), PIN_CONTACT_LEFTGARAGE_DOOR, LOW, true, PIN_RELAY_LEFTGARAGE_DOOR, LOW, true, 1000));
-  st::Everything::addSensor(new st::IS_DoorControl(F("rightDoor"), PIN_CONTACT_RIGHTGARAGE_DOOR, LOW, true, PIN_RELAY_RIGHTGARAGE_DOOR, LOW, true, 1000)); 
-  st::Everything::addSensor(new st::IS_Contact(F("garagesideDoor"), PIN_CONTACT_SIDEGARAGE_DOOR, LOW, true)); 
-  st::Everything::addSensor(new st::IS_Contact(F("frontDoor"), PIN_CONTACT_FRONT_DOOR, LOW, true));
-  st::Everything::addSensor(new st::IS_Contact(F("backDoor"), PIN_CONTACT_BACK_DOOR, LOW, true)); 
-  st::Everything::addSensor(new st::IS_Contact(F("kitchenDoor"), PIN_CONTACT_KITCHEN_DOOR, LOW, true));
+  st::Everything::addSensor(&sensor1);
+  st::Everything::addSensor(&sensor2);
+  st::Everything::addSensor(&sensor3);
+  st::Everything::addSensor(&sensor4); 
+  st::Everything::addSensor(&sensor5); 
+  st::Everything::addSensor(&sensor6);
+  st::Everything::addSensor(&sensor7); 
+  st::Everything::addSensor(&sensor8);
   
   //*****************************************************************************
   //Add each executor to the "Everything" Class

@@ -68,6 +68,7 @@
 #include <dht.h>                //DHT Temperature and Humidity Library (*** Rob Tillaart's version ***)
 #include <SPI.h>                //thermocouple additions
 #include <Adafruit_MAX31855.h>  //thermocouple additions
+#include <avr/pgmspace.h>
 //******************************************************************************************
 // ST_Anything Library 
 //******************************************************************************************
@@ -81,7 +82,7 @@
 
 #include <PS_TemperatureHumidity.h>  //Implements a Polling Sensor (PS) to measure Temperature and Humidity via DHT library
 #include <PS_AdafruitThermocouple.h> //Implements a Polling Sensor (PS) to measure Temperature via Adafruit_MAX31855 library
-#include <avr/pgmspace.h> 
+
 //******************************************************************************************
 //Define which Arduino Pins will be used for each device
 //  Notes: -Serial Communications Pins are defined in Constants.h (avoid pins 0,1,2,3
@@ -108,38 +109,39 @@
 #define PIN_MISO_OVEN             4
 #define PIN_MISO_BROILER          5
 
-//******************************************************************************************
-//Declare each Device that is attached to the Arduino
-//  Notes: - For each device, there is typically a corresponding "tile" defined in your 
-//           SmartThings DeviceType Groovy code
-//         - For details on each device's constructor arguments below, please refer to the 
-//           corresponding header (.h) and program (.cpp) files.
-//         - The name assigned to each device (1st argument below) must match the Groovy
-//           DeviceType Tile name.  (Note: "temphumid" below is the exception to this rule
-//           as the DHT sensors produce both "temperature" and "humidity".  Data from that
-//           particular sensor is sent to the ST Shield in two separate updates, one for 
-//           "temperature" and one for "humidity")
-//
-// TODO: Customize based on what devices the user needs attached to the Arduino
-//
-//******************************************************************************************
-//Polling Sensors
-;
-;
-;
-;
-;
-;
-
-//Interrupt Sensors 
-
-//Executors
 
 //******************************************************************************************
 //Arduino Setup() routine
 //******************************************************************************************
 void setup()
 {
+  //******************************************************************************************
+  //Declare each Device that is attached to the Arduino
+  //  Notes: - For each device, there is typically a corresponding "tile" defined in your 
+  //           SmartThings DeviceType Groovy code
+  //         - For details on each device's constructor arguments below, please refer to the 
+  //           corresponding header (.h) and program (.cpp) files.
+  //         - The name assigned to each device (1st argument below) must match the Groovy
+  //           DeviceType Tile name.  (Note: "temphumid" below is the exception to this rule
+  //           as the DHT sensors produce both "temperature" and "humidity".  Data from that
+  //           particular sensor is sent to the ST Shield in two separate updates, one for 
+  //           "temperature" and one for "humidity")
+  //
+  // TODO: Customize based on what devices the user needs attached to the Arduino
+  //
+  //******************************************************************************************
+  //Polling Sensors
+  static st::PS_TemperatureHumidity sensor1(F("th_Freezer"), 30, 3, PIN_TEMPHUMID_FREEZER, st::PS_TemperatureHumidity::DHT22, "t_Freezer", "h_Freezer");
+  static st::PS_TemperatureHumidity sensor2(F("th_Fridge"), 30, 5, PIN_TEMPHUMID_FRIDGE, st::PS_TemperatureHumidity::DHT22, "t_Fridge", "h_Fridge");
+  static st::PS_TemperatureHumidity sensor3(F("th_Moistcrisp"), 30, 7, PIN_TEMPHUMID_MOISTCRISP, st::PS_TemperatureHumidity::DHT22, "t_Moistcrisp", "h_Moistcrisp");
+  static st::PS_TemperatureHumidity sensor4(F("th_Othercrisp"), 30, 9, PIN_TEMPHUMID_OTHERCRISP, st::PS_TemperatureHumidity::DHT22, "t_Othercrisp", "h_Othercrisp");
+  static st::PS_AdafruitThermocouple sensor5(F("t_Oven"), 10, 0, PIN_SCLK, PIN_CS, PIN_MISO_OVEN);
+  static st::PS_AdafruitThermocouple sensor6(F("t_Broiler"), 10, 2, PIN_SCLK, PIN_CS, PIN_MISO_BROILER);
+  
+  //Interrupt Sensors 
+  
+  //Executors
+
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //  -Note: Set these to "false" if using Hardware Serial on pins 0 & 1
@@ -160,12 +162,12 @@ void setup()
   //Add each sensor to the "Everything" Class   
   // TODO: Customize based on sensors defined in global section above
   //*****************************************************************************
-  st::Everything::addSensor(new st::PS_TemperatureHumidity(F("th_Freezer"), 30, 3, PIN_TEMPHUMID_FREEZER, st::PS_TemperatureHumidity::DHT22, "t_Freezer", "h_Freezer"));
-  st::Everything::addSensor(new st::PS_TemperatureHumidity(F("th_Fridge"), 30, 5, PIN_TEMPHUMID_FRIDGE, st::PS_TemperatureHumidity::DHT22, "t_Fridge", "h_Fridge"));
-  st::Everything::addSensor(new st::PS_TemperatureHumidity(F("th_Moistcrisp"), 30, 7, PIN_TEMPHUMID_MOISTCRISP, st::PS_TemperatureHumidity::DHT22, "t_Moistcrisp", "h_Moistcrisp"));
-  st::Everything::addSensor(new st::PS_TemperatureHumidity(F("th_Othercrisp"), 30, 9, PIN_TEMPHUMID_OTHERCRISP, st::PS_TemperatureHumidity::DHT22, "t_Othercrisp", "h_Othercrisp")); 
-  st::Everything::addSensor(new st::PS_AdafruitThermocouple(F("t_Oven"), 10, 0, PIN_SCLK, PIN_CS, PIN_MISO_OVEN));
-  st::Everything::addSensor(new st::PS_AdafruitThermocouple(F("t_Broiler"), 10, 2, PIN_SCLK, PIN_CS, PIN_MISO_BROILER));
+  st::Everything::addSensor(&sensor1);
+  st::Everything::addSensor(&sensor2);
+  st::Everything::addSensor(&sensor3);
+  st::Everything::addSensor(&sensor4); 
+  st::Everything::addSensor(&sensor5);
+  st::Everything::addSensor(&sensor6);
   
   //*****************************************************************************
   //Add each executor to the "Everything" Class

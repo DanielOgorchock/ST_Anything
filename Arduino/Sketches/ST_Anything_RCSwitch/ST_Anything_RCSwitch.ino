@@ -37,7 +37,7 @@
 #include <SoftwareSerial.h>  //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Library
 #include <SmartThings.h>     //Library to provide API to the SmartThings Shield
 #include <RCSwitch.h>        //Library to provide support for RCSwitch devices
-#include <avr/pgmspace.h> 
+#include <avr/pgmspace.h>
 
 //******************************************************************************************
 // ST_Anything Library 
@@ -66,22 +66,30 @@
 
 #define PIN_RCSWITCH             12
 
-//******************************************************************************************
-//Declare each Device that is attached to the Arduino
-//  Notes: - For each device, there is typically a corresponding "tile" defined in your 
-//           SmartThings DeviceType Groovy code
-//         - For details on each device's constructor arguments below, please refer to the 
-//           main comments in the corresponding header (.h) and program (.cpp) files.
-//         - The name assigned to each device (1st argument below) must match the Groovy
-//           DeviceType Tile name in your custom DeviceType code. 
-//******************************************************************************************
-
 
 //******************************************************************************************
 //Arduino Setup() routine
 //******************************************************************************************
 void setup()
 {
+  //******************************************************************************************
+  //Declare each Device that is attached to the Arduino
+  //  Notes: - For each device, there is typically a corresponding "tile" defined in your 
+  //           SmartThings DeviceType Groovy code
+  //         - For details on each device's constructor arguments below, please refer to the 
+  //           main comments in the corresponding header (.h) and program (.cpp) files.
+  //         - The name assigned to each device (1st argument below) must match the Groovy
+  //           DeviceType Tile name in your custom DeviceType code. 
+  //******************************************************************************************
+  //Polling Sensors
+  
+  //Interrupt Sensors 
+  
+  //Executors
+  static st::EX_RCSwitch executor1(F("rcswitch1"), PIN_RCSWITCH, 35754004, 26, 18976788, 26);
+  static st::EX_RCSwitch executor2(F("rcswitch2"), PIN_RCSWITCH, 35751956, 26, 18974740, 26);
+  static st::EX_RCSwitch executor3(F("rcswitch3"), PIN_RCSWITCH, 35756052, 26, 18978836, 26);
+
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //  -Note: Set these to "false" if using Hardware Serial on pins 0 & 1
@@ -103,9 +111,9 @@ void setup()
   //*****************************************************************************
   //Add each executor to the "Everything" Class
   //*****************************************************************************
-  st::Everything::addExecutor(new st::EX_RCSwitch(F("rcswitch1"), PIN_RCSWITCH, 35754004, 26, 18976788, 26));
-  st::Everything::addExecutor(new st::EX_RCSwitch(F("rcswitch2"), PIN_RCSWITCH, 35751956, 26, 18974740, 26));
-  st::Everything::addExecutor(new st::EX_RCSwitch(F("rcswitch3"), PIN_RCSWITCH, 35756052, 26, 18978836, 26));
+  st::Everything::addExecutor(&executor1);
+  st::Everything::addExecutor(&executor2);
+  st::Everything::addExecutor(&executor3);
   
   //*****************************************************************************
   //Initialize each of the devices which were added to the Everything Class

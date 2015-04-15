@@ -41,6 +41,7 @@
 //******************************************************************************************
 #include <SoftwareSerial.h>  //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Library
 #include <SmartThings.h>     //Library to provide API to the SmartThings Shield
+#include <avr/pgmspace.h>
 
 //******************************************************************************************
 // ST_Anything Library 
@@ -52,7 +53,6 @@
 #include <Everything.h>      //Master Brain of ST_Anything library that ties everything together and performs ST Shield communications
 
 #include <EX_Switch.h>       //Implements an Executor (EX) via a digital output to a relay
-#include <avr/pgmspace.h> 
 
 //******************************************************************************************
 //Define which Arduino Pins will be used for each device
@@ -119,45 +119,45 @@ unsigned long lngBtnLastMillis[MAX_PUSHBUTTONS]; //needed to properly debounce t
 st::EX_Switch* swArray[MAX_PUSHBUTTONS]; //need an array of the executors so we can togle the correct one
 //---End Push Button declarations--- 
 
-//******************************************************************************************
-//Declare each Device that is attached to the Arduino
-//  Notes: - For each device, there is typically a corresponding "tile" defined in your 
-//           SmartThings DeviceType Groovy code
-//         - For details on each device's constructor arguments below, please refer to the 
-//           main comments in the corresponding header (.h) and program (.cpp) files.
-//         - The name assigned to each device (1st argument below) must match the Groovy
-//           DeviceType Tile name in your custom DeviceType code. 
-//******************************************************************************************
-//Polling Sensors
-
-//Interrupt Sensors 
-
-
 
 //******************************************************************************************
 //Arduino Setup() routine
 //******************************************************************************************
 void setup()
 {
-  //Executors
-  //EX_Switch arguments(name, pin, starting state,  invert logic) change last 2 args as needed for your application 
-  st::EX_Switch *executor1=new st::EX_Switch(F("switch1"), PIN_RELAY1, LOW, false);
-  st::EX_Switch *executor2=new st::EX_Switch(F("switch2"), PIN_RELAY2, LOW, false);
-  st::EX_Switch *executor3=new st::EX_Switch(F("switch3"), PIN_RELAY3, LOW, false);
-  st::EX_Switch *executor4=new st::EX_Switch(F("switch4"), PIN_RELAY4, LOW, false);
-  st::EX_Switch *executor5=new st::EX_Switch(F("switch5"), PIN_RELAY5, LOW, false);
-  st::EX_Switch *executor6=new st::EX_Switch(F("switch6"), PIN_RELAY6, LOW, false);
-  st::EX_Switch *executor7=new st::EX_Switch(F("switch7"), PIN_RELAY7, LOW, false);
-  st::EX_Switch *executor8=new st::EX_Switch(F("switch8"), PIN_RELAY8, LOW, false);
-  st::EX_Switch *executor9=new st::EX_Switch(F("switch9"), PIN_RELAY9, LOW, false);
-  st::EX_Switch *executor10=new st::EX_Switch(F("switch10"), PIN_RELAY10, LOW, false);
-  st::EX_Switch *executor11=new st::EX_Switch(F("switch11"), PIN_RELAY11, LOW, false);
-  st::EX_Switch *executor12=new st::EX_Switch(F("switch12"), PIN_RELAY12, LOW, false);
-  st::EX_Switch *executor13=new st::EX_Switch(F("switch13"), PIN_RELAY13, LOW, false);
-  st::EX_Switch *executor14=new st::EX_Switch(F("switch14"), PIN_RELAY14, LOW, false);
-  st::EX_Switch *executor15=new st::EX_Switch(F("switch15"), PIN_RELAY15, LOW, false);
-  st::EX_Switch *executor16=new st::EX_Switch(F("switch16"), PIN_RELAY16, LOW, false);
+  //******************************************************************************************
+  //Declare each Device that is attached to the Arduino
+  //  Notes: - For each device, there is typically a corresponding "tile" defined in your 
+  //           SmartThings DeviceType Groovy code
+  //         - For details on each device's constructor arguments below, please refer to the 
+  //           main comments in the corresponding header (.h) and program (.cpp) files.
+  //         - The name assigned to each device (1st argument below) must match the Groovy
+  //           DeviceType Tile name in your custom DeviceType code. 
+  //******************************************************************************************
+  //Polling Sensors
   
+  //Interrupt Sensors 
+  
+  //Executors
+      
+  //EX_Switch arguments(name, pin, starting state,  invert logic) change last 2 args as needed for your application 
+  static st::EX_Switch executor1(F("switch1"), PIN_RELAY1, LOW, false);
+  static st::EX_Switch executor2(F("switch2"), PIN_RELAY2, LOW, false);
+  static st::EX_Switch executor3(F("switch3"), PIN_RELAY3, LOW, false);
+  static st::EX_Switch executor4(F("switch4"), PIN_RELAY4, LOW, false);
+  static st::EX_Switch executor5(F("switch5"), PIN_RELAY5, LOW, false);
+  static st::EX_Switch executor6(F("switch6"), PIN_RELAY6, LOW, false);
+  static st::EX_Switch executor7(F("switch7"), PIN_RELAY7, LOW, false);
+  static st::EX_Switch executor8(F("switch8"), PIN_RELAY8, LOW, false);
+  static st::EX_Switch executor9(F("switch9"), PIN_RELAY9, LOW, false);
+  static st::EX_Switch executor10(F("switch10"), PIN_RELAY10, LOW, false);
+  static st::EX_Switch executor11(F("switch11"), PIN_RELAY11, LOW, false);
+  static st::EX_Switch executor12(F("switch12"), PIN_RELAY12, LOW, false);
+  static st::EX_Switch executor13(F("switch13"), PIN_RELAY13, LOW, false);
+  static st::EX_Switch executor14(F("switch14"), PIN_RELAY14, LOW, false);
+  static st::EX_Switch executor15(F("switch15"), PIN_RELAY15, LOW, false);
+  static st::EX_Switch executor16(F("switch16"), PIN_RELAY16, LOW, false);
+
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //  -Note: Set these to "false" if using Hardware Serial on pins 0 & 1
@@ -179,22 +179,22 @@ void setup()
   //*****************************************************************************
   //Add each executor to the "Everything" Class
   //*****************************************************************************
-  st::Everything::addExecutor(executor1);
-  st::Everything::addExecutor(executor2);
-  st::Everything::addExecutor(executor3);
-  st::Everything::addExecutor(executor4);
-  st::Everything::addExecutor(executor5);
-  st::Everything::addExecutor(executor6);
-  st::Everything::addExecutor(executor7);
-  st::Everything::addExecutor(executor8);
-  st::Everything::addExecutor(executor9);
-  st::Everything::addExecutor(executor10);
-  st::Everything::addExecutor(executor11);
-  st::Everything::addExecutor(executor12);
-  st::Everything::addExecutor(executor13);
-  st::Everything::addExecutor(executor14);
-  st::Everything::addExecutor(executor15);
-  st::Everything::addExecutor(executor16);
+  st::Everything::addExecutor(&executor1);
+  st::Everything::addExecutor(&executor2);
+  st::Everything::addExecutor(&executor3);
+  st::Everything::addExecutor(&executor4);
+  st::Everything::addExecutor(&executor5);
+  st::Everything::addExecutor(&executor6);
+  st::Everything::addExecutor(&executor7);
+  st::Everything::addExecutor(&executor8);
+  st::Everything::addExecutor(&executor9);
+  st::Everything::addExecutor(&executor10);
+  st::Everything::addExecutor(&executor11);
+  st::Everything::addExecutor(&executor12);
+  st::Everything::addExecutor(&executor13);
+  st::Everything::addExecutor(&executor14);
+  st::Everything::addExecutor(&executor15);
+  st::Everything::addExecutor(&executor16);
 
   //*****************************************************************************
   //Initialize each of the devices which were added to the Everything Class
@@ -205,22 +205,22 @@ void setup()
   //Add User Customized Setup Code Here (instead of modifying standard library files)
   //*****************************************************************************
   //---Begin Push Button initialization section---
-  swArray[0]=executor1;
-  swArray[1]=executor2;
-  swArray[2]=executor3;
-  swArray[3]=executor4;
-  swArray[4]=executor5;
-  swArray[5]=executor6;
-  swArray[6]=executor7;
-  swArray[7]=executor8;
-  swArray[8]=executor9;
-  swArray[9]=executor10;
-  swArray[10]=executor11;
-  swArray[11]=executor12;
-  swArray[12]=executor13;
-  swArray[13]=executor14;
-  swArray[14]=executor15;
-  swArray[15]=executor16;
+  swArray[0]=&executor1;
+  swArray[1]=&executor2;
+  swArray[2]=&executor3;
+  swArray[3]=&executor4;
+  swArray[4]=&executor5;
+  swArray[5]=&executor6;
+  swArray[6]=&executor7;
+  swArray[7]=&executor8;
+  swArray[8]=&executor9;
+  swArray[9]=&executor10;
+  swArray[10]=&executor11;
+  swArray[11]=&executor12;
+  swArray[12]=&executor13;
+  swArray[13]=&executor14;
+  swArray[14]=&executor15;
+  swArray[15]=&executor16;
     
   //Allocate strCommand buffer one time to prevent Heap Fragmentation.
   strCommand.reserve(20);
