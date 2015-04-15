@@ -40,7 +40,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation (ST_Anything demo)
 //    2015-03-31  Dan Ogorchock  Modified for a Pulse Counter / Energy Meter
-//
+//    2015-04-14  Daniel O.      Support for memory optimizations
 //
 //******************************************************************************************
 
@@ -49,6 +49,7 @@
 //******************************************************************************************
 #include <SoftwareSerial.h> //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Library
 #include <SmartThings.h>    //Library to provide API to the SmartThings Shield
+#include <avr/pgmspace.h>
 
 //******************************************************************************************
 // ST_Anything Library 
@@ -86,31 +87,31 @@
 #define PULSE_SLOPE       1.0  //Linear conversion slope  (eng units = PULSE_SLOPE * counts + PULSE_OFFSET)
 #define PULSE_OFFSET      0.0  //Linear conversion offset (eng units = PULSE_SLOPE * counts + PULSE_OFFSET)
 
-//******************************************************************************************
-//Declare each Device that is attached to the Arduino
-//  Notes: - For each device, there is typically a corresponding "tile" defined in your 
-//           SmartThings DeviceType Groovy code
-//         - For details on each device's constructor arguments below, please refer to the 
-//           corresponding header (.h) and program (.cpp) files.
-//         - The name assigned to each device (1st argument below) must match the Groovy
-//           DeviceType Tile name.  (Note: "temphumid" below is the exception to this rule
-//           as the DHT sensors produce both "temperature" and "humidity".  Data from that
-//           particular sensor is sent to the ST Shield in two separate updates, one for 
-//           "temperature" and one for "humidity")
-//******************************************************************************************
-//Polling Sensors
-st::PS_PulseCounter sensor1("power", PULSE_POLL_INTRVL, PULSE_POLL_OFFSET, PULSE_PIN, PULSE_INTTYPE, PULE_INPUTMODE, PULSE_SLOPE, PULSE_OFFSET);
-
-//Interrupt Sensors 
-
-//Executors
-
 
 //******************************************************************************************
 //Arduino Setup() routine
 //******************************************************************************************
 void setup()
 {
+  //******************************************************************************************
+  //Declare each Device that is attached to the Arduino
+  //  Notes: - For each device, there is typically a corresponding "tile" defined in your 
+  //           SmartThings DeviceType Groovy code
+  //         - For details on each device's constructor arguments below, please refer to the 
+  //           corresponding header (.h) and program (.cpp) files.
+  //         - The name assigned to each device (1st argument below) must match the Groovy
+  //           DeviceType Tile name.  (Note: "temphumid" below is the exception to this rule
+  //           as the DHT sensors produce both "temperature" and "humidity".  Data from that
+  //           particular sensor is sent to the ST Shield in two separate updates, one for 
+  //           "temperature" and one for "humidity")
+  //******************************************************************************************
+  //Polling Sensors
+  static st::PS_PulseCounter sensor1(F("power"), PULSE_POLL_INTRVL, PULSE_POLL_OFFSET, PULSE_PIN, PULSE_INTTYPE, PULE_INPUTMODE, PULSE_SLOPE, PULSE_OFFSET);
+  
+  //Interrupt Sensors 
+  
+  //Executors
+
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //  -Note: Set these to "false" if using Hardware Serial on pins 0 & 1

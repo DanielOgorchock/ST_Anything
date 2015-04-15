@@ -60,7 +60,7 @@ namespace st
 
 
 			//constructor - called in your sketch's global variable declaration section
-			PS_PulseCounter(const String &name, unsigned int interval, int offset, byte inputpin, byte inttype, byte inputmode, float cnvslope, float cnvoffset);
+			PS_PulseCounter(const __FlashStringHelper *name, unsigned int interval, int offset, byte inputpin, byte inttype, byte inputmode, float cnvslope, float cnvoffset);
 			
 			//destructor
 			virtual ~PS_PulseCounter();
