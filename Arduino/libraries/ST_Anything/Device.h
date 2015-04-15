@@ -19,17 +19,18 @@
 #define ST_DEVICE_H
 
 #include <Arduino.h>
+#include <avr/pgmspace.h>
 
 namespace st
 {
 	class Device
 	{
 		private:
-			String m_Name;
+			const __FlashStringHelper *m_pName;
 			
 		public:
 			//constructor
-			Device(const String &name);
+			Device(const __FlashStringHelper *name);
 			
 			//destructor
 			virtual ~Device();
@@ -44,11 +45,8 @@ namespace st
 			virtual void refresh();
 
 			//gets
-			inline const String& getName() const {return m_Name;}
-			
-			//sets
-			inline void setName(const String &str) {m_Name=str;}
-			
+			const String getName() const;
+				
 			//debug flag to determine if debug print statements are executed (set value in your sketch)
 			static bool debug;
 	};

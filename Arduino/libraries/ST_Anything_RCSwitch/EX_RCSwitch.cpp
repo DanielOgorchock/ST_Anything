@@ -50,7 +50,7 @@ namespace st
 
 //public
 	//constructor
-	EX_RCSwitch::EX_RCSwitch(const String &name, byte transmitterPin, unsigned long onCode, unsigned int onLength, unsigned long offCode, unsigned int offLength, bool startingState) :
+	EX_RCSwitch::EX_RCSwitch(const __FlashStringHelper *name, byte transmitterPin, unsigned long onCode, unsigned int onLength, unsigned long offCode, unsigned int offLength, bool startingState) :
 		Executor(name),
 		m_bCurrentState(startingState),
 		m_myRCSwitch(RCSwitch()),

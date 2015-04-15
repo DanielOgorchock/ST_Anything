@@ -56,7 +56,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2015-03-24  Dan Ogorchock  Modified to just monitor multiple DTHT Temp/Humid sensors
-//
+//    2015-03-31  Daniel O.      Memory optimizations utilizing progmem
 //
 //******************************************************************************************
 
@@ -68,6 +68,7 @@
 #include <dht.h>                //DHT Temperature and Humidity Library (*** Rob Tillaart's version ***)
 #include <SPI.h>                //thermocouple additions
 #include <Adafruit_MAX31855.h>  //thermocouple additions
+#include <avr/pgmspace.h>
 //******************************************************************************************
 // ST_Anything Library 
 //******************************************************************************************
@@ -108,38 +109,39 @@
 #define PIN_MISO_OVEN             4
 #define PIN_MISO_BROILER          5
 
-//******************************************************************************************
-//Declare each Device that is attached to the Arduino
-//  Notes: - For each device, there is typically a corresponding "tile" defined in your 
-//           SmartThings DeviceType Groovy code
-//         - For details on each device's constructor arguments below, please refer to the 
-//           corresponding header (.h) and program (.cpp) files.
-//         - The name assigned to each device (1st argument below) must match the Groovy
-//           DeviceType Tile name.  (Note: "temphumid" below is the exception to this rule
-//           as the DHT sensors produce both "temperature" and "humidity".  Data from that
-//           particular sensor is sent to the ST Shield in two separate updates, one for 
-//           "temperature" and one for "humidity")
-//
-// TODO: Customize based on what devices the user needs attached to the Arduino
-//
-//******************************************************************************************
-//Polling Sensors
-st::PS_TemperatureHumidity sensor1("th_Freezer", 30, 3, PIN_TEMPHUMID_FREEZER, st::PS_TemperatureHumidity::DHT22, "t_Freezer", "h_Freezer");
-st::PS_TemperatureHumidity sensor2("th_Fridge", 30, 5, PIN_TEMPHUMID_FRIDGE, st::PS_TemperatureHumidity::DHT22, "t_Fridge", "h_Fridge");
-st::PS_TemperatureHumidity sensor3("th_Moistcrisp", 30, 7, PIN_TEMPHUMID_MOISTCRISP, st::PS_TemperatureHumidity::DHT22, "t_Moistcrisp", "h_Moistcrisp");
-st::PS_TemperatureHumidity sensor4("th_Othercrisp", 30, 9, PIN_TEMPHUMID_OTHERCRISP, st::PS_TemperatureHumidity::DHT22, "t_Othercrisp", "h_Othercrisp");
-st::PS_AdafruitThermocouple sensor5("t_Oven", 10, 0, PIN_SCLK, PIN_CS, PIN_MISO_OVEN);
-st::PS_AdafruitThermocouple sensor6("t_Broiler", 10, 2, PIN_SCLK, PIN_CS, PIN_MISO_BROILER);
-
-//Interrupt Sensors 
-
-//Executors
 
 //******************************************************************************************
 //Arduino Setup() routine
 //******************************************************************************************
 void setup()
 {
+  //******************************************************************************************
+  //Declare each Device that is attached to the Arduino
+  //  Notes: - For each device, there is typically a corresponding "tile" defined in your 
+  //           SmartThings DeviceType Groovy code
+  //         - For details on each device's constructor arguments below, please refer to the 
+  //           corresponding header (.h) and program (.cpp) files.
+  //         - The name assigned to each device (1st argument below) must match the Groovy
+  //           DeviceType Tile name.  (Note: "temphumid" below is the exception to this rule
+  //           as the DHT sensors produce both "temperature" and "humidity".  Data from that
+  //           particular sensor is sent to the ST Shield in two separate updates, one for 
+  //           "temperature" and one for "humidity")
+  //
+  // TODO: Customize based on what devices the user needs attached to the Arduino
+  //
+  //******************************************************************************************
+  //Polling Sensors
+  static st::PS_TemperatureHumidity sensor1(F("th_Freezer"), 30, 3, PIN_TEMPHUMID_FREEZER, st::PS_TemperatureHumidity::DHT22, "t_Freezer", "h_Freezer");
+  static st::PS_TemperatureHumidity sensor2(F("th_Fridge"), 30, 5, PIN_TEMPHUMID_FRIDGE, st::PS_TemperatureHumidity::DHT22, "t_Fridge", "h_Fridge");
+  static st::PS_TemperatureHumidity sensor3(F("th_Moistcrisp"), 30, 7, PIN_TEMPHUMID_MOISTCRISP, st::PS_TemperatureHumidity::DHT22, "t_Moistcrisp", "h_Moistcrisp");
+  static st::PS_TemperatureHumidity sensor4(F("th_Othercrisp"), 30, 9, PIN_TEMPHUMID_OTHERCRISP, st::PS_TemperatureHumidity::DHT22, "t_Othercrisp", "h_Othercrisp");
+  static st::PS_AdafruitThermocouple sensor5(F("t_Oven"), 10, 0, PIN_SCLK, PIN_CS, PIN_MISO_OVEN);
+  static st::PS_AdafruitThermocouple sensor6(F("t_Broiler"), 10, 2, PIN_SCLK, PIN_CS, PIN_MISO_BROILER);
+  
+  //Interrupt Sensors 
+  
+  //Executors
+
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //  -Note: Set these to "false" if using Hardware Serial on pins 0 & 1

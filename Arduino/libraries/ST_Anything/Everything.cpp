@@ -25,6 +25,7 @@
 //******************************************************************************************
 
 #include <arduino.h>
+#include <avr/pgmspace.h>
 #include "Everything.h"
 
 int freeRam();	//freeRam() function prototype - useful in determining how much SRAM is available on Arduino
@@ -297,6 +298,12 @@ namespace st
 	{
 		if(m_nSensorCount>=Constants::MAX_SENSOR_COUNT)
 		{
+			if(debug)
+			{
+				Serial.print(F("Did not add sensor named "));
+				Serial.print(sensor->getName());
+				Serial.println(F("(You've exceeded maximum number of sensors; edit Constants.h)"));
+			}
 			return false;
 		}
 		else
@@ -319,6 +326,12 @@ namespace st
 	{
 		if(m_nExecutorCount>=Constants::MAX_EXECUTOR_COUNT)
 		{
+			if(debug)
+			{
+				Serial.print(F("Did not add executor named "));
+				Serial.print(executor->getName());
+				Serial.println(F("(You've exceeded maximum number of executors; edit Constants.h)"));
+			}
 			return false;
 		}
 		else
@@ -368,7 +381,7 @@ namespace st
 	unsigned long Everything::sendstringsLastMillis = 0;
 	bool Everything::debug=false;
 	byte Everything::bTimersPending = 0;	//initialize variable
-
+	
 	//SmartThings static members
 	#ifndef DISABLE_SMARTTHINGS
 		// Please refer to Constants.h for settings that affect whether a board uses SoftwareSerial or Hardware Serial calls

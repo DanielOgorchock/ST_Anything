@@ -73,7 +73,7 @@ namespace st
 //public
 
 	//constructor - called in your sketch's global variable declaration section
-	PS_PulseCounter::PS_PulseCounter(const String &name, unsigned int interval, int offset, byte inputpin, byte inttype, byte inputmode, float cnvslope, float cnvoffset) :
+	PS_PulseCounter::PS_PulseCounter(const __FlashStringHelper *name, unsigned int interval, int offset, byte inputpin, byte inttype, byte inputmode, float cnvslope, float cnvoffset) :
 		PollingSensor(name, interval, offset),
 		m_nInputMode(inputmode),
 		m_nSensorValue(0),

@@ -34,7 +34,7 @@ namespace st
 
 //public
 	//constructor
-	IS_Motion::IS_Motion(const String &name, byte pin, bool iState, bool pullup) :
+	IS_Motion::IS_Motion(const __FlashStringHelper *name, byte pin, bool iState, bool pullup) :
 		InterruptSensor(name, pin, iState, pullup),  //use parent class' constructor
 		calibrated(false)
 		{

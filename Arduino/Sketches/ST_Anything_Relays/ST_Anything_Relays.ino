@@ -32,7 +32,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2015-03-27  Dan Ogorchock  Modified for 16 Relay + 16 Pushbuttons Design
-//
+//    2015-03-31  Daniel O.      Memory optimizations utilizing progmem
 //
 //******************************************************************************************
 
@@ -41,6 +41,7 @@
 //******************************************************************************************
 #include <SoftwareSerial.h>  //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Library
 #include <SmartThings.h>     //Library to provide API to the SmartThings Shield
+#include <avr/pgmspace.h>
 
 //******************************************************************************************
 // ST_Anything Library 
@@ -118,44 +119,45 @@ unsigned long lngBtnLastMillis[MAX_PUSHBUTTONS]; //needed to properly debounce t
 st::EX_Switch* swArray[MAX_PUSHBUTTONS]; //need an array of the executors so we can togle the correct one
 //---End Push Button declarations--- 
 
-//******************************************************************************************
-//Declare each Device that is attached to the Arduino
-//  Notes: - For each device, there is typically a corresponding "tile" defined in your 
-//           SmartThings DeviceType Groovy code
-//         - For details on each device's constructor arguments below, please refer to the 
-//           main comments in the corresponding header (.h) and program (.cpp) files.
-//         - The name assigned to each device (1st argument below) must match the Groovy
-//           DeviceType Tile name in your custom DeviceType code. 
-//******************************************************************************************
-//Polling Sensors
-
-//Interrupt Sensors 
-
-//Executors
-    
-  //EX_Switch arguments(name, pin, starting state,  invert logic) change last 2 args as needed for your application 
-st::EX_Switch executor1("switch1", PIN_RELAY1, LOW, false);
-st::EX_Switch executor2("switch2", PIN_RELAY2, LOW, false);
-st::EX_Switch executor3("switch3", PIN_RELAY3, LOW, false);
-st::EX_Switch executor4("switch4", PIN_RELAY4, LOW, false);
-st::EX_Switch executor5("switch5", PIN_RELAY5, LOW, false);
-st::EX_Switch executor6("switch6", PIN_RELAY6, LOW, false);
-st::EX_Switch executor7("switch7", PIN_RELAY7, LOW, false);
-st::EX_Switch executor8("switch8", PIN_RELAY8, LOW, false);
-st::EX_Switch executor9("switch9", PIN_RELAY9, LOW, false);
-st::EX_Switch executor10("switch10", PIN_RELAY10, LOW, false);
-st::EX_Switch executor11("switch11", PIN_RELAY11, LOW, false);
-st::EX_Switch executor12("switch12", PIN_RELAY12, LOW, false);
-st::EX_Switch executor13("switch13", PIN_RELAY13, LOW, false);
-st::EX_Switch executor14("switch14", PIN_RELAY14, LOW, false);
-st::EX_Switch executor15("switch15", PIN_RELAY15, LOW, false);
-st::EX_Switch executor16("switch16", PIN_RELAY16, LOW, false);
 
 //******************************************************************************************
 //Arduino Setup() routine
 //******************************************************************************************
 void setup()
 {
+  //******************************************************************************************
+  //Declare each Device that is attached to the Arduino
+  //  Notes: - For each device, there is typically a corresponding "tile" defined in your 
+  //           SmartThings DeviceType Groovy code
+  //         - For details on each device's constructor arguments below, please refer to the 
+  //           main comments in the corresponding header (.h) and program (.cpp) files.
+  //         - The name assigned to each device (1st argument below) must match the Groovy
+  //           DeviceType Tile name in your custom DeviceType code. 
+  //******************************************************************************************
+  //Polling Sensors
+  
+  //Interrupt Sensors 
+  
+  //Executors
+      
+  //EX_Switch arguments(name, pin, starting state,  invert logic) change last 2 args as needed for your application 
+  static st::EX_Switch executor1(F("switch1"), PIN_RELAY1, LOW, false);
+  static st::EX_Switch executor2(F("switch2"), PIN_RELAY2, LOW, false);
+  static st::EX_Switch executor3(F("switch3"), PIN_RELAY3, LOW, false);
+  static st::EX_Switch executor4(F("switch4"), PIN_RELAY4, LOW, false);
+  static st::EX_Switch executor5(F("switch5"), PIN_RELAY5, LOW, false);
+  static st::EX_Switch executor6(F("switch6"), PIN_RELAY6, LOW, false);
+  static st::EX_Switch executor7(F("switch7"), PIN_RELAY7, LOW, false);
+  static st::EX_Switch executor8(F("switch8"), PIN_RELAY8, LOW, false);
+  static st::EX_Switch executor9(F("switch9"), PIN_RELAY9, LOW, false);
+  static st::EX_Switch executor10(F("switch10"), PIN_RELAY10, LOW, false);
+  static st::EX_Switch executor11(F("switch11"), PIN_RELAY11, LOW, false);
+  static st::EX_Switch executor12(F("switch12"), PIN_RELAY12, LOW, false);
+  static st::EX_Switch executor13(F("switch13"), PIN_RELAY13, LOW, false);
+  static st::EX_Switch executor14(F("switch14"), PIN_RELAY14, LOW, false);
+  static st::EX_Switch executor15(F("switch15"), PIN_RELAY15, LOW, false);
+  static st::EX_Switch executor16(F("switch16"), PIN_RELAY16, LOW, false);
+
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //  -Note: Set these to "false" if using Hardware Serial on pins 0 & 1

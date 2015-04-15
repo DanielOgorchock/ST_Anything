@@ -30,7 +30,7 @@ st
 
 //public
 	//constructor
-	Executor::Executor(const String &name):
+	Executor::Executor(const __FlashStringHelper *name):
 		Device(name)
 	{
 	

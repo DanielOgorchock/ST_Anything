@@ -39,7 +39,7 @@ namespace st
 			
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			IS_Contact(const String &name, byte pin, bool iState, bool internalPullup = false, long numReqCounts = 0); //(defaults to NOT using internal pullup resistors, and required counts = 0)
+			IS_Contact(const __FlashStringHelper *name, byte pin, bool iState, bool internalPullup = false, long numReqCounts = 0); //(defaults to NOT using internal pullup resistors, and required counts = 0)
 			
 			//destructor
 			virtual ~IS_Contact();

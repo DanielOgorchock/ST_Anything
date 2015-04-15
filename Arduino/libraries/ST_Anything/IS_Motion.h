@@ -40,7 +40,7 @@ namespace st
 			
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			IS_Motion(const String &name, byte pin, bool iState, bool internalPullup = false); //(defaults to NOT using internal pullup resistors)
+			IS_Motion(const __FlashStringHelper *name, byte pin, bool iState, bool internalPullup = false); //(defaults to NOT using internal pullup resistors)
 			
 			//destructor
 			virtual ~IS_Motion();

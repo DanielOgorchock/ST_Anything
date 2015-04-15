@@ -39,7 +39,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2015-01-07  Dan Ogorchock  Modified for Door Monitoring and Garage Door Control
 //    2015-03-28  Dan Ogorchock  Removed RCSwitch #include now that the libraries are split up
-//
+//    2015-03-31  Daniel O.      Memory optimizations utilizing progmem
 //
 //******************************************************************************************
 
@@ -49,6 +49,7 @@
 #include <SoftwareSerial.h> //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Library
 #include <SmartThings.h>    //Library to provide API to the SmartThings Shield
 #include <dht.h>            //DHT Temperature and Humidity Library 
+#include <avr/pgmspace.h>
 
 //******************************************************************************************
 // ST_Anything Library 
@@ -96,32 +97,6 @@
 #define PIN_CONTACT_KITCHEN_DOOR     12
 #define PIN_CONTACT_SIDEGARAGE_DOOR  13
 
-//******************************************************************************************
-//Declare each Device that is attached to the Arduino
-//  Notes: - For each device, there is typically a corresponding "tile" defined in your 
-//           SmartThings DeviceType Groovy code
-//         - For details on each device's constructor arguments below, please refer to the 
-//           corresponding header (.h) and program (.cpp) files.
-//         - The name assigned to each device (1st argument below) must match the Groovy
-//           DeviceType Tile name.  (Note: "temphumid" below is the exception to this rule
-//           as the DHT sensors produce both "temperature" and "humidity".  Data from that
-//           particular sensor is sent to the ST Shield in two separate updates, one for 
-//           "temperature" and one for "humidity")
-//******************************************************************************************
-//Polling Sensors
-st::PS_TemperatureHumidity sensor1("temphumid", 120, 10, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
-
-//Interrupt Sensors 
-st::IS_Motion sensor2("motion", PIN_MOTION, HIGH, false);
-st::IS_DoorControl sensor3("leftDoor", PIN_CONTACT_LEFTGARAGE_DOOR, LOW, true, PIN_RELAY_LEFTGARAGE_DOOR, LOW, true, 1000);
-st::IS_DoorControl sensor4("rightDoor", PIN_CONTACT_RIGHTGARAGE_DOOR, LOW, true, PIN_RELAY_RIGHTGARAGE_DOOR, LOW, true, 1000);
-st::IS_Contact sensor5("garagesideDoor", PIN_CONTACT_SIDEGARAGE_DOOR, LOW, true);
-st::IS_Contact sensor6("frontDoor", PIN_CONTACT_FRONT_DOOR, LOW, true);
-st::IS_Contact sensor7("backDoor", PIN_CONTACT_BACK_DOOR, LOW, true);
-st::IS_Contact sensor8("kitchenDoor", PIN_CONTACT_KITCHEN_DOOR, LOW, true);
-
-//Executors
-//st::EX_Switch executor1("sampleEX", PIN_sampleEX, LOW, true);
 
 
 //******************************************************************************************
@@ -129,6 +104,34 @@ st::IS_Contact sensor8("kitchenDoor", PIN_CONTACT_KITCHEN_DOOR, LOW, true);
 //******************************************************************************************
 void setup()
 {
+  //******************************************************************************************
+  //Declare each Device that is attached to the Arduino
+  //  Notes: - For each device, there is typically a corresponding "tile" defined in your 
+  //           SmartThings DeviceType Groovy code
+  //         - For details on each device's constructor arguments below, please refer to the 
+  //           corresponding header (.h) and program (.cpp) files.
+  //         - The name assigned to each device (1st argument below) must match the Groovy
+  //           DeviceType Tile name.  (Note: "temphumid" below is the exception to this rule
+  //           as the DHT sensors produce both "temperature" and "humidity".  Data from that
+  //           particular sensor is sent to the ST Shield in two separate updates, one for 
+  //           "temperature" and one for "humidity")
+  //******************************************************************************************
+  //Polling Sensors
+  static st::PS_TemperatureHumidity sensor1(F("temphumid"), 120, 10, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
+  
+  //Interrupt Sensors 
+  static st::IS_Motion sensor2(F("motion"), PIN_MOTION, HIGH, false);
+  static st::IS_DoorControl sensor3(F("leftDoor"), PIN_CONTACT_LEFTGARAGE_DOOR, LOW, true, PIN_RELAY_LEFTGARAGE_DOOR, LOW, true, 1000);
+  static st::IS_DoorControl sensor4(F("rightDoor"), PIN_CONTACT_RIGHTGARAGE_DOOR, LOW, true, PIN_RELAY_RIGHTGARAGE_DOOR, LOW, true, 1000);
+  static st::IS_Contact sensor5(F("garagesideDoor"), PIN_CONTACT_SIDEGARAGE_DOOR, LOW, true);
+  static st::IS_Contact sensor6(F("frontDoor"), PIN_CONTACT_FRONT_DOOR, LOW, true);
+  static st::IS_Contact sensor7(F("backDoor"), PIN_CONTACT_BACK_DOOR, LOW, true);
+  static st::IS_Contact sensor8(F("kitchenDoor"), PIN_CONTACT_KITCHEN_DOOR, LOW, true);
+  
+  //Executors
+  //static st::EX_Switch executor1(F("sampleEX"), PIN_sampleEX, LOW, true);
+
+  
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //  -Note: Set these to "false" if using Hardware Serial on pins 0 & 1

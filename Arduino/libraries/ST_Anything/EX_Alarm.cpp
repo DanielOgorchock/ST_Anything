@@ -41,7 +41,7 @@ namespace st
 
 	//public
 	//constructor
-	EX_Alarm::EX_Alarm(const String &name, byte pin, bool startingState, bool invertLogic) :
+	EX_Alarm::EX_Alarm(const __FlashStringHelper *name, byte pin, bool startingState, bool invertLogic) :
 		Executor(name),
 		m_bCurrentState(startingState),
 		m_bInvertLogic(invertLogic)

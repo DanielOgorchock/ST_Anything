@@ -32,16 +32,16 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2015-03-28  Dan Ogorchock  Removed RCSwitch #include now that the libraries are split up
-//
+//    2015-03-31  Daniel O.      Memory optimizations utilizing progmem
 //
 //******************************************************************************************
-
 //******************************************************************************************
 // SmartThings Library for Arduino Shield
 //******************************************************************************************
 #include <SoftwareSerial.h> //Arduino UNO/Leonardo uses SoftwareSerial for the SmartThings Library
 #include <SmartThings.h>    //Library to provide API to the SmartThings Shield
 #include <dht.h>            //DHT Temperature and Humidity Library 
+#include <avr/pgmspace.h>
 
 //******************************************************************************************
 // ST_Anything Library 
@@ -85,30 +85,7 @@
 #define PIN_ALARM                9
 #define PIN_CONTACT              11
 
-//******************************************************************************************
-//Declare each Device that is attached to the Arduino
-//  Notes: - For each device, there is typically a corresponding "tile" defined in your 
-//           SmartThings DeviceType Groovy code
-//         - For details on each device's constructor arguments below, please refer to the 
-//           corresponding header (.h) and program (.cpp) files.
-//         - The name assigned to each device (1st argument below) must match the Groovy
-//           DeviceType Tile name.  (Note: "temphumid" below is the exception to this rule
-//           as the DHT sensors produce both "temperature" and "humidity".  Data from that
-//           particular sensor is sent to the ST Shield in two separate updates, one for 
-//           "temperature" and one for "humidity")
-//******************************************************************************************
-//Polling Sensors
-st::PS_Illuminance sensor1("illuminance", 120, 0, PIN_ILLUMINANCE);
-st::PS_TemperatureHumidity sensor2("temphumid", 120, 10, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
-st::PS_Water sensor3("water", 60, 20, PIN_WATER);
 
-//Interrupt Sensors 
-st::IS_Motion sensor4("motion", PIN_MOTION, HIGH, false);
-st::IS_Contact sensor5("contact", PIN_CONTACT, LOW, true);
-
-//Executors
-st::EX_Switch executor1("switch", PIN_SWITCH, LOW, true);
-st::EX_Alarm executor2("alarm", PIN_ALARM, LOW, true);
 
 
 //******************************************************************************************
@@ -116,6 +93,31 @@ st::EX_Alarm executor2("alarm", PIN_ALARM, LOW, true);
 //******************************************************************************************
 void setup()
 {
+  //******************************************************************************************
+  //Declare each Device that is attached to the Arduino
+  //  Notes: - For each device, there is typically a corresponding "tile" defined in your 
+  //           SmartThings DeviceType Groovy code
+  //         - For details on each device's constructor arguments below, please refer to the 
+  //           corresponding header (.h) and program (.cpp) files.
+  //         - The name assigned to each device (1st argument below) must match the Groovy
+  //           DeviceType Tile name.  (Note: "temphumid" below is the exception to this rule
+  //           as the DHT sensors produce both "temperature" and "humidity".  Data from that
+  //           particular sensor is sent to the ST Shield in two separate updates, one for 
+  //           "temperature" and one for "humidity")
+  //******************************************************************************************
+  //Polling Sensors
+  static st::PS_Illuminance sensor1(F("illuminance"), 120, 0, PIN_ILLUMINANCE);
+  static st::PS_TemperatureHumidity sensor2(F("temphumid"), 120, 10, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
+  static st::PS_Water sensor3(F("water"), 60, 20, PIN_WATER);
+  
+  //Interrupt Sensors 
+  static st::IS_Motion sensor4(F("motion"), PIN_MOTION, HIGH, false);
+  static st::IS_Contact sensor5(F("contact"), PIN_CONTACT, LOW, true);
+  
+  //Executors
+  static st::EX_Switch executor1(F("switch"), PIN_SWITCH, LOW, true);
+  static st::EX_Alarm executor2(F("alarm"), PIN_ALARM, LOW, true);
+  
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //  -Note: Set these to "false" if using Hardware Serial on pins 0 & 1

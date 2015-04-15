@@ -66,7 +66,7 @@ namespace st
 
 //public
 	//constructor
-	PollingSensor::PollingSensor(const String &name, long interval, long offset):
+	PollingSensor::PollingSensor(const __FlashStringHelper *name, long interval, long offset):
 		Sensor(name),
 		m_nPreviousTime(0),
 		m_nDeltaTime(0),

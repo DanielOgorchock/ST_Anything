@@ -50,7 +50,7 @@ namespace st
 
 //public
 	//constructor - called in your sketch's global variable declaration section
-	PS_Illuminance::PS_Illuminance(const String &name, unsigned int interval, int offset, byte analogInputPin, int s_l, int s_h, int m_l, int m_h):
+	PS_Illuminance::PS_Illuminance(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, int s_l, int s_h, int m_l, int m_h):
 		PollingSensor(name, interval, offset),
 		m_nSensorValue(0),
 		SENSOR_LOW(s_l),

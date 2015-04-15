@@ -16,6 +16,8 @@
 //******************************************************************************************
 
 #include "Device.h"
+#include "Everything.h"
+#include "Constants.h"
 
 namespace st
 {
@@ -23,13 +25,13 @@ namespace st
 	
 //public
 	//constructor
-	Device::Device(const String &name):
-		m_Name(name)
+	Device::Device(const __FlashStringHelper *name):
+		m_pName(name)
 	{
 		if(debug)
 		{
 			Serial.print(F("Device: New Device ID: "));
-			Serial.println(m_Name);
+			Serial.println(getName());
 		}
 	}
 	
@@ -39,14 +41,23 @@ namespace st
 		if(debug)
 		{
 			Serial.print(F("Device: Destroyed Device ID: "));
-			Serial.println(m_Name);
+			Serial.println(getName());
 		}
 	}
 
 	void Device::refresh()
 	{
-
+		
 	}
+	
+	const String Device::getName() const
+	{
+		char tmp[Constants::MAX_NAME_LENGTH];
+		strcpy_P(tmp, (const char*)m_pName);
+		
+		return String(tmp);	
+	}
+	
 
 	//debug flag to determine if debug print statements are executed (set value in your sketch)
 	bool Device::debug=false;

@@ -54,7 +54,7 @@ namespace st
 
 //public
 	//constructor
-	InterruptSensor::InterruptSensor(const String &name, byte pin, bool iState, bool pullup, long numReqCounts) :
+	InterruptSensor::InterruptSensor(const __FlashStringHelper *name, byte pin, bool iState, bool pullup, long numReqCounts) :
 		Sensor(name),
 		m_bInterruptState(iState),
 		m_bStatus(false),

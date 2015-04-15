@@ -40,7 +40,7 @@ namespace st
 			
 		public:
 			//constructor
-			PollingSensor(const String &name, long interval, long offset=0);
+			PollingSensor(const __FlashStringHelper *name, long interval, long offset=0);
 			
 			//destructor
 			virtual ~PollingSensor();

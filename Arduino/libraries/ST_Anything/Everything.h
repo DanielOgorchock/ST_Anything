@@ -89,9 +89,12 @@ namespace st
 			static byte bTimersPending;	//number of time critical events in progress - if > 0, do NOT perform refreshDevices() routine 
 
 			static bool debug;	//debug flag to determine if debug print statements are executed - set value in your sketch's setup() routine
-
+			
+			
 			friend SmartThingsCallout_t receiveSmartString; //callback function to act on data received from SmartThings Shield - called from SmartThings Shield Library		
 
+			
+			
 			//SmartThings Object
 			#ifndef DISABLE_SMARTTHINGS
 			  static void setLED(uint8_t red, uint8_t green, uint8_t blue) {SmartThing.shieldSetLED(red, green, blue);}
