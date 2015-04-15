@@ -298,6 +298,12 @@ namespace st
 	{
 		if(m_nSensorCount>=Constants::MAX_SENSOR_COUNT)
 		{
+			if(debug)
+			{
+				Serial.print(F("Did not add sensor named "));
+				Serial.print(sensor->getName());
+				Serial.println(F("(You've exceeded maximum number of sensors; edit Constants.h)"));
+			}
 			return false;
 		}
 		else
@@ -320,6 +326,12 @@ namespace st
 	{
 		if(m_nExecutorCount>=Constants::MAX_EXECUTOR_COUNT)
 		{
+			if(debug)
+			{
+				Serial.print(F("Did not add executor named "));
+				Serial.print(executor->getName());
+				Serial.println(F("(You've exceeded maximum number of executors; edit Constants.h)"));
+			}
 			return false;
 		}
 		else
