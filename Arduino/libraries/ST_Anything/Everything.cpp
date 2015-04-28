@@ -24,7 +24,7 @@
 //
 //******************************************************************************************
 
-#include <arduino.h>
+#include <Arduino.h>
 #include <avr/pgmspace.h>
 #include "Everything.h"
 
