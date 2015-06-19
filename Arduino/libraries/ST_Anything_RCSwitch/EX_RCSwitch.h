@@ -6,7 +6,7 @@
 //			  It inherits from the st::Executor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_RCSwitch executor1("rcswitch", PIN_RCSWITCH, 35754004, 26, 18976788, 26, LOW);
+//			  For Example:  st::EX_RCSwitch executor1("rcswitch", PIN_RCSWITCH, 35754004, 26, 18976788, 26, 174, 1, 15, LOW);
 //
 //			  st::EX_RCSwitch() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -15,6 +15,9 @@
 //				- unsigned int onLength - REQUIRED - the "on" code's length for RCSwitch send() command
 //				- unsigned long offCode - REQUIRED - the "off" code for RCSwitch send() command
 //				- unsigned int offLength - REQUIRED - the "off" code's length for RCSwitch send() command
+//				- unsigned int pulseLength - REQUIRED - the length of the RF pulse for RCSwitch send() command
+//				- byte protocol - OPTIONAL - defaults to "1" - the protocol for RCSwitch send() command
+//				- byte repeatTransmits - OPTIONAL - defaults to "15" - the number of repeated transmits for RCSwitch send() command
 //				- bool startingState - OPTIONAL - the value desired for the initial state of the switch.  LOW = "off", HIGH = "on"
 //
 //  Change History:
@@ -22,7 +25,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-26  Dan			Original Creation
-//
+//    2015-05-20  Dan			Improved to work with Etekcity ZAP 3F 433Mhz RF Outlets
 //
 //******************************************************************************************
 #ifndef ST_EX_RCSWITCH
@@ -48,7 +51,7 @@ namespace st
 		
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			EX_RCSwitch(const __FlashStringHelper *name, byte transmitterPin, unsigned long onCode, unsigned int onLength, unsigned long offCode, unsigned int offLength, bool startingState = LOW);
+			EX_RCSwitch(const __FlashStringHelper *name, byte transmitterPin, unsigned long onCode, unsigned int onLength, unsigned long offCode, unsigned int offLength, unsigned int pulseLength, byte protocol = 1, byte repeatTransmits = 15, bool startingState = LOW);
 			
 			//destructor
 			virtual ~EX_RCSwitch();
