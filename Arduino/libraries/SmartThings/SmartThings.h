@@ -43,16 +43,16 @@
 //*******************************************************************************
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) 
 #define BOARD_TYPE BOARD_TYPE_UNO
-//#define DISABLE_SOFTWARESERIAL  // uncomment to disable SoftwareSerial to prevent conflicts if using HW Serial after IDE v1.6 DGO 10-16-2015
+//#define DISABLE_SOFTWARESERIAL  // uncomment to disable SoftwareSerial to save some program space if neccessary while using HW Serial
 #elif defined(__AVR_ATmega32U4__)
 #define BOARD_TYPE BOARD_TYPE_LEONARDO
-//#define DISABLE_SOFTWARESERIAL  // uncomment to disable SoftwareSerial to prevent conflicts if using HW Serial after IDE v1.6 DGO 10-16-2015
+//#define DISABLE_SOFTWARESERIAL  // uncomment to disable SoftwareSerial to save some program space if neccessary while using HW Serial
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define BOARD_TYPE BOARD_TYPE_MEGA
-#define DISABLE_SOFTWARESERIAL  //Assume HW Serial is being used.  This prevents conflicts if using HW Serial after IDE v1.6  DGO 10-16-2015
+#define DISABLE_SOFTWARESERIAL  //Assume HW Serial is being used.  Saves some program space while using HW Serial
 #else	//assume user is using an UNO for the unknown case
 #define BOARD_TYPE BOARD_TYPE_UNO
-//#define DISABLE_SOFTWARESERIAL  // uncomment to disable SoftwareSerial to prevent conflicts if using HW Serial after IDE v1.6 DGO 10-16-2015
+//#define DISABLE_SOFTWARESERIAL  // uncomment to disable SoftwareSerial to save some program space if neccessary while using HW Serial
 #endif
 
 #ifndef DISABLE_SOFTWARESERIAL
@@ -112,7 +112,7 @@ class SmartThings
 {
 private:
 #ifndef DISABLE_SOFTWARESERIAL
-	SoftwareSerial _mySerial;
+	SoftwareSerial* _mySerial;
 #endif
 	SmartThingsSerialType_t _SerialPort;
 	SmartThingsCallout_t *_calloutFunction;
