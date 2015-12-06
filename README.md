@@ -3,7 +3,8 @@ History:
 - v1.1 2015-01-11 Added st::IS_DoorControl device class & ST_Anything_Doors example code (sketch + groovy)
 - v1.2 2015-02-12 Added st::EX_RCSwitch device class & ST_Anything_RCSwitch example code (sketch and groovy), included DHT and RCSwitch libraries in the Arduino\libraries\ folder of the repo to simplify initial setup for users.
 - v1.3 2015-03-28 Added Furnace Alarm, Temperatures, and Relays example code (sketches and groovy code)
-- v1.4 2015-12-06 Added Alarm_Panel MEGA 2560 example, as well as adding Smoke Detector capability
+- v1.4 2015-04-14 Memory Optimizations
+- v1.5 2015-12-06 Added Alarm_Panel MEGA 2560 example, as well as adding Smoke Detector capability
 
 ST_Anything
 ===========
