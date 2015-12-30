@@ -102,8 +102,7 @@ void setup()
     //        - long onTime - OPTIONAL - the number of milliseconds to keep the output on, DEFAULTS to 0
     //        - intnumCycles - OPTIONAL - the number of ON/OFF Cycles required, DEFAULTS to 1
     //******************************************************************************************
-  static st::S_TimedRelay sensor1(F("relay"), PIN_RELAY, LOW, true, 500, 500, 3);
-
+  static st::S_TimedRelay sensor1(F("switch"), PIN_RELAY, LOW, true, 500, 500, 3);
 
   
   //*****************************************************************************
