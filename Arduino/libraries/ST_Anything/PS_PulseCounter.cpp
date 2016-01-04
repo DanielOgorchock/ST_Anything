@@ -107,7 +107,7 @@ namespace st
 		default:
 			m_pCounter = 0;
 			if (st::PollingSensor::debug) {
-				Serial.println(F("PS_PulseCounter::Invalid Pin Requested!!!  Must be 21, 20, 19, 18 "));
+				Serial.println(F("PS_PulseCounter::Invalid Pin Requested!  Must be 21, 20, 19, 18 "));
 			}
 		}	
 	}
@@ -157,7 +157,7 @@ namespace st
 		{
 			m_nSensorValue = 0;
 			if (st::PollingSensor::debug) {
-				Serial.println(F("PS_PulseCounter::Invalid Pin Requested!!!  Must be 21, 20, 19, 18 "));
+				Serial.println(F("PS_PulseCounter::Invalid Pin Requested!  Must be 21, 20, 19, 18 "));
 			}
 		}
 

@@ -60,7 +60,7 @@ namespace st
 				m_iNumCycles = 1;
 				m_iCurrentCount = 1;
 				
-				Serial.println(F("S_TimedRelay:: INVALID Number of Cycles Requested!!!  Must be at least 1.  Setting to 1."));
+				Serial.println(F("S_TimedRelay:: INVALID Number of Cycles Requested!  Must be at least 1.  Setting to 1."));
 				
 			}
 		}
