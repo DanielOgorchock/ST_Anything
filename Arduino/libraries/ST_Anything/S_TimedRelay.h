@@ -73,6 +73,7 @@ namespace st
 
 			//gets
 			virtual byte getPin() const { return m_nOutputPin; }
+			virtual bool getTimerActive() const { return m_bTimerPending; }
 
 			//sets
 			virtual void setOutputPin(byte pin);

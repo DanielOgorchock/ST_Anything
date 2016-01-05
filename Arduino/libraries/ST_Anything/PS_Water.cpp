@@ -7,7 +7,7 @@
 //			  presence of water using an inexpensive water sensor.  
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_Water sensor3("water", 60000, 6000, PIN_WATER);
+//			  For Example:  st::PS_Water sensor3("water", 60, 6, PIN_WATER, 200);
 //
 //			  st::PS_Water() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
