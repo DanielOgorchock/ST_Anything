@@ -91,6 +91,7 @@ namespace st
 
 			static bool debug;	//debug flag to determine if debug print statements are executed - set value in your sketch's setup() routine
 			
+			static void (*callOnMsgSend)(const String &msg); //If this function pointer is assigned, the function it points to will be called upon every time a string is sent to the cloud.		
 			
 			friend SmartThingsCallout_t receiveSmartString; //callback function to act on data received from SmartThings Shield - called from SmartThings Shield Library		
 

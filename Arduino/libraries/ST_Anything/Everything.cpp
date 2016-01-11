@@ -122,6 +122,11 @@ namespace st
 				Serial.println(Return_String.substring(0, index));
 			#endif
 			
+			if(callOnMsgSend!=0)
+			{
+				callOnMsgSend(Return_String.substring(0, index));
+			}
+
 			Return_String=Return_String.substring(index+1);
 		}
 		Return_String.remove(0);	//clear the Return_String buffer
@@ -379,6 +384,7 @@ namespace st
 	unsigned long Everything::sendstringsLastMillis = 0;
 	bool Everything::debug=false;
 	byte Everything::bTimersPending = 0;	//initialize variable
+	void (*Everything::callOnMsgSend)(const String &msg) = 0; //initialize this callback function to null
 	
 	//SmartThings static members
 	#ifndef DISABLE_SMARTTHINGS
