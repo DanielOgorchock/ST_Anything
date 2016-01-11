@@ -285,7 +285,6 @@ void SmartThings::_shieldGetNetworkInfo(void)
 // SoftwareSerial Constructor
 #ifndef DISABLE_SOFTWARESERIAL
 SmartThings::SmartThings(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *callout, String shieldType, bool enableDebug) :
-	_mySerial(pinRX, pinTX),
 	_SerialPort(SW_SERIAL),
 	_calloutFunction(callout),
 	_isDebugEnabled(enableDebug),
@@ -304,15 +303,12 @@ SmartThings::SmartThings(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *cal
 	//{
 	//	_shieldTypeBuf[i] = (uint8_t)shieldType[i];
 	//}
-
+	_mySerial = new SoftwareSerial(pinRX, pinTX);
 	st_begin(2400);
 }
 #endif
 //Hardware Serial Constructor
 SmartThings::SmartThings(SmartThingsSerialType_t hwSerialPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug) :
-#ifndef DISABLE_SOFTWARESERIAL
-	_mySerial(254, 255),		//Needed unless you uncomment the "#define DISABLE_SOFTWARESERIAL" to prevent compiler error (SmartThings.h)
-#endif
 	_SerialPort(hwSerialPort),
 	_calloutFunction(callout),
 	_isDebugEnabled(hwSerialPort != HW_SERIAL ? enableDebug : false),	//Do not allow debug print statements if using Hardware Serial (pins 0,1) for ST Communications
@@ -492,7 +488,7 @@ void SmartThings::st_begin(long baudRate)
 	switch (_SerialPort) {
 #ifndef DISABLE_SOFTWARESERIAL
 	case SW_SERIAL:
-		_mySerial.begin(baudRate);
+		_mySerial->begin(baudRate);
 #endif
 	case HW_SERIAL:
 		Serial.end();
@@ -520,7 +516,7 @@ int SmartThings::st_available()
 	switch (_SerialPort) {
 #ifndef DISABLE_SOFTWARESERIAL
 	case SW_SERIAL:
-		return _mySerial.available();
+		return _mySerial->available();
 #endif
 	case HW_SERIAL:
 		return Serial.available();
@@ -546,7 +542,7 @@ int SmartThings::st_read()
 	switch (_SerialPort) {
 #ifndef DISABLE_SOFTWARESERIAL
 	case SW_SERIAL:
-		return _mySerial.read();
+		return _mySerial->read();
 #endif
 	case HW_SERIAL:
 		return Serial.read();
@@ -572,7 +568,7 @@ long SmartThings::st_print(String str)
 	switch (_SerialPort) {
 #ifndef DISABLE_SOFTWARESERIAL
 	case SW_SERIAL:
-		return _mySerial.print(str);
+		return _mySerial->print(str);
 #endif
 	case HW_SERIAL:
 		return Serial.print(str);
@@ -599,7 +595,7 @@ long SmartThings::st_print(char c)
 	switch (_SerialPort) {
 #ifndef DISABLE_SOFTWARESERIAL
 	case SW_SERIAL:
-		return _mySerial.print(c);
+		return _mySerial->print(c);
 #endif
 	case HW_SERIAL:
 		return Serial.print(c);
@@ -627,7 +623,7 @@ long SmartThings::st_print(char c, int i)
 	switch (_SerialPort) {
 #ifndef DISABLE_SOFTWARESERIAL
 	case SW_SERIAL:
-		return _mySerial.print(c, i);
+		return _mySerial->print(c, i);
 #endif
 	case HW_SERIAL:
 		return Serial.print(c, i);
@@ -654,7 +650,7 @@ byte SmartThings::st_write(uint8_t i)
 	switch (_SerialPort) {
 #ifndef DISABLE_SOFTWARESERIAL
 	case SW_SERIAL:
-		return _mySerial.write(i);
+		return _mySerial->write(i);
 #endif
 	case HW_SERIAL:
 		return Serial.write(i);

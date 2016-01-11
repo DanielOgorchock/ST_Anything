@@ -227,11 +227,10 @@ namespace st
 		sendStrings();				//send any pending updates to ST Cloud
 		
 		#ifndef DISABLE_REFRESH		//Added new check to allow user to disable REFRESH feature - setting is in Constants.h)
-		if ((bTimersPending == 0) && (millis() - refLastMillis >= Constants::DEV_REFRESH_INTERVAL * 1000))  //DEV_REFRESH_INTERVAL is set in Constants.h
+		if ((bTimersPending == 0) && ((millis() - refLastMillis) >= long(Constants::DEV_REFRESH_INTERVAL) * 1000))  //DEV_REFRESH_INTERVAL is set in Constants.h
 		{
 			refLastMillis = millis();
 			refreshDevices();	//call each st::Device object to refresh data (this is just a safeguard to ensure the state of the Arduino and the ST Cloud stay in synch should an event be missed)
-
 		}
 		#endif
 		

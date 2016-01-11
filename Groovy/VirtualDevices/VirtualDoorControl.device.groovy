@@ -17,6 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2015-01-10  Dan Ogorchock  Original Creation
+ *    2015-06-06  Dan Ogorchock  Added "Momentary" capability with "push()" command
  *
  *
  */
@@ -26,6 +27,7 @@ metadata {
 		capability "Contact Sensor"
 		capability "Actuator"
 		capability "Sensor"
+		capability "Momentary"
         
 		command "opening"
 		command "closing"
@@ -81,4 +83,8 @@ def close() {
 def actuate() {
 	log.debug "Sending button press event"
 	sendEvent(name: "buttonPress", value: "true", isStateChange: true, unit: "")
+}
+
+def push() {
+	actuate()
 }

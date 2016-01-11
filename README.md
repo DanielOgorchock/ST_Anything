@@ -3,6 +3,8 @@ History:
 - v1.1 2015-01-11 Added st::IS_DoorControl device class & ST_Anything_Doors example code (sketch + groovy)
 - v1.2 2015-02-12 Added st::EX_RCSwitch device class & ST_Anything_RCSwitch example code (sketch and groovy), included DHT and RCSwitch libraries in the Arduino\libraries\ folder of the repo to simplify initial setup for users.
 - v1.3 2015-03-28 Added Furnace Alarm, Temperatures, and Relays example code (sketches and groovy code)
+- v1.4 2015-04-14 Memory Optimizations
+- v1.5 2015-12-06 Added Alarm_Panel MEGA 2560 example, as well as adding Smoke Detector capability
 
 ST_Anything
 ===========
@@ -25,6 +27,7 @@ This package currently implements the following SmartThings Device Capabilities:
 - Door Control (i.e. Garage Door Contact Sensor + Relay Output) - New! See 'ST_Anything_Doors' example
 - RCSwitch Control (i.e. Radio Control Switch) - New! See 'ST_Anything_RCSwitch' example (Requires RCSwitch library, see below)
 - Thermocouple Temperature Measurement (via the Adafruit MAX31855 library)
+- Smoke Detector (as a simple digital input)
 
 Note: Attempting to use all of these at once on an Arduino UNO is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.
 

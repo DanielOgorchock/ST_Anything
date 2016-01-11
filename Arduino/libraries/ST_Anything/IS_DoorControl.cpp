@@ -64,7 +64,7 @@ namespace st
 	
 	void IS_DoorControl::init()
 	{
-		//get current status of motion sensor by calling parent class's init() routine - no need to duplicate it here!
+		//get current status of contact sensor by calling parent class's init() routine - no need to duplicate it here!
 		InterruptSensor::init();
 	}
 

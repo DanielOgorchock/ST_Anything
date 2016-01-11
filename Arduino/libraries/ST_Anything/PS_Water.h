@@ -7,13 +7,14 @@
 //			  presence of water using an inexpensive water sensor.  
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_Water sensor3("water", 60000, 6000, PIN_WATER);
+//			  For Example:  st::PS_Water sensor3("water", 60, 6, PIN_WATER, 200);
 //
 //			  st::PS_Water() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
-//				- long interval - REQUIRED - the polling interval in milliseconds
-//				- long offset - REQUIRED - the polling interval offset in milliseconds - used to prevent all polling sensors from executing at the same time
+//				- long interval - REQUIRED - the polling interval in seconds
+//				- long offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
 //				- byte pin - REQUIRED - the Arduino Pin to be used as an analog input
+//				- int limit - OPTIONAL - the alarm limit to compare analog pin's reading to, above which the sensor reports "wet" instead of "dry" 
 //
 //			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
@@ -26,6 +27,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
+//    2015-08-23  Dan			 Added optional alarm limit to constructor
 //
 //
 //******************************************************************************************
@@ -42,10 +44,11 @@ namespace st
 		private:
 			byte m_nAnalogInputPin;		//analog pin connected to the water sensor
 			int m_nSensorValue;			//current sensor value
+			int m_nSensorLimit;			//alarm limit
 			
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			PS_Water(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin);
+			PS_Water(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, int limit = 100);
 			
 			//destructor
 			virtual ~PS_Water();
