@@ -39,6 +39,7 @@
 
 namespace st
 {
+	SmartThingsCallout_t receiveSmartString;	//function prototype for ST Library callback function
 
 	class Everything
 	{

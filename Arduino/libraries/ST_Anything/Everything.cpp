@@ -32,7 +32,6 @@ int freeRam();	//freeRam() function prototype - useful in determining how much S
 
 namespace st
 {
-	SmartThingsCallout_t receiveSmartString;	//function prototype for ST Library callback function
 	
 //private
 	void Everything::updateNetworkState()		//get the current zigbee network status of the ST Shield
@@ -365,7 +364,7 @@ namespace st
 			Device *p = Everything::getDeviceByName(message.substring(0, message.indexOf(' ')));
 			if (p != 0)
 			{
-				p->beSmart(message);	//pass the incoming SmartThings Shield message to the correct Device's beSMart() routine
+				p->beSmart(message);	//pass the incoming SmartThings Shield message to the correct Device's beSmart() routine
 			}
 		}
 	}
