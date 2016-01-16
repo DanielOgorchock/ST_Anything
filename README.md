@@ -53,16 +53,17 @@ ST_Anything (original example) consists of four parts:
 - Open the ST_Anything.ino and see if it successfully compiles.
 - WARNING:  If you are using an Arduino UNO, you will most likely need to comment out some of the devices in the sketch (both in the global variable declaration section as well as the setup() function) due to the UNO's limited 2 kilobytes of SRAM.  Failing to do so will most likely result in unpredictable behavior. The Arduino MEGA 2560 has 8k of SRAM and has four Hardware Serial ports (UARTs).  If you plan on using lots of devices, get the MEGA 2560.
 
-##ST_Anything SmartThings Device Type Installation Instructions
+##ST_Anything SmartThings Device Handler Installation Instructions
 - Join your Arduino/ThingShield to your hub using your phone's SmartThings App.  It will show up as a generic "Arduino ThingShield"
 - Create an account and/or log into the SmartThings Developers Web IDE.
-- Click on My Device Types from the navigation menu.
-- Click on  + New SmartDevice button.
-- Fill in the Name field as ST_Anything and click on the Create button. Don't worry about filling out everything else.
+- Click on "My Device Handlers" from the navigation menu.
+- Click on  "+ New Device Handler" button.
+- Select the "From Code" Tab near the top of the page
 - Paste the code from the ST_Anything.groovy file from this repo.
 - If you commented out any of the devices in the sketch, be sure to comment out the corresponding tiles & preferences in the ST_Anything.groovy code as well.
-- Click on  Save  in the IDE.
-- Click on  Publish -> For Me  in the IDE.
+- Click on "Create" near the bottom of the page.
+- Click on  "Save"  in the IDE.
+- Click on  "Publish" -> "For Me"  in the IDE.
 - Click on My Devices from navigation menu
 - Select your "Arduino ThingShield" device from the list
 - Click the Edit button at the bottom of the screen
