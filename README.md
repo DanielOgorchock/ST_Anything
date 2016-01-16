@@ -10,8 +10,7 @@ ST_Anything
 ===========
 Turn your Arduino into an AnyThing. ST_Anything is an Arduino library, sketch, and Device Type that works with your SmartThings ThingShield to create an all-in-one SmartThings device.
 
-
-![screenshot](https://cloud.githubusercontent.com/assets/5206084/5608219/53df3d16-944a-11e4-9791-ce42f7334990.PNG)
+![screenshot](https://cloud.githubusercontent.com/assets/5206084/12374289/021d4434-bc65-11e5-9efa-1457365a6cd5.PNG)
 
 
 This package currently implements the following SmartThings Device Capabilities:
