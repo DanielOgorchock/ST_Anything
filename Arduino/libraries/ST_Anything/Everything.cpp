@@ -101,10 +101,11 @@ namespace st
 	
 	void Everything::sendStrings()
 	{
+		unsigned int index;
 		//Loop through the Return_String buffer and send each "|" delimited string to ST Shield
 		while(Return_String.length()>=1 && Return_String[0]!='|')
 		{
-			unsigned int index=Return_String.indexOf("|");
+			index=Return_String.indexOf("|");
 			if(debug)
 			{
 				Serial.print(F("Everything: Sending: "));

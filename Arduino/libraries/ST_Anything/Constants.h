@@ -87,7 +87,7 @@ namespace st
 			//Interval on which Device's refresh methods are called (in seconds) - most useful for Executors and InterruptSensors - only works if DISABLE_REFRESH is not defined above
 			static const int DEV_REFRESH_INTERVAL=300;				//seconds - Used to make sure the ST Cloud is kept current with device status (in case of missed updates to the ST Cloud) - primarily for Executors and InterruptSensors - only works if DISABLE_REFRESH is not defined above
 			//Minumum interval between sending packets of data to ThingShield (in milliseconds) - noticed issue where ST Hub/Cloud could not keep up with rapid data transfer
-			static const int SENDSTRINGS_INTERVAL = 1000;
+			static const int SENDSTRINGS_INTERVAL = 100;
 			// ------------------------------------------------------------------------------- 
 			// --- SmartThings specific items 
 			// -------------------------------------------------------------------------------

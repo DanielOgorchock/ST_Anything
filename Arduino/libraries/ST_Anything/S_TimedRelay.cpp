@@ -120,7 +120,7 @@ namespace st
 			Serial.print(F("S_TimedRelay::beSmart s = "));
 			Serial.println(s);
 		}
-		if (s == F("on"))
+		if ((s == F("on")) && (m_bCurrentState == LOW))
 		{
 			m_bCurrentState = HIGH;
 
@@ -138,8 +138,11 @@ namespace st
 			
 			//Set the initial count to zero
 			m_iCurrentCount = 0;
+
+			//update the digital output
+			writeStateToPin();
 		}
-		else if (s == F("off"))
+		else if ((s == F("off")) && (m_bCurrentState == HIGH))
 		{
 			m_bCurrentState = LOW;
 
@@ -152,10 +155,11 @@ namespace st
 			
 			//Reset the count to the number of required cycles to prevent Update() routine from running if someone sends an OFF command
 			m_iCurrentCount = m_iNumCycles;
+
+			//update the digital output
+			writeStateToPin();
 		}
 		
-		//update the digital output
-		writeStateToPin();
 	}
 
 	//called periodically by Everything class to ensure ST Cloud is kept consistent with the state of the contact sensor
