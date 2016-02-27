@@ -16,6 +16,7 @@
 //				- byte pin - REQUIRED - the Arduino Pin to be used for the One-Wire DS18B20 sensor conenction
 //				- bool In_C - OPTIONAL - true = Report Celsius, false = Report Farenheit (Farentheit is the default)
 //				- byte resolution - OPTIONAL - DS18B20 sensor resolution in bits.  9, 10, 11, or 12.  Defaults to 10 for decent accuracy and performance
+//				- byte num_sensors - OPTIONAL - number of OneWire DS18B20 sensors attached to OneWire bus - Defaults to 1
 //
 //			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
@@ -29,6 +30,7 @@
 //    ----        ---            ----
 //    2015-10-08  Matt Boykin    Original Creation
 //	  2016-02-19  Dan Ogorchock	 Cleaned Up for inclusing in the ST_Anything Project
+//    2016-02-27  Dan Ogorchock  Added support for multiple DS18B20 sensors
 //
 //
 //******************************************************************************************
@@ -51,11 +53,12 @@ namespace st
 			DallasTemperature m_DS18B20;			//Dallas Temperature object
 			byte m_Resolution;						//DS18B20 Resolution in bits - 9, 10, 11, or 12
 			bool m_In_C;							//Return temp in C
+			byte m_numSensors;						//number of DS18B20 sensors to report values for
 
 		public:
 
 			//constructor - called in your sketch's global variable declaration section
-			PS_DS18B20_Temperature(const __FlashStringHelper *name, unsigned int interval, int offset, byte pin, bool In_C = false, byte resolution = 10);
+			PS_DS18B20_Temperature(const __FlashStringHelper *name, unsigned int interval, int offset, byte pin, bool In_C = false, byte resolution = 10, byte num_sensors = 1);
 
 			//destructor
 			virtual ~PS_DS18B20_Temperature();

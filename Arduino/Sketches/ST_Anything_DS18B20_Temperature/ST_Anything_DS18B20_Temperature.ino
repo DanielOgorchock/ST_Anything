@@ -31,6 +31,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2016-02-19  Dan Ogorchock  Created example for Dallas Semiconductor 1-Wire DS18B20 Temperature Sensor
+//    2016-02-27  Dan Ogorchock  Added support for multiple DS18B20 sensors on single 1-wire network
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -88,7 +89,7 @@ void setup()
   //           DeviceType Tile name.  
   //******************************************************************************************
   //Polling Sensors
-  static st::PS_DS18B20_Temperature sensor1(F("temperature"), 120, 0, PIN_DS18B20_Temperature, false, 10);
+  static st::PS_DS18B20_Temperature sensor1(F("temperature"), 120, 0, PIN_DS18B20_Temperature, false, 10, 1);
  
   //Interrupt Sensors 
   

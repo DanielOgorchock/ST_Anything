@@ -16,6 +16,7 @@
 //				- byte pin - REQUIRED - the Arduino Pin to be used for the One-Wire DS18B20 sensor conenction
 //				- bool In_C - OPTIONAL - true = Report Celsius, false = Report Farenheit (Farentheit is the default)
 //				- byte resolution - OPTIONAL - DS18B20 sensor resolution in bits.  9, 10, 11, or 12.  Defaults to 10 for decent accuracy and performance
+//				- byte num_sensors - OPTIONAL - number of OneWire DS18B20 sensors attached to OneWire bus - Defaults to 1
 //
 //			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
@@ -29,6 +30,7 @@
 //    ----        ---            ----
 //    2015-10-08  Matt Boykin    Original Creation
 //	  2016-02-19  Dan Ogorchock	 Cleaned Up for inclusing in the ST_Anything Project
+//    2016-02-27  Dan Ogorchock  Added support for multiple DS18B20 sensors
 //
 //
 //******************************************************************************************
@@ -47,13 +49,14 @@ namespace st
 
 //public
 	//constructor - called in your sketch's global variable declaration section
-	PS_DS18B20_Temperature::PS_DS18B20_Temperature(const __FlashStringHelper *name, unsigned int interval, int offset, byte pin, bool In_C, byte resolution) :
+	PS_DS18B20_Temperature::PS_DS18B20_Temperature(const __FlashStringHelper *name, unsigned int interval, int offset, byte pin, bool In_C, byte resolution, byte num_sensors) :
 		PollingSensor(name, interval, offset),
 		m_dblTemperatureSensorValue(0.0),
 		m_OneWireBus(pin),
 		m_DS18B20(&m_OneWireBus),
 		m_In_C(In_C),
-		m_Resolution(resolution)
+		m_Resolution(resolution),
+		m_numSensors(num_sensors)
 	{
 		
 	}
@@ -89,9 +92,11 @@ namespace st
 	//initialization routine - get first set of readings and send to ST cloud
 	void PS_DS18B20_Temperature::init()
 	{
-		m_DS18B20.begin();
+		m_DS18B20.begin();					   //Initialize the DallasTemperature library
 		m_DS18B20.setResolution(m_Resolution); //Set the temperature sensor resolution
-		getData();
+		m_DS18B20.requestTemperatures();	   //Send the command to get temperatures once, to ensure clean data before sending to ST
+		delay(500);						       //Wait 500ms to let sensors stabilize
+		getData();							   //Get temperature data and send to ST cloud
 	}
 
 	//function to get data from sensor and queue results for transfer to ST Cloud
@@ -103,31 +108,47 @@ namespace st
 		
 		m_DS18B20.requestTemperatures(); // Send the command to get temperatures
 
-		if (m_In_C)
-		{
-			m_dblTemperatureSensorValue = m_DS18B20.getTempCByIndex(0); 
-		}else
-		{
-			m_dblTemperatureSensorValue = m_DS18B20.getTempFByIndex(0); 
-		}
-
 		if (st::PollingSensor::debug) {
 			Serial.println(F("DONE"));
-			Serial.print("Temperature for the device 1 (index 0) is: ");
-			Serial.println(m_dblTemperatureSensorValue);
 		}
 
-
-		if (isnan(m_dblTemperatureSensorValue))
+		for (int index = 1; index <= m_numSensors; index++)
 		{
-			if (st::PollingSensor::debug) {
-				Serial.println(F("PS_DS18B20_Temperature:: Error Reading Sensor"));
+			if (m_In_C)
+			{
+				m_dblTemperatureSensorValue = m_DS18B20.getTempCByIndex(index-1);
 			}
-			m_dblTemperatureSensorValue = -99.0;
+			else
+			{
+				m_dblTemperatureSensorValue = m_DS18B20.getTempFByIndex(index-1);
+			}
+
+			if (st::PollingSensor::debug) {
+				Serial.print(F("PS_DS18B20_Temperature:: Temperature for the device # "));
+				Serial.print(index);
+				Serial.print(F(" is: "));
+				Serial.println(m_dblTemperatureSensorValue);
+			}
+
+
+			if (isnan(m_dblTemperatureSensorValue))
+			{
+				if (st::PollingSensor::debug) {
+					Serial.print(F("PS_DS18B20_Temperature:: Error Reading Sensor # "));
+					Serial.println(index);
+				}
+				m_dblTemperatureSensorValue = -99.0;
+			}
+
+			if (m_numSensors == 1)
+			{
+				Everything::sendSmartString(getName() + " " + String(int(m_dblTemperatureSensorValue)));
+			}
+			else
+			{
+				Everything::sendSmartString(getName() + index + " " + String(int(m_dblTemperatureSensorValue)));
+			}
 		}
-
-		Everything::sendSmartString(getName() + " " + String(int(m_dblTemperatureSensorValue)));
-
 	}
 
 }
