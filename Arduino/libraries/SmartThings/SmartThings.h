@@ -12,11 +12,13 @@
 ///		 programming and debugging typically.  UNO can use the Hardware "Serial"
 ///		 if desired, but USB programming and debug will be troublesome.
 ///		 Leonardo and Mega can use SoftwareSerial BUT cannot use Pin3 for Rx - use
-///		 Pin10 for Rx and add jumper from Pin10 to Pin3.  
+///		 Pin10 for Rx and add jumper from Pin10 to Pin3.
+///		-Arduino LEONARDO should use the Hardware Serial Constructor since it has 1 UART
+///		 separate from the USB port.  "Serial1" port uses pins 0(Rx) and 1(Tx).
 ///		-Arduino MEGA should use the Hardware Serial Constructor since it has 4 UARTs.
 ///		 "Serial3" port uses pins 14(Tx) and 15(Rx).  Wire Pin14 to Pin2 and Pin15 to Pin3. 
 ///		-Be certain to not use Pins 2 & 3 in your Arduino sketch for I/O since they are 
-///		 electrically connected to the ThingShield.
+///		 electrically connected to the ThingShield if set to D2/D3.
 ///		-Note - Pin6 is reserved by the ThingShield as well.  Best to avoid using it.
 ///		-The SoftwareSerial library has the following known limitations: 
 ///			- If using multiple software serial ports, only one can receive data at a time.
@@ -25,6 +27,7 @@
 ///			  A8(62), A9(63), A10(64), A11(65), A12(66), A13(67), A14(68), A15(69).
 ///			- Not all pins on the Leonardo and Micro support change interrupts, so only 
 ///			  the following can be used for RX : 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI).
+/// 	-2016-06-04  Dan Ogorchock  Added improved support for Arduino Leonardo
 //*******************************************************************************
 #ifndef __SMARTTHINGS_H__
 #define __SMARTTHINGS_H__
@@ -46,7 +49,7 @@
 //#define DISABLE_SOFTWARESERIAL  // uncomment to disable SoftwareSerial to save some program space if neccessary while using HW Serial
 #elif defined(__AVR_ATmega32U4__)
 #define BOARD_TYPE BOARD_TYPE_LEONARDO
-//#define DISABLE_SOFTWARESERIAL  // uncomment to disable SoftwareSerial to save some program space if neccessary while using HW Serial
+#define DISABLE_SOFTWARESERIAL  //Assume HW Serial is being used.  Saves some program space while using HW Serial
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define BOARD_TYPE BOARD_TYPE_MEGA
 #define DISABLE_SOFTWARESERIAL  //Assume HW Serial is being used.  Saves some program space while using HW Serial

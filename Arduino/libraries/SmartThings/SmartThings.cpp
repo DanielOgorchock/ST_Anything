@@ -12,11 +12,13 @@
 ///		 programming and debugging typically.  UNO can use the Hardware "Serial"
 ///		 if desired, but USB programming and debug will be troublesome.
 ///		 Leonardo and Mega can use SoftwareSerial BUT cannot use Pin3 for Rx - use
-///		 Pin10 for Rx and add jumper from Pin10 to Pin3.  
+///		 Pin10 for Rx and add jumper from Pin10 to Pin3.
+///		-Arduino LEONARDO should use the Hardware Serial Constructor since it has 1 UART
+///		 separate from the USB port.  "Serial1" port uses pins 0(Rx) and 1(Tx).
 ///		-Arduino MEGA should use the Hardware Serial Constructor since it has 4 UARTs.
 ///		 "Serial3" port uses pins 14(Tx) and 15(Rx).  Wire Pin14 to Pin2 and Pin15 to Pin3. 
 ///		-Be certain to not use Pins 2 & 3 in your Arduino sketch for I/O since they are 
-///		 electrically connected to the ThingShield.
+///		 electrically connected to the ThingShield if set to D2/D3.
 ///		-Note - Pin6 is reserved by the ThingShield as well.  Best to avoid using it.
 ///		-The SoftwareSerial library has the following known limitations: 
 ///			- If using multiple software serial ports, only one can receive data at a time.
@@ -25,6 +27,7 @@
 ///			  A8(62), A9(63), A10(64), A11(65), A12(66), A13(67), A14(68), A15(69).
 ///			- Not all pins on the Leonardo and Micro support change interrupts, so only 
 ///			  the following can be used for RX : 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI).
+/// 	-2016-06-04  Dan Ogorchock  Added improved support for Arduino Leonardo
 //*******************************************************************************
 #include <SmartThings.h>
 
@@ -494,12 +497,14 @@ void SmartThings::st_begin(long baudRate)
 		Serial.end();
 		Serial.begin(baudRate);
 		break;
-#if BOARD_TYPE == BOARD_TYPE_MEGA
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) || (BOARD_TYPE == BOARD_TYPE_LEONARDO)
 	case HW_SERIAL1:
 		Serial1.end();
 		Serial1.begin(baudRate);
 		break;
-	case HW_SERIAL2:
+#endif
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) 
+		case HW_SERIAL2:
 		Serial2.end();
 		Serial2.begin(baudRate);
 		break;
@@ -521,10 +526,12 @@ int SmartThings::st_available()
 	case HW_SERIAL:
 		return Serial.available();
 		break;
-#if BOARD_TYPE == BOARD_TYPE_MEGA
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) || (BOARD_TYPE == BOARD_TYPE_LEONARDO)
 	case HW_SERIAL1:
 		return Serial1.available();
 		break;
+#endif
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) 
 	case HW_SERIAL2:
 		return Serial2.available();
 		break;
@@ -547,10 +554,12 @@ int SmartThings::st_read()
 	case HW_SERIAL:
 		return Serial.read();
 		break;
-#if BOARD_TYPE == BOARD_TYPE_MEGA
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) || (BOARD_TYPE == BOARD_TYPE_LEONARDO)
 	case HW_SERIAL1:
 		return Serial1.read();
 		break;
+#endif
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) 
 	case HW_SERIAL2:
 		return Serial2.read();
 		break;
@@ -573,10 +582,12 @@ long SmartThings::st_print(String str)
 	case HW_SERIAL:
 		return Serial.print(str);
 		break;
-#if BOARD_TYPE == BOARD_TYPE_MEGA
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) || (BOARD_TYPE == BOARD_TYPE_LEONARDO)
 	case HW_SERIAL1:
 		return Serial1.print(str);
 		break;
+#endif
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) 
 	case HW_SERIAL2:
 		return Serial2.print(str);
 		break;
@@ -600,10 +611,12 @@ long SmartThings::st_print(char c)
 	case HW_SERIAL:
 		return Serial.print(c);
 		break;
-#if BOARD_TYPE == BOARD_TYPE_MEGA
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) || (BOARD_TYPE == BOARD_TYPE_LEONARDO)
 	case HW_SERIAL1:
 		return Serial1.print(c);
 		break;
+#endif
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) 
 	case HW_SERIAL2:
 		return Serial2.print(c);
 		break;
@@ -628,10 +641,12 @@ long SmartThings::st_print(char c, int i)
 	case HW_SERIAL:
 		return Serial.print(c, i);
 		break;
-#if BOARD_TYPE == BOARD_TYPE_MEGA
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) || (BOARD_TYPE == BOARD_TYPE_LEONARDO)
 	case HW_SERIAL1:
 		return Serial1.print(c, i);
 		break;
+#endif
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) 
 	case HW_SERIAL2:
 		return Serial2.print(c, i);
 		break;
@@ -655,10 +670,12 @@ byte SmartThings::st_write(uint8_t i)
 	case HW_SERIAL:
 		return Serial.write(i);
 		break;
-#if BOARD_TYPE == BOARD_TYPE_MEGA
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) || (BOARD_TYPE == BOARD_TYPE_LEONARDO)
 	case HW_SERIAL1:
 		return Serial1.write(i);
 		break;
+#endif
+#if (BOARD_TYPE == BOARD_TYPE_MEGA) 
 	case HW_SERIAL2:
 		return Serial2.write(i);
 		break;
