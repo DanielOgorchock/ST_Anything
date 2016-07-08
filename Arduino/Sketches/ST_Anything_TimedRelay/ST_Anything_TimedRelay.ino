@@ -99,7 +99,7 @@ void setup()
     //        - bool startingState - REQUIRED - the value desired for the initial state of the switch.  LOW = "off", HIGH = "on"
     //        - bool invertLogic - REQUIRED - determines whether the Arduino Digital Ouput should use inverted logic
     //        - long onTime - OPTIONAL - the number of milliseconds to keep the output on, DEFGAULTS to 1000 milliseconds
-    //        - long onTime - OPTIONAL - the number of milliseconds to keep the output on, DEFAULTS to 0
+    //        - long offTime - OPTIONAL - the number of milliseconds to keep the output off, DEFAULTS to 0
     //        - intnumCycles - OPTIONAL - the number of ON/OFF Cycles required, DEFAULTS to 1
     //******************************************************************************************
   static st::S_TimedRelay sensor1(F("switch"), PIN_RELAY, LOW, true, 500, 500, 3);
