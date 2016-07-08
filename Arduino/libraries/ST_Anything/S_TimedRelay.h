@@ -16,8 +16,8 @@
 //				- bool startingState - REQUIRED - the value desired for the initial state of the switch.  LOW = "off", HIGH = "on"
 //				- bool invertLogic - REQUIRED - determines whether the Arduino Digital Ouput should use inverted logic
 //				- long onTime - REQUIRED - the number of milliseconds to keep the output on, DEFGAULTS to 1000 milliseconds
-//				- long onTime - OPTIONAL - the number of milliseconds to keep the output on, DEFAULTS to 0
-//				- intnumCycles - OPTIONAL - the number of milliseconds to keep the output on, DEFAULTS to 1
+//				- long offTime - OPTIONAL - the number of milliseconds to keep the output off, DEFAULTS to 0
+//				- intnumCycles - OPTIONAL - the number of times to repeat the on/off cycle, DEFAULTS to 1
 //
 //  Change History:
 //
