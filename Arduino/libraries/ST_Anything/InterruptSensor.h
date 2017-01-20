@@ -61,9 +61,7 @@ namespace st
 			inline bool getInterruptState() const {return m_bInterruptState;}
 			inline bool getStatus() const {return m_bStatus;}	//whether or not the device is currently interrupted
 			
-			
 			//sets
-			void setInterruptPin(byte pin);
 			void setInterruptState(bool b) {m_bInterruptState=b;}
 	
 			//debug flag to determine if debug print statements are executed (set value in your sketch)

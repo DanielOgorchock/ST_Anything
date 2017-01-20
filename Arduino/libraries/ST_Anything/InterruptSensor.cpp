@@ -56,6 +56,7 @@ namespace st
 	//constructor
 	InterruptSensor::InterruptSensor(const __FlashStringHelper *name, byte pin, bool iState, bool pullup, long numReqCounts) :
 		Sensor(name),
+		m_nInterruptPin(pin),
 		m_bInterruptState(iState),
 		m_bStatus(false),
 		m_bPullup(pullup),
@@ -64,18 +65,24 @@ namespace st
 		m_nCurrentUpCount(0),
 		m_nCurrentDownCount(numReqCounts)
 		{
-			setInterruptPin(pin);
 		}
 	
 	//destructor
 	InterruptSensor::~InterruptSensor()
 	{
-	
 	}
 	
 	//initialization function
 	void InterruptSensor::init()
 	{
+		if(!m_bPullup)
+		{
+			pinMode(m_nInterruptPin, INPUT);
+		}
+		else
+		{
+			pinMode(m_nInterruptPin, INPUT_PULLUP);
+		}
 		checkIfTriggered();
 	}
 	
@@ -100,20 +107,6 @@ namespace st
 		if(debug)
 		{
 			Everything::sendSmartString(getName()+F(" ended ") + (m_bInterruptState?F("LOW)"):F("HIGH)")));
-		}
-	}
-	
-	//sets the pin to be monitored, and set the Arduino pinMode based on constructor data
-	void InterruptSensor::setInterruptPin(byte pin)
-	{
-		m_nInterruptPin=pin;
-		if(!m_bPullup)
-		{
-			pinMode(m_nInterruptPin, INPUT);
-		}
-		else
-		{
-			pinMode(m_nInterruptPin, INPUT_PULLUP);
 		}
 	}
 	
