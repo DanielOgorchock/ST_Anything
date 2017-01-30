@@ -86,6 +86,7 @@ namespace st
 				calibrated=true;
 				
 				//get current status of motion sensor by calling parent class's init() routine - no need to duplicate it here!
+				setInterruptPin(getInterruptPin());
 				InterruptSensor::init();
 				
 				if (debug)
