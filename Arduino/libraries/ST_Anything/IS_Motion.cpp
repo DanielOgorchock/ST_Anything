@@ -21,6 +21,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //	  2016-09-03  Dan			 Added optional "numReqCounts" constructor argument/capability
+//    2017-01-25  Dan            Corrected issue with INPUT_PULLUP per request of Jiri Culik
 //
 //
 //******************************************************************************************
