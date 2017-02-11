@@ -5,6 +5,7 @@ History:
 - v1.3 2015-03-28 Added Furnace Alarm, Temperatures, and Relays example code (sketches and groovy code)
 - v1.4 2015-04-14 Memory Optimizations
 - v1.5 2015-12-06 Added Alarm_Panel MEGA 2560 example, as well as adding Smoke Detector capability
+- v1.6 2017-02-11 Final release prior to the new version 2.0 baseline
 
 ST_Anything
 ===========
