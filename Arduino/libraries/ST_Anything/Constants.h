@@ -38,13 +38,14 @@
 //                               Added DISABLE_REFRESH feature - commented out by default.  Allows user to disable the automatic refresh feature as it can interfere with normal operations.
 //                               Adjusted MAX Sensor and Executor counts for the Arduino MEGA to allow 16 relay system to function properly.
 //    2016-06-04  Dan Ogorchock  Added improved support for Arduino Leonardo
+//    2017-02-07  Dan Ogorchock  Added support for new SmartThings v2.0 library (ThingShield, W5100, ESP8266)
 //
 //******************************************************************************************
 
 #ifndef ST_CONSTANTS_H
 #define ST_CONSTANTS_H
 
-#include "Arduino.h"
+//#include "Arduino.h"
 #include "SmartThings.h"
 
 //#define ENABLE_SERIAL			//If uncommented, will allow you to type in commands via the Arduino Serial Console Window (useful for debugging)
@@ -97,45 +98,45 @@ namespace st
 			static const bool WAIT_FOR_JOIN_AT_START = true;
 			
 			//Select whether to use Hardware or Software Serial Communications - will result in the correct SmartThings constructor being called in Everything.cpp
-			#if defined(BOARD_UNO)   
-				#define ST_SOFTWARE_SERIAL		//Use Software Serial for UNO by default 
-				//#define ST_HARDWARE_SERIAL
-			#elif defined(BOARD_MEGA) || defined(BOARD_LEONARDO) 
-				//#define ST_SOFTWARE_SERIAL
-				#define ST_HARDWARE_SERIAL		//Use Hardware Serial for MEGA or LEONARDO by default
-			#else
-				#define ST_SOFTWARE_SERIAL
-				//#define ST_HARDWARE_SERIAL
-			#endif
+			//#if defined(BOARD_UNO)   
+			//	#define ST_SOFTWARE_SERIAL		//Use Software Serial for UNO by default 
+			//	//#define ST_HARDWARE_SERIAL
+			//#elif defined(BOARD_MEGA) || defined(BOARD_LEONARDO) 
+			//	//#define ST_SOFTWARE_SERIAL
+			//	#define ST_HARDWARE_SERIAL		//Use Hardware Serial for MEGA or LEONARDO by default
+			//#else
+			//	#define ST_SOFTWARE_SERIAL
+			//	//#define ST_HARDWARE_SERIAL
+			//#endif
 
 			//---
 			//--- if using SoftwareSerial 
 			//---   -set the following based on the pins you desire 
 			//---   -NOTE: you must use the SoftwareSerial version of the SmartThings Constructor			
 			//---
-			#if defined(BOARD_UNO) 
-				static const uint8_t pinRX = 3;		//Rx Pin3 - works for UNO R3, but not for Leonardo or Mega
-			#else
-				static const uint8_t pinRX = 10;	//Rx Pin10 - works for Leonardo or Mega - You MUST jumper Pin10 to Pin3 - do not use Pin3 or Pin10 in your sketch!
-			#endif
-				
-				static const uint8_t pinTX = 2;		//Tx Pin2 - works for UNO R3, Leonardo, and Mega
+			//#if defined(BOARD_UNO) 
+			//	static const uint8_t pinRX = 3;		//Rx Pin3 - works for UNO R3, but not for Leonardo or Mega
+			//#else
+			//	static const uint8_t pinRX = 10;	//Rx Pin10 - works for Leonardo or Mega - You MUST jumper Pin10 to Pin3 - do not use Pin3 or Pin10 in your sketch!
+			//#endif
+			//	
+			//	static const uint8_t pinTX = 2;		//Tx Pin2 - works for UNO R3, Leonardo, and Mega
 			
 			//---
 			//--- if using Hardware Serial 
 			//---   -set the following based on the pins you desire (HW_SERIAL, Mega Only(HW_SERIAL1, HW_SERIAL2, HW_SERIAL3)) 
 			//---   -NOTE: you must use the HardwareSerial version of the SmartThings Constructor					
 			//---
-			#if defined(BOARD_UNO)   
-				static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL; //UNO - You MUST move ThingShield switch to D0/D1 position after loading program and then reset the Arduino
-			#elif defined(BOARD_LEONARDO) 				
-				static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL1; //Leonardo - You MUST move ThingShield switch to D0/D1 position
-			#elif defined(BOARD_MEGA)
-				//static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL;  //MEGA - You MUST move ThingShield switch to D0/D1 position after loading program and then reset the Arduino
-				//static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL1; //MEGA - You MUST jumper Pin18 to Pin2 AND Pin19 to Pin3 - do not use Pin2 or Pin3 in your sketch!
-				//static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL2; //MEGA - You MUST jumper Pin16 to Pin2 AND Pin17 to Pin3 - do not use Pin2 or Pin3 in your sketch!
-				static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL3; //MEGA - You MUST jumper Pin14 to Pin2 AND Pin15 to Pin3 - do not use Pin2 or Pin3 in your sketch!
-			#endif
+			//#if defined(BOARD_UNO)   
+			//	static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL; //UNO - You MUST move ThingShield switch to D0/D1 position after loading program and then reset the Arduino
+			//#elif defined(BOARD_LEONARDO) 				
+			//	static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL1; //Leonardo - You MUST move ThingShield switch to D0/D1 position
+			//#elif defined(BOARD_MEGA)
+			//	//static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL;  //MEGA - You MUST move ThingShield switch to D0/D1 position after loading program and then reset the Arduino
+			//	//static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL1; //MEGA - You MUST jumper Pin18 to Pin2 AND Pin19 to Pin3 - do not use Pin2 or Pin3 in your sketch!
+			//	//static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL2; //MEGA - You MUST jumper Pin16 to Pin2 AND Pin17 to Pin3 - do not use Pin2 or Pin3 in your sketch!
+			//	static const SmartThingsSerialType_t SERIAL_TYPE = HW_SERIAL3; //MEGA - You MUST jumper Pin14 to Pin2 AND Pin15 to Pin3 - do not use Pin2 or Pin3 in your sketch!
+			//#endif
 			// -------------------------------------------------------------------------------
 	};
 }

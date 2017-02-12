@@ -1,5 +1,5 @@
 //*******************************************************************************
-//	SmartThings Arduino Library Base Class
+//	SmartThings Arduino Ethernet Library 
 //
 //	License
 //	(C) Copyright 2017 Dan Ogorchock
@@ -7,38 +7,58 @@
 //	History
 //	2017-02-04  Dan Ogorchock  Created
 //*******************************************************************************
-#ifndef __SMARTTHINGS_H__ 
-#define __SMARTTHINGS_H__
 
-#include <Arduino.h>
+#ifndef __SMARTTHINGSETHERNET_H__ 
+#define __SMARTTHINGSETHERNET_H__
+
+#include "SmartThings.h"
 
 //*******************************************************************************
-// Callout Function Definition for Messages Received from SmartThings 
+// Using Ethernet Shield
 //*******************************************************************************
-typedef void SmartThingsCallout_t(String message);
+#if defined ARDUINO_ARCH_AVR
+#include <SPI.h>
+#include <Ethernet.h>
+#elif defined ARDUINO_ARCH_ESP8266
+#include <ESP8266WiFi.h>
+#endif
 
 namespace st
 {
-	class SmartThings
+	class SmartThingsEthernet: public SmartThings
 	{
 	private:
 
 	protected:
-		SmartThingsCallout_t *_calloutFunction;
-		bool _isDebugEnabled;
-		String _shieldType;
+		IPAddress st_localIP;
+		IPAddress st_localGateway;
+		IPAddress st_localSubnetMask;
+		IPAddress st_localDNSServer;
+		IPAddress st_hubIP;
+		uint16_t st_serverPort;
+		uint16_t st_hubPort;
 
 	public:
 
 		//*******************************************************************************
-		// SmartThings Constructor 
+		/// @brief  SmartThings Ethernet Constructor 
+		///   @param[in] localIP - TCP/IP Address of the Arduino
+		///   @param[in] localGateway - TCP/IP Gateway Address of local LAN (your Router's LAN Address)
+		///   @param[in] localSubnetMask - Subnet Mask of the Arduino
+		///   @param[in] localDNSServer - DNS Server
+		///   @param[in] serverPort - TCP/IP Port of the Arduino
+		///   @param[in] hubIP - TCP/IP Address of the ST Hub
+		///   @param[in] hubPort - TCP/IP Port of the ST Hub
+		///   @param[in] callout - Set the Callout Function that is called on Msg Reception
+		///   @param[in] shieldType (optional) - Set the Reported SheildType to the Server 
+		///   @param[in] enableDebug (optional) - Enable internal Library debug
 		//*******************************************************************************
-		SmartThings(SmartThingsCallout_t *callout, String shieldType = "Unknown", bool enableDebug = false);
+		SmartThingsEthernet(IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "EthernetShield", bool enableDebug = false);
 
 		//*******************************************************************************
-		// SmartThings Destructor 
+		/// Destructor 
 		//*******************************************************************************
-		virtual ~SmartThings();
+		~SmartThingsEthernet();
 
 		//*******************************************************************************
 		/// Initialize SmartThings Library 
@@ -55,7 +75,7 @@ namespace st
 		//*******************************************************************************
 		virtual void send(String message) = 0; //all derived classes must implement this pure virtual function
 
-	};
 
+	};
 }
 #endif

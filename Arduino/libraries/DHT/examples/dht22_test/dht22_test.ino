@@ -65,18 +65,6 @@ void loop()
         stat.time_out++;
         Serial.print("Time out error,\t");
         break;
-    case DHTLIB_ERROR_CONNECT:
-        stat.connect++;
-        Serial.print("Connect error,\t");
-        break;
-    case DHTLIB_ERROR_ACK_L:
-        stat.ack_l++;
-        Serial.print("Ack Low error,\t");
-        break;
-    case DHTLIB_ERROR_ACK_H:
-        stat.ack_h++;
-        Serial.print("Ack High error,\t");
-        break;
     default:
         stat.unknown++;
         Serial.print("Unknown error,\t");

@@ -145,21 +145,21 @@ namespace st
 				Serial.println(F("PS_TemperatureHumidity: DHT Time out error"));
 			}
 			break;
-		case DHTLIB_ERROR_CONNECT:
-			if (st::PollingSensor::debug) {
-				Serial.println(F("PS_TemperatureHumidity: DHT Connect error"));
-			}
-			break;
-		case DHTLIB_ERROR_ACK_L:
-			if (st::PollingSensor::debug) {
-				Serial.println(F("PS_TemperatureHumidity: DHT Ack Low error"));
-			}
-			break;
-		case DHTLIB_ERROR_ACK_H:
-			if (st::PollingSensor::debug) {
-				Serial.println(F("PS_TemperatureHumidity: DHT Ack High error"));
-			}
-			break;
+		//case DHTLIB_ERROR_CONNECT:
+		//	if (st::PollingSensor::debug) {
+		//		Serial.println(F("PS_TemperatureHumidity: DHT Connect error"));
+		//	}
+		//	break;
+		//case DHTLIB_ERROR_ACK_L:
+		//	if (st::PollingSensor::debug) {
+		//		Serial.println(F("PS_TemperatureHumidity: DHT Ack Low error"));
+		//	}
+		//	break;
+		//case DHTLIB_ERROR_ACK_H:
+		//	if (st::PollingSensor::debug) {
+		//		Serial.println(F("PS_TemperatureHumidity: DHT Ack High error"));
+		//	}
+		//	break;
 		default:
 			if (st::PollingSensor::debug) {
 				Serial.println(F("PS_TemperatureHumidity: DHT Unknown error"));

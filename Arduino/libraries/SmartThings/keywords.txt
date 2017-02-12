@@ -2,15 +2,19 @@
 # Data Types
 #######################################
 SmartThings	KEYWORD1
+SmartThingsThingShield	KEYWORD1
+SmartThingsEthernet	KEYWORD1
+SmartThingsEthernetW5100	KEYWORD1
+SmartThingsESP8266WiFi	KEYWORD1
 SmartThingsCallout_t	KEYWORD1 
 SmartThingsNetworkState_t	KEYWORD1
-SmartThingsSerialType_t	KEYWORD1
 
 #######################################
 # Public Methods / Functions 
 #######################################
 run	KEYWORD2
 send	KEYWORD2
+init	KEYWORD2
 shieldSetLED	KEYWORD2
 shieldFindNetwork	KEYWORD2
 shieldLeaveNetwork	KEYWORD2

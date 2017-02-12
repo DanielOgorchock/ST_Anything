@@ -19,7 +19,7 @@
 #define ST_DEVICE_H
 
 #include <Arduino.h>
-#include <avr/pgmspace.h>
+//#include <avr/pgmspace.h>
 
 namespace st
 {

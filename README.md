@@ -6,38 +6,51 @@ History:
 - v1.4 2015-04-14 Memory Optimizations
 - v1.5 2015-12-06 Added Alarm_Panel MEGA 2560 example, as well as adding Smoke Detector capability
 - v1.6 2017-02-11 Final release prior to the new version 2.0 baseline
+- v2.0 2017-02-12 Initial release of v2.x paltform with additonal support for Ethernet connectivity to SmartThings
 
-ST_Anything
-===========
-Turn your Arduino into an AnyThing. ST_Anything is an Arduino library, sketch, and Device Type that works with your SmartThings ThingShield to create an all-in-one SmartThings device.
+ST_Anything v2.0
+================
+Note: We created a ST_Anything v1.6 release on 2017-02-11 to make sure everyone can still get back to the original ThingShield-only code if necessary.  
+
+Note: ST_Anything v2.0 was built using the Arduino IDE v1.8.1.  Please make sure to upgrade your IDE.
+
+Turn your Arduino UNO/MEGA or NodeMCU ESP8266 into an AnyThing. ST_Anything is an Arduino library, sketch, and Device Handler that works with your Arduino/ThingShield, Arduino/W5100 Ethernet shield, or a NodeMCU ESP8266 to create an all-in-one SmartThings device.
+
+Note:  There are some significant changes as compared to the old v1.x platform.  A signiciant rewrite of the "SmartThings" Arduino library was completed to incorporate Ethernet communications support.  To use ST_Anything v2.x, you must also use all of the other supporting libaries found in this GitHub repository.  Included is a the new SmartThings v2.x Arduino library which can be used standalone (examples are included in the library), or in conjunction with the ST_Anything library.
+
+For now, I focused on getting something together for the user community to take a look at.  All of my previous examples have not been modified yet to support the new SmartThings v2.x library.  Therefore I have removed them from this initial release to avoid confusion.  The original "ST_Anything" examples are still here to get you started. I hope to add the others back back when I have more time.  
+
+THIS IS A WORK IN PROGRESS!  So please be patient.  The essential code is all here and has been tested.  Documentation is still lacking somewhat, so feel free to submit a pull request to improve this ReadMe as you try to get things working.
+
+
 
 ![screenshot](https://cloud.githubusercontent.com/assets/5206084/12374289/021d4434-bc65-11e5-9efa-1457365a6cd5.PNG)
 
 
 This package currently implements the following SmartThings Device Capabilities:
-- Alarm (Siren only currently) (HoneyWell Wave 2 Siren (http://amzn.com/B0006BCCAE) + relay)
+- Alarm (Siren only currently) (digital output to a relay)
 - Configuration
 - Illuminance Measurement (photo resistor)
 - Motion Sensor (HC-SR501 Infrared PIR)
-- Relative Humidity Measurement (DHT22)
+- Relative Humidity Measurement (DHT22, DHT11)
 - Switch (Sunfounder Relay - http://amzn.com/B00E0NTPP4)
-- Temperature Measurement (DHT22 - requires DHT Library, see below)
+- Temperature Measurement (DHT22 - requires Rob Tillaart's DHT 0.1.13 Library, included in this repo)
 - Water Sensor (http://amzn.com/B00HTSL7QC)
 - Contact Sensor  (Magnetic Door Switch)
-- Door Control (i.e. Garage Door Contact Sensor + Relay Output) - New! See 'ST_Anything_Doors' example
-- RCSwitch Control (i.e. Radio Control Switch) - New! See 'ST_Anything_RCSwitch' example (Requires RCSwitch library, see below)
-- Thermocouple Temperature Measurement (via the Adafruit MAX31855 library)
+- Door Control (i.e. Garage Door Contact Sensor + Relay Output) - See 'ST_Anything_Doors' example
+- RCSwitch Control (i.e. Radio Control Switch) - New! See 'ST_Anything_RCSwitch' example (Requires RCSwitch library, included in this repo)
+- Thermocouple Temperature Measurement (via the Adafruit MAX31855 library, included in this repo)
 - Smoke Detector (as a simple digital input)
 
-Note: Attempting to use all of these at once on an Arduino UNO is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.
+Note: Attempting to use all of these at once on an Arduino UNO R3 is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.
 
 
 ## Overview
 ST_Anything (original example) consists of four parts:
-- The ST_Anything.ino Arduino sketch
-- The ST_Anything Arduino library
-- The SmartThings (ThingShield) library - A modified, more efficient version 
-- The ST_Anything.groovy DeviceType
+- The ST_Anything_ThingShield.ino, ST_Anything_EthernetW5100.ino, and ST_Anything_ESP8266WiFi.ino example Arduino sketches
+- The ST_Anything Arduino libraries
+- The SmartThings library - A modified, more efficient version 
+- The ST_Anything_ThingShield.device.groovy (ThingShield) and ST_Anything_Ethernet.device.groovy (W5100 and ESP8266) Device Handlers that correspond to the sketches above.
 
 ##ST_Anything Arduino Setup Instructions
 - Download the ST_Anything repository.
@@ -45,12 +58,10 @@ ST_Anything (original example) consists of four parts:
   - On Mac, it's located in `~/Documents/Arduino/`.
   - On Windows, it's located in `C:\My Documents\Arduino`.
 - Look inside the `Arduino/Sketches` folder of the repo.
-- Copy and paste the `ST_Anything` sketch folder into your local Arduino sketches directory. If you haven't created any sketches, you may not see the folder. In this case, feel free to create it.
+- Copy and paste all of the `ST_Anything...` sketch folders into your local Arduino sketches directory. If you haven't created any sketches, you may not see the folder. In this case, feel free to create it.
 - Look inside the `Arduino/libraries` folder of the repo.
-- Copy and paste both the `ST_Anything` and `SmartThings`  (as well as all of the other new libraries from v1.2 and v1.3) folders into your local Arduino libraries directory. (Note: it may be wise to rename your existing 'SmartThings' library to prevent any overwriting if you have already downloaded the official release.)
-- Download DHT library from https://github.com/RobTillaart/Arduino/tree/master/libraries/DHTlib and copy dht.h, dht.cpp, and ReadMe.txt to your 'Arduino\libraries\DHT' folder. NOTE:  This library is now included in my github repo (v1.2)
-- Download the RCSwitch library from http://code.google.com/p/rc-switch/downloads/list?can=3&q= and copy it to your 'Arduino\libraries\RCSwitch' folder. NOTE:  This library is now included in my github repo (v1.2)
-- Open the ST_Anything.ino and see if it successfully compiles.
+- Copy and paste both the `ST_Anything` and `SmartThings` (as well as all of the other library folders) into your local Arduino libraries directory. 
+- Open the ST_Anything_ThingsShield.ino and see if it successfully compiles.
 - WARNING:  If you are using an Arduino UNO, you will most likely need to comment out some of the devices in the sketch (both in the global variable declaration section as well as the setup() function) due to the UNO's limited 2 kilobytes of SRAM.  Failing to do so will most likely result in unpredictable behavior. The Arduino MEGA 2560 has 8k of SRAM and has four Hardware Serial ports (UARTs).  If you plan on using lots of devices, get the MEGA 2560.
 
 ##ST_Anything SmartThings Device Handler Installation Instructions
@@ -59,7 +70,7 @@ ST_Anything (original example) consists of four parts:
 - Click on "My Device Handlers" from the navigation menu.
 - Click on  "+ New Device Handler" button.
 - Select the "From Code" Tab near the top of the page
-- Paste the code from the ST_Anything.groovy file from this repo.
+- Paste the code from the ST_Anything_ThingShield.device.groovy file from this repo.
 - If you commented out any of the devices in the sketch, be sure to comment out the corresponding tiles & preferences in the ST_Anything.groovy code as well.
 - Click on "Create" near the bottom of the page.
 - Click on  "Save"  in the IDE.
@@ -67,86 +78,21 @@ ST_Anything (original example) consists of four parts:
 - Click on My Devices from navigation menu
 - Select your "Arduino ThingShield" device from the list
 - Click the Edit button at the bottom of the screen
-- Change the Type to "ST_Anything"
+- Change the Type to "ST_Anything_ThingShield"
 - Click the Update button at the bottom of the screen
 - On your phone, log out of SmartThings in the app, and then log back into SmartThings to refresh its settings
 - Your Arduino Device Tile should now look like the image above in this ReadMe
-- Be sure to go into the Preferences section to set the polling rates for the sensors.  These are sent to the Arduino if you press the Configure tile.  (Note:  Currently, these settings do not persist after an Arduino reboot.  I am hoping to figure out a method to have SmartThings send the Configure() command each time the Arduino starts up.  Gotta leave something for the future! :) )
+- Be sure to go into the Preferences section to set the polling rates for the sensors.  These are sent to the Arduino if you press the Configure tile.  (Note:  Currently, these settings do not persist after an Arduino reboot.)
+
+
+##Ethernet (Arduino/W5100 and ESP8266) Examples
+The steps for using the Arduino/W5100 and NodeMCU ESP8266 sample code is very similar to above, with the added hassle of staic IP assignements, MAC addresses, SSID and Passwords, etc...
+For now, please refer to the SmartThings library's Readme.md for these details https://github.com/DanielOgorchock/ST_Anything/tree/master/Arduino/libraries/SmartThings 
 
 
 ##Updated SmartThings ThingShield Library
-While developing the ST_Anything library and Arduino sketch, it was discovered that the Arduino UNO R3's 2 kilobytes of SRAM was quickly limiting the number of devices that could be hosted simultaneously.  Numerous optimizations were made to the ST_Anything library which resulted in significant savings.  Focus was then turned to the SmartThings ThingShield library.
+As mentioned previously, the "SmartThings" v2.x library was extensively modified for Ethernet support.  Please see the readme.md file for that particular library for more detailed information. 
  
-Improvements to the SmartThings ThingShield library include:
-- 100% backwards compatible for use with your existing Arduino code
-- Performance improvements
-- SRAM memory optimizations (~150 bytes saved)
-- Elimination of unnecessary temporary dynamic memory allocations (255 bytes per send command)
-- Elimination of unused variables and dead code paths
-- The additon of a Hardware Serial communications constructor
-- Support for the 3 additional hardware UARTS on the Arduino MEGA 2560
+Plese refer to the header files of the ST_Anything library for explanation of specific classes, constructor arguments, etc... 
 
-If you choose to use the complete ST_Anything package (i.e. ST_Anything.ino, ST_Anything library, and ST_Anything.groovy) the following choices are automatically made:
-- If using an Arduino UNO - SoftwareSerial is used on pins 2/3
-- If using an Arduino Leonardo - SoftwareSerial is used on pins 2/10 (add jumper from pin 10 to pin 2)
-- If using an Arduino MEGA, Hardware Serial is used on pins 14/15 (add jumpers from Pin14 to Pin2 and another from Pin15 to Pin3)
-
-.
-.
-.
-
-###WARNING - Geeky Material Ahead!!!
-
-.
-.
-.
-
-If you want to use the new SmartThings libary with your existing sketches (or to just learn more about how all this stuff works, keep reading...) 
-
-The Arduino UNO should typically use the SoftwareSerial library Constructor since the UNO has only one Hardware UART port ("Serial") which is used by the USB port for programming and debugging.
-To use SoftwareSerial:
-- Use the original SoftwareSerial constructor passing in pinRX=3 and pinTX=2
-  - SmartThings(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *callout) call.
-- Make sure the ThingShield's switch in the "D2/D3" position
-- Be certain to not use Pins 2 & 3 in your Arduino sketch for I/O since they are electrically connected to the ThingShield. Pin6 is also reserved by the ThingShield. Best to avoid using it. 
-
-The Arduino Leonardo and Mega can use SoftwareSerial BUT cannot use Pin3 for Rx since that pin does not support interrupts on these boards.
-To use SoftwareSerial:
-- Use Pin 10 for Rx and add a wire jumper from Pin10 to Pin3. Use Pin 2 for Tx as usual
-- Use the original SoftwareSerial constructor passing in pinRX=10 and pinTX=2 
-  - SmartThings(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *callout);
-- Make sure the ThingShield's switch in the "D2/D3" position
-- Be certain to not use Pins 2 & 3 in your Arduino sketch for I/O since they are electrically connected to the ThingShield. Pin6 is also reserved by the ThingShield. Best to avoid using it.
-
-The Arduino UNO, Leonardo, and MEGA can use the Hardware "Serial" (pins 0,1) if desired, but USB programming and debug will be troublesome. 
-To use Hardware Serial:
-- Use the new Hardware Serial constructor passing in the Arduino's pin 0/1 UART (i.e "HW_SERIAL")
-  - SmartThings(SmartThingsSerialType_t hwSerialPort, SmartThingsCallout_t *callout);
-  - Note: SmartThingsSerialType_t is a new enum declared in SmartThings.h.  For the pin 0/1 UART, pass in "HW_SERIAL"
-- Download your sketch from the IDE with the ThingShield's switch in the "D2/D3" position
-- After the download is complete, move the switch to the "D0/D1" position and press RESET to allow the program to restart
-- You must suppress any and all "Serial.begin(), Serial.print(), Serial.println(), Serial.write(), Serial.read(), Serial.end(), Serial..." commands from your code when using Hardware Serial on pins 0/1 to avoid conflicts with the ThingShield's communication with the SmartThings library.
-- Pin6 is also reserved by the ThingShield. Best to avoid using it.
- 
-The Arduino MEGA should use the new Hardware Serial Constructor since it has 4 UARTs. 
-To use Hardware Serial on "Serial3":
-- The "Serial3" port uses pins 14(Tx) and 15(Rx).  Wire a jumper Pin14 to Pin2 and another from Pin15 to Pin3.
-- Use the new Hardware Serial constructor passing in the Arduino's pin 14/15 UART (i.e "HW_SERIAL3")
-  - SmartThings(SmartThingsSerialType_t hwSerialPort, SmartThingsCallout_t *callout);
-  - Note: SmartThingsSerialType_t is a new enum declared in SmartThings.h.  For the pin 14/15 UART, pass in "HW_SERIAL3"
-- Make sure the ThingShield's switch in the "D2/D3" position 
-- Be certain to not use Pins 2 & 3 in your Arduino sketch for I/O since they are electrically connected to the ThingShield. Pin6 is also reserved by the ThingShield. Best to avoid using it.
-
-Additional Information:
-The SoftwareSerial library has the following known limitations: 
-- If using multiple software serial ports, only one can receive data at a time.
-- Not all pins on the Mega and Mega 2560 support change interrupts, so only the following can be used for RX: 10, 11, 12, 13, 14, 15, 50, 51, 52, 53, A8(62), A9(63), A10(64), A11(65), A12(66), A13(67), A14(68), A15(69).
-- Not all pins on the Leonardo and Micro support change interrupts, so only the following can be used for RX : 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI).
-
-For more details on the methods used in ST_Anything to measure and optimize the amount of free RAM, please refer to https://learn.adafruit.com/memories-of-an-arduino/measuring-free-memory and  https://learn.adafruit.com/memories-of-an-arduino/optimizing-sram.  This is a great site for any Arduino programmer.
-
-More instructions coming soon:
-
-For now, reference the header files of the ST_Anything library for explanation of specific classes. 
-
-Look at the documentation in the 'ST_Anything.ino' file for explanation of general use of the library.  
+Look at the documentation in the 'ST_Anything_ThingShield.ino' file for explanation of general use of the library.  

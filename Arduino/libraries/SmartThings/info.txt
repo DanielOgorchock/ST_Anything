@@ -13,10 +13,15 @@
  --------------------------------------------------------------------------------------------------
 | ChangeLog:                                                                                       |
  --------------------------------------------------------------------------------------------------
-01/11/2015 (v0.0.6)		 do + Added Hardware Serial Constructor
-							+ Added support for Leonardo and MEGA
-							~ Performance improvements
-							~ Significant SRAM memory optimizations (minimum ~175 bytes, up to 430 bytes)
+02/10/2017 (v2.0.0)	 do ~ Totally rearchitected C++ Class structure to support ThingShield, W5100 Ethernet, and ESP8266 WiFi
+			    + Added new init() function to allow object to connect to network at runtime in sketch setup() routine
+			    + Revised On/Off Thingshield example to use the new library class, SmartThingsThingShield
+			    + Added On/Off W5100 example to use the new SmartThingsEthernetW5100 class
+			    + Added On/Off ESP8266WiFi example to use the new SmartThingsESP8266WiFi class	 
+01/11/2015 (v0.0.6)      do + Added Hardware Serial Constructor
+			    + Added support for Leonardo and MEGA
+			    ~ Performance improvements
+			    ~ Significant SRAM memory optimizations (minimum ~175 bytes, up to 430 bytes)
 02/11/2012 (v0.0.5)      db + shieldGetLastNetworkStatus to public Class
                             + example/stLEDwithNetworkStatus
                             ~ renamed SmartThingsLED to stLED
