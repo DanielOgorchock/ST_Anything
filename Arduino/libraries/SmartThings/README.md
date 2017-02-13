@@ -48,7 +48,7 @@ SmartThings library consists of:
 	- The Arduino must be assigned a static TCP/IP address, Gateway, DNS, Subnet Mask, MAC Address (W5100 only), SSID + Password (ESP8266 only)
 	- *** NOTE:  If using the W5100 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch!!! ***
   - Your IDE Serial Monitor Window should be set to 9600 baud
-  - With the Serial Monitor windows open, load your sketch and whatch the output
+  - With the Serial Monitor windows open, load your sketch and watch the output
     - If using an ESP8266 board, the MAC Address will be printed out in the serial monitor window.  Write this down as you will need it to configure the Device using your ST App on your phone.
   
 ##SmartThings IDE Device Handler Installation Instructions
