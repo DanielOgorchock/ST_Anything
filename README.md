@@ -98,14 +98,22 @@ By default, SmartThings only allows each device to have one of each capability. 
 
 As an example, here are the basic steps to use "ST_Anything_Doors_ThingShield"
 
-1) Load ST_Anything_Dooors_ThingShield.ino on your Arduino (requires all of the associated library files to have also been installed in your Arduino Libraries folder.) 
+1) Load ST_Anything_Dooors_ThingShield.ino on your Arduino (requires all of the associated library files to have also been installed in your Arduino Libraries folder.)
+
 2) Create a new "ST_Anything_Doors_ThingShield" Device Handler in the ST IDE (under Device Handlers) and paste in the ST_Anything_Doors_ThingShield.device.groovy code. Save and Publish. 
+
 3) In the ST IDE (under Devices), change the Device Handler of your Arduino to your new "ST_Anything_Doors_ThingShield" DeviceType from step 2. 
+
 4) Create a new "Virtual Contact Sensor" Device Handler in the ST IDE (under Device Handlers) and paste in the VirtualContactSensor.device.groovy code. Save and Publish.
+
 5) In the ST IDE (under Devices), create a new device (call it whatever you want) and assign it to use the "Virtual Contact Sensor" Device Handler from step 4.
+
 6) Repeat step 5 until you have created a virtual "contact sensor" device for each of the Arduino's real contact sensor inputs.
+
 7) In the ST IDE (under Smart Apps), create a new Smart App called "ST_Anything_Doors_Multiplexer" and paste in the groovy code from ST_Anything_Doors_Multiplexer.smartapp.groovy. Save and Publish.
+
 8) Using your phone/tablet, start the SmartThings app and "Add a new SmartApp" - select the "ST_Anything_Doors_Multiplexer" app that you created in step 7.
+
 9) Configure the new smart app to use the Virtual Contact Sensor devices you created in steps 5/6. Configure the smart app to use the Arduino device you revised in step 3. Save the settings.
 
 I have skipped the virtual garage "Door Control" devices, but you can repeat steps 4/5/6 to create the two virtual garage door devices if desired using the corresponding groovy code. Then you can add them to the SmartApp as well. These virtual devices are a little more complicated as they are two-way devices.
