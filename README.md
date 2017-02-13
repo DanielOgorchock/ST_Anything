@@ -70,7 +70,7 @@ ST_Anything (original example) consists of four parts:
 - Click on "My Device Handlers" from the navigation menu.
 - Click on  "+ New Device Handler" button.
 - Select the "From Code" Tab near the top of the page
-- Paste the code from the ST_Anything_ThingShield.device.groovy file from this repo.
+- Paste the code from the ST_Anything_ThingShield.device.groovy file from this repo (.\ST_Anything\Groovy\ST_Anything\DeviceHandlers\)
 - If you commented out any of the devices in the sketch, be sure to comment out the corresponding tiles & preferences in the ST_Anything.groovy code as well.
 - Click on "Create" near the bottom of the page.
 - Click on  "Save"  in the IDE.
@@ -86,13 +86,38 @@ ST_Anything (original example) consists of four parts:
 
 
 ##Ethernet (Arduino/W5100 and ESP8266) Examples
-The steps for using the Arduino/W5100 and NodeMCU ESP8266 sample code is very similar to above, with the added hassle of staic IP assignements, MAC addresses, SSID and Passwords, etc...
+The steps for using the Arduino/W5100 and NodeMCU ESP8266 sample code is very similar to above, with the added steps of staic IP assignements, MAC addresses, SSID and Passwords, etc...
 For now, please refer to the SmartThings library's Readme.md for these details https://github.com/DanielOgorchock/ST_Anything/tree/master/Arduino/libraries/SmartThings 
 
 
 ##Updated SmartThings ThingShield Library
 As mentioned previously, the "SmartThings" v2.x library was extensively modified for Ethernet support.  Please see the readme.md file for that particular library for more detailed information. 
- 
+
+##How do I create and expose more than 1 of a single capability?
+By default, SmartThings only allows each device to have one of each capability.  That means you can't create a device with 6 "Contact Sensor" capabilities and have normal SmartApps be able to use each of the 6 sensors for normal processing.  There is a work-around for this which I call a Multiplexer SmartApp.  When used in conjuction with a virtual device for each of the 6 Arduino "Contact Sensor" devices, we can finally allow normal SmartApps to interact with each sensor, switch, etc..
+
+As an example, here are the basic steps to use "ST_Anything_Doors_ThingShield"
+
+1) Load ST_Anything_Dooors_ThingShield.ino on your Arduino (requires all of the associated library files to have also been installed in your Arduino Libraries folder.) 
+2) Create a new "ST_Anything_Doors_ThingShield" Device Handler in the ST IDE (under Device Handlers) and paste in the ST_Anything_Doors_ThingShield.device.groovy code. Save and Publish. 
+3) In the ST IDE (under Devices), change the Device Handler of your Arduino to your new "ST_Anything_Doors_ThingShield" DeviceType from step 2. 
+4) Create a new "Virtual Contact Sensor" Device Handler in the ST IDE (under Device Handlers) and paste in the VirtualContactSensor.device.groovy code. Save and Publish.
+5) In the ST IDE (under Devices), create a new device (call it whatever you want) and assign it to use the "Virtual Contact Sensor" Device Handler from step 4.
+6) Repeat step 5 until you have created a virtual "contact sensor" device for each of the Arduino's real contact sensor inputs.
+7) In the ST IDE (under Smart Apps), create a new Smart App called "ST_Anything_Doors_Multiplexer" and paste in the groovy code from ST_Anything_Doors_Multiplexer.smartapp.groovy. Save and Publish.
+8) Using your phone/tablet, start the SmartThings app and "Add a new SmartApp" - select the "ST_Anything_Doors_Multiplexer" app that you created in step 7.
+9) Configure the new smart app to use the Virtual Contact Sensor devices you created in steps 5/6. Configure the smart app to use the Arduino device you revised in step 3. Save the settings.
+
+I have skipped the virtual garage "Door Control" devices, but you can repeat steps 4/5/6 to create the two virtual garage door devices if desired using the corresponding groovy code. Then you can add them to the SmartApp as well. These virtual devices are a little more complicated as they are two-way devices.
+
+Basically, what is happening here is the following:
+-Arduino reads real world data and sends to ST
+-Events are raised in the ST_Anything_Dooors_ThingShield device
+-The ST_Anything_Dooors_Multiplexer smart app sees these events, and in turn, updates the virtual contact sensor devices with the current state of the Arduino's inputs.
+-Any other smart apps that are looking at the virtual contact sensor devices will then receive an update and act accordingly.
+
+
+##Final Notes for now...
 Plese refer to the header files of the ST_Anything library for explanation of specific classes, constructor arguments, etc... 
 
 Look at the documentation in the 'ST_Anything_ThingShield.ino' file for explanation of general use of the library.  
