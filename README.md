@@ -119,9 +119,13 @@ As an example, here are the basic steps to use "ST_Anything_Doors_ThingShield"
 I have skipped the virtual garage "Door Control" devices, but you can repeat steps 4/5/6 to create the two virtual garage door devices if desired using the corresponding groovy code. Then you can add them to the SmartApp as well. These virtual devices are a little more complicated as they are two-way devices.
 
 Basically, what is happening here is the following:
+
 -Arduino reads real world data and sends to ST
+
 -Events are raised in the ST_Anything_Dooors_ThingShield device
+
 -The ST_Anything_Dooors_Multiplexer smart app sees these events, and in turn, updates the virtual contact sensor devices with the current state of the Arduino's inputs.
+
 -Any other smart apps that are looking at the virtual contact sensor devices will then receive an update and act accordingly.
 
 
