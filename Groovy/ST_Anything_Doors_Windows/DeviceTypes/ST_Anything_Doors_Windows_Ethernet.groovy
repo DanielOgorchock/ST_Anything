@@ -27,6 +27,7 @@ metadata {
 		capability "Contact Sensor"
 		capability "Motion Sensor"
 		capability "Sensor"
+        capability "Configuration"
 
 		attribute "frontDoor", "string"
 		attribute "bedroomDoor", "string"
@@ -114,8 +115,12 @@ metadata {
 			state("inactive", label:'no motion', icon:"st.motion.motion.inactive", backgroundColor:"#ffffff")
 		}
         
+		standardTile("configure", "device.configure", inactiveLabel: false, decoration: "flat") {
+			state "configure", label:'', action:"configuration.configure", icon:"st.secondary.configure"
+        }
+		
         main (["motion"])
-        details(["motion","frontDoor","kitchenDoor","garageDoor","bedroomDoor","kitchenWindow1","kitchenWindow2","kitchenWindow3","masterWindow1","masterWindow2","officeWindow1","officeWindow2","guestWindow1","guestWindow2"])
+        details(["motion","frontDoor","kitchenDoor","garageDoor","bedroomDoor","kitchenWindow1","kitchenWindow2","kitchenWindow3","masterWindow1","masterWindow2","officeWindow1","officeWindow2","guestWindow1","guestWindow2","configure"])
 	}
 }
 
@@ -161,4 +166,12 @@ def sendEthernet(message) {
     	path: "/${message}?",
     	headers: [ HOST: "${getHostAddress()}" ]
 	)
+}
+
+def configure() {
+	log.debug "Executing 'configure'"
+    if(device.deviceNetworkId!=settings.mac) {
+    	log.debug "setting device network id"
+    	device.deviceNetworkId = settings.mac
+    }
 }
