@@ -1,5 +1,5 @@
 /**
- *  ST_Anything_Doors_Windows_ThingShield Device Type - ST_Anything_Doors_Windows.device.groovy
+ *  ST_Anything_Doors_Windows_Ethernet Device Type - ST_Anything_Doors_Windows.device.groovy
  *
  *  Copyright 2015 Daniel Ogorchock
  *
@@ -17,12 +17,13 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2015-10-31  Dan Ogorchock  Original Creation
+ *    2017-02-13  Dan Ogorchock  Modified to work with Ethernet based devices instead of ThingShield
  *
  *
  */
 
 metadata {
-	definition (name: "ST_Anything_Doors_Windows_ThingShield", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "ST_Anything_Doors_Windows_Ethernet", namespace: "ogiewon", author: "Daniel Ogorchock") {
 		capability "Contact Sensor"
 		capability "Motion Sensor"
 		capability "Sensor"
@@ -118,25 +119,46 @@ metadata {
 	}
 }
 
-//Map parse(String description) {
+// parse events into attributes
 def parse(String description) {
-    def msg = zigbee.parse(description)?.text
-    log.debug "Parse got '${msg}'"
+	//log.debug "Parsing '${description}'"
+	def msg = parseLanMessage(description)
+	def headerString = msg.header
 
-    def parts = msg.split(" ")
-    def name  = parts.length>0?parts[0].trim():null
-    def value = parts.length>1?parts[1].trim():null
+	if (!headerString) {
+		//log.debug "headerstring was null for some reason :("
+    }
 
-    name = value != "ping" ? name : null
-	
-    //if (name == "temperature") 
-    //{
-    //	value = fahrenheitToCelsius(value.toDouble())
-    //}
-    
-    def result = createEvent(name: name, value: value, isStateChange: true)
+	def bodyString = msg.body
 
-    log.debug result
+	if (bodyString) {
+        log.debug "BodyString: $bodyString"
+    	def parts = bodyString.split(" ")
+    	def name  = parts.length>0?parts[0].trim():null
+    	def value = parts.length>1?parts[1].trim():null
+
+    	def result = createEvent(name: name, value: value)
+
+    	log.debug result
 
     return result
+	}
+}
+
+private getHostAddress() {
+    def ip = settings.ip
+    def port = settings.port
+
+	log.debug "Using ip: ${ip} and port: ${port} for device: ${device.id}"
+    return ip + ":" + port
+}
+
+
+def sendEthernet(message) {
+	log.debug "Executing 'sendEthernet' ${message}"
+	new physicalgraph.device.HubAction(
+    	method: "POST",
+    	path: "/${message}?",
+    	headers: [ HOST: "${getHostAddress()}" ]
+	)
 }
