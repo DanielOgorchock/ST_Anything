@@ -54,6 +54,11 @@ metadata {
     }
 	
     // Preferences
+	preferences {
+		input "ip", "text", title: "Arduino IP Address", description: "ip", required: true, displayDuringSetup: true
+		input "port", "text", title: "Arduino Port", description: "port", required: true, displayDuringSetup: true
+		input "mac", "text", title: "Arduino MAC Addr", description: "mac", required: true, displayDuringSetup: true
+	}
 
 	// tile definitions
 	tiles {
