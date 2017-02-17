@@ -69,6 +69,7 @@
 //         See https://www.arduino.cc/en/Main/ArduinoEthernetShieldV1 for details on the W5100 Sield
 //**********************************************************************************************************
 //"RESERVED" pins for W5100 Ethernet Shield - best to avoid
+#define PIN_4_RESERVED           4   //reserved by W5100 Shield on both UNO and MEGA
 #define PIN_1O_RESERVED          10  //reserved by W5100 Shield on both UNO and MEGA
 #define PIN_11_RESERVED          11  //reserved by W5100 Shield on UNO
 #define PIN_12_RESERVED          12  //reserved by W5100 Shield on UNO
@@ -78,26 +79,28 @@
 #define PIN_52_RESERVED          52  //reserved by W5100 Shield on MEGA
 #define PIN_53_RESERVED          53  //reserved by W5100 Shield on MEGA
 
+//Pin selections below are for an Arduino MEGA 2560.  Adjust accordingly for an UNO.
+
 //Window Pins
-#define PIN_CONTACT_KITCHEN_WINDOW1  2
-#define PIN_CONTACT_KITCHEN_WINDOW2  3
-#define PIN_CONTACT_KITCHEN_WINDOW3  4
-#define PIN_CONTACT_MASTER_WINDOW1   5
-#define PIN_CONTACT_MASTER_WINDOW2   6
-#define PIN_CONTACT_OFFICE_WINDOW1   7
-#define PIN_CONTACT_OFFICE_WINDOW2   8
-#define PIN_CONTACT_GUEST_WINDOW1    9
-#define PIN_CONTACT_GUEST_WINDOW2    11
+#define PIN_CONTACT_KITCHEN_WINDOW1  22
+#define PIN_CONTACT_KITCHEN_WINDOW2  23
+#define PIN_CONTACT_KITCHEN_WINDOW3  24
+#define PIN_CONTACT_MASTER_WINDOW1   25
+#define PIN_CONTACT_MASTER_WINDOW2   26
+#define PIN_CONTACT_OFFICE_WINDOW1   27
+#define PIN_CONTACT_OFFICE_WINDOW2   28
+#define PIN_CONTACT_GUEST_WINDOW1    29
+#define PIN_CONTACT_GUEST_WINDOW2    30
 
 
 //House Door Pins
-#define PIN_CONTACT_FRONT_DOOR       12
-#define PIN_CONTACT_KITCHEN_DOOR     13
-#define PIN_CONTACT_GARAGE_DOOR      14
-#define PIN_CONTACT_BEDROOM_DOOR     15
+#define PIN_CONTACT_FRONT_DOOR       31
+#define PIN_CONTACT_KITCHEN_DOOR     32
+#define PIN_CONTACT_GARAGE_DOOR      33
+#define PIN_CONTACT_BEDROOM_DOOR     34
 
 //motion pins
-#define PIN_MOTION                   16
+#define PIN_MOTION                   35
 
 //******************************************************************************************
 //W5100 Ethernet Shield Information
