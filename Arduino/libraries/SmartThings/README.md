@@ -91,6 +91,7 @@ Ethernet Arduino/W5100 or NodeMCU ESP8266
   - On your phone, you should now see a device that has simple "On/Off" tile and a "Configure" tile
   - One your phone, after selecting the new device, click on the settings icon (small gear in top right corner)
     - Enter your Arduino or ESP8266 device's TCP/IP Address, Port, and MAC Address (you should already know these from when you configured your sketch)
+    - Note: MAC Address should be entered with no delimeters in the form of "01AB23CD45EF" (no quotes!)
     - Click "Done"	
 
 .
