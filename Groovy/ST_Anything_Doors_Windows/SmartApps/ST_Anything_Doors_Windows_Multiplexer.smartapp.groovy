@@ -17,6 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2015-10-31  Dan Ogorchock  Original Creation
+ *    2017-02-18  Dan Ogorchock	 Fixed some typos
  *
  */
  
@@ -244,7 +245,7 @@ def masterWindow1Closed(evt)
 {
     if (masterwindow1.currentValue("contact") != "closed") {
 	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-	    masterwindow1.openme()
+	    masterwindow1.closeme()
 	}
 }
 
@@ -266,7 +267,7 @@ def masterWindow2Closed(evt)
 }
 
 // --- Office Window 1 --- 
-def officewindow1Open(evt)
+def officeWindow1Open(evt)
 {
     if (officewindow1.currentValue("contact") != "open") {
 	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
@@ -274,16 +275,16 @@ def officewindow1Open(evt)
 	}
 }
 
-def officewindow1Closed(evt)
+def officeWindow1Closed(evt)
 {
     if (officewindow1.currentValue("contact") != "closed") {
 	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-	    officewindow1.openme()
+	    officewindow1.closeme()
 	}
 }
 
 // --- Office Window 2 --- 
-def officewindow2Open(evt)
+def officeWindow2Open(evt)
 {
     if (officewindow2.currentValue("contact") != "open") {
 	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
@@ -291,7 +292,7 @@ def officewindow2Open(evt)
 	}
 }
 
-def officewindow2Closed(evt)
+def officeWindow2Closed(evt)
 {
     if (officewindow2.currentValue("contact") != "closed") {
 	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
@@ -300,7 +301,7 @@ def officewindow2Closed(evt)
 }
 
 // --- Guest Window 1 --- 
-def guestwindow1Open(evt)
+def guestWindow1Open(evt)
 {
     if (guestwindow1.currentValue("contact") != "open") {
 	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
@@ -308,16 +309,16 @@ def guestwindow1Open(evt)
 	}
 }
 
-def guestwindow1Closed(evt)
+def guestWindow1Closed(evt)
 {
     if (guestwindow1.currentValue("contact") != "closed") {
 	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
-	    guestwindow1.openme()
+	    guestwindow1.closeme()
 	}
 }
 
 // --- Guest Window 2 --- 
-def guestwindow2Open(evt)
+def guestWindow2Open(evt)
 {
     if (guestwindow2.currentValue("contact") != "open") {
 	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
@@ -325,7 +326,7 @@ def guestwindow2Open(evt)
 	}
 }
 
-def guestwindow2Closed(evt)
+def guestWindow2Closed(evt)
 {
     if (guestwindow2.currentValue("contact") != "closed") {
 	    log.debug "arduinoevent($evt.name: $evt.value: $evt.deviceId)"
