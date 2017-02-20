@@ -21,6 +21,7 @@
 //	  2015-03-14  Dan Ogorchock	 Added public setLED() function to control ThingShield LED
 //    2015-03-28  Dan Ogorchock  Added throttling capability to sendStrings to improve success rate of ST Cloud getting the data ("SENDSTRINGS_INTERVAL" is in CONSTANTS.H)
 //    2017-02-07  Dan Ogorchock  Added support for new SmartThings v2.0 library (ThingShield, W5100, ESP8266)
+//    2017-02-19  Dan Ogorchock  Fixed bug in throttling capability
 //
 //******************************************************************************************
 
@@ -75,7 +76,7 @@ namespace st
 			#ifndef DISABLE_SMARTTHINGS
 			if (millis() - sendstringsLastMillis < Constants::SENDSTRINGS_INTERVAL)
 				{
-					delay(1000 - (millis() - sendstringsLastMillis)); //Added due to slow ST Hub/Cloud Processing.  Events were being missed.  DGO 2015-03-28
+					delay(Constants::SENDSTRINGS_INTERVAL - (millis() - sendstringsLastMillis)); //Added due to slow ST Hub/Cloud Processing.  Events were being missed.  DGO 2015-03-28
 				}
 				SmartThing->send(Return_String.substring(0, index));
 				sendstringsLastMillis = millis();
