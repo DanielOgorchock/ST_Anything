@@ -7,14 +7,15 @@ History:
 - v1.5 2015-12-06 Added Alarm_Panel MEGA 2560 example, as well as adding Smoke Detector capability
 - v1.6 2017-02-11 Final release prior to the new version 2.0 baseline
 - v2.0 2017-02-12 Initial release of v2.x paltform with additonal support for Ethernet connectivity to SmartThings
+- v2.1 2017-02-20 Added support for using the ESP-01 as WiFi communications for Arduino MEGA 2560 (SmartThings and ST_Anything libraries updated)
 
-ST_Anything v2.0
+ST_Anything v2.1
 ================
 Note: We created a ST_Anything v1.6 release on 2017-02-11 to make sure everyone can still get back to the original ThingShield-only code if necessary.  
 
-Note: ST_Anything v2.0 was built using the Arduino IDE v1.8.1.  Please make sure to upgrade your IDE.
+Note: ST_Anything v2.1 was built using the Arduino IDE v1.8.1.  Please make sure to upgrade your IDE.
 
-Turn your Arduino UNO/MEGA or NodeMCU ESP8266 into an AnyThing. ST_Anything is an Arduino library, sketch, and Device Handler that works with your Arduino/ThingShield, Arduino/W5100 Ethernet shield, or a NodeMCU ESP8266 to create an all-in-one SmartThings device.
+Turn your Arduino UNO/MEGA or NodeMCU ESP8266 into an AnyThing. ST_Anything is an Arduino library, sketch, and Device Handler that works with your Arduino/ThingShield, Arduino/W5100 Ethernet shield, Arduino/ESP-01 or a NodeMCU ESP8266 to create an all-in-one SmartThings device.
 
 Note:  There are some significant changes as compared to the old v1.x platform.  A signiciant rewrite of the "SmartThings" Arduino library was completed to incorporate Ethernet communications support.  To use ST_Anything v2.x, you must also use all of the other supporting libaries found in this GitHub repository.  Included is a the new SmartThings v2.x Arduino library which can be used standalone (examples are included in the library), or in conjunction with the ST_Anything library.
 
@@ -29,25 +30,27 @@ THIS IS A WORK IN PROGRESS!  So please be patient.  The essential code is all he
 
 This package currently implements the following SmartThings Device Capabilities:
 - Alarm (Siren only currently) (digital output to a relay)
-- Configuration
+- Configuration (to set polling intervals from ST Cloud)
 - Illuminance Measurement (photo resistor)
 - Motion Sensor (HC-SR501 Infrared PIR)
 - Relative Humidity Measurement (DHT22, DHT11)
 - Switch (Sunfounder Relay - http://amzn.com/B00E0NTPP4)
 - Temperature Measurement (DHT22 - requires Rob Tillaart's DHT 0.1.13 Library, included in this repo)
+- Temperature Measurement (using Dallas Semiconductor DS18B20's)
 - Water Sensor (http://amzn.com/B00HTSL7QC)
 - Contact Sensor  (Magnetic Door Switch)
 - Door Control (i.e. Garage Door Contact Sensor + Relay Output) - See 'ST_Anything_Doors' example
-- RCSwitch Control (i.e. Radio Control Switch) - New! See 'ST_Anything_RCSwitch' example (Requires RCSwitch library, included in this repo)
+- RCSwitch Control (i.e. Radio Control Switch) - See 'ST_Anything_RCSwitch' example (Requires RCSwitch library, included in this repo)
 - Thermocouple Temperature Measurement (via the Adafruit MAX31855 library, included in this repo)
 - Smoke Detector (as a simple digital input)
+- Relay Switch (implemented as a timed relay, that turns off locally - i.e. no ST cloud command necessary to turn off)
 
 Note: Attempting to use all of these at once on an Arduino UNO R3 is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.
 
 
 ## Overview
 ST_Anything (original example) consists of four parts:
-- The ST_Anything_ThingShield.ino, ST_Anything_EthernetW5100.ino, and ST_Anything_ESP8266WiFi.ino example Arduino sketches
+- The ST_Anything_ThingShield.ino, ST_Anything_EthernetW5100.ino, ST_Anything_WiFiEsp.ino, and ST_Anything_ESP8266WiFi.ino example Arduino sketches
 - The ST_Anything Arduino libraries
 - The SmartThings library - A modified, more efficient version 
 - The ST_Anything_ThingShield.device.groovy (ThingShield) and ST_Anything_Ethernet.device.groovy (W5100 and ESP8266) Device Handlers that correspond to the sketches above.
@@ -85,8 +88,8 @@ ST_Anything (original example) consists of four parts:
 - Be sure to go into the Preferences section to set the polling rates for the sensors.  These are sent to the Arduino if you press the Configure tile.  (Note:  Currently, these settings do not persist after an Arduino reboot.)
 
 
-##Ethernet (Arduino/W5100 and ESP8266) Examples
-The steps for using the Arduino/W5100 and NodeMCU ESP8266 sample code is very similar to above, with the added steps of staic IP assignements, MAC addresses, SSID and Passwords, etc...
+##Ethernet (Arduino/W5100, Arduino/ESP-01, and ESP8266) Examples
+The steps for using the Arduino/W5100, Arduino/ESP-01, and NodeMCU ESP8266 sample code is very similar to above, with the added steps of staic IP assignements, MAC addresses, SSID and Passwords, etc...
 For now, please refer to the SmartThings library's Readme.md for these details https://github.com/DanielOgorchock/ST_Anything/tree/master/Arduino/libraries/SmartThings 
 
 

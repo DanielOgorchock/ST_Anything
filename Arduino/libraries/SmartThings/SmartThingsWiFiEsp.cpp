@@ -7,7 +7,7 @@
 //	History
 //	2017-02-20  Dan Ogorchock  Created
 //*******************************************************************************
-
+#ifndef ARDUINO_ARCH_ESP8266
 
 #include "SmartThingsWiFiEsp.h"
 
@@ -197,3 +197,4 @@ namespace st
 	}
 
 }
+#endif

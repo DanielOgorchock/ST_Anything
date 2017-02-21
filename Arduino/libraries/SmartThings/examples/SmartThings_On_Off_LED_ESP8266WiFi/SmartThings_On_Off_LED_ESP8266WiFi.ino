@@ -64,7 +64,7 @@ const unsigned int hubPort = 39500;   // smartthings hub port
 st::SmartThingsESP8266WiFi smartthing(str_ssid, str_password, ip, gateway, subnet, dnsserver, serverPort, hubIp, hubPort, messageCallout);
 
 bool isDebugEnabled;    // enable or disable debug in this example
-int stateLED;           // state to track last set value of LED
+
 
 //*****************************************************************************
 // Local Functions  | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
@@ -72,16 +72,14 @@ int stateLED;           // state to track last set value of LED
 //*****************************************************************************
 void on()
 {
-  stateLED = 1;                 // save state as 1 (on)
-  digitalWrite(PIN_LED, HIGH);  // turn LED on
+  digitalWrite(PIN_LED, LOW);  // turn LED on
   smartthing.send("on");        // send message to cloud
 }
 
 //*****************************************************************************
 void off()
 {
-  stateLED = 0;                 // set state to 0 (off)
-  digitalWrite(PIN_LED, LOW);   // turn LED off
+  digitalWrite(PIN_LED, HIGH);   // turn LED off
   smartthing.send("off");       // send message to cloud
 }
 
@@ -93,7 +91,6 @@ void setup()
 {
   // setup default state of global variables
   isDebugEnabled = true;
-  stateLED = 0;                 // matches state of hardware pin set below
 
   if (isDebugEnabled)
   { // setup debug serial port
@@ -104,12 +101,13 @@ void setup()
   
   // setup hardware pins 
   pinMode(PIN_LED, OUTPUT);     // define PIN_LED as an output
-  digitalWrite(PIN_LED, LOW);   // set value to LOW (off) to match stateLED=0
+  digitalWrite(PIN_LED, HIGH);   // set value to HIGH (off)
 
   //Run the SmartThings init() routine to make sure the ThingShield is connected to the ST Hub
   smartthing.init();
-  
 
+  //synch up the ST cloud
+  smartthing.send("off");       // send message to cloud
 }
 
 //*****************************************************************************

@@ -8,6 +8,7 @@
 //	2017-02-20  Dan Ogorchock  Created
 //*******************************************************************************
 
+#ifndef ARDUINO_ARCH_ESP8266
 
 #ifndef __SMARTTHINGSWIFIESP_H__ 
 #define __SMARTTHINGSWIFIESP_H__
@@ -73,4 +74,4 @@ namespace st
 	};
 }
 #endif
-
+#endif
