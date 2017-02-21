@@ -53,7 +53,7 @@ ST_Anything (original example) consists of four parts:
 - The ST_Anything_ThingShield.ino, ST_Anything_EthernetW5100.ino, ST_Anything_WiFiEsp.ino, and ST_Anything_ESP8266WiFi.ino example Arduino sketches
 - The ST_Anything Arduino libraries
 - The SmartThings library - A modified, more efficient version 
-- The ST_Anything_ThingShield.device.groovy (ThingShield) and ST_Anything_Ethernet.device.groovy (W5100 and ESP8266) Device Handlers that correspond to the sketches above.
+- The ST_Anything_ThingShield.device.groovy (ThingShield) and ST_Anything_Ethernet.device.groovy (Arduino/W5100, Arduino/ESP-01, and ESP8266) Device Handlers that correspond to the sketches above.
 
 ##ST_Anything Arduino Setup Instructions - FOR USE WITH A THINGSHIELD
 - Download the ST_Anything repository.
