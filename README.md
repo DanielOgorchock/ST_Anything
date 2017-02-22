@@ -15,7 +15,7 @@ Note: We created a ST_Anything v1.6 release on 2017-02-11 to make sure everyone 
 
 Note: ST_Anything v2.1 was built using the Arduino IDE v1.8.1.  Please make sure to upgrade your IDE.
 
-Turn your Arduino UNO/MEGA or NodeMCU ESP8266 into an AnyThing. ST_Anything is an Arduino library, sketch, and Device Handler that works with your Arduino/ThingShield, Arduino/W5100 Ethernet shield, Arduino/ESP-01 or a NodeMCU ESP8266 to create an all-in-one SmartThings device.
+Turn your Arduino UNO/MEGA or NodeMCU ESP8266 into an AnyThing. ST_Anything is an Arduino library, sketch, and Device Handler that works with your Arduino/ThingShield, Arduino/W5100 Ethernet shield, Arduino/ESP-01, a standalone NodeMCU ESP8266-12e, or standalone ESP-01 to create an all-in-one SmartThings device.
 
 Note:  There are some significant changes as compared to the old v1.x platform.  A signiciant rewrite of the "SmartThings" Arduino library was completed to incorporate Ethernet communications support.  To use ST_Anything v2.x, you must also use all of the other supporting libaries found in this GitHub repository.  Included is a the new SmartThings v2.x Arduino library which can be used standalone (examples are included in the library), or in conjunction with the ST_Anything library.
 
