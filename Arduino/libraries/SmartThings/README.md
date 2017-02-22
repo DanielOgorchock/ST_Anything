@@ -4,15 +4,15 @@ History:
 
 SmartThings v2.x
 ================
-This is a new version of the old SmartThings Arduino Library created by SmartThings for use with their Zigbee-based ThingShield.  Recently, SmartThings has decided to no longer produce nor support the ThingShield.  In an attempt to provide the Maker Community with alternatives, I decided to re-architect the C++ Class hierarchy of the SmartThings library to include continued support for the old ThingShield, as well as adding new support for the Arduino + Ethernet W5100 shield, Arduino + ESP-01 WiFi board, and the NodeMCU ESP8266 boards.  This allows users four options for connecting their DIY projects to SmartThings.
+This is a new version of the old SmartThings Arduino Library created by SmartThings for use with their Zigbee-based ThingShield.  Recently, SmartThings has decided to no longer produce nor support the ThingShield.  In an attempt to provide the Maker Community with alternatives, I decided to re-architect the C++ Class hierarchy of the SmartThings library to include continued support for the old ThingShield, as well as adding new support for the Arduino + Ethernet W5100 shield, Arduino + ESP-01 WiFi board, and the standalone NodeMCU ESP8266 and ESP-01 boards.  This allows users five options for connecting their DIY projects to SmartThings.
 
 This library currently implements the following C++ Classes and associated constructors:
 -st::SmartThings (base class, not to be used in your sketch!)
   -st::SmartThingsThingShield (use this class "#include <SmartThingsThingShield.h" if connecting an Arduino UNO/MEGA using a ThingShield)
   -st::SmartThingsEthernet (base class, not to be used in your sketch!)
      -st::SmartThingsEthernetW5100 (use this class "#include <SmartThingsEthernetW5100.h" if connecting an Arduino UNO/MEGA using a W5100 Ethernet shield)
-	 -st::SmartThingsWiFiEsp (use this class "#include <SmartThingsWiFiEsp.h>" if using an Arduino attached to a ESP-01 for WiFi)
-     -st::SmartThingsESP8266WiFi (use this class "#include <SmartThingsESP8266.h" if using a NodeMCU ESP8266 board)
+	 -st::SmartThingsWiFiEsp (use this class "#include <SmartThingsWiFiEsp.h>" if using an Arduino attached to a ESP-01 (AT Firmware) for WiFi)
+     -st::SmartThingsESP8266WiFi (use this class "#include <SmartThingsESP8266.h" if using a standalone NodeMCU ESP8266 or ESP-01)
 
 All four of the usable classes implement the following methods:
 - send(String) used to send an ASCII string to the SmartThings Device Handler
@@ -26,10 +26,11 @@ SmartThings library consists of:
   - SmartThings_On_Off_LED_ThingShield
   - SmartThings_On_Off_LED_EthernetW5100
   - SmartThings_On_Off_LED_WiFiEsp
-  - SmartThings_On_Off_LED_ESP8266WiFi
+  - SmartThings_On_Off_LED_ESP8266WiFi (no Arduino!)
+  - SmartThings_On_Off_LED_ESP01WiFi (no Arduino!)
 - In the `extras` folder, two SmartThings Groovy Device Handlers to be used with the example sketches above
   -On_Off_LED_ThingShield.device.groovy for use with a ThingShield
-  -On_Off_LED_Ethernet.device.groovy for use with an Arduino/W5100 combo OR Arduino/ESP-01 combo OR a NodeMCU ESP8266 board
+  -On_Off_LED_Ethernet.device.groovy for use with an Arduino/W5100 combo OR Arduino/ESP-01 combo OR a NodeMCU ESP8266 board OR a ESP-01 module
 
 
 ##SmartThings Library Installation Instructions
@@ -39,9 +40,9 @@ SmartThings library consists of:
   - Restart the Arduino IDE so it will scan the new library
   - Assumption: If you're using an ESP8266 based board, you should already have added support for it to the IDE (Google it if needed.)
 
-##Pre-Requisites for using Ethernet based connectivity (Arduino/W5100, Arduino/ESP-01 or NodeMCU ESP8266)
+##Pre-Requisites for using Ethernet based connectivity (Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, ESP-01)
 - Your SmartThings HUB must have a Static TCP/IP Address assigned via your router's DHCP Server.  Since this procedure varies by router model, Google it!
-- You'll need to identify a static TCP/IP address for your Arduino/W5100, Arduino/ESP-01, or ESP8266, as you'll need this later when setting up the sketch.  Choose an unused IP address outside of the range your router's DHCP server uses.
+- You'll need to identify a static TCP/IP address for your Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01, as you'll need this later when setting up the sketch.  Choose an unused IP address outside of the range your router's DHCP server uses.
   
 ##Arduino IDE Instructions
 - Open the Arduino IDE and select File->Examples->SmartThings
@@ -53,7 +54,7 @@ SmartThings library consists of:
 	- Note:  If using an ESP-01 with an Arduino, the example assumes you're using an Arduino MEGA 2560.  Attach the ESP-01 to Hardware Serial "Serial1"
   - Your IDE Serial Monitor Window should be set to 9600 baud
   - With the Serial Monitor windows open, load your sketch and watch the output
-    - If using an Arduino/ESP-01 or NodeMCU ESP8266 board, the MAC Address will be printed out in the serial monitor window.  Write this down as you will need it to configure the Device using your ST App on your phone.
+    - If using an Arduino/ESP-01, NodeMCU ESP8266 board, or ESP-01 the MAC Address will be printed out in the serial monitor window.  Write this down as you will need it to configure the Device using your ST App on your phone.
   
 ##SmartThings IDE Device Handler Installation Instructions
 - Create an account and/or log into the SmartThings Developers Web IDE.
@@ -75,7 +76,7 @@ Arduino/ThingShield
   - Click the Update button at the bottom of the screen
   - On your phone, you should now see a device that has simple On/Off tile
 
-Ethernet Arduino/W5100, Arduino/ESP-01 or NodeMCU ESP8266   
+Ethernet Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01   
 - Install the Ethernet example Device Handler
   - Click on  "+ New Device Handler" button.
   - Select the "From Code" Tab near the top of the page
@@ -98,7 +99,7 @@ Ethernet Arduino/W5100, Arduino/ESP-01 or NodeMCU ESP8266
     - Note: MAC Address should be entered with no delimeters in the form of "01AB23CD45EF" (no quotes!)
     - Click "Done"	
 
-  - Note:  If you're trying to use a ESP-01 WiFi board with an Arduino MEGA, please make sure the ESP-01 is running the "AT Firmware" and figure out the baudrate ahead of time.  Please use the examples in the WiFiEsp library to get the ESP-01 wired and working on "Serial1" before attempting to use this library.  If you need further help on this, please Google "Arduino MEGA ESP-01" and I am sure you will find some good guides.  Also, please note that the Arduino boards really are not rated to power the ESP-01 from the Arduino's 3.3v pin.  I had to use an external 3.3v powersupply for the ESP-01 to get everything working reliably.  Just remember to tie the 3.3v powersupply GND to the Arduino GND.  Do NOT connect the +3.3v powersupply to the Arduino's 3.3v pin.  This would be bad!  You may also want to "level shift" the Arduino's 5v Tx pin down to 3.3v before connecting it to the Rx pin on the ESP-01.  Some folks online say it is a must, others say the ESP-01 input is 5v tolerant.  YMMV.  
+  - Note:  If you're trying to use a ESP-01 WiFi board with an Arduino MEGA, please make sure the ESP-01 is running the "AT Firmware" and figure out the baudrate ahead of time.  Please use the examples in the WiFiEsp library to get the ESP-01 wired and working on "Serial1" before attempting to use this library.  If you need further help on this, please Google "Arduino MEGA ESP-01" and I am sure you will find some good guides.  Also, please note that the Arduino boards really are not rated to power the ESP-01 from the Arduino's 3.3v pin.  I had to use an external 3.3v power supply for the ESP-01 to get everything working reliably.  Just remember to tie the 3.3v powersupply GND to the Arduino GND.  Do NOT connect the +3.3v power supply to the Arduino's 3.3v pin.  This would be bad!  You may also want to "level shift" the Arduino's 5v Tx pin down to 3.3v before connecting it to the Rx pin on the ESP-01.  Some folks online say it is a must, others say the ESP-01 input is 5v tolerant.  YMMV.  
 
 .
 .

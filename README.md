@@ -50,10 +50,17 @@ Note: Attempting to use all of these at once on an Arduino UNO R3 is likely to r
 
 ## Overview
 ST_Anything (original example) consists of four parts:
-- The ST_Anything_ThingShield.ino, ST_Anything_EthernetW5100.ino, ST_Anything_WiFiEsp.ino, and ST_Anything_ESP8266WiFi.ino example Arduino sketches
+- The ST_Anything_xxxxx.ino example sketches 
+  - ST_Anything_ThingShield.ino - Arduino UNO/MEGA + ST ThingShield
+  - ST_Anything_EthernetW5100.ino - Arduino UNO/MEGA + W5100 Ethernet Shield
+  - ST_Anything_WiFiEsp.ino - Arduino MEGA + ESP-01 WiFi module with "AT Firmware"
+  - ST_Anything_ESP8266WiFi.ino - NodeMCU v1.0 ESP8266-12e development board (no Arduino!)
+  - ST_Anything_ESP01WiFi.ino - ESP-01 (ESP8266-01) module (no Arduino!)
 - The ST_Anything Arduino libraries
-- The SmartThings library - A modified, more efficient version 
-- The ST_Anything_ThingShield.device.groovy (ThingShield) and ST_Anything_Ethernet.device.groovy (Arduino/W5100, Arduino/ESP-01, and ESP8266) Device Handlers that correspond to the sketches above.
+- The SmartThings library - A modified, more efficient version, now with added support for LAN-to-Hub based communications too! 
+- The SmartThings Device Handlers that correspond to the sketches above.
+  - ST_Anything_ThingShield.device.groovy (ThingShield)
+  - ST_Anything_Ethernet.device.groovy (Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01) 
 
 ##ST_Anything Arduino Setup Instructions - FOR USE WITH A THINGSHIELD
 - Download the ST_Anything repository.
