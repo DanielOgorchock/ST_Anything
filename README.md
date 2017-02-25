@@ -62,7 +62,7 @@ ST_Anything (original example) consists of four parts:
   - ST_Anything_ThingShield.device.groovy (ThingShield)
   - ST_Anything_Ethernet.device.groovy (Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01) 
 
-##ST_Anything Arduino Setup Instructions - FOR USE WITH A THINGSHIELD
+##ST_Anything Arduino IDE Setup Instructions 
 - Download the ST_Anything repository.
 - This folder structure should mirror that of your local Arduino directory. 
   - On Mac, it's located in `~/Documents/Arduino/`.
@@ -71,8 +71,8 @@ ST_Anything (original example) consists of four parts:
 - Copy and paste all of the `ST_Anything...` sketch folders into your local Arduino sketches directory. If you haven't created any sketches, you may not see the folder. In this case, feel free to create it.
 - Look inside the `Arduino/libraries` folder of the repo.
 - Copy and paste both the `ST_Anything` and `SmartThings` (as well as all of the other library folders) into your local Arduino libraries directory. 
-- Open the ST_Anything_ThingsShield.ino and see if it successfully compiles.
-- WARNING:  If you are using an Arduino UNO, you will most likely need to comment out some of the devices in the sketch (both in the global variable declaration section as well as the setup() function) due to the UNO's limited 2 kilobytes of SRAM.  Failing to do so will most likely result in unpredictable behavior. The Arduino MEGA 2560 has 8k of SRAM and has four Hardware Serial ports (UARTs).  If you plan on using lots of devices, get the MEGA 2560.
+- Open one of the ST_Anything_xxxxx.ino sketches for the hardware you're using and see if it successfully compiles.
+- WARNING:  If you are using an Arduino UNO, you may need to comment out some of the devices in the sketch (both in the global variable declaration section as well as the setup() function) due to the UNO's limited 2 kilobytes of SRAM.  Failing to do so will most likely result in unpredictable behavior. The Arduino MEGA 2560 has 8k of SRAM and has four Hardware Serial ports (UARTs).  If you plan on using lots of devices, get the MEGA 2560.
 
 ##ST_Anything SmartThings Device Handler Installation Instructions - FOR USE WITH A THINGSHIELD
 - Join your Arduino/ThingShield to your hub using your phone's SmartThings App.  It will show up as a generic "Arduino ThingShield"
@@ -96,7 +96,7 @@ ST_Anything (original example) consists of four parts:
 
 
 ##Ethernet (Arduino/W5100, Arduino/ESP-01, and ESP8266) Examples
-The steps for using the Arduino/W5100, Arduino/ESP-01, and NodeMCU ESP8266 sample code is very similar to above, with the added steps of staic IP assignements, MAC addresses, SSID and Passwords, etc...
+The steps for using the Arduino/W5100, Arduino/ESP-01, and NodeMCU ESP8266 sample code is very similar to above, with the added steps of static IP assignements, MAC addresses, SSID and Passwords, etc...
 For now, please refer to the SmartThings library's Readme.md for these details https://github.com/DanielOgorchock/ST_Anything/tree/master/Arduino/libraries/SmartThings 
 
 
