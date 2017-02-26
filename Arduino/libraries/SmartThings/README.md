@@ -54,7 +54,7 @@ SmartThings library consists of:
 	- Note:  If using an ESP-01 with an Arduino, the example assumes you're using an Arduino MEGA 2560.  Attach the ESP-01 to Hardware Serial "Serial1"
   - Your IDE Serial Monitor Window should be set to 9600 baud
   - With the Serial Monitor windows open, load your sketch and watch the output
-    - If using an Arduino/ESP-01, NodeMCU ESP8266 board, or ESP-01 the MAC Address will be printed out in the serial monitor window.  Write this down as you will need it to configure the Device using your ST App on your phone.
+    - If using an Arduino/ESP-01, NodeMCU ESP8266 board, or ESP-01 the MAC Address will be printed out in the serial monitor window.  Write this down as you will need it to configure the Device using your ST App on your phone. (Note: MAC Address must later be entered with no delimeters in the form of "01AB23CD45EF" (without quotes!))
   
 ##SmartThings IDE Device Handler Installation Instructions
 - Create an account and/or log into the SmartThings Developers Web IDE.
