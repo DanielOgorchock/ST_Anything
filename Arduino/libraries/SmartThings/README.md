@@ -97,7 +97,8 @@ Ethernet Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01
   - One your phone, after selecting the new device, click on the settings icon (small gear in top right corner)
     - Enter your Arduino or ESP8266 device's TCP/IP Address, Port, and MAC Address (you should already know these from when you configured your sketch)
     - Note: MAC Address should be entered with no delimeters in the form of "06AB23CD45EF" (no quotes!)
-    - Click "Done"	
+    - Click "Done"
+    - CLick the "Configure" tile to make sure the 'networkDeviceID' for your new ST Device is set to the MAC address you just entered
 
   - Note:  If you're trying to use a ESP-01 WiFi board with an Arduino MEGA, please make sure the ESP-01 is running the "AT Firmware" and figure out the baudrate ahead of time.  Please use the examples in the WiFiEsp library to get the ESP-01 wired and working on "Serial1" before attempting to use this library.  If you need further help on this, please Google "Arduino MEGA ESP-01" and I am sure you will find some good guides.  Also, please note that the Arduino boards really are not rated to power the ESP-01 from the Arduino's 3.3v pin.  I had to use an external 3.3v power supply for the ESP-01 to get everything working reliably.  Just remember to tie the 3.3v powersupply GND to the Arduino GND.  Do NOT connect the +3.3v power supply to the Arduino's 3.3v pin.  This would be bad!  You may also want to "level shift" the Arduino's 5v Tx pin down to 3.3v before connecting it to the Rx pin on the ESP-01.  Some folks online say it is a must, others say the ESP-01 input is 5v tolerant.  YMMV.  
 
