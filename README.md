@@ -138,6 +138,14 @@ Basically, what is happening here is the following:
 
 -Any other smart apps that are looking at the virtual contact sensor devices will then receive an update and act accordingly.
 
+##Items to be aware of
+1) Please do not start editing any code before getting one of the examples up and running on both the Arduino/ESP8266 and the Device Handler.  It is always best to start with known working code before editing it.  This greatly reduces the amount of troubleshooting later.
+
+2) The names of the devices you create in the Arduino setup() routine must match exactly the names of the tiles (and custom attributes) in the Device Handler code.  The names are CaSe SenSiTiVe!  
+
+3) If you are using a W5100 Ethernet Shield with an Arduino, the MAC address must start with '06' in order to be sure you're using a ***locally administered unicast MAC address***.  Make sure that you have unique MAC addresses if you use more than one W5100 on your network.
+
+4) When entering the MAC address into the Device Prerences in your phone's SmartThings App, please be sure to enter it without delimiters, and in uppercase.  It should be in the form '06AB02CD03EF' without the quotes.  If using the W5100, get the MAC address from the sketch.  If using an ESP8266 based solution, the MAC address of the onboard WiFi will be printed out in the Arduino IDE Serial Monitor window (9600 baud).
 
 ##Final Notes for now...
 Plese refer to the header files of the ST_Anything library for explanation of specific classes, constructor arguments, etc... 

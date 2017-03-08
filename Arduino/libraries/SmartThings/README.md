@@ -50,11 +50,11 @@ SmartThings library consists of:
   - Select File->Save As and select your "Sketches" folder, and click "Save"
   - If using Arduino/W5100, Arduino/ESP-01 or ESP8266, find the lines of the Sketch where it says "<---You must edit this line!"
 	- The Arduino must be assigned a static TCP/IP address, Gateway, DNS, Subnet Mask, MAC Address (W5100 only), SSID + Password (WiFiEsp + ESP8266 only)
-	- *** NOTE:  If using the W5100 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch!!! ***
+	- *** NOTE:  If using the W5100 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch! Please leave the first octet in the MAC Address '06' as certain MAC addresses are UNICAST while others are MULTICAST.  Your MAC must be UNICAST and be a 'Locally Administered Address' Please see https://en.wikipedia.org/wiki/MAC_address#Address_details for more information ***
 	- Note:  If using an ESP-01 with an Arduino, the example assumes you're using an Arduino MEGA 2560.  Attach the ESP-01 to Hardware Serial "Serial1"
   - Your IDE Serial Monitor Window should be set to 9600 baud
   - With the Serial Monitor windows open, load your sketch and watch the output
-    - If using an Arduino/ESP-01, NodeMCU ESP8266 board, or ESP-01 the MAC Address will be printed out in the serial monitor window.  Write this down as you will need it to configure the Device using your ST App on your phone. (Note: MAC Address must later be entered with no delimeters in the form of "01AB23CD45EF" (without quotes!))
+    - If using an Arduino/ESP-01, NodeMCU ESP8266 board, or ESP-01 the MAC Address will be printed out in the serial monitor window.  Write this down as you will need it to configure the Device using your ST App on your phone. (Note: MAC Address must later be entered with no delimeters in the form of "06AB23CD45EF" (without quotes!))
   
 ##SmartThings IDE Device Handler Installation Instructions
 - Create an account and/or log into the SmartThings Developers Web IDE.
@@ -96,7 +96,7 @@ Ethernet Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01
   - On your phone, you should now see a device that has simple "On/Off" tile and a "Configure" tile
   - One your phone, after selecting the new device, click on the settings icon (small gear in top right corner)
     - Enter your Arduino or ESP8266 device's TCP/IP Address, Port, and MAC Address (you should already know these from when you configured your sketch)
-    - Note: MAC Address should be entered with no delimeters in the form of "01AB23CD45EF" (no quotes!)
+    - Note: MAC Address should be entered with no delimeters in the form of "06AB23CD45EF" (no quotes!)
     - Click "Done"	
 
   - Note:  If you're trying to use a ESP-01 WiFi board with an Arduino MEGA, please make sure the ESP-01 is running the "AT Firmware" and figure out the baudrate ahead of time.  Please use the examples in the WiFiEsp library to get the ESP-01 wired and working on "Serial1" before attempting to use this library.  If you need further help on this, please Google "Arduino MEGA ESP-01" and I am sure you will find some good guides.  Also, please note that the Arduino boards really are not rated to power the ESP-01 from the Arduino's 3.3v pin.  I had to use an external 3.3v power supply for the ESP-01 to get everything working reliably.  Just remember to tie the 3.3v powersupply GND to the Arduino GND.  Do NOT connect the +3.3v power supply to the Arduino's 3.3v pin.  This would be bad!  You may also want to "level shift" the Arduino's 5v Tx pin down to 3.3v before connecting it to the Rx pin on the ESP-01.  Some folks online say it is a must, others say the ESP-01 input is 5v tolerant.  YMMV.  

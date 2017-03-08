@@ -61,6 +61,7 @@
 //         See https://www.arduino.cc/en/Main/ArduinoEthernetShieldV1 for details on the W5100 Sield
 //**********************************************************************************************************
 //"RESERVED" pins for W5100 Ethernet Shield - best to avoid
+#define PIN_4_RESERVED           4   //reserved by W5100 Shield on both UNO and MEGA
 #define PIN_1O_RESERVED          10  //reserved by W5100 Shield on both UNO and MEGA
 #define PIN_11_RESERVED          11  //reserved by W5100 Shield on UNO
 #define PIN_12_RESERVED          12  //reserved by W5100 Shield on UNO
@@ -82,8 +83,8 @@
 //******************************************************************************************
 //W5100 Ethernet Shield Information
 //****************************************************************************************** 
-byte mac[] = {0x01,0x02,0x03,0x04,0x05,0x06}; //physical MAC address, MAKE SURE IT's UNIQUE //  <---You must edit this line!
-IPAddress ip(192, 168, 1, 200);               // Device IP Address                          //  <---You must edit this line!
+byte mac[] = {0x06,0x02,0x03,0x04,0x05,0x06}; //MAC address, leave first octet 0x06, change others to be unique //  <---You must edit this line!
+IPAddress ip(192, 168, 1, 200);               //Arduino device IP Address                   //  <---You must edit this line!
 IPAddress gateway(192, 168, 1, 1);            //router gateway                              //  <---You must edit this line!
 IPAddress subnet(255, 255, 255, 0);           //LAN subnet mask                             //  <---You must edit this line!
 IPAddress dnsserver(192, 168, 1, 1);          //DNS server                                  //  <---You must edit this line!
