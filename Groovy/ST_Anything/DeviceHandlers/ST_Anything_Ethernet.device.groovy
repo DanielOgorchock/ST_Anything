@@ -1,5 +1,5 @@
 /**
- *  ST_AnyThing_Ethernet.device.groovy
+ *  ST_Anything_Ethernet.device.groovy
  *
  *  Copyright 2017 Dan G Ogorchock 
  *
@@ -22,7 +22,7 @@
  */
  
 metadata {
-	definition (name: "ST_AnyThing_Ethernet", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "ST_Anything_Ethernet", namespace: "ogiewon", author: "Dan Ogorchock") {
 		capability "Configuration"
 		capability "Illuminance Measurement"
 		capability "Temperature Measurement"
@@ -223,10 +223,7 @@ def poll() {
 
 def configure() {
 	log.debug "Executing 'configure'"
-    if(device.deviceNetworkId!=settings.mac) {
-    	log.debug "setting device network id"
-    	device.deviceNetworkId = settings.mac
-    }
+
     //log.debug "illuminance " + illuminanceSampleRate + "|temphumid " + temphumidSampleRate + "|water " + waterSampleRate
     log.debug "water " + waterSampleRate
     log.debug "illuminance " + illuminanceSampleRate
@@ -238,4 +235,25 @@ def configure() {
         "delay 1000",
         sendEthernet("temphumid " + temphumidSampleRate)
     ]
+    
+    updateDeviceNetworkID()
+}
+
+def updateDeviceNetworkID() {
+	log.debug "Executing 'updateDeviceNetworkID'"
+    if(device.deviceNetworkId!=mac) {
+    	log.debug "setting deviceNetworkID = ${mac}"
+        device.setDeviceNetworkId("${mac}")
+	}
+}
+
+def updated() {
+	if (!state.updatedLastRanAt || now() >= state.updatedLastRanAt + 5000) {
+		state.updatedLastRanAt = now()
+		log.debug "Executing 'updated'"
+    	runIn(3, updateDeviceNetworkID)
+	}
+	else {
+		log.trace "updated(): Ran within last 5 seconds so aborting."
+	}
 }

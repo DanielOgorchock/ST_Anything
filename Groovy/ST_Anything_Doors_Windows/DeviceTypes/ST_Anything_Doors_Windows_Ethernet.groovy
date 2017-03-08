@@ -174,9 +174,25 @@ def sendEthernet(message) {
 }
 
 def configure() {
-	log.debug "Executing 'configure'"
-    if(device.deviceNetworkId!=settings.mac) {
-    	log.debug "setting device network id"
-    	device.deviceNetworkId = settings.mac
-    }
+	log.debug "Executing 'configure'"   
+    updateDeviceNetworkID()
+}
+
+def updateDeviceNetworkID() {
+	log.debug "Executing 'updateDeviceNetworkID'"
+    if(device.deviceNetworkId!=mac) {
+    	log.debug "setting deviceNetworkID = ${mac}"
+        device.setDeviceNetworkId("${mac}")
+	}
+}
+
+def updated() {
+	if (!state.updatedLastRanAt || now() >= state.updatedLastRanAt + 5000) {
+		state.updatedLastRanAt = now()
+		log.debug "Executing 'updated'"
+    	runIn(3, updateDeviceNetworkID)
+	}
+	else {
+		log.trace "updated(): Ran within last 5 seconds so aborting."
+	}
 }
