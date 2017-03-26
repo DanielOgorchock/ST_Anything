@@ -6,16 +6,15 @@
 //			  It inherits from the st::InterruptSensor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::IS_Button sensor("button1", PIN_BUTTON1, 1000, HIGH, true, 250);
+//			  For Example:  st::IS_Button sensor("button1", PIN_BUTTON1, 1000, LOW, true, 500);
 //
 //			  st::IS_Button() constructor requires the following arguments
-//				- String &name - REQUIRED - the name of the object - should be "button1", "button2", "button3", etc...
+//				- String &name - REQUIRED - the name of the object - should be "button:1", "button:2", "button:3", etc... THE COLON IS REQUIRED!
 //				- byte pin - REQUIRED - the Arduino Pin to be used as a digital input
 //				- long reqNumMillisHeld - Required - number of milliseconds required needed to detect a "Held" condition versus a "Pushed" (default = 1000)
 //				- bool iState - OPTIONAL - LOW or HIGH - determines which value indicates the interrupt is true (default = HIGH)
 //				- bool internalPullup - OPTIONAL - true == INTERNAL_PULLUP (default - true)
-//				- long numReqCounts - OPTIONAL - number of counts before changing state of input (prevent false triggers) (default = 250)
-
+//				- long numReqCounts - OPTIONAL - number of counts before changing state of input (prevent false triggers) (default = 500)
 //
 //  Change History:
 //
