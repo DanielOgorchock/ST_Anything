@@ -36,8 +36,8 @@ namespace st
 
 //public
 	//constructor
-	IS_Contact::IS_Contact(const __FlashStringHelper *name, byte pin, bool iState, bool pullup, long numReqCounts) :
-		InterruptSensor(name, pin, iState, pullup, numReqCounts)  //use parent class' constructor
+	IS_Contact::IS_Contact(const __FlashStringHelper *name, byte pin, bool iState, bool internalPullup, long numReqCounts) :
+		InterruptSensor(name, pin, iState, internalPullup, numReqCounts)  //use parent class' constructor
 		{
 		}
 	

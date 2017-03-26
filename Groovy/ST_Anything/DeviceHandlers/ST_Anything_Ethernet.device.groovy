@@ -34,6 +34,8 @@ metadata {
 		capability "Alarm"
 		capability "Contact Sensor"
 		capability "Polling"
+        capability "Button"
+        capability "Holdable Button"
 
 		command "test"
 		command "alarmoff"
@@ -51,7 +53,8 @@ metadata {
 		input "illuminanceSampleRate", "number", title: "Light Sensor Inputs", description: "Sampling Interval (seconds)", defaultValue: 30, required: true, displayDuringSetup: true
 		input "temphumidSampleRate", "number", title: "Temperature/Humidity Sensor Inputs", description: "Sampling Interval (seconds)", defaultValue: 30, required: true, displayDuringSetup: true
 		input "waterSampleRate", "number", title: "Water Sensor Inputs", description: "Sampling Interval (seconds)", defaultValue: 30, required: true, displayDuringSetup: true
-	}
+		input "numButtons", "number", title: "Number of Buttons", description: "Number of Buttons to be implemented", defaultValue: 0, required: true, displayDuringSetup: true
+}
 
 	// Tile Definitions
 	tiles {
@@ -147,12 +150,21 @@ def parse(String description) {
     	def parts = bodyString.split(" ")
     	def name  = parts.length>0?parts[0].trim():null
     	def value = parts.length>1?parts[1].trim():null
+		def results = []
+		if (name.startsWith("button")) {
+        	def pieces = name.split(":")
+            def btnName = pieces.length>0?pieces[0].trim():null
+            def btnNum = pieces.length>1?pieces[1].trim():null
+			//log.debug "In parse:  name = ${name}, value = ${value}, btnName = ${btnName}, btnNum = ${btnNum}"
+        	results = createEvent([name: btnName, value: value, data: [buttonNumber: btnNum], descriptionText: "${btnName} ${btnNum} was ${value} ", isStateChange: true, displayed: true])
+        }
+        else {
+    		results = createEvent(name: name, value: value)
+		}
 
-    	def result = createEvent(name: name, value: value)
+		log.debug results
+        return results
 
-    	log.debug result
-
-    return result
 	}
 }
 
@@ -223,7 +235,8 @@ def poll() {
 
 def configure() {
 	log.debug "Executing 'configure'"
-
+    updateDeviceNetworkID()
+    sendEvent(name: "numberOfButtons", value: numButtons)
     //log.debug "illuminance " + illuminanceSampleRate + "|temphumid " + temphumidSampleRate + "|water " + waterSampleRate
     log.debug "water " + waterSampleRate
     log.debug "illuminance " + illuminanceSampleRate
@@ -236,7 +249,7 @@ def configure() {
         sendEthernet("temphumid " + temphumidSampleRate)
     ]
     
-    updateDeviceNetworkID()
+
 }
 
 def updateDeviceNetworkID() {
@@ -252,8 +265,13 @@ def updated() {
 		state.updatedLastRanAt = now()
 		log.debug "Executing 'updated'"
     	runIn(3, updateDeviceNetworkID)
+        sendEvent(name: "numberOfButtons", value: numButtons)
 	}
 	else {
 		log.trace "updated(): Ran within last 5 seconds so aborting."
 	}
+}
+
+def initialize() {
+	sendEvent(name: "numberOfButtons", value: numButtons)
 }
