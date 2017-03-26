@@ -8,8 +8,9 @@ History:
 - v1.6 2017-02-11 Final release prior to the new version 2.0 baseline
 - v2.0 2017-02-12 Initial release of v2.x paltform with additonal support for Ethernet connectivity to SmartThings
 - v2.1 2017-02-20 Added support for using the ESP-01 as WiFi communications for Arduino MEGA 2560 (SmartThings and ST_Anything libraries updated)
+- v2.2 2017-03-25 Added new IS_Button class, sample sketches, updated Device Handler, etc... to support ST "Button" capability
 
-ST_Anything v2.1
+ST_Anything v2.2
 ================
 Note: We created a ST_Anything v1.6 release on 2017-02-11 to make sure everyone can still get back to the original ThingShield-only code if necessary.  
 
@@ -44,6 +45,7 @@ This package currently implements the following SmartThings Device Capabilities:
 - Thermocouple Temperature Measurement (via the Adafruit MAX31855 library, included in this repo)
 - Smoke Detector (as a simple digital input)
 - Relay Switch (implemented as a timed relay, that turns off locally - i.e. no ST cloud command necessary to turn off)
+- Button (both pushed and held are supported)
 
 Note: Attempting to use all of these at once on an Arduino UNO R3 is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.
 
