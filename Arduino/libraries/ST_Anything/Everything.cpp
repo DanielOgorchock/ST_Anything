@@ -312,8 +312,12 @@ namespace st
 			Serial.print(F("Everything: Received: "));
 			Serial.println(message);
 		}
-		
-		if (message.length() > 1)		//ignore empty string messages from the ST Hub
+
+		if (message == "refresh")
+		{
+			Everything::refreshDevices();
+		}
+		else if (message.length() > 1)		//ignore empty string messages from the ST Hub
 		{
 			Device *p = Everything::getDeviceByName(message.substring(0, message.indexOf(' ')));
 			if (p != 0)

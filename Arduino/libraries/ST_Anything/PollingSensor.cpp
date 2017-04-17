@@ -86,7 +86,12 @@ namespace st
 	{
 		getData();
 	}
-	
+
+	void PollingSensor::refresh()
+	{
+		getData();
+	}
+
 	void PollingSensor::update()
 	{
 		if(checkInterval())

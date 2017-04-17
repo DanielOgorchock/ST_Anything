@@ -47,7 +47,10 @@ namespace st
 			
 			//initialization function
 			virtual void init();
-			
+
+			//called periodically by Everything class to ensure ST Cloud is kept consistent with the state of each Device subclass object
+			virtual void refresh();
+
 			//update function 
 			virtual void update();
 			
