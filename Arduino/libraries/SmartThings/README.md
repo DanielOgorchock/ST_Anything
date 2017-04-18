@@ -33,18 +33,18 @@ SmartThings library consists of:
   -On_Off_LED_Ethernet.device.groovy for use with an Arduino/W5100 combo OR Arduino/ESP-01 combo OR a NodeMCU ESP8266 board OR a ESP-01 module
 
 
-##SmartThings Library Installation Instructions
+## SmartThings Library Installation Instructions
 - Download the SmartThings library and copy it to your your Arduino "libraries" folder
   - On Windows, it's located in `C:\My Documents\Arduino\libraries`
   - On Mac, it's located in `~/Documents/Arduino/libraries`
   - Restart the Arduino IDE so it will scan the new library
   - Assumption: If you're using an ESP8266 based board, you should already have added support for it to the IDE (Google it if needed.)
 
-##Pre-Requisites for using Ethernet based connectivity (Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, ESP-01)
+## Pre-Requisites for using Ethernet based connectivity (Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, ESP-01)
 - Your SmartThings HUB must have a Static TCP/IP Address assigned via your router's DHCP Server.  Since this procedure varies by router model, Google it!
 - You'll need to identify a static TCP/IP address for your Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01, as you'll need this later when setting up the sketch.  Choose an unused IP address outside of the range your router's DHCP server uses.
   
-##Arduino IDE Instructions
+## Arduino IDE Instructions
 - Open the Arduino IDE and select File->Examples->SmartThings
   - Select the example sketch that matches your hardware
   - Select File->Save As and select your "Sketches" folder, and click "Save"
@@ -56,7 +56,7 @@ SmartThings library consists of:
   - With the Serial Monitor windows open, load your sketch and watch the output
     - If using an Arduino/ESP-01, NodeMCU ESP8266 board, or ESP-01 the MAC Address will be printed out in the serial monitor window.  Write this down as you will need it to configure the Device using your ST App on your phone. (Note: MAC Address must later be entered with no delimeters in the form of "06AB23CD45EF" (without quotes!))
   
-##SmartThings IDE Device Handler Installation Instructions
+## SmartThings IDE Device Handler Installation Instructions
 - Create an account and/or log into the SmartThings Developers Web IDE.
 
 Arduino/ThingShield
@@ -106,7 +106,7 @@ Ethernet Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01
 .
 .
 
-###WARNING - Geeky Material Ahead!!!
+### WARNING - Geeky Material Ahead!!!
 
 .
 .

@@ -64,7 +64,7 @@ ST_Anything (original example) consists of four parts:
   - ST_Anything_ThingShield.device.groovy (ThingShield)
   - ST_Anything_Ethernet.device.groovy (Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01) 
 
-##ST_Anything Arduino IDE Setup Instructions 
+## ST_Anything Arduino IDE Setup Instructions 
 - Download the ST_Anything repository.
 - This folder structure should mirror that of your local Arduino directory. 
   - On Mac, it's located in `~/Documents/Arduino/`.
@@ -76,7 +76,7 @@ ST_Anything (original example) consists of four parts:
 - Open one of the ST_Anything_xxxxx.ino sketches for the hardware you're using and see if it successfully compiles.
 - WARNING:  If you are using an Arduino UNO, you may need to comment out some of the devices in the sketch (both in the global variable declaration section as well as the setup() function) due to the UNO's limited 2 kilobytes of SRAM.  Failing to do so will most likely result in unpredictable behavior. The Arduino MEGA 2560 has 8k of SRAM and has four Hardware Serial ports (UARTs).  If you plan on using lots of devices, get the MEGA 2560.
 
-##ST_Anything SmartThings Device Handler Installation Instructions - FOR USE WITH A THINGSHIELD
+## ST_Anything SmartThings Device Handler Installation Instructions - FOR USE WITH A THINGSHIELD
 - Join your Arduino/ThingShield to your hub using your phone's SmartThings App.  It will show up as a generic "Arduino ThingShield"
 - Create an account and/or log into the SmartThings Developers Web IDE.
 - Click on "My Device Handlers" from the navigation menu.
@@ -97,15 +97,15 @@ ST_Anything (original example) consists of four parts:
 - Be sure to go into the Preferences section to set the polling rates for the sensors.  These are sent to the Arduino if you press the Configure tile.  (Note:  Currently, these settings do not persist after an Arduino reboot.)
 
 
-##Ethernet (Arduino/W5100, Arduino/ESP-01, and ESP8266) Examples
+## Ethernet (Arduino/W5100, Arduino/ESP-01, and ESP8266) Examples
 The steps for using the Arduino/W5100, Arduino/ESP-01, and NodeMCU ESP8266 sample code is very similar to above, with the added steps of static IP assignements, MAC addresses, SSID and Passwords, etc...
 For now, please refer to the SmartThings library's Readme.md for these details https://github.com/DanielOgorchock/ST_Anything/tree/master/Arduino/libraries/SmartThings 
 
 
-##Updated SmartThings ThingShield Library
+## Updated SmartThings ThingShield Library
 As mentioned previously, the "SmartThings" v2.x library was extensively modified for Ethernet support.  Please see the readme.md file for that particular library for more detailed information. 
 
-##How do I create and expose more than 1 of a single capability?
+## How do I create and expose more than 1 of a single capability?
 By default, SmartThings only allows each device to have one of each capability.  That means you can't create a device with 6 "Contact Sensor" capabilities and have normal SmartApps be able to use each of the 6 sensors for normal processing.  There is a work-around for this which I call a Multiplexer SmartApp.  When used in conjuction with a virtual device for each of the 6 Arduino "Contact Sensor" devices, we can finally allow normal SmartApps to interact with each sensor, switch, etc..
 
 As an example, here are the basic steps to use "ST_Anything_Doors_ThingShield"
@@ -140,7 +140,7 @@ Basically, what is happening here is the following:
 
 -Any other smart apps that are looking at the virtual contact sensor devices will then receive an update and act accordingly.
 
-##Items to be aware of
+## Items to be aware of
 1) Please do not start editing any code before getting one of the examples up and running on both the Arduino/ESP8266 and the Device Handler.  It is always best to start with known working code before editing it.  This greatly reduces the amount of troubleshooting later.
 
 2) The names of the devices you create in the Arduino setup() routine must match exactly the names of the tiles (and custom attributes) in the Device Handler code.  The names are CaSe SenSiTiVe!  
@@ -149,7 +149,7 @@ Basically, what is happening here is the following:
 
 4) When entering the MAC address into the Device Prerences in your phone's SmartThings App, please be sure to enter it without delimiters, and in uppercase.  It should be in the form '06AB02CD03EF' without the quotes.  If using the W5100, get the MAC address from the sketch.  If using an ESP8266 based solution, the MAC address of the onboard WiFi will be printed out in the Arduino IDE Serial Monitor window (9600 baud).
 
-##Final Notes for now...
+## Final Notes for now...
 Plese refer to the header files of the ST_Anything library for explanation of specific classes, constructor arguments, etc... 
 
 Look at the documentation in the 'ST_Anything_ThingShield.ino' file for explanation of general use of the library.  
