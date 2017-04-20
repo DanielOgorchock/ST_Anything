@@ -11,7 +11,6 @@
 //			  defaults for this sensor are based on the device used during testing.  
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_Voltage sensor1("voltage", 120000, 0, PIN_VOLTAGE, 0, 1024, 0, 5);
 //
 //			  st::PS_Voltage() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
