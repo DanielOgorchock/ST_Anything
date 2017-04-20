@@ -1,14 +1,14 @@
 //******************************************************************************************
-//  File: IS_Smoke.h
+//  File: IS_CarbonMonoxide.h
 //  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son)
 //
-//  Summary:  IS_Smoke is a class which implements the SmartThings "Smoke Detector" device capability.
-//			  It inherits from the st::InterruptSensor class.
+//  Summary:  IS_Smoke is a class which implements the SmartThings "Carbon Monoxide Detector" device capability.
+//			  It inherits from the st::IS_Smoke class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::IS_Smoke sensor6("smoke", PIN_SMOKE, HIGH, 500);
+//			  For Example:  st::IS_CarbonMonoxide sensor6("carbonMonoxide", PIN_CO, HIGH, 500);
 //
-//			  st::IS_Smoke() constructor requires the following arguments
+//			  st::IS_CarbonMonoxide() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
 //				- byte pin - REQUIRED - the Arduino Pin to be used as a digital input
 //				- bool iState - REQUIRED - LOW or HIGH - determines which value indicates the interrupt is true
@@ -19,31 +19,30 @@
 //
 //    Date        Who            What
 //    ----        ---            ----
-//    2015-01-03  Dan & Daniel   Original Creation
-//	  2015-03-17  Dan			 Added optional "numReqCounts" constructor argument/capability
+//    2015-04-19  Dan & Daniel   Original Creation
 //
 //
 //******************************************************************************************
 
-#ifndef ST_IS_SMOKE_H
-#define ST_IS_SMOKE_H
+#ifndef ST_IS_CARBONMONOXIDE_H
+#define ST_IS_CARBONMONOXIDE_H
 
 #include "InterruptSensor.h"
 
 namespace st
 {
-	class IS_Smoke: public InterruptSensor
+	class IS_CarbonMonoxide: public InterruptSensor
 	{
 		private:
-			//inherits everything necessary from parent InterruptSensor Class
+			//inherits everything necessary from parent IS_Smoke Class
 			
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			IS_Smoke(const __FlashStringHelper *name, byte pin, bool iState, bool internalPullup = false, long numReqCounts = 0); //(defaults to NOT using internal pullup resistors, and required counts = 0)
+			IS_CarbonMonoxide(const __FlashStringHelper *name, byte pin, bool iState, bool internalPullup = false, long numReqCounts = 0); //(defaults to NOT using internal pullup resistors, and required counts = 0)
 			
 			//destructor
-			virtual ~IS_Smoke();
-			
+			virtual ~IS_CarbonMonoxide();
+
 			//initialization function
 			virtual void init();
 
@@ -55,7 +54,7 @@ namespace st
 
 			//handles what to do when interrupt is ended 
 			virtual void runInterruptEnded();
-	
+
 	};
 }
 
