@@ -32,21 +32,35 @@ metadata {
 	tiles(scale: 2) {
         multiAttributeTile(name:"alarm", type: "generic", width: 6, height: 4){
             tileAttribute ("device.alarm", key: "PRIMARY_CONTROL") {
-                attributeState "off", label:'off', action:'alarm.siren', icon:"st.alarm.alarm.alarm", backgroundColor:"#ffffff"
+                attributeState "off", label:'off', action:'alarm.both', icon:"st.alarm.alarm.alarm", backgroundColor:"#ffffff"
                 attributeState "both", label:'alarm!', action:'alarm.off', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
-                attributeState "strobe", label:'strobe!', action:'alarm.off', icon:"st.secondary.strobe", backgroundColor:"#cccccc"
-                attributeState "siren", label:'siren!', action:'alarm.off', icon:"st.alarm.beep.beep", backgroundColor:"#e86d13"
+                attributeState "strobe", label:'strobe!', action:'alarm.off', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
+                attributeState "siren", label:'siren!', action:'alarm.off', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
     		}
 		}
-        standardTile("test", "device.alarm", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:'', action:"test", icon:"st.secondary.test"
+        standardTile("siren", "device.alarm", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+//            state "default", label:'', action:"alarm.siren", icon:"st.secondary.siren"
+			state "off", label:'', action:"alarm.siren", icon:"st.secondary.siren", backgroundColor:"#ffffff"
+			state "strobe", label:'', action:"alarm.siren", icon:"st.secondary.siren", backgroundColor:"#ffffff"
+			state "siren", label:'', action:'alarm.off', icon:"st.secondary.siren", backgroundColor:"#e86d13"
+			state "both", label:'', action:'alarm.siren', icon:"st.secondary.siren", backgroundColor:"#e86d13"
         }
+        standardTile("strobe", "device.alarm", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+//            state "default", label:'', action:"alarm.strobe", icon:"st.secondary.strobe"
+			state "off", label:'', action:"alarm.strobe", icon:"st.secondary.strobe", backgroundColor:"#ffffff"
+			state "siren", label:'', action:"alarm.strobe", icon:"st.secondary.strobe", backgroundColor:"#ffffff"
+			state "strobe", label:'', action:'alarm.off', icon:"st.secondary.strobe", backgroundColor:"#e86d13"
+			state "both", label:'', action:'alarm.strobe', icon:"st.secondary.strobe", backgroundColor:"#e86d13"
+		}
         standardTile("off", "device.alarm", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "default", label:'', action:"alarm.off", icon:"st.secondary.off"
         }
+        standardTile("test", "device.alarm", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:'', action:"test", icon:"st.secondary.test"
+        }
 
         main "alarm"
-        details(["alarm", "test", "off"])
+        details(["alarm", "siren", "strobe", "off", "test"])
 	}
 }
 
@@ -59,15 +73,15 @@ void off() {
 }
 
 def strobe() {
-	on()
+	parent.childAlarmStrobe(device.deviceNetworkId)
 }
 
 def siren() {
-	on()
+	parent.childAlarmSiren(device.deviceNetworkId)
 }
 
 def both() {
-	on()
+	parent.childAlarmBoth(device.deviceNetworkId)
 }
 
 def test() {

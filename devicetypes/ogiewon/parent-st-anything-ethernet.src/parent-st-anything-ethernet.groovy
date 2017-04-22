@@ -183,6 +183,24 @@ def childAlarmOn(String dni) {
     sendEthernet("${name} both")
 }
 
+def childAlarmSiren(String dni) {
+    def name = dni.split("-")[-1]
+    log.debug "childAlarmOn($dni), name = ${name}"
+    sendEthernet("${name} siren")
+}
+
+def childAlarmStrobe(String dni) {
+    def name = dni.split("-")[-1]
+    log.debug "childAlarmOn($dni), name = ${name}"
+    sendEthernet("${name} strobe")
+}
+
+def childAlarmBoth(String dni) {
+    def name = dni.split("-")[-1]
+    log.debug "childAlarmOn($dni), name = ${name}"
+    sendEthernet("${name} both")
+}
+
 def childAlarmOff(String dni) {
     def name = dni.split("-")[-1]
     log.debug "childAlarmOff($dni), name = ${name}"
