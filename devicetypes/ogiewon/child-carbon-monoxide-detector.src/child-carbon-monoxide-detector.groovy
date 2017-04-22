@@ -23,6 +23,7 @@
 metadata {
 	definition (name: "Child Carbon Monoxide Detector", namespace: "ogiewon", author: "Dan Ogorchock") {
 		capability "Carbon Monoxide Detector"
+        capability "Smoke Detector"
 		capability "Sensor"
 	}
 
