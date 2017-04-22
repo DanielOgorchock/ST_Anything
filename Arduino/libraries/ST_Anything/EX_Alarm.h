@@ -9,19 +9,21 @@
 //			  TODO:  Possibly add Strobe capability in the future
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_Alarm executor2("alarm", PIN_ALARM, LOW, true);
+//			  For Example:  st::EX_Alarm executor2("alarm", PIN_ALARM, LOW, true, PIN_STROBE);
 //
 //			  st::EX_Alarm() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
 //				- byte pin - REQUIRED - the Arduino Pin to be used as a digital output
 //				- bool startingState - OPTIONAL - the value desired for the initial state of the switch.  LOW = "off", HIGH = "on"
 //				- bool invertLogic - OPTIONAL - determines whether the Arduino Digital Output should use inverted logic
+//				- byte pinStrobe - OPTOINAL - If supplied, will allow separate SIREN and STROBE outputs
 //
 //  Change History:
 //
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
+//	  2017-04-20  Dan Ogorchock	 Add optional Strobe functionality
 //
 //
 //******************************************************************************************
@@ -31,6 +33,8 @@
 
 #include "Executor.h"
 
+enum Alarm_States { off, both, siren, strobe};
+
 namespace st
 {
 	class EX_Alarm : public Executor
@@ -38,16 +42,17 @@ namespace st
 
 	private:
 		
-		bool m_bCurrentState; //HIGH or LOW
 		bool m_bInvertLogic;
 		byte m_nPin;
-
+		byte m_nPinStrobe;
+		bool m_bUseStrobe;
+		Alarm_States m_nCurrentAlarmState;
 
 		void writeStateToPin();
 
 	public:
 		//constructor
-		EX_Alarm(const __FlashStringHelper *name, byte Pin, bool startingState = LOW, bool invertLogic = false);
+		EX_Alarm(const __FlashStringHelper *name, byte Pin, bool startingState = LOW, bool invertLogic = false, byte pingStrobe = 255);
 
 		//destructor
 		virtual ~EX_Alarm();
@@ -63,11 +68,11 @@ namespace st
 
 		//gets
 		virtual byte getPin() const { return m_nPin; }
+		virtual byte getStrobePin() const { return m_nPinStrobe; }
 
 		//sets
 		virtual void setPin(byte pin);
 
-	
 	};
 }
 

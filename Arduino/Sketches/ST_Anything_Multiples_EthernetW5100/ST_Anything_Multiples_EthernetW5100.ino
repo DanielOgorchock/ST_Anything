@@ -22,7 +22,7 @@
 //              - 2 x Humidity Measurement devices (Humidity from DHT22 device)
 //              - 2 x Relay Switch devices (used to turn on a digital output for a set number of cycles And On/Off times (e.g.relay, etc...))
 //              - 2 x Button devices (sends "pushed" if held for less than 1 second, else sends "held"
-//              - 2 x Alarm devices (using a simple digital output)
+//              - 2 x Alarm devices - 1 siren only, 1 siren and strobe (using simple digital outputs)
 //
 //            During the development of this re-usable library, it became apparent that the 
 //            Arduino UNO R3's very limited 2K of SRAM was very limiting in the number of 
@@ -39,6 +39,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2017-02-12  Dan Ogorchock  Revised to use the new SMartThings v2.0 library
 //    2017-04-16  Dan Ogorchock  New sketch to demonstrate multiple SmartThings Capabilties of each type
+//    2017-04-22  Dan Ogorchock  Added Voltage, Carbon Monoxide, and Alarm with Strobe
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -68,7 +69,7 @@
 #include <IS_DoorControl.h>  //Implements an Interrupt Sensor (IS) and Executor to monitor the status of a digital input pin and control a digital output pin
 #include <IS_Button.h>       //Implements an Interrupt Sensor (IS) to monitor the status of a digital input pin for button presses
 #include <EX_Switch.h>       //Implements an Executor (EX) via a digital output to a relay
-#include <EX_Alarm.h>        //Implements Executor (EX)as an Alarm Siren capability via a digital output to a relay
+#include <EX_Alarm.h>        //Implements Executor (EX)as an Alarm capability with Siren and Strobe via digital outputs to relays
 #include <S_TimedRelay.h>    //Implements a Sensor to control a digital output pin with timing/cycle repeat capabilities
 
 //**********************************************************************************************************
@@ -115,7 +116,8 @@
 #define PIN_SMOKE_1               32  //SmartThings Capability "Smoke Detector"
 #define PIN_SMOKE_2               33  //SmartThings Capability "Smoke Detector"
 #define PIN_ALARM_1               34  //SmartThings Capability "Alarm"
-#define PIN_ALARM_2               41  //SmartThings Capability "Alarm"
+#define PIN_ALARM_2               40  //SmartThings Capability "Alarm"
+#define PIN_STROBE_2              41  //SmartThings Capability "Alarm"              
 #define PIN_CO_1                  42  //SmartThings Capability "Carbon Monoxide Detector"
 #define PIN_CO_2                  43  //SmartThings Capability "Carbon Monoxide Detector"
 
@@ -126,8 +128,8 @@
 #define PIN_DOORCONTROL_RELAY_2   38  //SmartThings Capabilty "Door Control" 
 
 //Pushbutton Pins
-#define PIN_BUTTON1               39  //SmartThings Capabilty Button / Holdable Button
-#define PIN_BUTTON2               40  //SmartThings Capabilty Button / Holdable Button
+#define PIN_BUTTON1               48  //SmartThings Capabilty Button / Holdable Button
+#define PIN_BUTTON2               49  //SmartThings Capabilty Button / Holdable Button
 
 //******************************************************************************************
 //W5100 Ethernet Shield Information
@@ -214,7 +216,7 @@ void setup()
   static st::EX_Switch              executor1(F("switch1"), PIN_SWITCH_1, LOW, true);
   static st::EX_Switch              executor2(F("switch2"), PIN_SWITCH_2, LOW, true);
   static st::EX_Alarm               executor3(F("alarm1"), PIN_ALARM_1, LOW, true);
-  static st::EX_Alarm               executor4(F("alarm2"), PIN_ALARM_2, LOW, true);
+  static st::EX_Alarm               executor4(F("alarm2"), PIN_ALARM_2, LOW, true, PIN_STROBE_2);
     
   //*****************************************************************************
   //  Configure debug print output from each main class 
