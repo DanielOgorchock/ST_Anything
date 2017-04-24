@@ -1,0 +1,1 @@
+These file pre-date the v2.5 release.  New Device Handlers have been developed that utilize the v2.5 architecture and are now at the root of the ST_Anything Github Repository.  This was necessary to enable ST IDE GitHub integration.

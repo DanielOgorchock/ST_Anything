@@ -1,0 +1,1 @@
+These file pre-date the v2.5 release.  New Example sketches will be developed that utilize the v2.5 architecture.  In the meanwhile, take a look at the v2.5 examples named ST_Anything_Multiples_xxxx.ino.
