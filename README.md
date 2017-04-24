@@ -14,7 +14,7 @@ History:
 - v2.2 2017-03-25 Added new IS_Button class, sample sketches, updated Device Handler, etc... to support ST "Button" capability
 - v2.5 2017-04-23 Initial relase of v3.x platform.  New SmartThings Composite Device Handler (i.e. Parent/Child Device Handlers) which eliminates the need for the Multiplexer SmartApps!  Also added Carnon Monoxide, Alarm with Strobe, and Voltage Measurement capabilities.   
 
-Architecture Flow Chart
+## Architecture Flow Chart
 
 ![screenshot](https://cloud.githubusercontent.com/assets/5206084/25318949/d00b08b4-2865-11e7-82f6-9a355bb9082b.PNG)
 
