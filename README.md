@@ -65,7 +65,7 @@ Note: Attempting to use all of these at once on an Arduino UNO R3 is likely to r
 
 ## Overview
 ST_Anything consists of four main parts:
-- The ST_Anything_xxxxx.ino example sketches 
+- The ST_Anything_Multiples_xxxxx.ino example sketches 
   - ST_Anything_Multiples_EthernetW5100.ino - Arduino UNO/MEGA + W5100 Ethernet Shield
   - ST_Anything_Multiples_MEGAWiFiEsp.ino - Arduino MEGA + ESP-01 WiFi module with "AT Firmware"
   - ST_Anything_Multiples_ESP8266WiFi.ino - NodeMCU v1.0 ESP8266-12e development board (no Arduino!)
