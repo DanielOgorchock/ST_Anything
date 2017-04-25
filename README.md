@@ -34,7 +34,7 @@ v2.0 Note:  There are some significant changes as compared to the old v1.x platf
 v2.5 Note:  Version 2.5 builds upon the changes in v2.x to incorporate SmartThings new Composite Device Handler (DH).  This new functionality allows one Parent DH to create many Child Devices (using Child DHs).  This allows more than one of each SmartThings capability per Arduino.  Previously, this was only possible through the use of a Multiplexer SmartApp and virtual devices.  The only manual device that has to be create within the ST IDE is the Parent.  The ST_Anything Parent DH has been written to automagically create Child Devices that exist, or are added to, the Arduino ST_Anything sketch.
 
 For now, I focused on getting the new Parent/Child Device Handlers ready along with the new "ST_Anything_Multiples_xxxxx.ino" example sketch files. All of my previous examples have not been modified yet to support the new SmartThings v2.5 library and Device Handlers. Therefore I have removed them from the v2.5 release to avoid confusion. The "ST_Anything_Multiples_xxxx.ino" examples are here to get you started. I hope to add other example sketches when I have more time.
-  - Currently missing are the examples for ThingShield, Arduino + ESP01, and Standalone ESP-01
+  - Currently missing is the example for ThingShield
 
 THIS DOCUMENT IS A WORK IN PROGRESS!  So please be patient.  The essential code is all here and has been tested.  Documentation is still lacking somewhat, so feel free to submit a pull request to improve this ReadMe as you try to get things working.
 
