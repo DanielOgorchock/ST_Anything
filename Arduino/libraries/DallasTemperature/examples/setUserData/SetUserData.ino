@@ -1,4 +1,9 @@
-// Include the libraries we need
+//
+// This sketch does not use the ALARM registers and uses those 2 bytes as a counter
+// these 2 bytes can be used for other purposes as well e.g. last temperature or
+// a specific ID.
+// 
+
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
@@ -11,9 +16,8 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass our oneWire reference to Dallas Temperature. 
 DallasTemperature sensors(&oneWire);
 
-/*
- * The setup function. We only start the sensors here
- */
+int count = 0;
+
 void setup(void)
 {
   // start serial port
@@ -22,11 +26,9 @@ void setup(void)
 
   // Start up the library
   sensors.begin();
+  
 }
 
-/*
- * Main function, get and show the temperature
- */
 void loop(void)
 { 
   // call sensors.requestTemperatures() to issue a global temperature 
@@ -34,8 +36,12 @@ void loop(void)
   Serial.print("Requesting temperatures...");
   sensors.requestTemperatures(); // Send the command to get temperatures
   Serial.println("DONE");
-  // After we got the temperatures, we can print them here.
-  // We use the function ByIndex, and as an example get the temperature from the first sensor only.
+  
   Serial.print("Temperature for the device 1 (index 0) is: ");
   Serial.println(sensors.getTempCByIndex(0));  
+  
+  count++;
+  sensors.setUserDataByIndex(0, count);
+  int x = sensors.getUserDataByIndex(0);
+  Serial.println(count);
 }
