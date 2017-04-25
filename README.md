@@ -50,7 +50,7 @@ This package currently implements the following SmartThings Device Capabilities:
 - Relative Humidity Measurement (DHT22, DHT11)
 - Switch (Sunfounder Relay - http://amzn.com/B00E0NTPP4)
 - Temperature Measurement (DHT22 - requires Rob Tillaart's DHT 0.1.13 Library, included in this repo)
-- Temperature Measurement (using Dallas Semiconductor DS18B20's)
+- Temperature Measurement (using Dallas Semiconductor DS18B20's, requires OneWire and DallasTemperature libraries included in this repo)
 - Water Sensor (http://amzn.com/B00HTSL7QC)
 - Contact Sensor  (Magnetic Door Switch)
 - Door Control (i.e. Garage Door Contact Sensor + Relay Output) - See 'ST_Anything_Doors' example
@@ -68,10 +68,10 @@ ST_Anything consists of four main parts:
 - The ST_Anything_xxxxx.ino example sketches 
   - ST_Anything_Multiples_EthernetW5100.ino - Arduino UNO/MEGA + W5100 Ethernet Shield
   - ST_Anything_Multiples_MEGAWiFiEsp.ino - Arduino MEGA + ESP-01 WiFi module with "AT Firmware"
+  - ST_Anything_Multiples_ESP8266WiFi.ino - NodeMCU v1.0 ESP8266-12e development board (no Arduino!)
+  - ST_Anything_Multiples_ESP01WiFi.ino - ESP-01 (ESP8266-01) module (no Arduino!)
   - ST_Anything_Multiples_ThingShield.ino - Arduino UNO/MEGA + ST ThingShield (not released at time of this writing!)
-  - ST_Anything_Multiples_ESP8266WiFi.ino - NodeMCU v1.0 ESP8266-12e development board (no Arduino!) (not released at time of this writing!)
-  - ST_Anything_Multiples_ESP01WiFi.ino - ESP-01 (ESP8266-01) module (no Arduino!) (not released at time of this writing!)
-- The ST_Anything Arduino libraries
+- The ST_Anything Arduino libraries + required 3rd party libraries
 - The SmartThings library - A modified, more efficient version, now with added support for LAN-to-Hub based communications too! 
 - The SmartThings Parent and Child Device Handlers that support sketches above.
   - parent-st-anything-ethernet.groovy (LAN-to-Hub, Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01)
