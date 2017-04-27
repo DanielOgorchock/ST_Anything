@@ -1,4 +1,4 @@
-ST_Anything v2.5
+ST_Anything v2.6
 ================
 
 History:
@@ -12,7 +12,8 @@ History:
 - v2.0 2017-02-12 Initial release of v2.x platform with additonal support for Ethernet connectivity to SmartThings
 - v2.1 2017-02-20 Added support for using the ESP-01 as WiFi communications for Arduino MEGA 2560 (SmartThings and ST_Anything libraries updated)
 - v2.2 2017-03-25 Added new IS_Button class, sample sketches, updated Device Handler, etc... to support ST "Button" capability
-- v2.5 2017-04-23 Initial relase of v3.x platform.  New SmartThings Composite Device Handler (i.e. Parent/Child Device Handlers) which eliminates the need for the Multiplexer SmartApps!  Also added Carnon Monoxide, Alarm with Strobe, and Voltage Measurement capabilities.   
+- v2.5 2017-04-23 New SmartThings Composite Device Handler (i.e. Parent/Child Device Handlers) which eliminates the need for the Multiplexer SmartApps!  Also added Carnon Monoxide, Alarm with Strobe, and Voltage Measurement capabilities. Support for LAN devices only at this time.
+- v2.6 2017-04-26 Added support for ThingShield using new Composite Device Handler.  Includes new version of SmartThings library, updates to ST_Anything library, and new ST_Anything_Multiples_Thingshield.ino sketch.  Minor tweak to EX_Alarm logic to better handle whether or not the Strobe Pin is defined.
 
 ## Architecture Flow Chart
 
@@ -20,7 +21,7 @@ History:
 
 Note: The ST_Anything v1.6 release was created on 2017-02-11 to make sure everyone can still get back to the original ThingShield-only code if necessary.  
 Note: If you want the old ST_Anything v2.2 code, please pull it by the v2.2 release number and follow the old v2.2 ReadMe 
-Note: ST_Anything v2.5 was built using the Arduino IDE v1.8.1.  Please make sure to upgrade your IDE.
+Note: ST_Anything v2.6 was built using the Arduino IDE v1.8.1.  Please make sure to upgrade your IDE.
 
 Turn your Arduino UNO/MEGA or NodeMCU ESP8266 into a Anything you can imagine! ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
@@ -31,14 +32,13 @@ Turn your Arduino UNO/MEGA or NodeMCU ESP8266 into a Anything you can imagine! S
 
 v2.0 Note:  There are some significant changes as compared to the old v1.x platform.  A signiciant rewrite of the "SmartThings" Arduino library was completed to incorporate Ethernet communications support.  To use ST_Anything v2.x, you must also use all of the other supporting libaries found in this GitHub repository.  Included is a the new SmartThings v2.x Arduino library which can be used standalone (examples are included in the library), or in conjunction with the ST_Anything library.
 
-v2.5 Note:  Version 2.5 builds upon the changes in v2.x to incorporate SmartThings new Composite Device Handler (DH).  This new functionality allows one Parent DH to create many Child Devices (using Child DHs).  This allows more than one of each SmartThings capability per Arduino.  Previously, this was only possible through the use of a Multiplexer SmartApp and virtual devices.  The only manual device that has to be create within the ST IDE is the Parent.  The ST_Anything Parent DH has been written to automagically create Child Devices that exist, or are added to, the Arduino ST_Anything sketch.
+v2.6 Note:  Version 2.6 builds upon the changes in v2.x to incorporate SmartThings new Composite Device Handler (DH).  This new functionality allows one Parent DH to create many Child Devices (using Child DHs).  This allows more than one of each SmartThings capability per Arduino.  Previously, this was only possible through the use of a Multiplexer SmartApp and virtual devices.  The only manual device that has to be create within the ST IDE is the Parent.  The ST_Anything Parent DH has been written to automagically create Child Devices that exist, or are added to, the Arduino ST_Anything sketch.
 
-For now, I focused on getting the new Parent/Child Device Handlers ready along with the new "ST_Anything_Multiples_xxxxx.ino" example sketch files. All of my previous examples have not been modified yet to support the new SmartThings v2.5 library and Device Handlers. Therefore I have removed them from the v2.5 release to avoid confusion. The "ST_Anything_Multiples_xxxx.ino" examples are here to get you started. I hope to add other example sketches when I have more time.
-  - Currently missing is the example for ThingShield
+For now, I focused on getting the new Parent/Child Device Handlers ready along with the new "ST_Anything_Multiples_xxxxx.ino" example sketch files. All of my previous examples have not been modified yet to support the new SmartThings v2.6 library and Device Handlers. Therefore I have removed them from the v2.6 release to avoid confusion. The "ST_Anything_Multiples_xxxx.ino" examples are here to get you started. I hope to add other example sketches when I have more time.
 
 THIS DOCUMENT IS A WORK IN PROGRESS!  So please be patient.  The essential code is all here and has been tested.  Documentation is still lacking somewhat, so feel free to submit a pull request to improve this ReadMe as you try to get things working.
 
-New v2.5 Parent / Child Devices 
+New v2.6 Parent / Child Devices 
 ![screenshot](https://cloud.githubusercontent.com/assets/5206084/25319004/8b6ab50a-2866-11e7-9f47-6f2b4863311a.PNG)
 
 
@@ -70,7 +70,7 @@ ST_Anything consists of four main parts:
   - ST_Anything_Multiples_MEGAWiFiEsp.ino - Arduino MEGA + ESP-01 WiFi module with "AT Firmware"
   - ST_Anything_Multiples_ESP8266WiFi.ino - NodeMCU v1.0 ESP8266-12e development board (no Arduino!)
   - ST_Anything_Multiples_ESP01WiFi.ino - ESP-01 (ESP8266-01) module (no Arduino!)
-  - ST_Anything_Multiples_ThingShield.ino - Arduino UNO/MEGA + ST ThingShield (not released at time of this writing!)
+  - ST_Anything_Multiples_ThingShield.ino - Arduino UNO/MEGA + ST ThingShield
 - The ST_Anything Arduino libraries + required 3rd party libraries
 - The SmartThings library - A modified, more efficient version, now with added support for LAN-to-Hub based communications too! 
 - The SmartThings Parent and Child Device Handlers that support sketches above.
@@ -158,7 +158,7 @@ Your screen should look like the following image:
 
 
 
-## SmartThings Device Handler Instructions - FOR USE WITH A THINGSHIELD (not available yet as of this writing!)
+## SmartThings Device Handler Instructions - FOR USE WITH A THINGSHIELD
 - Join your Arduino/ThingShield to your hub using your phone's SmartThings App.  It will show up as a generic "Arduino ThingShield"
 - Click on My Devices from navigation menu
 - Select your "Arduino ThingShield" device from the list
@@ -166,7 +166,7 @@ Your screen should look like the following image:
 - Change the Type to "Parent_ST_Anything_ThingShield"
 - Click the Update button at the bottom of the screen
 - On your phone's SmartThings app, select Things view, select your Arduino Device, and pull down on the screen to refresh the page
-- In the Arduino Device, clisk the "Gear Icon" in the top right of the screen
+- In the Arduino Device, click the "Gear Icon" in the top right of the screen
 - Configure the correct number of "Button Devices" to match what you defined in the Arduino Sketch.  Set to 0 if none.
 
 
@@ -178,7 +178,7 @@ Your screen should look like the following image:
   - Assuming you're keeping things fairly standard, you should never need to modify the groovy code within the Parent or Child Device Handlers!  Pretty much all changes are kept within the Arduino Sketch .ino file!
   - Child Devices are automatically created - no manual creation of Virtual Devices and no messy/complicated Multiplexer SmartApps!
     - NOTE: There appears to be a race-condition within the ST platform that sometimes results in a duplicate child device being created.  Just simply delete the extra child device and everything should be fine.  I have never seen a duplicate occur after the initial creation (i.e. after the first few minutes.)
-  - If you delete a Parent Device, all of its children are also deleted.  PLEASE NOTE that you can simply delete any child device individually if necessary (no need to delete the Parent App!)  If the Arduino sketch no longer sends updates for those child devices, they will not be re-created.
+  - If you delete a Parent Device, all of its children are also deleted.  PLEASE NOTE that you can simply delete any child device individually if necessary (no need to delete the Parent Device!)  If the Arduino sketch no longer sends updates for those child devices, they will not be re-created.
   - You can add additional devices to the Arduino sketch at a later date.  Doing so will cause the parent to automagically create the new child devices once data from the Arduino sketch makes its way to the ST Cloud.
   - You can rename any of the Child Devices via the ST Phone App as you see fit (just click the gear icon within any child device in the phone app.  
   - You can assign the child devices to any "Room" you have defined to keep things organized.
