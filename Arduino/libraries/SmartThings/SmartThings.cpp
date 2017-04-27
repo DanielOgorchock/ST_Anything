@@ -14,10 +14,11 @@ namespace st
 	//*******************************************************************************
 	// SmartThings Constructor  
 	//*******************************************************************************
-	SmartThings::SmartThings(SmartThingsCallout_t *callout, String shieldType, bool enableDebug) :
+	SmartThings::SmartThings(SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
 		_calloutFunction(callout),
 		_shieldType(shieldType),
-		_isDebugEnabled(enableDebug)
+		_isDebugEnabled(enableDebug),
+		m_nTransmitInterval(transmitInterval)
 	{
 
 	}

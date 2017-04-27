@@ -281,8 +281,8 @@ namespace st
 
 	// SoftwareSerial Constructor
 #ifndef DISABLE_SOFTWARESERIAL
-	SmartThingsThingShield::SmartThingsThingShield(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *callout, String shieldType, bool enableDebug) :
-		SmartThings(callout, shieldType, enableDebug),
+	SmartThingsThingShield::SmartThingsThingShield(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
+		SmartThings(callout, shieldType, enableDebug, transmitInterval),
 		//_SerialPort(SW_SERIAL),
 		_lastPingMS(0xFFFFFF00),
 		_lastShieldMS(0xFFFFFF00),
@@ -294,8 +294,8 @@ namespace st
 	}
 #else
 	//Hardware Serial Constructor
-	SmartThingsThingShield::SmartThingsThingShield(HardwareSerial* hwSerialPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug) :
-		SmartThings(callout, shieldType, enableDebug),
+	SmartThingsThingShield::SmartThingsThingShield(HardwareSerial* hwSerialPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
+		SmartThings(callout, shieldType, enableDebug, transmitInterval),
 		_mySerial(hwSerialPort),
 		_lastPingMS(0xFFFFFF00),
 		_lastShieldMS(0xFFFFFF00),

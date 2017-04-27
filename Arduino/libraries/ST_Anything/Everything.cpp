@@ -22,6 +22,7 @@
 //    2015-03-28  Dan Ogorchock  Added throttling capability to sendStrings to improve success rate of ST Cloud getting the data ("SENDSTRINGS_INTERVAL" is in CONSTANTS.H)
 //    2017-02-07  Dan Ogorchock  Added support for new SmartThings v2.0 library (ThingShield, W5100, ESP8266)
 //    2017-02-19  Dan Ogorchock  Fixed bug in throttling capability
+//    2017-04-26  Dan Ogorchock  Allow each communication method to specify unique ST transmission throttling delay
 //
 //******************************************************************************************
 
@@ -72,12 +73,16 @@ namespace st
 			{
 				Serial.print(F("Everything: Sending: "));
 				Serial.println(Return_String.substring(0, index));
+				//Serial.print(F("Everything: getTransmitInterval() = "));
+				//Serial.println(SmartThing->getTransmitInterval());
 			}
 			#ifndef DISABLE_SMARTTHINGS
-			if (millis() - sendstringsLastMillis < Constants::SENDSTRINGS_INTERVAL)
+//			if (millis() - sendstringsLastMillis < Constants::SENDSTRINGS_INTERVAL)
+			if (millis() - sendstringsLastMillis < SmartThing->getTransmitInterval())
 				{
-					delay(Constants::SENDSTRINGS_INTERVAL - (millis() - sendstringsLastMillis)); //Added due to slow ST Hub/Cloud Processing.  Events were being missed.  DGO 2015-03-28
-				}
+//					delay(Constants::SENDSTRINGS_INTERVAL - (millis() - sendstringsLastMillis)); //Added due to slow ST Hub/Cloud Processing.  Events were being missed.  DGO 2015-03-28
+					delay(SmartThing->getTransmitInterval() - (millis() - sendstringsLastMillis)); //modified to allow different values for each method of communicating to ST cloud.  DGO 2017-04-26
+			}
 				SmartThing->send(Return_String.substring(0, index));
 				sendstringsLastMillis = millis();
 			#endif

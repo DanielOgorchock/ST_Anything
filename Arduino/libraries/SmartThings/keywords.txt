@@ -16,8 +16,10 @@ SmartThingsNetworkState_t	KEYWORD1
 run	KEYWORD2
 send	KEYWORD2
 init	KEYWORD2
+getTransmitInterval	KEYWORD2
 shieldSetLED	KEYWORD2
 shieldFindNetwork	KEYWORD2
 shieldLeaveNetwork	KEYWORD2
 shieldGetLastNetworkState	KEYWORD2
 shieldGetNetworkState	KEYWORD2
+

@@ -24,6 +24,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //	  2017-04-20  Dan Ogorchock	 Add optional Strobe functionality
+//    2017-04-26  Dan Ogorchock  Improved Logic if Strobe pin not defined 
 //
 //
 //******************************************************************************************
@@ -129,7 +130,16 @@ namespace st
 
 		//if (m_bUseStrobe) {
 			if (s == F("both")) {
-				m_nCurrentAlarmState = both;
+				if (m_bUseStrobe) {
+					m_nCurrentAlarmState = both;
+				}
+				else {
+					m_nCurrentAlarmState = siren;
+					if (debug) {
+						Serial.println(F("EX_Alarm::beSmart - Strobe Pin not defined. Defaulting to Siren!"));
+					}
+
+				}
 			}
 			else if(s == F("siren")) {
 				m_nCurrentAlarmState = siren;

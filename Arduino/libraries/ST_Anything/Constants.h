@@ -88,8 +88,10 @@ namespace st
 			static const byte RETURN_STRING_RESERVE = (MAX_SENSOR_COUNT + MAX_EXECUTOR_COUNT) * 5;	//Do not make too large due to UNO's 2K SRAM limitation
 			//Interval on which Device's refresh methods are called (in seconds) - most useful for Executors and InterruptSensors - only works if DISABLE_REFRESH is not defined above
 			static const int DEV_REFRESH_INTERVAL=300;				//seconds - Used to make sure the ST Cloud is kept current with device status (in case of missed updates to the ST Cloud) - primarily for Executors and InterruptSensors - only works if DISABLE_REFRESH is not defined above
+
+			//NOTE:  The following constant was removed and replaced by a user defineable interval in the SmartThings library constaructors to permit different values for each communication method (i.e. ThingShield requires 1000ms, whereas Ethernet is ~100ms) 
 			//Minumum interval between sending packets of data to ThingShield (in milliseconds) - noticed issue where ST Hub/Cloud could not keep up with rapid data transfer
-			static const int SENDSTRINGS_INTERVAL = 100;
+			//static const int SENDSTRINGS_INTERVAL = 100;
 			// ------------------------------------------------------------------------------- 
 			// --- SmartThings specific items 
 			// -------------------------------------------------------------------------------

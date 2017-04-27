@@ -125,7 +125,7 @@ namespace st
 		///   @param[in] enableDebug (optional) - Enable internal Library debug
 		//*******************************************************************************
 #ifndef DISABLE_SOFTWARESERIAL
-		SmartThingsThingShield(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *callout, String shieldType = "ThingShield", bool enableDebug = false);
+		SmartThingsThingShield(uint8_t pinRX, uint8_t pinTX, SmartThingsCallout_t *callout, String shieldType = "ThingShield", bool enableDebug = false, int transmitInterval = 1000);
 #else
 		//*******************************************************************************
 		/// @brief  SmartThings HardwareSerial Constructor 
@@ -134,7 +134,7 @@ namespace st
 		///   @param[in] shieldType (optional) - Set the Reported SheildType to the Server 
 		///   @param[in] enableDebug (optional) - Enable internal Library debug
 		//*******************************************************************************
-		SmartThingsThingShield(HardwareSerial* hwSerialPort, SmartThingsCallout_t *callout, String shieldType = "ThingShield", bool enableDebug = false);
+		SmartThingsThingShield(HardwareSerial* hwSerialPort, SmartThingsCallout_t *callout, String shieldType = "ThingShield", bool enableDebug = false, int transmitInterval = 1000);
 #endif
 		//*******************************************************************************
 		/// @brief Destructor 

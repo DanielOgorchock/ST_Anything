@@ -16,8 +16,8 @@ namespace st
 	//*******************************************************************************
 	// SmartThingsWiFiEsp Constructor - Arduino + ESP-01 board  
 	//*******************************************************************************
-	SmartThingsWiFiEsp::SmartThingsWiFiEsp(Stream *espSerial, String ssid, String password, IPAddress localIP, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug) :
-		SmartThingsEthernet(localIP, serverPort, hubIP, hubPort, callout, shieldType, enableDebug),
+	SmartThingsWiFiEsp::SmartThingsWiFiEsp(Stream *espSerial, String ssid, String password, IPAddress localIP, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
+		SmartThingsEthernet(localIP, serverPort, hubIP, hubPort, callout, shieldType, enableDebug, transmitInterval),
 		st_server(serverPort),
 		st_espSerial(espSerial)
 	{

@@ -27,13 +27,14 @@ namespace st
 		SmartThingsCallout_t *_calloutFunction;
 		bool _isDebugEnabled;
 		String _shieldType;
+		int m_nTransmitInterval;
 
 	public:
 
 		//*******************************************************************************
 		// SmartThings Constructor 
 		//*******************************************************************************
-		SmartThings(SmartThingsCallout_t *callout, String shieldType = "Unknown", bool enableDebug = false);
+		SmartThings(SmartThingsCallout_t *callout, String shieldType = "Unknown", bool enableDebug = false, int transmitInterval = 100);
 
 		//*******************************************************************************
 		// SmartThings Destructor 
@@ -54,6 +55,11 @@ namespace st
 		/// Send Message to the Hub 
 		//*******************************************************************************
 		virtual void send(String message) = 0; //all derived classes must implement this pure virtual function
+
+		//*******************************************************************************
+		/// Send Message to the Hub 
+		//*******************************************************************************
+		virtual int getTransmitInterval() const { return m_nTransmitInterval; }
 
 	};
 
