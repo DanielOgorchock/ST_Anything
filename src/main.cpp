@@ -1,5 +1,6 @@
 // ST_Anything 3.0
 #include "Timer.h"
+#include "Logger.h"
 #include <chrono>
 #include <iostream>
 #include <sstream>
@@ -40,5 +41,7 @@ int main(int argc, char* argv[])
         Timer::wait(sleepDur);
     }
     std::cout<<(Timer::getMillis()-start)<<std::endl;
+
+    Logger::logln("Testing logging class 123.");
     return 0;
 }
