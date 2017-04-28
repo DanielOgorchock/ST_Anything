@@ -1,11 +1,12 @@
 #ifndef ST_ANALOGINPUT_H
 #define ST_ANALOGINPUT_H
 
+#include "Constants.h"
 #include <cstdint>
 
 namespace st
 {
-    typedef uint16_t analog_output_unit;
+    typedef uint16_t analog_input_unit;
     class AnalogInput
     {
         private:
@@ -16,8 +17,8 @@ namespace st
 
         void setPin(uint8_t pin);
 
-        analog_output_unit read();
-        analog_output_unit operator()();
+        analog_input_unit read();
+        analog_input_unit operator()();
         
     };
 }

@@ -1,6 +1,7 @@
 #ifndef ST_DIGITALINPUT_H
 #define ST_DIGITALINPUT_H
 
+#include "Constants.h"
 #include <cstdint>
 
 namespace st

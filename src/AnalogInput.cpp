@@ -21,16 +21,16 @@ namespace st
         m_nPin = pin;
     }
 
-    analog_output_unit AnalogInput::read()
+    analog_input_unit AnalogInput::read()
     {
-        analog_output_unit res = 0;
+        analog_input_unit res = 0;
     #if defined(ST_ARDUINO)
         res = analogRead(m_nPin);
     #endif
         return res;
     }
 
-    analog_output_unit AnalogInput::operator()()
+    analog_input_unit AnalogInput::operator()()
     {
         return read();
     }
