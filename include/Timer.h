@@ -1,11 +1,17 @@
 #ifndef ST_TIMER_H
 #define ST_TIMER_H
 
+#include "Constants.h"
+
 #include <cstdint>
 
 namespace st
 {
+#if defined(ST_LINUX)
     typedef uint64_t time_unit;
+#elif defined(ST_ARDUINO)
+    typedef uint32_t time_unit;
+#endif
     class Timer
     {
         private:

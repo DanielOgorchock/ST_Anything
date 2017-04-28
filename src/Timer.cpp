@@ -1,7 +1,9 @@
 #include "Timer.h"
 
-#include <chrono>
-#include <thread>
+#if defined(ST_LINUX)
+    #include <chrono>
+    #include <thread>
+#endif
 
 namespace st
 {
@@ -17,12 +19,20 @@ namespace st
 
     time_unit Timer::getMillis()
     {
+    #if defined(ST_LINUX)
         return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count(); 
+    #elif defined(ST_ARDUINO)
+        return millis();
+    #endif
     }
 
     void Timer::wait(time_unit duration)
     {
+    #if defined(ST_LINUX)
        std::this_thread::sleep_for(std::chrono::duration<time_unit, std::milli>(duration));
+    #elif defined(ST_ARDUINO)
+       delay(duration);
+    #endif
     }
 
     bool Timer::ready()
