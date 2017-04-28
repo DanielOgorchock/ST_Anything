@@ -19,6 +19,7 @@ namespace st
             void setInvertLogic(bool invertLogic);
 
             bool operator() ();
+            bool read();
             bool isTrue();
             bool isFalse();
     };

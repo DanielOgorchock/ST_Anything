@@ -54,6 +54,11 @@ namespace st
         return result;
     }
 
+    bool DigitalInput::read()
+    {
+        return (*this)();
+    }
+
     bool DigitalInput::isTrue()
     {
         return (*this)();
