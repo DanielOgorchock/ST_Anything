@@ -5,6 +5,10 @@
     #include <thread>
 #endif
 
+#if defined(ST_ARDUINO)
+    #include <Arduino.h>
+#endif
+
 namespace st
 {
     Timer::Timer()
