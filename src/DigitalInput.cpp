@@ -1,4 +1,5 @@
 #include "DigitalInput.h"
+#include "Constants.h"
 
 #if defined(ST_ARDUINO)
     #include <Arduino.h>
