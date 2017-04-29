@@ -65,13 +65,13 @@ namespace st
 
 		st_server.begin();
 
-		Serial.print(F("MAC Address = "));
-		byte mac[6];
-		WiFi.macAddress(mac);
+		uint8_t mac[6];
 		char buf[20];
+
+		WiFi.macAddress(mac);
+		Serial.print(F("MAC Address = "));
 		sprintf(buf, "%02X:%02X:%02X:%02X:%02X:%02X", mac[5], mac[4], mac[3], mac[2], mac[1], mac[0]);
 		Serial.println(buf);
-
 
 		if (_isDebugEnabled)
 		{
