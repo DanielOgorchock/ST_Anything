@@ -13,14 +13,19 @@ using namespace st;
 
 int main(int argc, char* argv[])
 {
-    Anything::addDevice(new Switch(1, 1));
+    //Anything::addDevice(new Switch(1, 1));
     //Anything::init(new Com_Restful(44555));
     Anything::init(new Com_Console());
+    
+    Timer t(1);
 
     while(true)
     {
-        Anything::run();
-        Timer::wait(1);
+        if(t())
+        {
+            t.start(1);
+            Anything::run();
+        }
     }
 
     return 0;

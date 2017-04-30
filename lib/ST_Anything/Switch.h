@@ -30,7 +30,7 @@ namespace st
             virtual void refresh();
 
 
-
+            static Switch* createNew(const char* msg, const jsmntok_t* t);
     };
 }
 

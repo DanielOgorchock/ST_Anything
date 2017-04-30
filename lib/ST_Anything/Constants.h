@@ -35,6 +35,6 @@ const uint16_t UPDATES_BUFFER_SIZE = 10 * MAX_DEVICES;
 const time_unit SEND_UPDATES_INTERVAL = 0; //if zero, will send every time Anything's run() method executes
 const time_unit REFRESH_INTERVAL = 60000;
 
-const uint8_t JSMN_TOKENS = 15; //number of jsmn tokens
+const uint8_t JSMN_TOKENS = 25; //number of jsmn tokens
 
 #endif

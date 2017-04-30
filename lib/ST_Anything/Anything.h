@@ -38,6 +38,8 @@ namespace st
             static void sendUpdates();
             static void handleMessage(const char* msg);
 
+            static void createDevice(const char* msg, const jsmntok_t* t);
+
         public:
             static void init(Communicator* com);
             static void run();

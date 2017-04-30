@@ -56,4 +56,37 @@ namespace st
         sendCurrentStatus();
     }
 
+    Switch* Switch::createNew(const char* msg, const jsmntok_t* t)
+    {
+        int32_t uid;
+        int32_t pin;
+        bool invertLogic = false;
+        bool initialOutput = false;
+
+        if(t->size < 4)
+        {
+            Logger::debugln(F("Switch construction object doesn't contain all fields"));
+            return 0;
+        }
+
+        t+=2;
+        if(!Anything::getJsonInt(*t, msg, &uid))
+            return 0;
+        t+=2;
+        if(!Anything::getJsonInt(*t, msg, &pin))
+            return 0;
+        t+=2;
+        if(!Anything::getJsonBool(*t, msg, &invertLogic))
+            return 0;
+        t+=2;
+        if(!Anything::getJsonBool(*t, msg, &initialOutput))
+            return 0;
+
+        return new Switch(uid, pin, invertLogic, initialOutput);
+    }
 }
+
+
+
+
+

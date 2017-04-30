@@ -4,6 +4,10 @@
     #include <Arduino.h>
 #endif
 
+
+//include all devices:
+#include "Switch.h"
+
 namespace st
 {
     //static initializations
@@ -67,7 +71,8 @@ namespace st
 
         char tmp[20];
         jsmntok_t* t = &tokens[0];
-
+        
+        // {"type":"str", ...}"
         if(res > 0  &&  t->type == JSMN_OBJECT)
         {
             ++t;
@@ -86,18 +91,69 @@ namespace st
                         Logger::debugln(tmp);
 
                         //handle message types:
+                        // {"type":"refresh"}
                         if(!stringcmp(tmp,(const char*) F("refresh")))
                         {
                             refreshDevices();
                         }
+                        // {"type":"add" , "cmd":{"dtype":"str", "parms":{construction params}}}
                         else if(!stringcmp(tmp,(const char*) F("add")))
                         {
+                            ++t;
+                            if(t->type == JSMN_STRING && (++t)->type == JSMN_OBJECT)
+                            {
+                                createDevice(msg, t);
+                            }
 
                         }
+                        // {"type":"del", "uid":num}
                         else if(!stringcmp(tmp,(const char*) F("del")))
                         {
-                            
+                            ++t;
+                            if(t->type == JSMN_STRING)
+                            {
+                                if(!getJsonString(*t, msg, tmp, 20))
+                                    return;
+                                if((++t)->type == JSMN_PRIMITIVE && !stringcmp(tmp, (const char*) F("uid")))
+                                {
+                                    int32_t id;
+                                    if(!getJsonInt(*t, msg, &id))
+                                       return;
+
+                                    Device* d = getDevice(id);
+                                    if(!d)
+                                    {
+                                        Logger::debugln(F("ERROR: UID not found"));
+                                        return;
+                                    }
+
+                                    Device* tmp[MAX_DEVICES];
+                                    bool found = false;
+                                    for(uint8_t i = 0; i < numDevices; ++i)
+                                    {
+                                        if(devices[i] == d)
+                                        {
+                                            devices[i] = 0;
+                                            found = true;
+                                            continue;
+                                        }
+
+                                        tmp[found?(i-1):i] = devices[i];
+                                        devices[i] = 0;
+                                    }
+
+                                    --numDevices;
+                                    
+                                    for(uint8_t i = 0; i < numDevices; ++i)
+                                    {
+                                        devices[i] = tmp[i];
+                                    }
+
+                                    delete d;
+                                }
+                            }                            
                         }
+                        // {"type":"update" , {"uid":num, "parms":{object for the Dev.}}}
                         else if(!stringcmp(tmp,(const char*) F("update")))
                         {
                             ++t;
@@ -114,11 +170,11 @@ namespace st
                                     Device* d = getDevice(uid);
                                     if(!d)
                                     {
-                                        Logger::debugln(F("ERROR: uid not found"));
+                                        Logger::debugln(F("ERROR: UID not found"));
                                         return;
                                     }
 
-                                    if((++t)->type == JSMN_OBJECT)
+                                    if((++t)->type == JSMN_STRING && (++t)->type == JSMN_OBJECT)
                                     {
                                         d->beSmart(msg, t);
                                     }
@@ -135,7 +191,51 @@ namespace st
             }
 
         }
-        
+    }
+
+    void Anything::createDevice(const char* msg, const jsmntok_t* t)
+    {
+        char tmp[20];
+        if((++t)->type != JSMN_STRING || !getJsonString(*t, msg, tmp, 20))
+            return;
+        if(!stringcmp(tmp, (const char*) F("dtype")) && (++t)->type == JSMN_STRING)
+        {
+            if(!getJsonString(*t, msg, tmp, 20))
+                return;
+            ++t;
+            if(t->type != JSMN_STRING || (++t)->type != JSMN_OBJECT)
+                return;
+
+            Device* d;
+            //check which device it is...
+            if(!stringcmp(tmp, (const char*) F("switch")))
+                d = Switch::createNew(msg, t); 
+            else
+            {
+                Logger::debugln("ERROR: unknown type to create");
+            }
+
+
+            if(!d)
+            {
+                Logger::debugln("ERROR: device creation failed");
+                return;
+            }
+
+            //make sure this is a unique id
+            for(uint8_t i = 0; i < numDevices; ++i)
+            {
+                if(devices[i]->getUid() == d->getUid())
+                {
+                    Logger::debugln("ERROR: Another device already has this UID");
+                    delete d;
+                    return;
+                }
+            }
+
+            addDevice(d);
+            d->init();
+        }
     }
 
     //public:
