@@ -25,7 +25,7 @@ namespace st
 
             virtual void update();
 
-            virtual void refresh()=0;
+            virtual void refresh();
 
             virtual void takeAction()=0;
     };

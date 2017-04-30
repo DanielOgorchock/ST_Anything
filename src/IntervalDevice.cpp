@@ -35,4 +35,8 @@ namespace st
         }
     }
    
+    void IntervalDevice::refresh()
+    {
+
+    }
 }
