@@ -19,6 +19,12 @@ typedef uint8_t pin_unit;
     typedef uint32_t time_unit;
 #endif
 
+#if defined(ST_ARDUINO)
+    #define stringcpy strncpy_P
+#else
+    #define stringcpy strncpy 
+#endif
+
 
 const uint8_t MAX_DEVICES = 30;
 const uint16_t UPDATES_BUFFER_SIZE = 10 * MAX_DEVICES;

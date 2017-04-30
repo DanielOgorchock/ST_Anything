@@ -1,0 +1,54 @@
+#include "Switch.h"
+
+namespace st
+{
+    //private:
+    void Switch::sendCurrentStatus()
+    {
+        char buffer[80];
+        sprintf(buffer, F("{\"uid\":%u,\"update\":{\"state\":%s}}"), getUid(), (m_Output())?F("true"):F("false"));
+        Anything::sendUpdate(buffer);
+    }
+
+
+    //public:
+    Switch::Switch(dev_uid_unit uid, pin_unit pin, bool invertLogic, bool initialOutput):
+        Device(uid),
+        m_Output(pin, invertLogic, initialOutput)
+    {
+
+    }
+
+    Switch::~Switch()
+    {
+
+    }
+
+    void Switch::init()
+    {
+        sendCurrentStatus();
+    }
+
+    // {"state":true/false}
+    void Switch::beSmart(const char* msg, const jsmntok_t* t)
+    {
+        char buf[50];
+        t+=2;
+        bool b;
+        if(!Anything::getJsonBool(*t, msg, &b))
+            Logger::debugln(F("ERROR: Couldn't interpret Switch command string"));
+
+        m_Output(b);
+    }
+
+    void Switch::update()
+    {
+
+    }
+
+    void Switch::refresh()
+    {
+        sendCurrentStatus();
+    }
+
+}

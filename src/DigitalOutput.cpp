@@ -53,12 +53,21 @@ namespace st
         bool res = false;
     #if defined(ST_ARDUINO)
         res = digitalRead(m_nPin);
+        if(m_bInvertLogic)
+            res = !res;
     #endif
         return res;
     }
 
     bool DigitalOutput::operator()()
     {
+        return read();
+    }
+
+    bool DigitalOutput::readRaw()
+    {
+        if(m_bInvertLogic)
+            return !read();
         return read();
     }
 

@@ -40,13 +40,14 @@ namespace st
 
     void Anything::sendUpdates()
     {
-        if(updatesIndex > 1)
+        if(strcmp(updatesBuffer, F("{\"type\":\"update\", \"updates\":[")))
         {
-            updatesBuffer[updatesIndex] = ']';
+            updatesBuffer[updatesIndex-1] = ']';
+            updatesBuffer[updatesIndex] = '}';
             communicator->send(updatesBuffer, updatesIndex);
-            updatesIndex = 1;
-            updatesBuffer[0] = '[';
-            updatesBuffer[1] = 0;
+            stringcpy(updatesBuffer, F("{\"type\":\"update\", \"updates\":["), UPDATES_BUFFER_SIZE);
+            updatesIndex = strlen(updatesBuffer);
+            updatesBuffer[updatesIndex] = 0;
         }
     }
 
@@ -95,7 +96,27 @@ namespace st
                         }
                         else if(!strcmp(tmp, F("update")))
                         {
-                            
+                            ++t;
+                            if(t->type == JSMN_OBJECT && (++t)->type == JSMN_STRING)
+                            {
+                                if(!getJsonString(*t, msg, tmp, 20))
+                                    return;
+                                if(!strcmp(tmp, F("uid")) && (++t)->type == JSMN_PRIMITIVE)
+                                {
+                                    int32_t uid = 0;
+                                    if(!getJsonInt(*t, msg, &uid))
+                                        return;
+
+                                    Device* d = getDevice(uid);
+                                    if(!d)
+                                    {
+                                        Logger::debugln(F("ERROR: uid not found"));
+                                        return;
+                                    }
+
+                                     
+                                }
+                            }         
                         }
                         else
                         {
@@ -120,9 +141,9 @@ namespace st
         //Communicators:
         communicator = com;
 
-        updatesBuffer[0] = '[';
-        updatesBuffer[1] = 0;
-        updatesIndex = 1;
+        stringcpy(updatesBuffer, F("{\"type\":\"update\", \"updates\":["), UPDATES_BUFFER_SIZE);
+        updatesIndex = strlen(updatesBuffer);
+        updatesBuffer[updatesIndex] = 0;
 
         communicator->init();
 
@@ -154,12 +175,12 @@ namespace st
     void Anything::sendUpdate(const char* msg)
     {
         int len = strlen(msg);
-        if(len + updatesIndex + 1 >= UPDATES_BUFFER_SIZE)
+        if(len + updatesIndex + 10 >= UPDATES_BUFFER_SIZE)
         {
             sendUpdates();
         } 
 
-        strncpy(&updatesBuffer[updatesIndex], msg, UPDATES_BUFFER_SIZE - updatesIndex - 1);
+        stringcpy(&updatesBuffer[updatesIndex], msg, UPDATES_BUFFER_SIZE - updatesIndex - 1);
         updatesIndex += len;
         updatesBuffer[updatesIndex] = ',';
         updatesIndex++;
@@ -206,7 +227,7 @@ namespace st
         {
             return false;
         }
-        strncpy(buffer, &msg[t.start], len-1);
+        stringcpy(buffer, &msg[t.start], len-1);
         buffer[len-1] = 0;
 
         return true;
@@ -237,7 +258,7 @@ namespace st
         if(len+1 > 12)
             return false;
 
-        strncpy(tmp, &msg[t.start], len-1);
+        stringcpy(tmp, &msg[t.start], len-1);
         tmp[len-1] = 0;
         return sscanf(tmp, F("%i"), res) == 1;
     }

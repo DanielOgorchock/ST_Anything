@@ -21,6 +21,7 @@ namespace st
 
             bool read();
             bool operator()();
+            bool readRaw(); //direct pin reading, ignore any inverted logic
 
     };
 }

@@ -28,7 +28,7 @@ namespace st
             
             virtual void init();
 
-            virtual void beSmart(const char* msg)=0;
+            virtual void beSmart(const char* msg, const jsmntok_t* t)=0;
 
             virtual void update();
 

@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 #include <stdint.h>
+#include "jsmn.h"
 
 namespace st
 {
@@ -19,7 +20,7 @@ namespace st
 
             virtual void init()=0;
 
-            virtual void beSmart(const char* msg)=0;
+            virtual void beSmart(const char* msg, const jsmntok_t* t)=0;
 
             virtual void update()=0;
 

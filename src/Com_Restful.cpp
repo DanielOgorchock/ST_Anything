@@ -30,7 +30,8 @@ namespace st
 
         com->m_bReceived = true; 
 
-        write(sock, F("HTTP/1.x 200 OK"), 20);
+        //TODO send a real, valid http response, this isn't adequate
+        write(sock, F("HTTP/1.x 200 OK"), 20); 
 
         shutdown(sock, 2);
     }
@@ -78,7 +79,7 @@ namespace st
         {
             m_Thread->join();
             m_bReceived = false;
-            strncpy(m_sMessage, strchr(m_sTmpMessage, '{'), 499);
+            stringcpy(m_sMessage, strchr(m_sTmpMessage, '{'), 499);
             m_sMessage[499] = 0;
 
             delete m_Thread;
