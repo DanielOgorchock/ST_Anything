@@ -31,7 +31,7 @@ namespace st
         com->m_bReceived = true; 
 
         //TODO send a real, valid http response, this isn't adequate
-        write(sock, F("HTTP/1.x 200 OK"), 20); 
+        write(sock, F("HTTP/1.1 200 OK"), 20); 
 
         shutdown(sock, 2);
     }

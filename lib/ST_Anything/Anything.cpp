@@ -212,13 +212,13 @@ namespace st
                 d = Switch::createNew(msg, t); 
             else
             {
-                Logger::debugln("ERROR: unknown type to create");
+                Logger::debugln(F("ERROR: unknown type to create"));
             }
 
 
             if(!d)
             {
-                Logger::debugln("ERROR: device creation failed");
+                Logger::debugln(F("ERROR: device creation failed"));
                 return;
             }
 
@@ -227,13 +227,18 @@ namespace st
             {
                 if(devices[i]->getUid() == d->getUid())
                 {
-                    Logger::debugln("ERROR: Another device already has this UID");
+                    Logger::debugln(F("ERROR: Another device already has this UID"));
                     delete d;
                     return;
                 }
             }
 
-            addDevice(d);
+            if(!addDevice(d))
+            {
+                Logger::debugln(F("ERROR: Maximum device count reached"));
+                delete d;
+                return;
+            }
             d->init();
         }
     }
@@ -241,6 +246,10 @@ namespace st
     //public:
     void Anything::init(Communicator* com)
     {
+    #if defined(ST_ARDUINO)
+        Serial.begin(SERIAL_BAUDRATE);
+    #endif
+
         refreshTimer.start(REFRESH_INTERVAL);
         sendUpdatesTimer.start(SEND_UPDATES_INTERVAL);
 

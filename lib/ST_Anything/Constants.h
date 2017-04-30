@@ -37,4 +37,5 @@ const time_unit REFRESH_INTERVAL = 60000;
 
 const uint8_t JSMN_TOKENS = 25; //number of jsmn tokens
 
+const uint16_t SERIAL_BAUDRATE = 9600;
 #endif

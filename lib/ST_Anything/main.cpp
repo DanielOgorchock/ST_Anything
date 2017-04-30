@@ -14,8 +14,8 @@ using namespace st;
 int main(int argc, char* argv[])
 {
     //Anything::addDevice(new Switch(1, 1));
-    //Anything::init(new Com_Restful(44555));
-    Anything::init(new Com_Console());
+    Anything::init(new Com_Restful(44555));
+    //Anything::init(new Com_Console());
     
     Timer t(1);
 
