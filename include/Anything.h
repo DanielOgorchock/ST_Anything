@@ -39,7 +39,7 @@ namespace st
             static void handleMessage(const char* msg);
 
         public:
-            static void init();
+            static void init(Communicator* com);
             static void run();
 
             static void sendUpdate(const char* msg);

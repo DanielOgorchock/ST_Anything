@@ -1,6 +1,5 @@
 #include "Anything.h"
 
-
 namespace st
 {
     //static initializations
@@ -41,15 +40,20 @@ namespace st
 
     void Anything::sendUpdates()
     {
-        updatesBuffer[updatesIndex] = ']';
-        communicator->send(updatesBuffer, updatesIndex);
-        updatesIndex = 1;
-        updatesBuffer[0] = '[';
-        updatesBuffer[1] = 0;
+        if(updatesIndex > 1)
+        {
+            updatesBuffer[updatesIndex] = ']';
+            communicator->send(updatesBuffer, updatesIndex);
+            updatesIndex = 1;
+            updatesBuffer[0] = '[';
+            updatesBuffer[1] = 0;
+        }
     }
 
     void Anything::handleMessage(const char* msg)
     {
+        jsmn_init(&jParser);
+
         Logger::debug(F("Received message: "));
         Logger::debugln(msg);
 
@@ -64,17 +68,39 @@ namespace st
             ++t;
             if (t->type == JSMN_STRING)
             {
-                getJsonString(*t, msg, tmp, 20);
+                if(!getJsonString(*t, msg, tmp, 20))
+                    return;
                 if(!strcmp(tmp, F("type")))
                 {
                     ++t;
                     if(t->type == JSMN_STRING)
                     {
-                        getJsonString(*t, msg, tmp, 20);
+                        if(!getJsonString(*t, msg, tmp, 20))
+                            return;
                         Logger::debug(F("type: "));
                         Logger::debugln(tmp);
 
-                        //later add checking for different message types
+                        //handle message types:
+                        if(!strcmp(tmp, F("refresh")))
+                        {
+                            refreshDevices();
+                        }
+                        else if(!strcmp(tmp, F("add")))
+                        {
+
+                        }
+                        else if(!strcmp(tmp, F("del")))
+                        {
+                            
+                        }
+                        else if(!strcmp(tmp, F("update")))
+                        {
+                            
+                        }
+                        else
+                        {
+                            Logger::debugln(F("Unknown message type, ignoring..."));
+                        }
                     }
                 }
             }
@@ -84,15 +110,15 @@ namespace st
     }
 
     //public:
-    void Anything::init()
+    void Anything::init(Communicator* com)
     {
         refreshTimer.start(REFRESH_INTERVAL);
         sendUpdatesTimer.start(SEND_UPDATES_INTERVAL);
 
         jsmn_init(&jParser);
 
-        //TODO: assign communicator
-
+        //Communicators:
+        communicator = com;
 
         updatesBuffer[0] = '[';
         updatesBuffer[1] = 0;
@@ -180,7 +206,8 @@ namespace st
         {
             return false;
         }
-        strncpy(buffer, &msg[t.start], len);
+        strncpy(buffer, &msg[t.start], len-1);
+        buffer[len-1] = 0;
 
         return true;
     }
@@ -210,7 +237,8 @@ namespace st
         if(len+1 > 12)
             return false;
 
-        strncpy(tmp, &msg[t.start], len);
+        strncpy(tmp, &msg[t.start], len-1);
+        tmp[len-1] = 0;
         return sscanf(tmp, F("%i"), res) == 1;
     }
 }

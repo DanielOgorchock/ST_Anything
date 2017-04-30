@@ -2,7 +2,10 @@
 
 namespace st
 {
+    Communicator::~Communicator()
+    {
 
+    }
 }
 
 
