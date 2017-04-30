@@ -1,5 +1,9 @@
 #include "Anything.h"
 
+#if defined(ST_ARDUINO)
+    #include <Arduino.h>
+#endif
+
 namespace st
 {
     //static initializations
@@ -40,12 +44,12 @@ namespace st
 
     void Anything::sendUpdates()
     {
-        if(strcmp(updatesBuffer, F("{\"type\":\"update\", \"updates\":[")))
+        if(stringcmp(updatesBuffer,(const char*) F("{\"type\":\"update\", \"updates\":[")))
         {
             updatesBuffer[updatesIndex-1] = ']';
             updatesBuffer[updatesIndex] = '}';
             communicator->send(updatesBuffer, updatesIndex);
-            stringcpy(updatesBuffer, F("{\"type\":\"update\", \"updates\":["), UPDATES_BUFFER_SIZE);
+            stringcpy(updatesBuffer, (const char*)F("{\"type\":\"update\", \"updates\":["), UPDATES_BUFFER_SIZE);
             updatesIndex = strlen(updatesBuffer);
             updatesBuffer[updatesIndex] = 0;
         }
@@ -71,7 +75,7 @@ namespace st
             {
                 if(!getJsonString(*t, msg, tmp, 20))
                     return;
-                if(!strcmp(tmp, F("type")))
+                if(!stringcmp(tmp,(const char*) F("type")))
                 {
                     ++t;
                     if(t->type == JSMN_STRING)
@@ -82,26 +86,26 @@ namespace st
                         Logger::debugln(tmp);
 
                         //handle message types:
-                        if(!strcmp(tmp, F("refresh")))
+                        if(!stringcmp(tmp,(const char*) F("refresh")))
                         {
                             refreshDevices();
                         }
-                        else if(!strcmp(tmp, F("add")))
+                        else if(!stringcmp(tmp,(const char*) F("add")))
                         {
 
                         }
-                        else if(!strcmp(tmp, F("del")))
+                        else if(!stringcmp(tmp,(const char*) F("del")))
                         {
                             
                         }
-                        else if(!strcmp(tmp, F("update")))
+                        else if(!stringcmp(tmp,(const char*) F("update")))
                         {
                             ++t;
                             if(t->type == JSMN_OBJECT && (++t)->type == JSMN_STRING)
                             {
                                 if(!getJsonString(*t, msg, tmp, 20))
                                     return;
-                                if(!strcmp(tmp, F("uid")) && (++t)->type == JSMN_PRIMITIVE)
+                                if(!stringcmp(tmp, (const char*)F("uid")) && (++t)->type == JSMN_PRIMITIVE)
                                 {
                                     int32_t uid = 0;
                                     if(!getJsonInt(*t, msg, &uid))
@@ -141,7 +145,7 @@ namespace st
         //Communicators:
         communicator = com;
 
-        stringcpy(updatesBuffer, F("{\"type\":\"update\", \"updates\":["), UPDATES_BUFFER_SIZE);
+        stringcpy(updatesBuffer, (const char*)F("{\"type\":\"update\", \"updates\":["), UPDATES_BUFFER_SIZE);
         updatesIndex = strlen(updatesBuffer);
         updatesBuffer[updatesIndex] = 0;
 
@@ -180,7 +184,7 @@ namespace st
             sendUpdates();
         } 
 
-        stringcpy(&updatesBuffer[updatesIndex], msg, UPDATES_BUFFER_SIZE - updatesIndex - 1);
+        strncpy(&updatesBuffer[updatesIndex], msg, UPDATES_BUFFER_SIZE - updatesIndex - 1);
         updatesIndex += len;
         updatesBuffer[updatesIndex] = ',';
         updatesIndex++;
@@ -227,7 +231,7 @@ namespace st
         {
             return false;
         }
-        stringcpy(buffer, &msg[t.start], len-1);
+        strncpy(buffer, &msg[t.start], len-1);
         buffer[len-1] = 0;
 
         return true;
@@ -258,9 +262,9 @@ namespace st
         if(len+1 > 12)
             return false;
 
-        stringcpy(tmp, &msg[t.start], len-1);
+        strncpy(tmp, &msg[t.start], len-1);
         tmp[len-1] = 0;
-        return sscanf(tmp, F("%i"), res) == 1;
+        return sscanf(tmp, "%i", res) == 1;
     }
 }
 

@@ -6,7 +6,7 @@ namespace st
     void Switch::sendCurrentStatus()
     {
         char buffer[80];
-        sprintf(buffer, F("{\"uid\":%u,\"update\":{\"state\":%s}}"), getUid(), (m_Output())?F("true"):F("false"));
+        stringprintf(buffer, (const char*)F("{\"uid\":%u,\"update\":{\"state\":%u}}"), getUid(), m_Output());
         Anything::sendUpdate(buffer);
     }
 

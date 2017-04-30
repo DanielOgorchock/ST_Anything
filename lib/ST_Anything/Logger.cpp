@@ -43,4 +43,31 @@ namespace st
         logln(msg);
     #endif
     }
+
+#if defined(ST_ARDUINO)
+    void Logger::log(const __FlashStringHelper* msg)
+    {
+        Serial.print(msg);
+    }
+
+    void Logger::logln(const __FlashStringHelper* msg)
+    {
+        log(msg);
+        log("\n");
+    }
+
+    void Logger::debug(const __FlashStringHelper* msg)
+    {
+    #if defined(ST_DEBUG)
+        log(msg);
+    #endif
+    }
+
+    void Logger::debugln(const __FlashStringHelper* msg)
+    {
+    #if defined(ST_DEBUG)
+        logln(msg);
+    #endif
+    }
+#endif
 }

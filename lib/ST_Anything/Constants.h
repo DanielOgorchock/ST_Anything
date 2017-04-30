@@ -21,8 +21,12 @@ typedef uint8_t pin_unit;
 
 #if defined(ST_ARDUINO)
     #define stringcpy strncpy_P
+    #define stringcmp strcmp_P
+    #define stringprintf sprintf_P
 #else
     #define stringcpy strncpy 
+    #define stringcmp strcmp
+    #define stringprintf sprintf
 #endif
 
 
