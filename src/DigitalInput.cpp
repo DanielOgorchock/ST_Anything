@@ -10,14 +10,14 @@ namespace st
     //private:
 
     //public:
-    DigitalInput::DigitalInput(uint8_t pin, bool pullup, bool invertLogic):
+    DigitalInput::DigitalInput(pin_unit pin, bool pullup, bool invertLogic):
         m_bPullup(pullup),
         m_bInvertLogic(invertLogic)
     {
         setPin(pin);
     }
 
-    void DigitalInput::setPin(uint8_t pin)
+    void DigitalInput::setPin(pin_unit pin)
     {
         m_nPin = pin;
         

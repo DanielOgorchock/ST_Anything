@@ -11,14 +11,14 @@ namespace st
     
 
     //public:
-    DigitalOutput::DigitalOutput(uint8_t pin, bool invertLogic, bool initalOutput):
+    DigitalOutput::DigitalOutput(pin_unit pin, bool invertLogic, bool initalOutput):
         m_bInvertLogic(invertLogic)
     {
         setPin(pin);
         write(initalOutput);
     }
 
-    void DigitalOutput::setPin(uint8_t pin)
+    void DigitalOutput::setPin(pin_unit pin)
     {
         m_nPin = pin;
 

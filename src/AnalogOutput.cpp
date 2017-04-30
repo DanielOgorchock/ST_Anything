@@ -11,13 +11,13 @@ namespace st
 
 
     //public
-    AnalogOutput::AnalogOutput(uint8_t pin, analog_output_unit initial)
+    AnalogOutput::AnalogOutput(pin_unit pin, analog_output_unit initial)
     {
         setPin(pin);
         write(initial);
     }
 
-    void AnalogOutput::setPin(uint8_t pin)
+    void AnalogOutput::setPin(pin_unit pin)
     {
         m_nPin = pin;
     }

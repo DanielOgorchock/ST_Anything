@@ -11,12 +11,12 @@ namespace st
     
 
     //public
-    AnalogInput::AnalogInput(uint8_t pin)
+    AnalogInput::AnalogInput(pin_unit pin)
     {
         setPin(pin);
     }
 
-    void AnalogInput::setPin(uint8_t pin)
+    void AnalogInput::setPin(pin_unit pin)
     {
         m_nPin = pin;
     }

@@ -2,6 +2,8 @@
 #define ST_ANALOGOUTPUT_H
 
 #include "Constants.h"
+#include "jsmn.h"
+
 #include <stdint.h>
 
 namespace st
