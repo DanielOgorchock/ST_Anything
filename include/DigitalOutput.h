@@ -2,7 +2,7 @@
 #define ST_DIGITALOUTPUT_H
 
 #include "Constants.h"
-#include <cstdint>
+#include <stdint.h>
 
 namespace st
 {

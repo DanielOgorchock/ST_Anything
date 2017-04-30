@@ -2,7 +2,7 @@
 #define ST_ANALOGINPUT_H
 
 #include "Constants.h"
-#include <cstdint>
+#include <stdint.h>
 
 namespace st
 {
