@@ -17,6 +17,8 @@ namespace st
             
             virtual ~Device();
 
+            virtual void init()=0;
+
             virtual void beSmart(const char* msg)=0;
 
             virtual void update()=0;
