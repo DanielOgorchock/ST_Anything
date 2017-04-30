@@ -14,8 +14,10 @@ namespace st
 
         public:
            static void log(const char* msg); 
+           static void log(long long n);
            static void logln(const char* msg);
            static void debug(const char* msg);
+           static void debug(long long n);
            static void debugln(const char* msg);
         #if defined(ST_ARDUINO)
            static void log(const __FlashStringHelper* msg); 

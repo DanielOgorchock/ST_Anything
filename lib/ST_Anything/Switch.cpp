@@ -39,6 +39,11 @@ namespace st
             Logger::debugln(F("ERROR: Couldn't interpret Switch command string"));
 
         m_Output(b);
+
+        Logger::debug(getUid());
+        Logger::debug(F(": Switch turned "));
+        Logger::debug(F(m_Output()?"on (output ":"off (output "));
+        Logger::debugln(F(m_Output.readRaw()?"1)":"0)"));
     }
 
     void Switch::update()

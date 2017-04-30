@@ -5,10 +5,13 @@
 #if defined(ST_LINUX)
     #include <iostream>
     #include <fstream>
+    #include <cstring>
+    #include <stdio.h>
 #endif
 
 #if defined(ST_ARDUINO)
     #include <Arduino.h>
+    #include <string.h>
 #endif
 
 namespace st
@@ -24,6 +27,13 @@ namespace st
     #endif    
     }
 
+    void Logger::log(long long n)
+    {
+        char buf[15];
+        sprintf(buf, "%d", n);
+        log(buf); 
+    }
+
     void Logger::logln(const char* msg)
     {
         log(msg);
@@ -34,6 +44,13 @@ namespace st
     {
     #if defined(ST_DEBUG)
         log(msg);
+    #endif
+    }
+
+    void Logger::debug(long long n)
+    {
+    #if defined(ST_DEBUG)
+        log(n);
     #endif
     }
 

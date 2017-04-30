@@ -118,6 +118,10 @@ namespace st
                                         return;
                                     }
 
+                                    if((++t)->type == JSMN_OBJECT)
+                                    {
+                                        d->beSmart(msg, t);
+                                    }
                                      
                                 }
                             }         
