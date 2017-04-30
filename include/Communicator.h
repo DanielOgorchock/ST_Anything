@@ -1,6 +1,7 @@
 #ifndef ST_COMMUNICATOR_H
 #define ST_COMMUNICATOR_H
 
+#include <stdint.h>
 
 namespace st
 {

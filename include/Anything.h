@@ -5,8 +5,16 @@
 #include "Device.h"
 #include "Communicator.h"
 #include "Timer.h"
+#include "Logger.h"
+#include "jsmn.h"
 #include <stdint.h>
-#include <string.h>
+#include <stdio.h>
+
+#if defined(ST_LINUX)
+    #include <cstring>
+#elif defined(ST_ARDUINO)
+    #include <string.h>
+#endif
 
 namespace st
 {
@@ -21,6 +29,7 @@ namespace st
             static Timer sendUpdatesTimer;
             static Communicator* communicator;
 
+            static jsmn_parser jParser; //for json parsing
 
             static void refreshDevices(); 
             static void initDevices();
@@ -43,6 +52,11 @@ namespace st
 
             static uint8_t timersPending;
 
+
+            //json parsing helpers
+            static bool getJsonString(const jsmntok_t& t, const char* msg, char* buffer, uint8_t size);
+            static bool getJsonBool(const jsmntok_t& t, const char* msg, bool* res);
+            static bool getJsonInt(const jsmntok_t& t, const char* msg, int32_t* res);
     };
 }
 

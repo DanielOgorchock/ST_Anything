@@ -29,4 +29,18 @@ namespace st
         log(msg);
         log("\n");
     }
+
+    void Logger::debug(const char* msg)
+    {
+    #if defined(ST_DEBUG)
+        log(msg);
+    #endif
+    }
+
+    void Logger::debugln(const char* msg)
+    {
+    #if defined(ST_DEBUG)
+        logln(msg);
+    #endif
+    }
 }
