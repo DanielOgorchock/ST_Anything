@@ -9,12 +9,12 @@ namespace st
     class DigitalOutput
     {
         private:
-            uint8_t m_nPin;
+            pin_unit m_nPin;
             bool m_bInvertLogic;
         public:
-            DigitalOutput(uint8_t pin, bool invertLogic=false, bool initialOutput=false); 
+            DigitalOutput(pin_unit pin, bool invertLogic=false, bool initialOutput=false); 
 
-            void setPin(uint8_t pin);
+            void setPin(pin_unit pin);
             void write(bool output);
             void operator()(bool output);
             void toggle();

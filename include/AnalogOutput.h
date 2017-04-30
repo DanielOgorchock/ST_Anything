@@ -10,12 +10,12 @@ namespace st
     class AnalogOutput
     {
         private:
-            uint8_t m_nPin;
+            pin_unit m_nPin;
 
         public:
-            AnalogOutput(uint8_t pin, analog_output_unit initial=0);
+            AnalogOutput(pin_unit pin, analog_output_unit initial=0);
 
-            void setPin(uint8_t pin);
+            void setPin(pin_unit pin);
             void write(analog_output_unit val);
             void operator()(analog_output_unit val);
 

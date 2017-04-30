@@ -10,12 +10,12 @@ namespace st
     class AnalogInput
     {
         private:
-        uint8_t m_nPin;
+        pin_unit m_nPin;
 
         public:
-        AnalogInput(uint8_t pin);
+        AnalogInput(pin_unit pin);
 
-        void setPin(uint8_t pin);
+        void setPin(pin_unit pin);
 
         analog_input_unit read();
         analog_input_unit operator()();

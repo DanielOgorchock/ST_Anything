@@ -2,20 +2,20 @@
 #define ST_DIGITALINPUT_H
 
 #include "Constants.h"
-#include <cstdint>
+#include <stdint.h>
 
 namespace st
 {
     class DigitalInput
     {
         private:
-            uint8_t m_nPin; 
+            pin_unit m_nPin; 
             bool m_bInvertLogic, m_bPullup;
 
         public:
-            DigitalInput(uint8_t pin, bool pullup=false, bool invertLogic=false);
+            DigitalInput(pin_unit pin, bool pullup=false, bool invertLogic=false);
 
-            void setPin(uint8_t pin);
+            void setPin(pin_unit pin);
             void setPullup(bool pullup);
             void setInvertLogic(bool invertLogic);
 
