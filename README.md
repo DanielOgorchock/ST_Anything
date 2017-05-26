@@ -1,4 +1,4 @@
-ST_Anything v2.6
+ST_Anything v2.7
 ================
 
 History:
