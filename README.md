@@ -22,7 +22,7 @@ History:
 
 Note: The ST_Anything v1.6 release was created on 2017-02-11 to make sure everyone can still get back to the original ThingShield-only code if necessary.  
 Note: If you want the old ST_Anything v2.2 code, please pull it by the v2.2 release number and follow the old v2.2 ReadMe 
-Note: ST_Anything v2.6 was built using the Arduino IDE v1.8.1.  Please make sure to upgrade your IDE.
+Note: ST_Anything v2.7 was built using the Arduino IDE v1.8.2.  Please make sure to upgrade your IDE.
 
 Turn your Arduino UNO/MEGA or NodeMCU ESP8266 into a Anything you can imagine! ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
