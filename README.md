@@ -209,6 +209,9 @@ Your screen should look like the following image:
 
 5) When entering the MAC address into the Device Prerences in your phone's SmartThings App, please be sure to enter it without delimiters, and in uppercase.  It should be in the form '06AB02CD03EF' without the quotes.  If using the W5100/W5500, you can get the MAC address from the sketch.  If using a WiFi based solution, the MAC address will be printed out in the Arduino IDE Serial Monitor window (9600 baud).
 
+6) When using a NodeMCU ESP8266 board, you need to be aware of some GPIO limitations.  I have assembled my findings in this image:
+![screenshot](https://cloud.githubusercontent.com/assets/5206084/26479180/53488d08-419f-11e7-824f-aa1649335c02.png)
+
 ## Final Notes for now...
 Plese refer to the header files of the ST_Anything library for explanation of specific classes, constructor arguments, etc... ST_Anything devices support inverted logic, default power-on states, debounce logic, etc...  Read through the top section of the .h files found on the libraries\ST_Anything... folders for more information!
 
