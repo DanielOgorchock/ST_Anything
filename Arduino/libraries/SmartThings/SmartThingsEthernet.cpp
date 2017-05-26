@@ -13,9 +13,9 @@
 namespace st
 {
 	//*******************************************************************************
-	// SmartThingsEthernet Constructor  
+	// SmartThingsEthernet Constructor - Static IP 
 	//*******************************************************************************
-	SmartThingsEthernet::SmartThingsEthernet(IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
+	SmartThingsEthernet::SmartThingsEthernet(IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval, bool DHCP) :
 		SmartThings(callout, shieldType, enableDebug, transmitInterval),
 		st_localIP(localIP),
 		st_localGateway(localGateway),
@@ -23,20 +23,35 @@ namespace st
 		st_localDNSServer(localDNSServer),
 		st_hubIP(hubIP),
 		st_serverPort(serverPort),
-		st_hubPort(hubPort)
+		st_hubPort(hubPort),
+		st_DHCP(DHCP)
 	{
 
 	}
 
 	//*******************************************************************************
-	// SmartThingsEthernet Constructor  (Abbreviated version)
+	// SmartThingsEthernet Constructor - Static IP (Abbreviated version for WiFiEsp library)
 	//*******************************************************************************
-	SmartThingsEthernet::SmartThingsEthernet(IPAddress localIP, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
+	SmartThingsEthernet::SmartThingsEthernet(IPAddress localIP, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval, bool DHCP) :
 		SmartThings(callout, shieldType, enableDebug, transmitInterval),
 		st_localIP(localIP),
 		st_hubIP(hubIP),
 		st_serverPort(serverPort),
-		st_hubPort(hubPort)
+		st_hubPort(hubPort),
+		st_DHCP(DHCP)
+	{
+
+	}
+
+	//*******************************************************************************
+	// SmartThingsEthernet Constructor - DHCP
+	//*******************************************************************************
+	SmartThingsEthernet::SmartThingsEthernet(uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval, bool DHCP) :
+		SmartThings(callout, shieldType, enableDebug, transmitInterval),
+		st_hubIP(hubIP),
+		st_serverPort(serverPort),
+		st_hubPort(hubPort),
+		st_DHCP(DHCP)
 	{
 
 	}

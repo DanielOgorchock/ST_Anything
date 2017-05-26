@@ -52,12 +52,16 @@
 //#define DISABLE_SMARTTHINGS	//If uncommented, will disable all ST Shield Library calls (e.g. you want to use this library without SmartThings for a different application)
 //#define DISABLE_REFRESH		//If uncommented, will disable periodic refresh of the sensors and executors states to the ST Cloud - improves performance, but may reduce data integrity
 
-#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) 
+#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(ARDUINO_AVR_UNO)
 #define BOARD_UNO
-#elif defined(__AVR_ATmega32U4__)
+#elif defined(__AVR_ATmega32U4__) || defined(ARDUINO_AVR_LEONARDO)
 #define BOARD_LEONARDO
-#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(ARDUINO_AVR_MEGA2560)
 #define BOARD_MEGA
+#elif defined(ARDUINO_ARCH_SAMD)
+#define BOARD_MKR1000
+#elif defined(ARDUINO_ARCH_ESP8266)
+#define BOARD_ESP8266
 #else	
 #define BOARD_UNO	//assume user is using an UNO for the unknown case
 #endif
@@ -73,7 +77,7 @@ namespace st
 			//Serial debug console baud rate
 			static const unsigned int SERIAL_BAUDRATE=9600;				//Uncomment If NOT using pins 0,1 for ST Shield communications (default)
 			//static const unsigned int SERIAL_BAUDRATE=2400;			//Uncomment if using Pins 0,1 for ST Shield Communications
-			#if defined(BOARD_MEGA)
+			#if defined(BOARD_MEGA) || defined(BOARD_MKR1000) || defined(BOARD_ESP8266)
 				//Maximum number of SENSOR objects
 				static const byte MAX_SENSOR_COUNT=30;					//Used to limit the number of sensor devices allowed.  Be careful on Arduino UNO due to 2K SRAM limitation 
 				//Maximum number of EXECUTOR objects

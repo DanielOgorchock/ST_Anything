@@ -1,0 +1,117 @@
+WiFi101 ?.?.? - ????.??.??
+
+WiFi101 0.14.2 - 2017.05.08
+
+* Fixed issues with WiFiServer::write not working
+
+WiFi101 0.14.1 - 2017.04.20
+
+* Fixed issues with WiFiMDNSResponder and Windows using Bonjour
+* Correct cast of buffer size when processing received data 
+
+WiFi101 0.14.0 - 2017.03.22
+
+* Added support for firmware 19.5.2
+* Add ability to create Access Point with WPA security (f/w 19.5.2 or higher)
+* Add WiFi.hostname(name) method to set custom host name for DHCP (f/w 19.5.2 or higher)
+* Enables support for AES-256 Ciphers (f/w 19.5.2 or higher)
+* Make provisioning mode backwards compatible with f/w 19.4.4 and older
+
+WiFi101 0.13.0 - 2017.03.01
+
+* Added WiFi.channel() and WiFi.BSSID()
+
+WiFi101 0.12.1 - 2017.01.19
+
+* Fixed tomorrow day issue in WiFi.getTime()
+
+WiFi101 0.12.0 - 2017.01.05
+
+* Made provisioning mode easier and added example sketch
+* Fixed WiFi.getTime() not returning 0, if time has not been synced via NTP
+* Fixed crashing when connecting after scanning
+* Fixed WiFiServer::available() returning valid client on outbound client connection
+* Added WiFiUdp::beginMulticast(port) function for compatiblity with EthernetUdp, as beginMulti was inconsistent
+
+WiFi101 0.11.2 - 2016.12.15
+
+* Fixed value of WiFi.getTime() being off by one day
+* Fixed calling WiFi.RSSI() causing lockups
+
+WiFi101 0.11.1 - 2016.11.29
+
+* Fixed regression for non-AVR boards that resulted in corrupt with data over than 1400 bytes was received
+
+WiFi101 0.11.0 - 2016.11.14
+
+* Changed WiFi.ping(...) to return round trip time on success, negative value on error. Thanks @PKGeorgiev
+* WiFi.end() now powers down the WiFi module
+* WiFi.config(ip) can now be used to set a static IP for WiFi.begin(...)
+* Fixed WiFi.BSSID(bssid) returning reversed MAC address
+* Added WiFi.APClientMacAddress() API to get MAC address of AP client in AP mode
+* Added WiFi.getTime() API to get epoch from NTP
+
+WiFi101 0.10.0 - 2016.09.08
+
+* Added WiFi.end() to disconnect from the AP or end AP mode
+* Added new WiFi.ping(...) functionality. Thanks @PKGeorgiev
+* Added WiFi.setPins(...) to customize the CS, INTN, RESET and CHIPEN pins 
+* Add new WL_AP_LISTENING, WL_AP_CONNECTED, and WL_AP_FAILED status types for AP mode
+* Fixed return value of WiFiUDP::beginPacket(host, port) when host is successfully resolved
+* Added power management methods: WiFi.lowPowerMode(), WiFi.maxLowPowerMode(), WiFi.noLowPowerMode()
+* Close TCP sockets when physical link is disconnected
+* Fixed WiFi.RSSI() returning 0 when there was pending socket data
+
+WiFi101 0.9.1 - 2016.04.19
+
+* Increased compatibility with 3rd party boards and architectures.
+* Rename WiFiMdnsResponder.h/cpp to WiFiMDNSResponder.h/cpp
+* Fixed buffering of UDP packet
+
+WiFi101 0.9.0 - 2016.03.21
+
+* Fixed WiFi.status() hanging when shield is not present
+* Fixed MAC address returning 00:00:00:00:00:00 with firmware version 19.3.0
+* Fixed SSL write functionality with firmware version 19.3.0
+* Fixed previous version of the library not working on the Uno and other boards that used PCINT's
+* Added beginAP(...) API's to create access point with WEP passwords
+* Fixed beginAP(...) channel off by one error
+* Fixed WiFi.status() always returning WL_CONNECTED once connected, even if access point is disconnected later
+* Added beginMulti API for Multicast UDP support
+* Added WiFiMDNSResponder class and MDNS Web server example
+
+WiFi101 0.8.0 - 2016.02.15
+
+* Added example for Access Point web server (thanks @ladyada)
+* Fixed MAC Address printed in reverse order
+* Allow another library to override PCINT ISR (fix issues when using the WiFi101
+  library with other libraries like SoftwareSerial)
+
+WiFi101 0.7.0 - 2015.01.11
+
+* Added support for WiFi Firmware 19.4.4
+* WiFi.hostByName(...) will not try resolve the domain name if it's already a numeric IP
+* Fixed manual IP configuration (no DHCP)
+* Fixed WiFiServer.available(), now follows API specification
+* Fixed WEP key connection
+* Fixed WiFiClient copy constructor and assignment operator. This improves stability when
+  Client objects are assigned or returned from functions.
+* Control pins are now configurable through defines from variant.
+
+WiFi101 0.6.0 - 2015.11.27
+
+* Fixed bug with AVR boards when Web Server is used
+* Fixed UDP read bug on AVR Boards
+* Added missing inlcude for SSL Client
+* Fixed peek() function
+* Fixed some examples
+
+WiFi101 0.5.1 - 2015.10.06
+
+* Improved support for AVR Boards (Uno, Mega, Leonardo, etc.) and
+  ARM based boards (Due and Zero).
+
+WiFi101 0.5.0 - 2015.10.01
+
+* Initial release
+

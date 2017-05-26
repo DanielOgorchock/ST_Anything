@@ -1,9 +1,9 @@
  --------------------------------------------------------------------------------------------------
 | Setup Instructions                                                                               |
  --------------------------------------------------------------------------------------------------
-1) Copy the entire SmartThings directory into the 'libraries' directory in your sketchbook location.
-    Windows: 'My Documents\Arduino\libraries\SmartThings'
-    OSX: '~/Documents/Arduino/libraries/SmartThings'
+1) Copy all of the SmartThings* directories into the 'libraries' directory in your sketchbook location.
+    Windows: 'My Documents\Arduino\libraries\SmartThings*'
+    OSX: '~/Documents/Arduino/libraries/SmartThings*'
 
  --------------------------------------------------------------------------------------------------
 | Notes                                                                                            |
@@ -13,7 +13,10 @@
  --------------------------------------------------------------------------------------------------
 | ChangeLog:                                                                                       |
  --------------------------------------------------------------------------------------------------
-04/26/2017 (v2.2.0)      do + Added optional argument for max transmission rate which can be queried by calling application.  Not used internally.
+05/25/2017 (v2.3.0)      do + Added support for W5500 shield, causing library to be broken into 
+                              multiple folders to avoid duplicate class definitions
+04/26/2017 (v2.2.0)      do + Added optional argument for max transmission rate which can be queried 
+                              by calling application.  Not used internally.
 02/20/2017 (v2.1.0)	 do + Added support for Arduino + ESP-01 hardware combination
 02/10/2017 (v2.0.0)	 do ~ Totally rearchitected C++ Class structure to support ThingShield, W5100 Ethernet, and ESP8266 WiFi
 			    + Added new init() function to allow object to connect to network at runtime in sketch setup() routine

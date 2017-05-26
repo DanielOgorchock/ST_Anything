@@ -135,7 +135,11 @@ void setup()
   st::Everything::callOnMsgSend = callback;
   
   //Create the SmartThings ESP8266WiFi Communications Object
-  st::Everything::SmartThing = new st::SmartThingsESP8266WiFi(str_ssid, str_password, ip, gateway, subnet, dnsserver, serverPort, hubIp, hubPort, st::receiveSmartString);
+    //STATIC IP Assignment - Recommended
+    st::Everything::SmartThing = new st::SmartThingsESP8266WiFi(str_ssid, str_password, ip, gateway, subnet, dnsserver, serverPort, hubIp, hubPort, st::receiveSmartString);
+ 
+    //DHCP IP Assigment - Must set your router's DHCP server to provice a static IP address for this device's MAC address
+    //st::Everything::SmartThing = new st::SmartThingsESP8266WiFi(str_ssid, str_password, serverPort, hubIp, hubPort, st::receiveSmartString);
 
   //Run the Everything class' init() routine which establishes WiFi communications with SmartThings Hub
   st::Everything::init();

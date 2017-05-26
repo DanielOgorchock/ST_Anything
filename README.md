@@ -14,6 +14,7 @@ History:
 - v2.2 2017-03-25 Added new IS_Button class, sample sketches, updated Device Handler, etc... to support ST "Button" capability
 - v2.5 2017-04-23 New SmartThings Composite Device Handler (i.e. Parent/Child Device Handlers) which eliminates the need for the Multiplexer SmartApps!  Also added Carnon Monoxide, Alarm with Strobe, and Voltage Measurement capabilities. Support for LAN devices only at this time.
 - v2.6 2017-04-26 Added support for ThingShield using new Composite Device Handler.  Includes new version of SmartThings library, updates to ST_Anything library, and new ST_Anything_Multiples_Thingshield.ino sketch.  Minor tweak to EX_Alarm logic to better handle whether or not the Strobe Pin is defined.
+- v2.7 2017-05-25 Added support for the Arduino W5500 Ethernet Shield.  Added new ST_Anything_AlarmPanel_ESP8266WiFi.ino sketch.  Revised the ST_Anything_Multiples_ESP8266WiFi.ino sketch to take into account NodeMCU ESP8266 GPIO limitations.  
 
 ## Architecture Flow Chart
 
@@ -26,7 +27,8 @@ Note: ST_Anything v2.6 was built using the Arduino IDE v1.8.1.  Please make sure
 Turn your Arduino UNO/MEGA or NodeMCU ESP8266 into a Anything you can imagine! ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
 - Arduino with W5100 Ethernet shield
-- Arduino with ESP-01 for WiFi
+- Arduino with W5500 Ethernet shield
+- Arduino with ESP-01 for WiFi (currently not very reliable!)
 - Standalone NodeMCU v1.0 ESP8266-12e
 - Standalone ESP-01 (or really any ESP8266 based board)
 
@@ -38,7 +40,7 @@ For now, I focused on getting the new Parent/Child Device Handlers ready along w
 
 THIS DOCUMENT IS A WORK IN PROGRESS!  So please be patient.  The essential code is all here and has been tested.  Documentation is still lacking somewhat, so feel free to submit a pull request to improve this ReadMe as you try to get things working.
 
-New v2.6 Parent / Child Devices 
+New v2.6+ Parent / Child Devices 
 ![screenshot](https://cloud.githubusercontent.com/assets/5206084/25319004/8b6ab50a-2866-11e7-9f47-6f2b4863311a.PNG)
 
 
@@ -65,14 +67,16 @@ Note: Attempting to use all of these at once on an Arduino UNO R3 is likely to r
 
 ## Overview
 ST_Anything consists of four main parts:
-- The ST_Anything_Multiples_xxxxx.ino example sketches 
+- The ST_Anything example sketches 
   - ST_Anything_Multiples_EthernetW5100.ino - Arduino UNO/MEGA + W5100 Ethernet Shield
+  - ST_Anything_Multiples_EthernetW5500.ino - Arduino UNO/MEGA + W5500 Ethernet Shield
   - ST_Anything_Multiples_MEGAWiFiEsp.ino - Arduino MEGA + ESP-01 WiFi module with "AT Firmware"
   - ST_Anything_Multiples_ESP8266WiFi.ino - NodeMCU v1.0 ESP8266-12e development board (no Arduino!)
   - ST_Anything_Multiples_ESP01WiFi.ino - ESP-01 (ESP8266-01) module (no Arduino!)
   - ST_Anything_Multiples_ThingShield.ino - Arduino UNO/MEGA + ST ThingShield
+  - ST_Anything_AlarmPanel_ESP8266WiFi.ino - NodeMCU v1.0 ESP8266-12e development board (no Arduino!)
 - The ST_Anything Arduino libraries + required 3rd party libraries
-- The SmartThings library - A modified, more efficient version, now with added support for LAN-to-Hub based communications too! 
+- The SmartThings libraries - A modified, more efficient version, now with added support for LAN-to-Hub based communications too! 
 - The SmartThings Parent and Child Device Handlers that support sketches above.
   - parent-st-anything-ethernet.groovy (LAN-to-Hub, Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01)
   - parent-st-anything-thingshield.groovy (Thingshield-to-Hub) (not released at time of this writing!)
@@ -89,7 +93,7 @@ ST_Anything consists of four main parts:
   - On Mac, it's located in `~/Documents/Arduino/`.
   - On Windows, it's located in `C:\Users\yourusername\Documents\Arduino`.
 - Look inside the `Arduino/Sketches` folder of the repo.
-- Copy and paste all of the `ST_Anything_Multiples...` sketch folders into your local Arduino sketches directory. If you haven't created any sketches, you may not see the folder. In this case, feel free to create it.
+- Copy and paste all of the `ST_Anything_...` sketch folders into your local Arduino sketches directory. If you haven't created any sketches, you may not see the folder. In this case, feel free to create it.
 - Look inside the `Arduino/libraries` folder of the repo.
 - Copy and paste both the `ST_Anything` and `SmartThings` folders (as well as all of the other library folders) into your local Arduino libraries directory. 
 - Open one of the ST_Anything_Multiples_xxxxx.ino sketches for the hardware you're using and see if it successfully compiles.
@@ -100,7 +104,8 @@ ST_Anything consists of four main parts:
     - You must ensure your hub's LAN IP address does not change.  Use your router's static DHCP assignment feature to make sure your hub always gets the same IP Address!  Enter that address in the corresponding line in the sketch.
     - The Arduino must be assigned a static TCP/IP address, Gateway, DNS, Subnet Mask, MAC Address(W5100 only), SSID+Password(ESP8266 only)
     - *** NOTE: If using the W5100 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch! Please leave the first octet in the MAC Address '06' as certain MAC addresses are UNICAST while others are MULTICAST. Your MAC must be UNICAST and be a 'Locally Administered Address' Please see https://en.wikipedia.org/wiki/MAC_address#Address_details for more information ***
-    - Note: If using an ESP-01 for WiFi only with an Arduino, the example assumes you're using an Arduino MEGA 2560. Attach the ESP-01 to Hardware Serial "Serial1"
+    - *** NOTE: If using the W5500 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch! Use the one packaged with the W5500 shield.
+    - Note: If using an ESP-01 for WiFi only with an Arduino, the example assumes you're using an Arduino MEGA 2560. Attach the ESP-01 to Hardware Serial "Serial1"  (currently this combination has NOT proven to be reliable)
   - Your IDE Serial Monitor Window must be set to 9600 baud
   - With the Serial Monitor window open, load your sketch and watch the output
   - If using an Arduino/ESP-01, NodeMCU v1.0 ESP8266 board, or ESP-01 the MAC Address will be printed out in the serial monitor window. Write this down as you will need it to configure the Device using your ST App on your phone. (Note: MAC Address must later be entered with no delimeters in the form of "06AB23CD45EF" (without quotes!))
@@ -202,9 +207,9 @@ Your screen should look like the following image:
 
 4) If you are using a W5100 Ethernet Shield with an Arduino, the MAC address must start with '06' in order to be sure you're using a ***locally administered unicast MAC address***.  Make sure that you have unique MAC addresses if you use more than one W5100 on your network.
 
-5) When entering the MAC address into the Device Prerences in your phone's SmartThings App, please be sure to enter it without delimiters, and in uppercase.  It should be in the form '06AB02CD03EF' without the quotes.  If using the W5100, get the MAC address from the sketch.  If using an ESP8266 based solution, the MAC address of the onboard WiFi will be printed out in the Arduino IDE Serial Monitor window (9600 baud).
+5) When entering the MAC address into the Device Prerences in your phone's SmartThings App, please be sure to enter it without delimiters, and in uppercase.  It should be in the form '06AB02CD03EF' without the quotes.  If using the W5100/W5500, you can get the MAC address from the sketch.  If using a WiFi based solution, the MAC address will be printed out in the Arduino IDE Serial Monitor window (9600 baud).
 
 ## Final Notes for now...
-Plese refer to the header files of the ST_Anything library for explanation of specific classes, constructor arguments, etc... 
+Plese refer to the header files of the ST_Anything library for explanation of specific classes, constructor arguments, etc... ST_Anything devices support inverted logic, default power-on states, debounce logic, etc...  Read through the top section of the .h files found on the libraries\ST_Anything... folders for more information!
 
-Look at the documentation in the 'ST_Anything_Multiples_xxxx.ino' file for explanation of general use of the library.  
+Look at the documentation in the 'ST_Anything_Multiples_xxxx.ino' files for explanation and examples of the general use of the library.  

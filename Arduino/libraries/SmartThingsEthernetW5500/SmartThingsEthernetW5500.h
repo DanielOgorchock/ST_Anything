@@ -1,41 +1,41 @@
 //*******************************************************************************
-//	SmartThings Arduino ESP8266 Wifi Library 
+//	SmartThings Arduino Ethernet Library 
 //
 //	License
 //	(C) Copyright 2017 Dan Ogorchock
 //
 //	History
-//	2017-02-05  Dan Ogorchock  Created
+//	2017-02-04  Dan Ogorchock  Created
+//  2017-05-02  Dan Ogorchock  New version for the Arduino Ethernet 2 shield based on the W5500 chip 
 //*******************************************************************************
-#if defined ARDUINO_ARCH_ESP8266
 
-#ifndef __SMARTTHINGSESP8266WIFI_H__ 
-#define __SMARTTHINGSESP8266WIFI_H__
+#ifndef __SMARTTHINGSETHERNETW5500_H__ 
+#define __SMARTTHINGSETHERNETW5500_H__
 
+#include <SPI.h>
+#include <Ethernet2.h>
 #include "SmartThingsEthernet.h"
 
+
 //*******************************************************************************
-// Using ESP8266 WiFi
+// Using Ethernet Shield
 //*******************************************************************************
-#include <ESP8266WiFi.h>
 
 namespace st
 {
-	class SmartThingsESP8266WiFi: public SmartThingsEthernet
+	class SmartThingsEthernetW5500: public SmartThingsEthernet
 	{
 	private:
-		//ESP8266 WiFi Specific
-		char st_ssid[50];
-		char st_password[50];
-		WiFiServer st_server; //server
-		WiFiClient st_client; //client
+		//Ethernet W5500 Specific 
+		byte st_mac[6];
+		EthernetServer st_server; //server
+		EthernetClient st_client; //client
 
 	public:
 
 		//*******************************************************************************
-		/// @brief  SmartThings ESP8266 WiFi Constructor 
-		///   @param[in] ssid - Wifi Network SSID
-		///   @param[in] password - Wifi Network Password
+		/// @brief  SmartThings Ethernet Constructor - STATIC
+		///   @param[in] mac[] - MAC Address of the Ethernet Shield, 6 bytes 
 		///   @param[in] localIP - TCP/IP Address of the Arduino
 		///   @param[in] localGateway - TCP/IP Gateway Address of local LAN (your Router's LAN Address)
 		///   @param[in] localSubnetMask - Subnet Mask of the Arduino
@@ -47,20 +47,32 @@ namespace st
 		///   @param[in] shieldType (optional) - Set the Reported SheildType to the Server 
 		///   @param[in] enableDebug (optional) - Enable internal Library debug
 		//*******************************************************************************
-		SmartThingsESP8266WiFi(String ssid, String password, IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "ESP8266Wifi", bool enableDebug = false, int transmitInterval = 100);
+		SmartThingsEthernetW5500(byte mac[], IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "EthernetShield", bool enableDebug = false, int transmitInterval = 100);
+
+		//*******************************************************************************
+		/// @brief  SmartThings Ethernet Constructor - DHCP
+		///   @param[in] mac[] - MAC Address of the Ethernet Shield, 6 bytes 
+		///   @param[in] serverPort - TCP/IP Port of the Arduino
+		///   @param[in] hubIP - TCP/IP Address of the ST Hub
+		///   @param[in] hubPort - TCP/IP Port of the ST Hub
+		///   @param[in] callout - Set the Callout Function that is called on Msg Reception
+		///   @param[in] shieldType (optional) - Set the Reported SheildType to the Server 
+		///   @param[in] enableDebug (optional) - Enable internal Library debug
+		//*******************************************************************************
+		SmartThingsEthernetW5500(byte mac[], uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "EthernetShield", bool enableDebug = false, int transmitInterval = 100);
 
 		//*******************************************************************************
 		/// Destructor 
 		//*******************************************************************************
-		~SmartThingsESP8266WiFi();
+		~SmartThingsEthernetW5500();
 
 		//*******************************************************************************
-		/// Initialize SmartThingsESP8266WiFI Library 
+		/// Initialize SmartThingsEthernet Library 
 		//*******************************************************************************
 		virtual void init(void);
 
 		//*******************************************************************************
-		/// Run SmartThingsESP8266WiFI Library 
+		/// Run SmartThingsEthernet Library 
 		//*******************************************************************************
 		virtual void run(void);
 
@@ -71,5 +83,4 @@ namespace st
 
 	};
 }
-#endif
 #endif

@@ -31,7 +31,9 @@
 #include "Everything.h"
 
 long freeRam();	//freeRam() function prototype - useful in determining how much SRAM is available on Arduino
-
+#if defined(ARDUINO_ARCH_SAMD)
+extern "C" char* sbrk(int incr);
+#endif
 namespace st
 {
 	
@@ -194,7 +196,7 @@ namespace st
 		}
 		#endif
 		
-		if(debug && millis()%60000==0 && millis()!=lastmillis)
+		if((debug) && (millis()%60000==0) && (millis()!=lastmillis))
 		{
 			lastmillis = millis();
 			Serial.print(F("Everything: Free Ram = "));  
@@ -368,11 +370,13 @@ long freeRam()
 	return (int)&v - (__brkval == 0 ? (int)&__heap_start : (int)__brkval);
 #elif defined(ARDUINO_ARCH_ESP8266)
 	return ESP.getFreeHeap();
+#elif defined(ARDUINO_ARCH_SAMD)
+	char top;
+	return &top - reinterpret_cast<char*>(sbrk(0));
 #else
 	return -1;
 #endif // !
 
 
 }
-	
 	

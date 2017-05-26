@@ -2,6 +2,7 @@ History:
 - v2.0 2017-02-11 Initial Release
 - v2.1 2017-02-20 Added support for Arduino + ESP-01 hardware combination
 - v2.2 2017-04-26 Added additional optional argument to each constructor which can be queried to determine maximum data transfer rate for each type of communication.  This field is not used directly by the SmartThings library.  It is used by ST_Anything's Everything Class.
+- v2.3 2017-05-25 Added support for the W5500 Ethernet Shield.  This required the library to be split into multiple library folders to avoid duplicate class defintions at compile/link time.
 
 SmartThings v2.x
 ================
@@ -12,10 +13,11 @@ This library currently implements the following C++ Classes and associated const
   -st::SmartThingsThingShield (use this class "#include <SmartThingsThingShield.h" if connecting an Arduino UNO/MEGA using a ThingShield)
   -st::SmartThingsEthernet (base class, not to be used in your sketch!)
      -st::SmartThingsEthernetW5100 (use this class "#include <SmartThingsEthernetW5100.h" if connecting an Arduino UNO/MEGA using a W5100 Ethernet shield)
+     -st::SmartThingsEthernetW5500 (use this class "#include <SmartThingsEthernetW5500.h" if connecting an Arduino UNO/MEGA using a W5500 Ethernet shield)
 	 -st::SmartThingsWiFiEsp (use this class "#include <SmartThingsWiFiEsp.h>" if using an Arduino attached to a ESP-01 (AT Firmware) for WiFi)
      -st::SmartThingsESP8266WiFi (use this class "#include <SmartThingsESP8266.h" if using a standalone NodeMCU ESP8266 or ESP-01)
 
-All four of the usable classes implement the following methods:
+All five of the usable classes implement the following methods:
 - send(String) used to send an ASCII string to the SmartThings Device Handler
 - run() used in the sketch's loop() routine to execute background processing for the library to check for incoming data from the SmartThings Device Handler
 - init() used in the sketch's setup() routine to establish the initial connection to the ST Hub 
@@ -26,12 +28,18 @@ SmartThings library consists of:
 - In the `examples` folder, sample sketches for using the Arduino/ThingShield, Arduino/EthernetW5100, Arduino/ESP-01, and NodeMCU ESP8266.
   - SmartThings_On_Off_LED_ThingShield
   - SmartThings_On_Off_LED_EthernetW5100
+  - SmartThings_On_Off_LED_EthernetW5500
   - SmartThings_On_Off_LED_WiFiEsp
   - SmartThings_On_Off_LED_ESP8266WiFi (no Arduino!)
   - SmartThings_On_Off_LED_ESP01WiFi (no Arduino!)
 - In the `extras` folder, two SmartThings Groovy Device Handlers to be used with the example sketches above
   -On_Off_LED_ThingShield.device.groovy for use with a ThingShield
-  -On_Off_LED_Ethernet.device.groovy for use with an Arduino/W5100 combo OR Arduino/ESP-01 combo OR a NodeMCU ESP8266 board OR a ESP-01 module
+  -On_Off_LED_Ethernet.device.groovy for use with
+    - Arduino/W5100 combo
+	- Arduino/W5500 combo
+	- Arduino/ESP-01 combo (not reliable currently)
+	- NodeMCU ESP8266 board (standalone)
+	- ESP-01 module (standalone)
 
 
 ##SmartThings Library Installation Instructions
@@ -52,7 +60,8 @@ SmartThings library consists of:
   - If using Arduino/W5100, Arduino/ESP-01 or ESP8266, find the lines of the Sketch where it says "<---You must edit this line!"
 	- The Arduino must be assigned a static TCP/IP address, Gateway, DNS, Subnet Mask, MAC Address (W5100 only), SSID + Password (WiFiEsp + ESP8266 only)
 	- *** NOTE:  If using the W5100 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch! Please leave the first octet in the MAC Address '06' as certain MAC addresses are UNICAST while others are MULTICAST.  Your MAC must be UNICAST and be a 'Locally Administered Address' Please see https://en.wikipedia.org/wiki/MAC_address#Address_details for more information ***
-	- Note:  If using an ESP-01 with an Arduino, the example assumes you're using an Arduino MEGA 2560.  Attach the ESP-01 to Hardware Serial "Serial1"
+	- *** NOTE:  If using the W5500 Shield, YOU MUST ASSIGN IT THE MAC ADDRESS that came with the shield in the sketch!
+ 	- Note:  If using an ESP-01 with an Arduino, the example assumes you're using an Arduino MEGA 2560.  Attach the ESP-01 to Hardware Serial "Serial1"  *** THE ARDUINO + ESP01 is currently not very stable!
   - Your IDE Serial Monitor Window should be set to 9600 baud
   - With the Serial Monitor windows open, load your sketch and watch the output
     - If using an Arduino/ESP-01, NodeMCU ESP8266 board, or ESP-01 the MAC Address will be printed out in the serial monitor window.  Write this down as you will need it to configure the Device using your ST App on your phone. (Note: MAC Address must later be entered with no delimeters in the form of "06AB23CD45EF" (without quotes!))
@@ -77,7 +86,7 @@ Arduino/ThingShield
   - Click the Update button at the bottom of the screen
   - On your phone, you should now see a device that has simple On/Off tile
 
-Ethernet Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01   
+Ethernet Arduino/W5100, Arduino/W5500, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01   
 - Install the Ethernet example Device Handler
   - Click on  "+ New Device Handler" button.
   - Select the "From Code" Tab near the top of the page

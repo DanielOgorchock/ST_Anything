@@ -56,6 +56,8 @@
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define BOARD_TYPE BOARD_TYPE_MEGA
 #define DISABLE_SOFTWARESERIAL  //Assume HW Serial is being used.  Saves some program space while using HW Serial
+#elif defined(ARDUINO_ARCH_SAMD)
+#define DISABLE_SOFTWARESERIAL  //The SAMD chip (e.g. MKR1000) does not support SoftwareSerial
 #else	//assume user is using an UNO for the unknown case
 #define BOARD_TYPE BOARD_TYPE_UNO
 //#define DISABLE_SOFTWARESERIAL  // uncomment to disable SoftwareSerial to save some program space if neccessary while using HW Serial

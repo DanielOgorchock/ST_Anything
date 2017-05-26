@@ -218,7 +218,11 @@ void setup()
   st::Everything::callOnMsgSend = callback;
   
   //Create the SmartThings WiFiEsp (ESP-01) Communications Object
-  st::Everything::SmartThing = new st::SmartThingsWiFiEsp(&Serial1, str_ssid, str_password, ip, serverPort, hubIp, hubPort, st::receiveSmartString);
+    //STATIC IP Assignment - Recommended
+    st::Everything::SmartThing = new st::SmartThingsWiFiEsp(&Serial1, str_ssid, str_password, ip, serverPort, hubIp, hubPort, st::receiveSmartString);
+ 
+    //DHCP IP Assigment - Must set your router's DHCP server to provice a static IP address for this device's MAC address
+    //st::Everything::SmartThing = new st::SmartThingsWiFiEsp(&Serial1, str_ssid, str_password, serverPort, hubIp, hubPort, st::receiveSmartString);
 
   //Initialize the Serial1 baudrate to match your ESP-01's baud rate (e.g. 9600, 57600, 115200)
   Serial1.begin(115200); 

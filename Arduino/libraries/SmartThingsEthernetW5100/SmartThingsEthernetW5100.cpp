@@ -7,7 +7,6 @@
 //	History
 //	2017-02-04  Dan Ogorchock  Created
 //*******************************************************************************
-#if defined ARDUINO_ARCH_AVR
 
 #include "SmartThingsEthernetW5100.h"
 
@@ -27,6 +26,19 @@ namespace st
     	}
 	}
 
+	//*******************************************************************************
+	// SmartThingsEthernet Constructor - DHCP 
+	//*******************************************************************************
+	SmartThingsEthernetW5100::SmartThingsEthernetW5100(byte mac[], uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
+		SmartThingsEthernet(serverPort, hubIP, hubPort, callout, shieldType, enableDebug, transmitInterval, true),
+		st_server(serverPort)
+	{
+		//make a local copy of the MAC address
+		for (byte x = 0; x <= 5; x++)
+		{
+			st_mac[x] = mac[x];
+		}
+	}
 
 	//*****************************************************************************
 	//SmartThingsEthernet::~SmartThingsEthernet()
@@ -41,32 +53,45 @@ namespace st
 	//*******************************************************************************
 	void SmartThingsEthernetW5100::init(void)
 	{
+		char buf[20];
+
 		// give the ethernet module time to boot up:
 		delay(1000);
-		Ethernet.begin(st_mac, st_localIP, st_localDNSServer, st_localGateway, st_localSubnetMask);
+
+		if (st_DHCP == false)
+		{
+			Ethernet.begin(st_mac, st_localIP, st_localDNSServer, st_localGateway, st_localSubnetMask);
+		}
+		else
+		{
+			Ethernet.begin(st_mac);
+		}
+
 		st_server.begin();
 
-		if (_isDebugEnabled)
-		{
-			Serial.print(F("MAC Address = "));
-			Serial.print(st_mac[0], HEX);
-			Serial.print(F(":"));
-			Serial.print(st_mac[1], HEX);
-			Serial.print(F(":"));
-			Serial.print(st_mac[2], HEX);
-			Serial.print(F(":"));
-			Serial.print(st_mac[3], HEX);
-			Serial.print(F(":"));
-			Serial.print(st_mac[4], HEX);
-			Serial.print(F(":"));
-			Serial.println(st_mac[5], HEX);
-			Serial.print(F("hubIP = "));
-			Serial.println(st_hubIP);
-			Serial.print(F("hubPort = "));
-			Serial.println(st_hubPort);
 
-			Serial.println(F("SmartThingsEthernet: Intialized"));
-		}
+		//if (_isDebugEnabled)
+		//{
+		Serial.println(F(""));
+		Serial.println(F("Enter the following three lines of data into ST App on your phone!"));
+		Serial.print(F("localIP = "));
+		Serial.println(Ethernet.localIP());
+		Serial.print(F("serverPort = "));
+		Serial.println(st_serverPort);
+		Serial.print(F("MAC Address = "));
+		sprintf(buf, "%02X:%02X:%02X:%02X:%02X:%02X", st_mac[0], st_mac[1], st_mac[2], st_mac[3], st_mac[4], st_mac[5]);
+		Serial.println(buf);
+		Serial.println(F(""));
+
+		Serial.print(F("hubIP = "));
+		Serial.println(st_hubIP);
+		Serial.print(F("hubPort = "));
+		Serial.println(st_hubPort);
+
+		Serial.println(F(""));
+		Serial.println(F("SmartThingsEthernet: Intialized"));
+		Serial.println(F(""));
+		//}
 	}
 
 	//*****************************************************************************
@@ -74,6 +99,8 @@ namespace st
 	//*****************************************************************************
 	void SmartThingsEthernetW5100::run(void)
 	{
+		if (st_DHCP) { Ethernet.maintain(); }  //Renew DHCP lease if necessary
+
 		String readString;
 		String tempString;
 		EthernetClient client = st_server.available();
@@ -178,4 +205,3 @@ namespace st
 	}
 
 }
-#endif
