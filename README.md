@@ -19,7 +19,7 @@ Turn your Arduino UNO/MEGA/MKR1000 or NodeMCU ESP8266 into a Anything you can im
 - Arduino with SmartThings ThingShield
 - Arduino with W5100 Ethernet shield
 - Arduino with W5500 Ethernet shield
-- Arduino with WiFi101 Shield
+- Arduino with WiFi101 Shield (or Adafruit ATWINC1500 module)
 - Arduino MKR1000 (has integrated WiFi101)
 - Arduino with ESP-01 for WiFi
 - Standalone NodeMCU v1.0 ESP8266-12e
