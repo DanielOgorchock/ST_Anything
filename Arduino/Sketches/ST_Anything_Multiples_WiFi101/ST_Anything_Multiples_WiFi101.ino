@@ -1,12 +1,12 @@
 //******************************************************************************************
-//  File: ST_Anything_Multiples_EthernetW5100.ino
+//  File: ST_Anything_Multiples_WiFi101.ino
 //  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son)
 //
 //  Summary:  This Arduino Sketch, along with the ST_Anything library and the revised SmartThings 
-//            library, demonstrates the ability of one Arduino + Ethernet W5100 Shield to 
-//            implement a multi input/output custom device for integration into SmartThings.
+//            library, demonstrates the ability of one Arduino MEGA + WiFi101/Adafruit ATWINC1500
+//            shield to implement a multi input/output custom device for integration into SmartThings.
 //            The ST_Anything library takes care of all of the work to schedule device updates
-//            as well as all communications with the Ethernet W5100 Shield.
+//            as well as all communications with the WiFi101/Adafruit ATWINC1500 shield.
 //
 //            ST_Anything_Multiples implements the following ST Capabilities in multiples of 2 as a demo of what is possible with a single Arduino
 //              - 2 x Door Control devices (used typically for Garage Doors - input pin (contact sensor) and output pin (relay switch)
@@ -24,28 +24,21 @@
 //              - 2 x Button devices (sends "pushed" if held for less than 1 second, else sends "held"
 //              - 2 x Alarm devices - 1 siren only, 1 siren and strobe (using simple digital outputs)
 //
-//            During the development of this re-usable library, it became apparent that the 
-//            Arduino UNO R3's very limited 2K of SRAM was very limiting in the number of 
-//            devices that could be implemented simultaneously.  A tremendous amount of effort
-//            has gone into reducing the SRAM usage, including siginificant improvements to
-//            the SmartThings Arduino library.
+//            This example requires the use of an Arduino MEGA2560 due to the number of devices defined.  An Arduino UNO 
+//            could also be used if the number of devices was kept to a minimum
 //
-//            Note: This sketch was fully tested on an Arduino MEGA 2560 using the Ethernet W5100 Shield.
 //    
 //  Change History:
 //
 //    Date        Who            What
 //    ----        ---            ----
-//    2015-01-03  Dan & Daniel   Original Creation
-//    2017-02-12  Dan Ogorchock  Revised to use the new SMartThings v2.0 library
-//    2017-04-16  Dan Ogorchock  New sketch to demonstrate multiple SmartThings Capabilties of each type
-//    2017-04-22  Dan Ogorchock  Added Voltage, Carbon Monoxide, and Alarm with Strobe
+//    2017-05-06  Dan Ogorchock  New example sketch for use with the WiFi 101 shield or Adafruit ATWINC1500
 //
 //******************************************************************************************
 //******************************************************************************************
-// SmartThings Library for Arduino Ethernet W5100 Shield
+// SmartThings Library for Arduino + WiFi 101 shield combination.
 //******************************************************************************************
-#include <SmartThingsEthernetW5100.h>    //Library to provide API to the SmartThings Ethernet W5100 Shield
+#include <SmartThingsWiFi101.h>    //Library to provide API to the SmartThings WiFi 101 Shield
 
 //******************************************************************************************
 // ST_Anything Library 
@@ -74,24 +67,24 @@
 
 //**********************************************************************************************************
 //Define which Arduino Pins will be used for each device
-//  Notes: Arduino communicates with both the W5100 and SD card using the SPI bus (through the ICSP header). 
-//         This is on digital pins 10, 11, 12, and 13 on the Uno and pins 50, 51, and 52 on the Mega. 
-//         On both boards, pin 10 is used to select the W5100 and pin 4 for the SD card. 
-//         These pins cannot be used for general I/O. On the Mega, the hardware SS pin, 53, 
-//         is not used to select either the W5100 or the SD card, but it must be kept as an output 
-//         or the SPI interface won't work.
-//         See https://www.arduino.cc/en/Main/ArduinoEthernetShieldV1 for details on the W5100 Sield
+//  Notes: Arduino communicates with the WiFI 101/Adafruit ATWINC1500 using SPI.  THis requires certain pins 
+//         to be reserved and the user must not try to use the pins in their sketch. 
+//         This is on digital pins 11, 12, and 13 on the Uno and pins 50, 51, and 52 on the Mega. 
+//         On both boards, pin 10 is used as SS. On the Mega, the hardware SS pin, 53, is not used, but it 
+//         must be kept as an output or the SPI interface won't work. Pins 5 & 7 are also reserved (at least for 
+//         the Adafruit ATWINC1500 WiFi module.)
 //**********************************************************************************************************
-//"RESERVED" pins for W5100 Ethernet Shield - best to avoid
-#define PIN_4_RESERVED            4   //reserved by W5100 Shield on both UNO and MEGA
-#define PIN_1O_RESERVED           10  //reserved by W5100 Shield on both UNO and MEGA
-#define PIN_11_RESERVED           11  //reserved by W5100 Shield on UNO
-#define PIN_12_RESERVED           12  //reserved by W5100 Shield on UNO
-#define PIN_13_RESERVED           13  //reserved by W5100 Shield on UNO
-#define PIN_50_RESERVED           50  //reserved by W5100 Shield on MEGA
-#define PIN_51_RESERVED           51  //reserved by W5100 Shield on MEGA
-#define PIN_52_RESERVED           52  //reserved by W5100 Shield on MEGA
-#define PIN_53_RESERVED           53  //reserved by W5100 Shield on MEGA
+//"RESERVED" pins for WiFi 101/Adafruit ATWINC1500 - best to avoid
+#define PIN_5_RESERVED            5  //reserved on UNO and MEGA
+#define PIN_7_RESERVED            7  //reserved on UNO and MEGA
+#define PIN_10_RESERVED          10  //reserved on UNO and MEGA
+#define PIN_11_RESERVED          11  //reserved on UNO
+#define PIN_12_RESERVED          12  //reserved on UNO
+#define PIN_13_RESERVED          13  //reserved on UNO
+#define PIN_50_RESERVED          50  //reserved on MEGA
+#define PIN_51_RESERVED          51  //reserved on MEGA
+#define PIN_52_RESERVED          52  //reserved on MEGA
+#define PIN_53_RESERVED          53  //reserved on MEGA
 
 
 //Analog Pins
@@ -132,23 +125,24 @@
 #define PIN_BUTTON2               49  //SmartThings Capabilty Button / Holdable Button
 
 //******************************************************************************************
-//W5100 Ethernet Shield Information
+//WiFi101 Information
 //****************************************************************************************** 
-byte mac[] = {0x06,0x02,0x03,0x04,0x05,0x06}; //MAC address, leave first octet 0x06, change others to be unique //  <---You must edit this line!
-IPAddress ip(192, 168, 1, 226);               //Arduino device IP Address                   //  <---You must edit this line!
-IPAddress gateway(192, 168, 1, 1);            //router gateway                              //  <---You must edit this line!
-IPAddress subnet(255, 255, 255, 0);           //LAN subnet mask                             //  <---You must edit this line!
-IPAddress dnsserver(192, 168, 1, 1);          //DNS server                                  //  <---You must edit this line!
-const unsigned int serverPort = 8090;         // port to run the http server on
+String str_ssid     = "yourSSIDhere";                            //  <---You must edit this line!
+String str_password = "yourWiFiPasswordhere";                    //  <---You must edit this line!
+IPAddress ip(192, 168, 1, 232);       // Device IP Address       //  <---You must edit this line!
+IPAddress gateway(192, 168, 1, 1);    //Router gateway           //  <---You must edit this line!
+IPAddress subnet(255, 255, 255, 0);   //LAN subnet mask          //  <---You must edit this line!
+IPAddress dnsserver(192, 168, 1, 1);  //DNS server               //  <---You must edit this line!
+const unsigned int serverPort = 8090; // port to run the http server on
 
 // Smartthings hub information
-IPAddress hubIp(192,168,1,149);               // smartthings hub ip                         //  <---You must edit this line!
-const unsigned int hubPort = 39500;           // smartthings hub port
+IPAddress hubIp(192,168,1,149);       // smartthings hub ip      //  <---You must edit this line!
+const unsigned int hubPort = 39500;   // smartthings hub port
 
 //******************************************************************************************
 //st::Everything::callOnMsgSend() optional callback routine.  This is a sniffer to monitor 
 //    data being sent to ST.  This allows a user to act on data changes locally within the 
-//    Arduino sktech withotu having to rely on the ST Cloud for time-critical tasks.
+//    Arduino sktech.
 //******************************************************************************************
 void callback(const String &msg)
 {
@@ -184,7 +178,7 @@ void setup()
   //           device (e.g. contact1, contact2, contact3, etc...)  You can rename the Child Devices
   //           to match your specific use case in the ST Phone Application.
   //******************************************************************************************
-  //Polling Sensors 
+//Polling Sensors 
   static st::PS_Water               sensor1(F("water1"), 60, 0, PIN_WATER_1, 200);
   static st::PS_Water               sensor2(F("water2"), 60, 10, PIN_WATER_2, 200);
   static st::PS_Illuminance         sensor3(F("illuminance1"), 60, 20, PIN_ILLUMINANCE_1, 0, 1023, 0, 1000);
@@ -217,7 +211,7 @@ void setup()
   static st::EX_Switch              executor2(F("switch2"), PIN_SWITCH_2, LOW, true);
   static st::EX_Alarm               executor3(F("alarm1"), PIN_ALARM_1, LOW, true);
   static st::EX_Alarm               executor4(F("alarm2"), PIN_ALARM_2, LOW, true, PIN_STROBE_2);
-    
+   
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //*****************************************************************************
@@ -234,13 +228,13 @@ void setup()
   //Initialize the optional local callback routine (safe to comment out if not desired)
   st::Everything::callOnMsgSend = callback;
   
-  //Create the SmartThings EthernetW5100 Communications Object
+  //Create the SmartThings WiFi101 Communications Object
     //STATIC IP Assignment - Recommended
-    st::Everything::SmartThing = new st::SmartThingsEthernetW5100(mac, ip, gateway, subnet, dnsserver, serverPort, hubIp, hubPort, st::receiveSmartString);
+    st::Everything::SmartThing = new st::SmartThingsWiFi101(str_ssid, str_password, ip, gateway, subnet, dnsserver, serverPort, hubIp, hubPort, st::receiveSmartString);
  
     //DHCP IP Assigment - Must set your router's DHCP server to provice a static IP address for this device's MAC address
-    //st::Everything::SmartThing = new st::SmartThingsEthernetW5100(mac, serverPort, hubIp, hubPort, st::receiveSmartString);
-
+    //st::Everything::SmartThing = new st::SmartThingsWiFi101(str_ssid, str_password, serverPort, hubIp, hubPort, st::receiveSmartString);
+  
   //Run the Everything class' init() routine which establishes Ethernet communications with the SmartThings Hub
   st::Everything::init();
   
@@ -282,6 +276,7 @@ void setup()
   //Initialize each of the devices which were added to the Everything Class
   //*****************************************************************************
   st::Everything::initDevices();
+  
 }
 
 //******************************************************************************************

@@ -1,51 +1,39 @@
 //******************************************************************************************
-//  File: ST_Anything_Multiples_EthernetW5100.ino
+//  File: ST_Anything_Multiples_MKR1000.ino
 //  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son)
 //
 //  Summary:  This Arduino Sketch, along with the ST_Anything library and the revised SmartThings 
-//            library, demonstrates the ability of one Arduino + Ethernet W5100 Shield to 
-//            implement a multi input/output custom device for integration into SmartThings.
+//            library, demonstrates the ability of one Arduino MKR1000 to implement a multiple
+//            input/output custom device for integration into SmartThings.
 //            The ST_Anything library takes care of all of the work to schedule device updates
-//            as well as all communications with the Ethernet W5100 Shield.
+//            as well as all communications with the WiFi101 onboard chip.
 //
 //            ST_Anything_Multiples implements the following ST Capabilities in multiples of 2 as a demo of what is possible with a single Arduino
-//              - 2 x Door Control devices (used typically for Garage Doors - input pin (contact sensor) and output pin (relay switch)
 //              - 2 x Contact Sensor devices (used to monitor magnetic door sensors)
 //              - 2 x Switch devices (used to turn on a digital output (e.g. LED, relay, etc...)
 //              - 2 x Water Sensor devices (using an analog input pin to measure voltage from a water detector baord)
 //              - 2 x Illuminance Measurement devices (using a photoresitor attached to ananlog input)
 //              - 2 x Voltage Measurement devices (using a photoresitor attached to ananlog input)
 //              - 2 x Smoke Detector devices (using simple digital input)
-//              - 2 x Carbon Monoxide Detector devices (using simple digital input)
 //              - 2 x Motion devices (used to detect motion)
 //              - 2 x Temperature Measurement devices (Temperature from DHT22 device)
 //              - 2 x Humidity Measurement devices (Humidity from DHT22 device)
 //              - 2 x Relay Switch devices (used to turn on a digital output for a set number of cycles And On/Off times (e.g.relay, etc...))
-//              - 2 x Button devices (sends "pushed" if held for less than 1 second, else sends "held"
 //              - 2 x Alarm devices - 1 siren only, 1 siren and strobe (using simple digital outputs)
 //
-//            During the development of this re-usable library, it became apparent that the 
-//            Arduino UNO R3's very limited 2K of SRAM was very limiting in the number of 
-//            devices that could be implemented simultaneously.  A tremendous amount of effort
-//            has gone into reducing the SRAM usage, including siginificant improvements to
-//            the SmartThings Arduino library.
-//
-//            Note: This sketch was fully tested on an Arduino MEGA 2560 using the Ethernet W5100 Shield.
-//    
+//            This example requires the use of an Arduino MKR1000.
+// 
 //  Change History:
 //
 //    Date        Who            What
 //    ----        ---            ----
-//    2015-01-03  Dan & Daniel   Original Creation
-//    2017-02-12  Dan Ogorchock  Revised to use the new SMartThings v2.0 library
-//    2017-04-16  Dan Ogorchock  New sketch to demonstrate multiple SmartThings Capabilties of each type
-//    2017-04-22  Dan Ogorchock  Added Voltage, Carbon Monoxide, and Alarm with Strobe
+//    2017-05-28  Dan Ogorchock  New example sketch for use with the Arduino MKR1000
 //
 //******************************************************************************************
 //******************************************************************************************
-// SmartThings Library for Arduino Ethernet W5100 Shield
+// SmartThings Library for Arduino MKR1000.
 //******************************************************************************************
-#include <SmartThingsEthernetW5100.h>    //Library to provide API to the SmartThings Ethernet W5100 Shield
+#include <SmartThingsWiFi101.h>    //Library to provide API to the SmartThings WiFi 101 Shield
 
 //******************************************************************************************
 // ST_Anything Library 
@@ -74,25 +62,9 @@
 
 //**********************************************************************************************************
 //Define which Arduino Pins will be used for each device
-//  Notes: Arduino communicates with both the W5100 and SD card using the SPI bus (through the ICSP header). 
-//         This is on digital pins 10, 11, 12, and 13 on the Uno and pins 50, 51, and 52 on the Mega. 
-//         On both boards, pin 10 is used to select the W5100 and pin 4 for the SD card. 
-//         These pins cannot be used for general I/O. On the Mega, the hardware SS pin, 53, 
-//         is not used to select either the W5100 or the SD card, but it must be kept as an output 
-//         or the SPI interface won't work.
-//         See https://www.arduino.cc/en/Main/ArduinoEthernetShieldV1 for details on the W5100 Sield
+//  Notes: Arduino MKR1000 communicates directly to the onboard ATWINC1500 WiFi module without interfering 
+//         with remaining MKR1000 pins.  Thus A0-A6 and D0-D14 an be used for your sketch. 
 //**********************************************************************************************************
-//"RESERVED" pins for W5100 Ethernet Shield - best to avoid
-#define PIN_4_RESERVED            4   //reserved by W5100 Shield on both UNO and MEGA
-#define PIN_1O_RESERVED           10  //reserved by W5100 Shield on both UNO and MEGA
-#define PIN_11_RESERVED           11  //reserved by W5100 Shield on UNO
-#define PIN_12_RESERVED           12  //reserved by W5100 Shield on UNO
-#define PIN_13_RESERVED           13  //reserved by W5100 Shield on UNO
-#define PIN_50_RESERVED           50  //reserved by W5100 Shield on MEGA
-#define PIN_51_RESERVED           51  //reserved by W5100 Shield on MEGA
-#define PIN_52_RESERVED           52  //reserved by W5100 Shield on MEGA
-#define PIN_53_RESERVED           53  //reserved by W5100 Shield on MEGA
-
 
 //Analog Pins
 #define PIN_WATER_1               A0  //SmartThings Capability "Water Sensor"
@@ -103,52 +75,45 @@
 #define PIN_VOLTAGE_2             A5  //SmartThings Capability "Voltage Measurement"
 
 //Digital Pins
-#define PIN_TEMPERATUREHUMIDITY_1 22  //SmartThings Capabilities "Temperature Measurement" and "Relative Humidity Measurement"
-#define PIN_TEMPERATUREHUMIDITY_2 23  //SmartThings Capabilities "Temperature Measurement" and "Relative Humidity Measurement"
-#define PIN_MOTION_1              24  //SmartThings Capability "Motion Sensor"
-#define PIN_MOTION_2              25  //SmartThings Capability "Motion Sensor"
-#define PIN_CONTACT_1             26  //SmartThings Capability "Contact Sensor"
-#define PIN_CONTACT_2             27  //SmartThings Capability "Contact Sensor"
-#define PIN_SWITCH_1              28  //SmartThings Capability "Switch"
-#define PIN_SWITCH_2              29  //SmartThings Capability "Switch"
-#define PIN_TIMEDRELAY_1          30  //SmartThings Capability "Relay Switch"
-#define PIN_TIMEDRELAY_2          31  //SmartThings Capability "Relay Switch"
-#define PIN_SMOKE_1               32  //SmartThings Capability "Smoke Detector"
-#define PIN_SMOKE_2               33  //SmartThings Capability "Smoke Detector"
-#define PIN_ALARM_1               34  //SmartThings Capability "Alarm"
-#define PIN_ALARM_2               40  //SmartThings Capability "Alarm"
-#define PIN_STROBE_2              41  //SmartThings Capability "Alarm"              
-#define PIN_CO_1                  42  //SmartThings Capability "Carbon Monoxide Detector"
-#define PIN_CO_2                  43  //SmartThings Capability "Carbon Monoxide Detector"
-
-//Garage Door Pins 
-#define PIN_DOORCONTROL_CONTACT_1 35  //SmartThings Capabilty "Door Control" 
-#define PIN_DOORCONTROL_RELAY_1   36  //SmartThings Capabilty "Door Control" 
-#define PIN_DOORCONTROL_CONTACT_2 37  //SmartThings Capabilty "Door Control"  
-#define PIN_DOORCONTROL_RELAY_2   38  //SmartThings Capabilty "Door Control" 
+#define PIN_TEMPERATUREHUMIDITY_1 0  //SmartThings Capabilities "Temperature Measurement" and "Relative Humidity Measurement"
+#define PIN_TEMPERATUREHUMIDITY_2 1  //SmartThings Capabilities "Temperature Measurement" and "Relative Humidity Measurement"
+#define PIN_MOTION_1              2  //SmartThings Capability "Motion Sensor"
+#define PIN_MOTION_2              3  //SmartThings Capability "Motion Sensor"
+#define PIN_CONTACT_1             4  //SmartThings Capability "Contact Sensor"
+#define PIN_CONTACT_2             5  //SmartThings Capability "Contact Sensor"
+#define PIN_SWITCH_1              6  //SmartThings Capability "Switch"
+#define PIN_SWITCH_2              7  //SmartThings Capability "Switch"
+#define PIN_TIMEDRELAY_1          8  //SmartThings Capability "Relay Switch"
+#define PIN_TIMEDRELAY_2          9  //SmartThings Capability "Relay Switch"
+#define PIN_SMOKE_1               10 //SmartThings Capability "Smoke Detector"
+#define PIN_SMOKE_2               11 //SmartThings Capability "Smoke Detector"
+#define PIN_ALARM_1               12 //SmartThings Capability "Alarm"
+#define PIN_ALARM_2               13 //SmartThings Capability "Alarm"
+#define PIN_STROBE_2              14 //SmartThings Capability "Alarm"              
 
 //Pushbutton Pins
-#define PIN_BUTTON1               48  //SmartThings Capabilty Button / Holdable Button
-#define PIN_BUTTON2               49  //SmartThings Capabilty Button / Holdable Button
+//#define PIN_BUTTON1               48  //SmartThings Capabilty Button / Holdable Button
+//#define PIN_BUTTON2               49  //SmartThings Capabilty Button / Holdable Button
 
 //******************************************************************************************
-//W5100 Ethernet Shield Information
+//WiFi101 Information
 //****************************************************************************************** 
-byte mac[] = {0x06,0x02,0x03,0x04,0x05,0x06}; //MAC address, leave first octet 0x06, change others to be unique //  <---You must edit this line!
-IPAddress ip(192, 168, 1, 226);               //Arduino device IP Address                   //  <---You must edit this line!
-IPAddress gateway(192, 168, 1, 1);            //router gateway                              //  <---You must edit this line!
-IPAddress subnet(255, 255, 255, 0);           //LAN subnet mask                             //  <---You must edit this line!
-IPAddress dnsserver(192, 168, 1, 1);          //DNS server                                  //  <---You must edit this line!
-const unsigned int serverPort = 8090;         // port to run the http server on
+String str_ssid     = "yourSSIDhere";                            //  <---You must edit this line!
+String str_password = "yourWiFiPasswordhere";                    //  <---You must edit this line!
+IPAddress ip(192, 168, 1, 233);       // Device IP Address       //  <---You must edit this line!
+IPAddress gateway(192, 168, 1, 1);    //Router gateway           //  <---You must edit this line!
+IPAddress subnet(255, 255, 255, 0);   //LAN subnet mask          //  <---You must edit this line!
+IPAddress dnsserver(192, 168, 1, 1);  //DNS server               //  <---You must edit this line!
+const unsigned int serverPort = 8090; // port to run the http server on
 
 // Smartthings hub information
-IPAddress hubIp(192,168,1,149);               // smartthings hub ip                         //  <---You must edit this line!
-const unsigned int hubPort = 39500;           // smartthings hub port
+IPAddress hubIp(192,168,1,149);       // smartthings hub ip      //  <---You must edit this line!
+const unsigned int hubPort = 39500;   // smartthings hub port
 
 //******************************************************************************************
 //st::Everything::callOnMsgSend() optional callback routine.  This is a sniffer to monitor 
 //    data being sent to ST.  This allows a user to act on data changes locally within the 
-//    Arduino sktech withotu having to rely on the ST Cloud for time-critical tasks.
+//    Arduino sktech.
 //******************************************************************************************
 void callback(const String &msg)
 {
@@ -184,7 +149,7 @@ void setup()
   //           device (e.g. contact1, contact2, contact3, etc...)  You can rename the Child Devices
   //           to match your specific use case in the ST Phone Application.
   //******************************************************************************************
-  //Polling Sensors 
+//Polling Sensors 
   static st::PS_Water               sensor1(F("water1"), 60, 0, PIN_WATER_1, 200);
   static st::PS_Water               sensor2(F("water2"), 60, 10, PIN_WATER_2, 200);
   static st::PS_Illuminance         sensor3(F("illuminance1"), 60, 20, PIN_ILLUMINANCE_1, 0, 1023, 0, 1000);
@@ -201,23 +166,17 @@ void setup()
   static st::IS_Contact             sensor12(F("contact2"), PIN_CONTACT_2, LOW, true, 500);
   static st::IS_Smoke               sensor13(F("smoke1"), PIN_SMOKE_1, HIGH, true, 500);
   static st::IS_Smoke               sensor14(F("smoke2"), PIN_SMOKE_2, HIGH, true, 500);
-  static st::IS_DoorControl         sensor15(F("doorControl1"), PIN_DOORCONTROL_CONTACT_1, LOW, true, PIN_DOORCONTROL_RELAY_1, LOW, true, 1000);
-  static st::IS_DoorControl         sensor16(F("doorControl2"), PIN_DOORCONTROL_CONTACT_2, LOW, true, PIN_DOORCONTROL_RELAY_2, LOW, true, 1000);
-  static st::IS_Button              sensor17(F("button1"), PIN_BUTTON1, 1000, LOW, true, 500);
-  static st::IS_Button              sensor18(F("button2"), PIN_BUTTON2, 1000, LOW, true, 500);
-  static st::IS_CarbonMonoxide      sensor19(F("carbonMonoxide1"), PIN_CO_1, HIGH, true, 500);
-  static st::IS_CarbonMonoxide      sensor20(F("carbonMonoxide2"), PIN_CO_2, HIGH, true, 500);
 
   //Special sensors/executors (uses portions of both polling and executor classes)
-  static st::S_TimedRelay           sensor21(F("relaySwitch1"), PIN_TIMEDRELAY_1, LOW, true, 3000, 0, 1);
-  static st::S_TimedRelay           sensor22(F("relaySwitch2"), PIN_TIMEDRELAY_2, LOW, true, 3000, 0, 1);
+  static st::S_TimedRelay           sensor15(F("relaySwitch1"), PIN_TIMEDRELAY_1, LOW, true, 3000, 0, 1); //Inverted logic for "Active Low" Relay Board
+  static st::S_TimedRelay           sensor16(F("relaySwitch2"), PIN_TIMEDRELAY_2, LOW, true, 3000, 0, 1); //Inverted logic for "Active Low" Relay Board
 
   //Executors
-  static st::EX_Switch              executor1(F("switch1"), PIN_SWITCH_1, LOW, true);
-  static st::EX_Switch              executor2(F("switch2"), PIN_SWITCH_2, LOW, true);
-  static st::EX_Alarm               executor3(F("alarm1"), PIN_ALARM_1, LOW, true);
-  static st::EX_Alarm               executor4(F("alarm2"), PIN_ALARM_2, LOW, true, PIN_STROBE_2);
-    
+  static st::EX_Switch              executor1(F("switch1"), PIN_SWITCH_1, LOW, false);            //Non-inverted logic for "Active High" Relay Board
+  static st::EX_Switch              executor2(F("switch2"), PIN_SWITCH_2, LOW, true);             //Inverted logic for "Active Low" Relay Board
+  static st::EX_Alarm               executor3(F("alarm1"), PIN_ALARM_1, LOW, true);               //Inverted logic for "Active Low" Relay Board
+  static st::EX_Alarm               executor4(F("alarm2"), PIN_ALARM_2, LOW, true, PIN_STROBE_2); //Inverted logic for "Active Low" Relay Board
+   
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //*****************************************************************************
@@ -234,13 +193,13 @@ void setup()
   //Initialize the optional local callback routine (safe to comment out if not desired)
   st::Everything::callOnMsgSend = callback;
   
-  //Create the SmartThings EthernetW5100 Communications Object
+  //Create the SmartThings WiFi101 Communications Object
     //STATIC IP Assignment - Recommended
-    st::Everything::SmartThing = new st::SmartThingsEthernetW5100(mac, ip, gateway, subnet, dnsserver, serverPort, hubIp, hubPort, st::receiveSmartString);
+    st::Everything::SmartThing = new st::SmartThingsWiFi101(str_ssid, str_password, ip, gateway, subnet, dnsserver, serverPort, hubIp, hubPort, st::receiveSmartString);
  
     //DHCP IP Assigment - Must set your router's DHCP server to provice a static IP address for this device's MAC address
-    //st::Everything::SmartThing = new st::SmartThingsEthernetW5100(mac, serverPort, hubIp, hubPort, st::receiveSmartString);
-
+    //st::Everything::SmartThing = new st::SmartThingsWiFi101(str_ssid, str_password, serverPort, hubIp, hubPort, st::receiveSmartString);
+  
   //Run the Everything class' init() routine which establishes Ethernet communications with the SmartThings Hub
   st::Everything::init();
   
@@ -263,12 +222,6 @@ void setup()
   st::Everything::addSensor(&sensor14); 
   st::Everything::addSensor(&sensor15); 
   st::Everything::addSensor(&sensor16); 
-  st::Everything::addSensor(&sensor17); 
-  st::Everything::addSensor(&sensor18); 
-  st::Everything::addSensor(&sensor19); 
-  st::Everything::addSensor(&sensor20); 
-  st::Everything::addSensor(&sensor21); 
-  st::Everything::addSensor(&sensor22); 
     
   //*****************************************************************************
   //Add each executor to the "Everything" Class

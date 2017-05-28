@@ -1,21 +1,22 @@
 //*******************************************************************************
-//	SmartThings NodeMCU ESP8266 Wifi Library 
+//	SmartThings Arduino Wifi101 Library - Use an Arduino with an Arduino WiFi 101 
+//                                        shield or Adafruit ATWINC1500
 //
 //	License
 //	(C) Copyright 2017 Dan Ogorchock
 //
 //	History
-//	2017-02-10  Dan Ogorchock  Created
+//	2017-05-06  Dan Ogorchock  Created
 //*******************************************************************************
 
-#include "SmartThingsESP8266WiFi.h"
+#include "SmartThingsWiFi101.h"
 
 namespace st
 {
 	//*******************************************************************************
-	// SmartThingsESP8266WiFI Constructor - Static IP
+	// SmartThingsWiFi101 Constructor - Arduino + WiFi 101 - STATIC IP
 	//*******************************************************************************
-	SmartThingsESP8266WiFi::SmartThingsESP8266WiFi(String ssid, String password, IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
+	SmartThingsWiFi101::SmartThingsWiFi101(String ssid, String password, IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
 		SmartThingsEthernet(localIP, localGateway, localSubnetMask, localDNSServer, serverPort, hubIP, hubPort, callout, shieldType, enableDebug, transmitInterval, false),
 		st_server(serverPort)
 	{
@@ -23,10 +24,10 @@ namespace st
 		password.toCharArray(st_password, sizeof(st_password));
 	}
 
-	//*******************************************************************************
-	// SmartThingsESP8266WiFI Constructor - DHCP
-	//*******************************************************************************
-	SmartThingsESP8266WiFi::SmartThingsESP8266WiFi(String ssid, String password, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
+	//*****************************************************************************
+	// SmartThingsWiFi101 Constructor - Arduino + WiFi 101 - DHCP
+	//*****************************************************************************
+	SmartThingsWiFi101::SmartThingsWiFi101(String ssid, String password, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
 		SmartThingsEthernet(serverPort, hubIP, hubPort, callout, shieldType, enableDebug, transmitInterval, true),
 		st_server(serverPort)
 	{
@@ -34,47 +35,65 @@ namespace st
 		password.toCharArray(st_password, sizeof(st_password));
 	}
 
+
 	//*****************************************************************************
-	//SmartThingsESP8266WiFI::~SmartThingsESP8266WiFI()
+	//SmartThingsWiFi101::~SmartThingsWiFi101()
 	//*****************************************************************************
-	SmartThingsESP8266WiFi::~SmartThingsESP8266WiFi()
+	SmartThingsWiFi101::~SmartThingsWiFi101()
 	{
 
 	}
 
 	//*******************************************************************************
-	/// Initialize SmartThingsESP8266WiFI Library 
+	/// Initialize SmartThingsWiFi101 Library 
 	//*******************************************************************************
-	void SmartThingsESP8266WiFi::init(void)
+	void SmartThingsWiFi101::init(void)
 	{
+		int status = WL_IDLE_STATUS;     // the Wifi radio's status
+
 		Serial.println(F(""));
 		Serial.println(F("Initializing WiFi 101 network.  Please be patient..."));
 
-		// attempt to connect to WiFi network
-		WiFi.begin(st_ssid, st_password);
+		// check for the presence of the shield
+		if (WiFi.status() == WL_NO_SHIELD) {
+			Serial.println("WiFi 101 shield not present");
+			// don't continue
+			while (true);
+		}
 
-		while (WiFi.status() != WL_CONNECTED) {
+		// attempt to connect to WiFi network
+		while (status != WL_CONNECTED) {
 			Serial.print("Attempting to connect to WPA SSID: ");
 			Serial.println(st_ssid);
-			delay(1000);	// wait for connection:
+			// Connect to WPA/WPA2 network
+			status = WiFi.begin(st_ssid, st_password);
+			// wait 5 seconds for connection:
+			delay(5000);
 		}
 
 		if (st_DHCP == false)
 		{
-			WiFi.config(st_localIP, st_localGateway, st_localSubnetMask, st_localDNSServer);
+			// Set the local IP address
+			WiFi.config(st_localIP, st_localDNSServer, st_localGateway, st_localSubnetMask);
 		}
 
 		st_server.begin();
 
-		Serial.println(F(""));
+		uint8_t mac[6];
+		char buf[20];
+		IPAddress ip = WiFi.localIP();
+		Serial.println();
 		Serial.println(F("Enter the following three lines of data into ST App on your phone!"));
 		Serial.print(F("localIP = "));
-		Serial.println(WiFi.localIP());
+		Serial.println(ip);
 		Serial.print(F("serverPort = "));
 		Serial.println(st_serverPort);
+		WiFi.macAddress(mac);
 		Serial.print(F("MAC Address = "));
-		Serial.println(WiFi.macAddress());
-		Serial.println(F(""));
+		sprintf(buf, "%02X:%02X:%02X:%02X:%02X:%02X", mac[5], mac[4], mac[3], mac[2], mac[1], mac[0]);
+		Serial.println(buf);
+		Serial.println();
+
 		Serial.print(F("SSID = "));
 		Serial.println(st_ssid);
 		Serial.print(F("PASSWORD = "));
@@ -83,27 +102,27 @@ namespace st
 		Serial.println(st_hubIP);
 		Serial.print(F("hubPort = "));
 		Serial.println(st_hubPort);
-		Serial.println(F(""));
-		Serial.println(F("SmartThingsESP8266WiFI: Intialized"));
-		Serial.println(F(""));
+		Serial.println();
+		Serial.println(F("SmartThingsWiFi101: Intialized"));
+		Serial.println();
 	}
 
 	//*****************************************************************************
-	// Run SmartThingsESP8266WiFI Library 
+	// Run SmartThingsWiFi101 Library 
 	//*****************************************************************************
-	void SmartThingsESP8266WiFi::run(void)
+	void SmartThingsWiFi101::run(void)
 	{
 		String readString;
 		String tempString;
 
-		if (WiFi.isConnected() == false)
+		if (WiFi.status() != WL_CONNECTED)
 		{
 			if (_isDebugEnabled)
 			{
 				Serial.println(F("**********************************************************"));
 				Serial.println(F("**** WiFi Disconnected.  Attempting restart!        ******"));
 				Serial.println(F("**********************************************************"));
-
+				WiFi.end();
 				init();
 			}
 		}
@@ -138,7 +157,7 @@ namespace st
 						if (tempString.length() > 0) {
 							client.println(F("HTTP/1.1 200 OK")); //send new page
 							client.println();
-						}
+							}
 						else {
 							client.println(F("HTTP/1.1 204 No Content"));
 							client.println();
@@ -184,14 +203,14 @@ namespace st
 	//*******************************************************************************
 	/// Send Message out over Ethernet to the Hub 
 	//*******************************************************************************
-	void SmartThingsESP8266WiFi::send(String message)
+	void SmartThingsWiFi101::send(String message)
 	{
-		if (WiFi.isConnected() == false)
+		if (WiFi.status() != WL_CONNECTED)
 		{
 			Serial.println(F("**********************************************************"));
-			Serial.println(F("**** WiFi Disconnected.  Attempting restart!        ******"));
+			Serial.println(F("**** WiFi Module Disconnected.  Attempting restart! ******"));
 			Serial.println(F("**********************************************************"));
-
+			WiFi.end();
 			init();
 		}
 
@@ -229,8 +248,8 @@ namespace st
 				Serial.println(F("******        Attempting to restart network         *******"));
 				Serial.println(F("***********************************************************"));
 			}
-
-
+				
+			WiFi.end();  //End current broken WiFi Connection
 			init();      //Re-Init connection to get things working again
 
 			if (_isDebugEnabled)
@@ -239,7 +258,7 @@ namespace st
 				Serial.println(F("******        Attempting to resend missed data      *******"));
 				Serial.println(F("***********************************************************"));
 			}
-
+			
 
 			st_client.flush();
 			st_client.stop();
@@ -263,9 +282,9 @@ namespace st
 		// read any data returned from the POST
 		while (st_client.connected()) {
 			//while (st_client.available()) {
-			char c = st_client.read(); //gets byte from ethernet buffer
-									   //if (_isDebugEnabled) { Serial.print(c); } //prints byte to serial monitor
-									   //}
+				char c = st_client.read(); //gets byte from ethernet buffer
+				//if (_isDebugEnabled) { Serial.print(c); } //prints byte to serial monitor
+			//}
 		}
 
 		delay(1);

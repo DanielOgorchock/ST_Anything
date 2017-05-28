@@ -121,7 +121,7 @@
 //****************************************************************************************** 
 String str_ssid     = "yourSSIDhere";                            //  <---You must edit this line!
 String str_password = "yourWiFiPasswordhere";                    //  <---You must edit this line!
-IPAddress ip(192, 168, 1, 205);       // Device IP Address       //  <---You must edit this line!
+IPAddress ip(192, 168, 1, 228);       // Device IP Address       //  <---You must edit this line!
 const unsigned int serverPort = 8090; // port to run the http server on
 
 // Smartthings hub information

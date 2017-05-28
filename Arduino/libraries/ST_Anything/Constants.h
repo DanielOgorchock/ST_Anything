@@ -75,7 +75,7 @@ namespace st
 			static const byte MAX_NAME_LENGTH=30;
 			
 			//Serial debug console baud rate
-			static const unsigned int SERIAL_BAUDRATE=9600;				//Uncomment If NOT using pins 0,1 for ST Shield communications (default)
+			static const unsigned long SERIAL_BAUDRATE=115200;			//Uncomment If NOT using pins 0,1 for ST Shield communications (default)
 			//static const unsigned int SERIAL_BAUDRATE=2400;			//Uncomment if using Pins 0,1 for ST Shield Communications
 			#if defined(BOARD_MEGA) || defined(BOARD_MKR1000) || defined(BOARD_ESP8266)
 				//Maximum number of SENSOR objects

@@ -99,10 +99,11 @@ namespace st
 	//*****************************************************************************
 	void SmartThingsEthernetW5100::run(void)
 	{
-		if (st_DHCP) { Ethernet.maintain(); }  //Renew DHCP lease if necessary
-
 		String readString;
 		String tempString;
+
+		if (st_DHCP) { Ethernet.maintain(); }  //Renew DHCP lease if necessary
+
 		EthernetClient client = st_server.available();
 		if (client) {
 			boolean currentLineIsBlank = true;
@@ -110,22 +111,29 @@ namespace st
 				if (client.available()) {
 					char c = client.read();
 					//read char by char HTTP request
-					if (readString.length() < 100) {
+					if (readString.length() < 200) {
 						//store characters to string
 						readString += c;
 					}
+					else
+					{
+						if (_isDebugEnabled)
+						{
+							Serial.println(F(""));
+							Serial.println(F("SmartThings.run() - Exceeded 200 character limit"));
+							Serial.println(F(""));
+						}
+					}
+					// if you've gotten to the end of the line (received a newline
+					// character) and the line is blank, the http request has ended,
+					// so you can send a reply
 					if (c == '\n' && currentLineIsBlank) {
 						//now output HTML data header
 						tempString = readString.substring(readString.indexOf('/') + 1, readString.indexOf('?'));
 
 						if (tempString.length() > 0) {
 							client.println(F("HTTP/1.1 200 OK")); //send new page
-							if (_isDebugEnabled)
-							{
-								Serial.print(F("Handling request from ST. tempString = "));
-								Serial.println(tempString);
-							}
-							_calloutFunction(tempString);
+							client.println();
 						}
 						else {
 							client.println(F("HTTP/1.1 204 No Content"));
@@ -135,7 +143,6 @@ namespace st
 							{
 								Serial.println(F("No Valid Data Received"));
 							}
-
 						}
 						break;
 					}
@@ -149,12 +156,24 @@ namespace st
 					}
 				}
 			}
-			readString = "";
-			tempString = "";
 
 			delay(1);
 			//stopping client
 			client.stop();
+
+			//Handle the received data after cleaning up the network connection
+			if (tempString.length() > 0) {
+				if (_isDebugEnabled)
+				{
+					Serial.print(F("Handling request from ST. tempString = "));
+					Serial.println(tempString);
+				}
+				//Pass the message to user's SmartThings callout function
+				_calloutFunction(tempString);
+			}
+
+			readString = "";
+			tempString = "";
 		}
 	}
 
@@ -163,6 +182,9 @@ namespace st
 	//*******************************************************************************
 	void SmartThingsEthernetW5100::send(String message)
 	{
+		//Make sure the client is stopped, to free up socket for new conenction
+		st_client.stop();
+
 		if (st_client.connect(st_hubIP, st_hubPort))
 		{
 			st_client.println(F("POST / HTTP/1.1"));
@@ -170,8 +192,6 @@ namespace st
 			st_client.print(st_hubIP);
 			st_client.print(F(":"));
 			st_client.println(st_hubPort);
-			//st_client.println(message);
-
 			st_client.println(F("CONTENT-TYPE: text"));
 			st_client.print(F("CONTENT-LENGTH: "));
 			st_client.println(message.length());
@@ -183,21 +203,56 @@ namespace st
 			//connection failed;
 			if (_isDebugEnabled)
 			{
-				Serial.print(F(""));
-				Serial.println(F("SmartThingsEthernet::send() - Ethernet Connection Failed"));
+				Serial.println(F("***********************************************************"));
+				Serial.println(F("***** SmartThings.send() - Ethernet Connection Failed *****"));
+				Serial.println(F("***********************************************************"));
 				Serial.print(F("hubIP = "));
 				Serial.print(st_hubIP);
 				Serial.print(F(" "));
 				Serial.print(F("hubPort = "));
 				Serial.println(st_hubPort);
+
+				Serial.println(F("***********************************************************"));
+				Serial.println(F("******        Attempting to restart network         *******"));
+				Serial.println(F("***********************************************************"));
 			}
+
+
+			init();      //Re-Init connection to get things working again
+
+			if (_isDebugEnabled)
+			{
+				Serial.println(F("***********************************************************"));
+				Serial.println(F("******        Attempting to resend missed data      *******"));
+				Serial.println(F("***********************************************************"));
+			}
+
+
+			st_client.flush();
+			st_client.stop();
+			if (st_client.connect(st_hubIP, st_hubPort))
+			{
+				st_client.println(F("POST / HTTP/1.1"));
+				st_client.print(F("HOST: "));
+				st_client.print(st_hubIP);
+				st_client.print(F(":"));
+				st_client.println(st_hubPort);
+				st_client.println(F("CONTENT-TYPE: text"));
+				st_client.print(F("CONTENT-LENGTH: "));
+				st_client.println(message.length());
+				st_client.println();
+				st_client.println(message);
+			}
+
 		}
 
+		//if (_isDebugEnabled) { Serial.println(F("Ethernet.send(): Reading for reply data "));}
 		// read any data returned from the POST
-		while (st_client.connected() && !st_client.available()) delay(1);  //waits for data
-		while (st_client.connected() || st_client.available())             //connected or data available
-		{
-			char c = st_client.read();
+		while (st_client.connected()) {
+			//while (st_client.available()) {
+			char c = st_client.read(); //gets byte from ethernet buffer
+									   //if (_isDebugEnabled) { Serial.print(c); } //prints byte to serial monitor
+									   //}
 		}
 
 		delay(1);

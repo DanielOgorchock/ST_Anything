@@ -133,10 +133,10 @@
 #define PIN_BUTTON2               49  //SmartThings Capabilty Button / Holdable Button
 
 //******************************************************************************************
-//W5100 Ethernet Shield Information
+//W5500 Ethernet Shield Information
 //****************************************************************************************** 
 byte mac[] = {0x06,0x02,0x03,0x04,0x05,0x06}; //MAC address                                 //  <---You must edit this line using the MAC address provided with your W5500 Shield!
-IPAddress ip(192, 168, 1, 200);               //Arduino device IP Address                   //  <---You must edit this line!
+IPAddress ip(192, 168, 1, 231);               //Arduino device IP Address                   //  <---You must edit this line!
 IPAddress gateway(192, 168, 1, 1);            //router gateway                              //  <---You must edit this line!
 IPAddress subnet(255, 255, 255, 0);           //LAN subnet mask                             //  <---You must edit this line!
 IPAddress dnsserver(192, 168, 1, 1);          //DNS server                                  //  <---You must edit this line!

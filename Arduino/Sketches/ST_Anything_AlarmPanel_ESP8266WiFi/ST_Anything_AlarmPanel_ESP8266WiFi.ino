@@ -85,7 +85,7 @@
 //******************************************************************************************
 String str_ssid     = "yourSSIDhere";                           //  <---You must edit this line!
 String str_password = "yourWiFiPasswordhere";                   //  <---You must edit this line!
-IPAddress ip(192, 168, 1, 227);       //Device IP Address       //  <---You must edit this line!
+IPAddress ip(192, 168, 1, 234);       //Device IP Address       //  <---You must edit this line!
 IPAddress gateway(192, 168, 1, 1);    //Router gateway          //  <---You must edit this line!
 IPAddress subnet(255, 255, 255, 0);   //LAN subnet mask         //  <---You must edit this line!
 IPAddress dnsserver(192, 168, 1, 1);  //DNS server              //  <---You must edit this line!
