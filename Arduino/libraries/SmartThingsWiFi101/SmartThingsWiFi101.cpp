@@ -7,6 +7,7 @@
 //
 //	History
 //	2017-05-06  Dan Ogorchock  Created
+//  2017-05-29  Dan Ogorchock  Implemented Low Power Mode to reduce power usage/chip heat
 //*******************************************************************************
 
 #include "SmartThingsWiFi101.h"
@@ -76,6 +77,8 @@ namespace st
 			// Set the local IP address
 			WiFi.config(st_localIP, st_localDNSServer, st_localGateway, st_localSubnetMask);
 		}
+
+		WiFi.lowPowerMode(); //Reduce power usage when IDLE
 
 		st_server.begin();
 
