@@ -48,17 +48,20 @@ namespace st
 	void SmartThingsESP8266WiFi::init(void)
 	{
 		Serial.println(F(""));
-		Serial.println(F("Initializing WiFi 101 network.  Please be patient..."));
+		Serial.println(F("Initializing ESP8266 WiFi network.  Please be patient..."));
 
 		// attempt to connect to WiFi network
 		WiFi.begin(st_ssid, st_password);
-
+		Serial.print(F("Attempting to connect to WPA SSID: "));
+		Serial.println(st_ssid);
+		
 		while (WiFi.status() != WL_CONNECTED) {
-			Serial.print("Attempting to connect to WPA SSID: ");
-			Serial.println(st_ssid);
-			delay(1000);	// wait for connection:
+			Serial.print(F("."));
+			delay(500);	// wait for connection:
 		}
-
+		
+		Serial.println();
+		
 		if (st_DHCP == false)
 		{
 			WiFi.config(st_localIP, st_localGateway, st_localSubnetMask, st_localDNSServer);
