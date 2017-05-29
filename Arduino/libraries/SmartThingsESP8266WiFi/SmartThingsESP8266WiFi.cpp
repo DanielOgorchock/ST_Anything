@@ -104,11 +104,11 @@ namespace st
 			if (_isDebugEnabled)
 			{
 				Serial.println(F("**********************************************************"));
-				Serial.println(F("**** WiFi Disconnected.  Attempting restart!        ******"));
+				Serial.println(F("**** WiFi Disconnected.  ESP8266 should auto-reconnect ***"));
 				Serial.println(F("**********************************************************"));
-
-				init();
 			}
+			
+			//init();  
 		}
 
 		WiFiClient client = st_server.available();
@@ -191,11 +191,14 @@ namespace st
 	{
 		if (WiFi.isConnected() == false)
 		{
-			Serial.println(F("**********************************************************"));
-			Serial.println(F("**** WiFi Disconnected.  Attempting restart!        ******"));
-			Serial.println(F("**********************************************************"));
+			if (_isDebugEnabled)
+			{
+				Serial.println(F("**********************************************************"));
+				Serial.println(F("**** WiFi Disconnected.  ESP8266 should auto-reconnect ***"));
+				Serial.println(F("**********************************************************"));
+			}
 
-			init();
+			//init();
 		}
 
 		//Make sure the client is stopped, to free up socket for new conenction
@@ -229,12 +232,11 @@ namespace st
 				Serial.println(st_hubPort);
 
 				Serial.println(F("***********************************************************"));
-				Serial.println(F("******        Attempting to restart network         *******"));
+				Serial.println(F("**** WiFi Disconnected.  ESP8266 should auto-reconnect ****"));
 				Serial.println(F("***********************************************************"));
 			}
 
-
-			init();      //Re-Init connection to get things working again
+			//init();      //Re-Init connection to get things working again
 
 			if (_isDebugEnabled)
 			{
