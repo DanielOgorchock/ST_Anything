@@ -55,19 +55,19 @@ namespace st
 	//called periodically by Everything class to ensure ST Cloud is kept consistent with the state of the contact sensor
 	void IS_Contact::refresh()
 	{
-		Everything::sendSmartString(getName() + (getStatus() ? F(" closed") : F(" open")));
+		Everything::sendSmartString(getName() + (getStatus() ? F(" open") : F(" closed")));
 	}
 
 	void IS_Contact::runInterrupt()
 	{
-		//add the "closed" event to the buffer to be queued for transfer to the ST Shield
-		Everything::sendSmartString(getName() + F(" closed"));
+		// the contact is opened
+		Everything::sendSmartString(getName() + F(" open"));
 	}
 	
 	void IS_Contact::runInterruptEnded()
 	{
-		//add the "open" event to the buffer to be queued for transfer to the ST Shield
-		Everything::sendSmartString(getName() + F(" open"));
+		// the contact is closed
+		Everything::sendSmartString(getName() + F(" closed"));
 	}
 
 }
