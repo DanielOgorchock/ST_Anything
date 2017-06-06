@@ -1,5 +1,5 @@
 //*******************************************************************************
-//	SmartThings NodeMCU ESP8266 Wifi Library 
+//	SmartThings NodeMCU ESP8266 Wifi Library
 //
 //	License
 //	(C) Copyright 2017 Dan Ogorchock
@@ -34,6 +34,16 @@ namespace st
 		password.toCharArray(st_password, sizeof(st_password));
 	}
 
+	//*******************************************************************************
+	// SmartThingsESP8266WiFI Constructor - DHCP
+	//*******************************************************************************
+	SmartThingsESP8266WiFi::SmartThingsESP8266WiFi(uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
+		SmartThingsEthernet(serverPort, hubIP, hubPort, callout, shieldType, enableDebug, transmitInterval, true),
+		st_server(serverPort)
+	{
+		st_preExistingConnection = true;
+	}
+
 	//*****************************************************************************
 	//SmartThingsESP8266WiFI::~SmartThingsESP8266WiFI()
 	//*****************************************************************************
@@ -43,25 +53,27 @@ namespace st
 	}
 
 	//*******************************************************************************
-	/// Initialize SmartThingsESP8266WiFI Library 
+	/// Initialize SmartThingsESP8266WiFI Library
 	//*******************************************************************************
 	void SmartThingsESP8266WiFi::init(void)
 	{
-		Serial.println(F(""));
-		Serial.println(F("Initializing ESP8266 WiFi network.  Please be patient..."));
+		if (!st_preExistingConnection) {
+			Serial.println(F(""));
+			Serial.println(F("Initializing ESP8266 WiFi network.  Please be patient..."));
 
-		// attempt to connect to WiFi network
-		WiFi.begin(st_ssid, st_password);
-		Serial.print(F("Attempting to connect to WPA SSID: "));
-		Serial.println(st_ssid);
-		
+			// attempt to connect to WiFi network
+			WiFi.begin(st_ssid, st_password);
+			Serial.print(F("Attempting to connect to WPA SSID: "));
+			Serial.println(st_ssid);
+		}
+
 		while (WiFi.status() != WL_CONNECTED) {
 			Serial.print(F("."));
 			delay(500);	// wait for connection:
 		}
-		
+
 		Serial.println();
-		
+
 		if (st_DHCP == false)
 		{
 			WiFi.config(st_localIP, st_localGateway, st_localSubnetMask, st_localDNSServer);
@@ -92,7 +104,7 @@ namespace st
 	}
 
 	//*****************************************************************************
-	// Run SmartThingsESP8266WiFI Library 
+	// Run SmartThingsESP8266WiFI Library
 	//*****************************************************************************
 	void SmartThingsESP8266WiFi::run(void)
 	{
@@ -107,8 +119,8 @@ namespace st
 				Serial.println(F("**** WiFi Disconnected.  ESP8266 should auto-reconnect ***"));
 				Serial.println(F("**********************************************************"));
 			}
-			
-			//init();  
+
+			//init();
 		}
 
 		WiFiClient client = st_server.available();
@@ -185,7 +197,7 @@ namespace st
 	}
 
 	//*******************************************************************************
-	/// Send Message out over Ethernet to the Hub 
+	/// Send Message out over Ethernet to the Hub
 	//*******************************************************************************
 	void SmartThingsESP8266WiFi::send(String message)
 	{
