@@ -1,5 +1,10 @@
 WiFi101 ?.?.? - ????.??.??
 
+WiFi101 0.14.3 - 2017.06.01
+
+* Fixed issues with WiFiMDNSResponder and large request packets
+* Fixed issues with WiFiClient and sending data after the socket is closed
+
 WiFi101 0.14.2 - 2017.05.08
 
 * Fixed issues with WiFiServer::write not working

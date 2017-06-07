@@ -178,7 +178,7 @@ size_t WiFiClient::write(const uint8_t *buf, size_t size)
 {
 	sint16 err;
 
-	if (_socket < 0 || size == 0) {
+	if (_socket < 0 || size == 0 || !IS_CONNECTED) {
 		setWriteError();
 		return 0;
 	}

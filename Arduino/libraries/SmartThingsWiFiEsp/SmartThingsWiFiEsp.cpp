@@ -248,12 +248,12 @@ namespace st
 				Serial.println(st_hubPort);
 
 				Serial.println(F("***********************************************************"));
-				Serial.println(F("******        Attempting to restart network         *******"));
+				Serial.println(F("**** WiFi Disconnected.  ESP8266 should auto-reconnect ****"));
 				Serial.println(F("***********************************************************"));
 			}
 
-			WiFi.reset();//End current broken WiFi Connection
-			init();      //Re-Init connection to get things working again
+			//WiFi.reset();//End current broken WiFi Connection
+			//init();      //Re-Init connection to get things working again
 
 			if (_isDebugEnabled)
 			{

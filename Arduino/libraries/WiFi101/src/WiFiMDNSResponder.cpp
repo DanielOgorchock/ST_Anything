@@ -135,9 +135,14 @@ bool WiFiMDNSResponder::parseRequest()
       return false;
     }
 
-    // read packet
-    uint8_t request[packetLength];
-    udpSocket.read(request, packetLength);
+    // read up to the min expect request length
+    uint8_t request[minimumExpectedRequestLength];
+    udpSocket.read(request, minimumExpectedRequestLength);
+
+    // discard the rest
+    while(udpSocket.available()) {
+      udpSocket.read();
+    }
 
     // parse request
     uint8_t requestNameLength   = request[HEADER_SIZE];

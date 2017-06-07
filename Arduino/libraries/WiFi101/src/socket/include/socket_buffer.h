@@ -4,7 +4,7 @@
  *
  * \brief BSD compatible socket interface.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016-2017 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -22,9 +22,6 @@
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -63,7 +60,7 @@ extern "C" {
 #else
 #define SOCKET_BUFFER_MTU						(1400u)
 #endif
-#define SOCKET_BUFFER_UDP_SIZE					(SOCKET_BUFFER_MTU)
+#define SOCKET_BUFFER_UDP_SIZE					(SOCKET_BUFFER_UDP_HEADER_SIZE + SOCKET_BUFFER_MTU)
 #define SOCKET_BUFFER_TCP_SIZE					(SOCKET_BUFFER_MTU)
 #endif
 
