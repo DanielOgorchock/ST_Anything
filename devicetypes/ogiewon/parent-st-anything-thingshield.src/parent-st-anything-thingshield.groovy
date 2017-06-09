@@ -23,111 +23,111 @@
  */
  
 metadata {
-	definition (name: "Parent_ST_Anything_Thingshield", namespace: "ogiewon", author: "Dan Ogorchock") {
-		capability "Configuration"
+    definition (name: "Parent_ST_Anything_Thingshield", namespace: "ogiewon", author: "Dan Ogorchock") {
+        capability "Configuration"
         capability "Refresh"
         capability "Button"
         capability "Holdable Button"
-	}
+    }
 
     simulator {
     }
 
     // Preferences
-	preferences {
-		input "numButtons", "number", title: "Number of Buttons", description: "Number of Buttons to be implemented", defaultValue: 0, required: true, displayDuringSetup: true
-	}
+    preferences {
+        input "numButtons", "number", title: "Number of Buttons", description: "Number of Buttons to be implemented", defaultValue: 0, required: true, displayDuringSetup: true
+    }
 
-	// Tile Definitions
-	tiles (scale: 2){
-		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 3, height: 2) {
-			state "default", label:'Refresh', action: "refresh.refresh", icon: "st.secondary.refresh-icon"
-		}
+    // Tile Definitions
+    tiles (scale: 2){
+        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 3, height: 2) {
+            state "default", label:'Refresh', action: "refresh.refresh", icon: "st.secondary.refresh-icon"
+        }
         
-		standardTile("configure", "device.configure", inactiveLabel: false, decoration: "flat", width: 3, height: 2) {
-			state "configure", label:'Configure', action:"configuration.configure", icon:"st.secondary.tools"
-		}
+        standardTile("configure", "device.configure", inactiveLabel: false, decoration: "flat", width: 3, height: 2) {
+            state "configure", label:'Configure', action:"configuration.configure", icon:"st.secondary.tools"
+        }
 
-		childDeviceTiles("all")
-	}
+        childDeviceTiles("all")
+    }
 }
 
 // parse events into attributes
 def parse(String description) {
-	//log.debug "Parsing '${description}'"
+    //log.debug "Parsing '${description}'"
     def msg = zigbee.parse(description)?.text
-	def parts = []
+    def parts = []
     def name = ""
     def value = ""
 
-	try {
-    	log.debug "Parsing: ${msg}"
-    	parts = msg.split(" ")
-    	name  = parts.length>0?parts[0].trim():null
-    	value = parts.length>1?parts[1].trim():null
-    	name = value != "ping" ? name : null
- 	}
+    try {
+        log.debug "Parsing: ${msg}"
+        parts = msg.split(" ")
+        name  = parts.length>0?parts[0].trim():null
+        value = parts.length>1?parts[1].trim():null
+        name = value != "ping" ? name : null
+    }
     catch (e) {
         //log.error "Error in parse() routine, error = ${e}"
         return
     }
     
-	if (name != "ping") {  
-		log.debug "Parsing name: ${name}"
-		def nameparts = name.split("\\d+", 2)
-		def namebase = nameparts.length>0?nameparts[0].trim():null
+    if (name != "ping") {  
+        log.debug "Parsing name: ${name}"
+        def nameparts = name.split("\\d+", 2)
+        def namebase = nameparts.length>0?nameparts[0].trim():null
         def namenum = name.substring(namebase.length()).trim()
-		
+        
         def results = []
         
-		if (name.startsWith("button")) {
-			//log.debug "In parse:  name = ${name}, value = ${value}, btnName = ${name}, btnNum = ${namemun}"
-        	results = createEvent([name: namebase, value: value, data: [buttonNumber: namenum], descriptionText: "${namebase} ${namenum} was ${value} ", isStateChange: true, displayed: true])
-			log.debug results
-			return results
+        if (name.startsWith("button")) {
+            //log.debug "In parse:  name = ${name}, value = ${value}, btnName = ${name}, btnNum = ${namemun}"
+            results = createEvent([name: namebase, value: value, data: [buttonNumber: namenum], descriptionText: "${namebase} ${namenum} was ${value} ", isStateChange: true, displayed: true])
+            log.debug results
+            return results
         }
 
         def isChild = containsDigit(name)
-   		//log.debug "Name = ${name}, isChild = ${isChild}, namebase = ${namebase}, namenum = ${namenum}"      
+        //log.debug "Name = ${name}, isChild = ${isChild}, namebase = ${namebase}, namenum = ${namenum}"      
         //log.debug "parse() childDevices.size() =  ${childDevices.size()}"
 
-		def childDevice = null
+        def childDevice = null
 
-		try {
+        try {
 
             childDevices.each {
-				try{
-            		//log.debug "1-Looking for child with deviceNetworkID = ${device.deviceNetworkId}-${name} against ${it.deviceNetworkId}"
-                	if (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") {
-                	childDevice = it
+                try{
+                    //log.debug "1-Looking for child with deviceNetworkID = ${device.deviceNetworkId}-${name} against ${it.deviceNetworkId}"
+                    if (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") {
+                    childDevice = it
                     //log.debug "Found a match!!!"
-                	}
-            	}
-            	catch (e) {
-            	//log.debug e
-            	}
-        	}
+                    }
+                }
+                catch (e) {
+                //log.debug e
+                }
+            }
             
             //If a child should exist, but doesn't yet, automatically add it!            
-        	if (isChild && childDevice == null) {
-        		//log.debug "isChild = true, but no child found - Auto Add it!"
-            	//log.debug "    Need a ${namebase} with id = ${namenum}"
+            if (isChild && childDevice == null) {
+                //log.debug "isChild = true, but no child found - Auto Add it!"
+                //log.debug "    Need a ${namebase} with id = ${namenum}"
             
-            	createChildDevice(namebase, namenum)
-            	//find child again, since it should now exist!
-            	childDevices.each {
-					try{
-            			//log.debug "2-Looking for child with deviceNetworkID = ${device.deviceNetworkId}-${name} against ${it.deviceNetworkId}"
-                		if (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") {
-                			childDevice = it
-                    		log.debug "Found a match!!!"
-                		}
-            		}
-            		catch (e) {
-            			//log.debug e
-            		}
-        		}
-        	}
+                createChildDevice(namebase, namenum)
+                //find child again, since it should now exist!
+                childDevices.each {
+                    try{
+                        //log.debug "2-Looking for child with deviceNetworkID = ${device.deviceNetworkId}-${name} against ${it.deviceNetworkId}"
+                        if (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") {
+                            childDevice = it
+                            log.debug "Found a match!!!"
+                        }
+                    }
+                    catch (e) {
+                        //log.debug e
+                    }
+                }
+            }
             
             if (childDevice != null) {
                 //log.debug "parse() found child device ${childDevice.deviceNetworkId}"
@@ -135,7 +135,7 @@ def parse(String description) {
                 log.debug "${childDevice.deviceNetworkId} - name: ${namebase}, value: ${value}"
                 //If event was dor a "Door Control" device, also update the child door control device's "Contact Sensor" to keep everything in synch
                 if (namebase == "doorControl") {
-                	childDevice.sendEvent(name: "contact", value: value)
+                    childDevice.sendEvent(name: "contact", value: value)
                     log.debug "${childDevice.deviceNetworkId} - name: contact, value: ${value}"
                 }
             }
@@ -145,16 +145,16 @@ def parse(String description) {
                 log.debug results
                 return results
             }
-		}
+        }
         catch (e) {
-        	log.error "Error in parse() routine, error = ${e}"
+            log.error "Error in parse() routine, error = ${e}"
         }
 
-	}
+    }
 }
 
 def sendThingShield(message) {
-	log.debug "Executing 'sendThingShield' ${message}"
+    log.debug "Executing 'sendThingShield' ${message}"
     def cmd = zigbee.smartShield(text: "${message}").format()
     sendHubCommand(new physicalgraph.device.HubAction(cmd))
 }
@@ -194,11 +194,11 @@ def childAlarmTest(String dni) {
     def name = dni.split("-")[-1]
     log.debug "childAlarmTest($dni), name = ${name}"
     sendThingShield("${name} both")
-	runIn(3, childAlarmTestOff, [data: [devicenetworkid: dni]])
+    runIn(3, childAlarmTestOff, [data: [devicenetworkid: dni]])
 }
 
 def childAlarmTestOff(data) {
-	childAlarmOff(data.devicenetworkid)
+    childAlarmOff(data.devicenetworkid)
 }
 
 void childDoorOpen(String dni) {
@@ -215,7 +215,7 @@ void childDoorClose(String dni) {
 
 void childOn(String dni) {
     def name = dni.split("-")[-1]
-	log.debug "childOn($dni), name = ${name}"
+    log.debug "childOn($dni), name = ${name}"
     sendThingShield("${name} on")
 }
 
@@ -223,6 +223,18 @@ void childOff(String dni) {
     def name = dni.split("-")[-1]
     log.debug "childOff($dni), name = ${name}"
     sendThingShield("${name} off")
+}
+
+void childOpen(String dni) {
+    def name = dni.split("-")[-1]
+    log.debug "childOpen($dni), name = ${name}"
+    sendEthernet("${name} open")
+}
+
+void childClose(String dni) {
+    def name = dni.split("-")[-1]
+    log.debug "childClose($dni), name = ${name}"
+    sendEthernet("${name} close")
 }
 
 void childRelayOn(String dni) {
@@ -238,43 +250,43 @@ void childRelayOff(String dni) {
 }
 
 def configure() {
-	log.debug "Executing 'configure()'"
+    log.debug "Executing 'configure()'"
     refresh()
-	sendEvent(name: "numberOfButtons", value: numButtons)
+    sendEvent(name: "numberOfButtons", value: numButtons)
 }
 
 def refresh() {
-	log.debug "Executing 'refresh()'"
+    log.debug "Executing 'refresh()'"
     sendEvent(name: "numberOfButtons", value: numButtons)
-	sendThingShield("refresh")
+    sendThingShield("refresh")
 }
 
 def installed() {
-	log.debug "Executing 'installed()'"
+    log.debug "Executing 'installed()'"
 }
 
 def initialize() {
-	log.debug "Executing 'initialize()'"
+    log.debug "Executing 'initialize()'"
     sendEvent(name: "numberOfButtons", value: numButtons)
 }
 
 def updated() {
-	if (!state.updatedLastRanAt || now() >= state.updatedLastRanAt + 5000) {
-		state.updatedLastRanAt = now()
-		log.debug "Executing 'updated()'"
-    	runIn(2, "refresh")
+    if (!state.updatedLastRanAt || now() >= state.updatedLastRanAt + 5000) {
+        state.updatedLastRanAt = now()
+        log.debug "Executing 'updated()'"
+        runIn(2, "refresh")
         //refresh()
-		sendEvent(name: "numberOfButtons", value: numButtons)
-	}
-	else {
-//		log.trace "updated(): Ran within last 5 seconds so aborting."
-	}
+        sendEvent(name: "numberOfButtons", value: numButtons)
+    }
+    else {
+//      log.trace "updated(): Ran within last 5 seconds so aborting."
+    }
 }
 
 
 private void createChildDevice(String deviceName, String deviceNumber) {
 
-	log.trace "createChildDevice:  Creating Child Device '${device.displayName} (${deviceName}${deviceNumber})'"
+    log.trace "createChildDevice:  Creating Child Device '${device.displayName} (${deviceName}${deviceNumber})'"
 
     //Child Contact Sensors
     try 
@@ -286,6 +298,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
             break
             case "switch": 
             deviceHandlerName = "Child Switch" 
+            break
+            case "blind": 
+            deviceHandlerName = "Child Blind" 
             break
             case "relaySwitch": 
             deviceHandlerName = "Child Relay Switch" 
@@ -338,10 +353,10 @@ private void createChildDevice(String deviceName, String deviceNumber) {
 private sendAlert() {
    sendEvent(
       descriptionText: state.alertMessage,
-	  eventType: "ALERT",
-	  name: "childDeviceCreation",
-	  value: "failed",
-	  displayed: true,
+      eventType: "ALERT",
+      name: "childDeviceCreation",
+      value: "failed",
+      displayed: true,
    )
 }
 
@@ -349,8 +364,8 @@ private boolean containsDigit(String s) {
     boolean containsDigit = false;
 
     if (s != null && !s.isEmpty()) {
-//		log.debug "containsDigit .matches = ${s.matches(".*\\d+.*")}"
-		containsDigit = s.matches(".*\\d+.*")
+//      log.debug "containsDigit .matches = ${s.matches(".*\\d+.*")}"
+        containsDigit = s.matches(".*\\d+.*")
     }
     return containsDigit
 }

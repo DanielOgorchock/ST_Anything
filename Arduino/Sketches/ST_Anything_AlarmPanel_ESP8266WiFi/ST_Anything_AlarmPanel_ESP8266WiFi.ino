@@ -48,6 +48,7 @@
 #include <IS_DoorControl.h>  //Implements an Interrupt Sensor (IS) and Executor to monitor the status of a digital input pin and control a digital output pin
 #include <IS_Button.h>       //Implements an Interrupt Sensor (IS) to monitor the status of a digital input pin for button presses
 #include <EX_Switch.h>       //Implements an Executor (EX) via a digital output to a relay
+#include <EX_Blind.h>        //Implements Executor (EX)as an Window Shade capability with seperate up and down pins
 #include <EX_Alarm.h>        //Implements Executor (EX)as an Alarm capability with Siren and Strobe via digital outputs to relays
 #include <S_TimedRelay.h>    //Implements a Sensor to control a digital output pin with timing/cycle repeat capabilities
 
@@ -145,6 +146,7 @@ void setup()
   
   //Executors
   static st::EX_Alarm               executor1(F("alarm1"), PIN_ALARM_1, LOW, false);
+  //Example for using blinds: static st::EX_Blind               executor1(F("blind1"), PIN_SWITCH_1, PIN_SWITCH_2, LOW, false);
   
   //*****************************************************************************
   //  Configure debug print output from each main class 
