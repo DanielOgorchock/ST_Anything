@@ -24,111 +24,110 @@
  */
  
 metadata {
-    definition (name: "Parent_ST_Anything_Ethernet", namespace: "ogiewon", author: "Dan Ogorchock") {
-        capability "Configuration"
+	definition (name: "Parent_ST_Anything_Ethernet", namespace: "ogiewon", author: "Dan Ogorchock") {
+		capability "Configuration"
         capability "Refresh"
         capability "Button"
         capability "Holdable Button"
-
-    }
+	}
 
     simulator {
     }
 
     // Preferences
-    preferences {
-        input "ip", "text", title: "Arduino IP Address", description: "IP Address in form 192.168.1.226", required: true, displayDuringSetup: true
-        input "port", "text", title: "Arduino Port", description: "port in form of 8090", required: true, displayDuringSetup: true
-        input "mac", "text", title: "Arduino MAC Addr", description: "MAC Address in form of 02A1B2C3D4E5", required: true, displayDuringSetup: true
-        input "numButtons", "number", title: "Number of Buttons", description: "Number of Buttons to be implemented", defaultValue: 0, required: true, displayDuringSetup: true
-    }
+	preferences {
+		input "ip", "text", title: "Arduino IP Address", description: "IP Address in form 192.168.1.226", required: true, displayDuringSetup: true
+		input "port", "text", title: "Arduino Port", description: "port in form of 8090", required: true, displayDuringSetup: true
+		input "mac", "text", title: "Arduino MAC Addr", description: "MAC Address in form of 02A1B2C3D4E5", required: true, displayDuringSetup: true
+		input "numButtons", "number", title: "Number of Buttons", description: "Number of Buttons to be implemented", defaultValue: 0, required: true, displayDuringSetup: true
+	}
 
-    // Tile Definitions
-    tiles (scale: 2){
-        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 3, height: 2) {
-            state "default", label:'Refresh', action: "refresh.refresh", icon: "st.secondary.refresh-icon"
-        }
+	// Tile Definitions
+	tiles (scale: 2){
+		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 3, height: 2) {
+			state "default", label:'Refresh', action: "refresh.refresh", icon: "st.secondary.refresh-icon"
+		}
         
-        standardTile("configure", "device.configure", inactiveLabel: false, decoration: "flat", width: 3, height: 2) {
-            state "configure", label:'Configure', action:"configuration.configure", icon:"st.secondary.tools"
-        }
+		standardTile("configure", "device.configure", inactiveLabel: false, decoration: "flat", width: 3, height: 2) {
+			state "configure", label:'Configure', action:"configuration.configure", icon:"st.secondary.tools"
+		}
 
-        childDeviceTiles("all")
-    }
+		childDeviceTiles("all")
+	}
 }
 
 // parse events into attributes
 def parse(String description) {
-    //log.debug "Parsing '${description}'"
-    def msg = parseLanMessage(description)
-    def headerString = msg.header
+	//log.debug "Parsing '${description}'"
+	def msg = parseLanMessage(description)
+	def headerString = msg.header
 
-    if (!headerString) {
-        //log.debug "headerstring was null for some reason :("
+	if (!headerString) {
+		//log.debug "headerstring was null for some reason :("
     }
 
-    def bodyString = msg.body
+	def bodyString = msg.body
 
-    if (bodyString) {
+	if (bodyString) {
         log.debug "Parsing: $bodyString"
-        def parts = bodyString.split(" ")
-        def name  = parts.length>0?parts[0].trim():null
-        def value = parts.length>1?parts[1].trim():null
+    	def parts = bodyString.split(" ")
+    	def name  = parts.length>0?parts[0].trim():null
+    	def value = parts.length>1?parts[1].trim():null
         
-        def nameparts = name.split("\\d+", 2)
-        def namebase = nameparts.length>0?nameparts[0].trim():null
+		def nameparts = name.split("\\d+", 2)
+		def namebase = nameparts.length>0?nameparts[0].trim():null
         def namenum = name.substring(namebase.length()).trim()
-        
+		
         def results = []
         
-        if (name.startsWith("button")) {
-            //log.debug "In parse:  name = ${name}, value = ${value}, btnName = ${name}, btnNum = ${namemun}"
-            results = createEvent([name: namebase, value: value, data: [buttonNumber: namenum], descriptionText: "${namebase} ${namenum} was ${value} ", isStateChange: true, displayed: true])
-            log.debug results
-            return results
+		if (name.startsWith("button")) {
+			//log.debug "In parse:  name = ${name}, value = ${value}, btnName = ${name}, btnNum = ${namemun}"
+        	results = createEvent([name: namebase, value: value, data: [buttonNumber: namenum], descriptionText: "${namebase} ${namenum} was ${value} ", isStateChange: true, displayed: true])
+			log.debug results
+			return results
         }
 
         def isChild = containsDigit(name)
-        //log.debug "Name = ${name}, isChild = ${isChild}, namebase = ${namebase}, namenum = ${namenum}"      
+   		//log.debug "Name = ${name}, isChild = ${isChild}, namebase = ${namebase}, namenum = ${namenum}"      
         //log.debug "parse() childDevices.size() =  ${childDevices.size()}"
 
-        def childDevice = null
+		def childDevice = null
 
-        try {
+		try {
 
             childDevices.each {
-                try{
-                    //log.debug "Looking for child with deviceNetworkID = ${device.deviceNetworkId}-${name} against ${it.deviceNetworkId}"
-                    if (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") {
-                    childDevice = it
+				try{
+            		//log.debug "Looking for child with deviceNetworkID = ${device.deviceNetworkId}-${name} against ${it.deviceNetworkId}"
+                	if (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") {
+                	childDevice = it
                     //log.debug "Found a match!!!"
-                    }
-                }
-                catch (e) {
-                //log.debug e
-                }
-            }
+                	}
+            	}
+            	catch (e) {
+            	//log.debug e
+            	}
+        	}
             
             //If a child should exist, but doesn't yet, automatically add it!            
-            if (isChild && childDevice == null) {
-                log.debug "isChild = true, but no child found - Auto Add it!"
-                //log.debug "    Need a ${namebase} with id = ${namenum}"
+        	if (isChild && childDevice == null) {
+        		log.debug "isChild = true, but no child found - Auto Add it!"
+            	//log.debug "    Need a ${namebase} with id = ${namenum}"
             
-                createChildDevice(namebase, namenum)
-                //find child again, since it should now exist!
-                childDevices.each {
-                    try{
-                        //log.debug "Looking for child with deviceNetworkID = ${device.deviceNetworkId}-${name} against ${it.deviceNetworkId}"
-                        if (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") {
-                            childDevice = it
-                            //log.debug "Found a match!!!"
-                        }
-                    }
-                    catch (e) {
-                        //log.debug e
-                    }
-                }
-            }
+            	createChildDevice(namebase, namenum)
+            	//find child again, since it should now exist!
+            	childDevices.each {
+					try{
+            			//log.debug "Looking for child with deviceNetworkID = ${device.deviceNetworkId}-${name} against ${it.deviceNetworkId}"
+                		if (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") {
+                			childDevice = it
+                    		//log.debug "Found a match!!!"
+                		}
+            		}
+            		catch (e) {
+            			//log.debug e
+            		}
+        		}
+        	}
             
             if (childDevice != null) {
                 //log.debug "parse() found child device ${childDevice.deviceNetworkId}"
@@ -136,7 +135,7 @@ def parse(String description) {
                 log.debug "${childDevice.deviceNetworkId} - name: ${namebase}, value: ${value}"
                 //If event was dor a "Door Control" device, also update the child door control device's "Contact Sensor" to keep everything in synch
                 if (namebase == "doorControl") {
-                    childDevice.sendEvent(name: "contact", value: value)
+                	childDevice.sendEvent(name: "contact", value: value)
                     log.debug "${childDevice.deviceNetworkId} - name: contact, value: ${value}"
                 }
             }
@@ -146,12 +145,12 @@ def parse(String description) {
                 log.debug results
                 return results
             }
-        }
+		}
         catch (e) {
-            log.error "Error in parse() routine, error = ${e}"
+        	log.error "Error in parse() routine, error = ${e}"
         }
 
-    }
+	}
 }
 
 private getHostAddress() {
@@ -163,8 +162,8 @@ private getHostAddress() {
 }
 
 def sendEthernet(message) {
-    log.debug "Executing 'sendEthernet' ${message}"
-    if (settings.ip != null && settings.port != null) {
+	log.debug "Executing 'sendEthernet' ${message}"
+	if (settings.ip != null && settings.port != null) {
         sendHubCommand(new physicalgraph.device.HubAction(
             method: "POST",
             path: "/${message}?",
@@ -212,11 +211,11 @@ def childAlarmTest(String dni) {
     def name = dni.split("-")[-1]
     log.debug "childAlarmTest($dni), name = ${name}"
     sendEthernet("${name} both")
-    runIn(3, childAlarmTestOff, [data: [devicenetworkid: dni]])
+	runIn(3, childAlarmTestOff, [data: [devicenetworkid: dni]])
 }
 
 def childAlarmTestOff(data) {
-    childAlarmOff(data.devicenetworkid)
+	childAlarmOff(data.devicenetworkid)
 }
 
 void childDoorOpen(String dni) {
@@ -231,18 +230,6 @@ void childDoorClose(String dni) {
     sendEthernet("${name} on")
 }
 
-void childOn(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childOn($dni), name = ${name}"
-    sendEthernet("${name} on")
-}
-
-void childOff(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childOff($dni), name = ${name}"
-    sendEthernet("${name} off")
-}
-
 void childOpen(String dni) {
     def name = dni.split("-")[-1]
     log.debug "childOpen($dni), name = ${name}"
@@ -253,6 +240,18 @@ void childClose(String dni) {
     def name = dni.split("-")[-1]
     log.debug "childClose($dni), name = ${name}"
     sendEthernet("${name} close")
+}
+
+void childOn(String dni) {
+    def name = dni.split("-")[-1]
+    log.debug "childOn($dni), name = ${name}"
+    sendEthernet("${name} on")
+}
+
+void childOff(String dni) {
+    def name = dni.split("-")[-1]
+    log.debug "childOff($dni), name = ${name}"
+    sendEthernet("${name} off")
 }
 
 void childRelayOn(String dni) {
@@ -268,19 +267,19 @@ void childRelayOff(String dni) {
 }
 
 def configure() {
-    log.debug "Executing 'configure()'"
+	log.debug "Executing 'configure()'"
     updateDeviceNetworkID()
-    sendEvent(name: "numberOfButtons", value: numButtons)
+	sendEvent(name: "numberOfButtons", value: numButtons)
 }
 
 def refresh() {
-    log.debug "Executing 'refresh()'"
-    sendEthernet("refresh")
-    sendEvent(name: "numberOfButtons", value: numButtons)
+	log.debug "Executing 'refresh()'"
+	sendEthernet("refresh")
+	sendEvent(name: "numberOfButtons", value: numButtons)
 }
 
 def installed() {
-    log.debug "Executing 'installed()'"
+	log.debug "Executing 'installed()'"
     if ( device.deviceNetworkId =~ /^[A-Z0-9]{12}$/)
     {
     }
@@ -292,99 +291,99 @@ def installed() {
 }
 
 def initialize() {
-    log.debug "Executing 'initialize()'"
+	log.debug "Executing 'initialize()'"
     sendEvent(name: "numberOfButtons", value: numButtons)
 }
 def updated() {
-    if (!state.updatedLastRanAt || now() >= state.updatedLastRanAt + 5000) {
-        state.updatedLastRanAt = now()
-        log.debug "Executing 'updated()'"
-        runIn(3, "updateDeviceNetworkID")
-        sendEvent(name: "numberOfButtons", value: numButtons)
-    }
-    else {
-//      log.trace "updated(): Ran within last 5 seconds so aborting."
-    }
+	if (!state.updatedLastRanAt || now() >= state.updatedLastRanAt + 5000) {
+		state.updatedLastRanAt = now()
+		log.debug "Executing 'updated()'"
+    	runIn(3, "updateDeviceNetworkID")
+		sendEvent(name: "numberOfButtons", value: numButtons)
+	}
+	else {
+//		log.trace "updated(): Ran within last 5 seconds so aborting."
+	}
 }
 
 
 def updateDeviceNetworkID() {
-    log.debug "Executing 'updateDeviceNetworkID'"
+	log.debug "Executing 'updateDeviceNetworkID'"
     if(device.deviceNetworkId!=mac) {
-        log.debug "setting deviceNetworkID = ${mac}"
+    	log.debug "setting deviceNetworkID = ${mac}"
         device.setDeviceNetworkId("${mac}")
-    }
+	}
     //Need deviceNetworkID updated BEFORE we can create Child Devices
-    //Have the Arduino send an updated value for every device attached.  This will auto-created child devices!
-    refresh()
+	//Have the Arduino send an updated value for every device attached.  This will auto-created child devices!
+	refresh()
 }
 
 private void createChildDevice(String deviceName, String deviceNumber) {
     if ( device.deviceNetworkId =~ /^[A-Z0-9]{12}$/)
     {
-        log.trace "createChildDevice:  Creating Child Device '${device.displayName} (${deviceName}${deviceNumber})'"
+		log.trace "createChildDevice:  Creating Child Device '${device.displayName} (${deviceName}${deviceNumber})'"
 
-        //Child Contact Sensors
-        try 
+		//Child Contact Sensors
+		try 
         {
-            def deviceHandlerName = ""
-            switch (deviceName) {
-                case "contact": 
-                    deviceHandlerName = "Child Contact Sensor" 
-                    break
-                case "switch": 
-                    deviceHandlerName = "Child Switch" 
-                    break
+        	def deviceHandlerName = ""
+        	switch (deviceName) {
+         		case "contact": 
+                	deviceHandlerName = "Child Contact Sensor" 
+                	break
+         		case "switch": 
+                	deviceHandlerName = "Child Switch" 
+                	break
                 case "blind": 
                     deviceHandlerName = "Child Blind" 
-                    break
-                case "relaySwitch": 
-                    deviceHandlerName = "Child Relay Switch" 
-                    break
-                case "temperature": 
-                    deviceHandlerName = "Child Temperature Sensor" 
-                    break
-                case "humidity": 
-                    deviceHandlerName = "Child Humidity Sensor" 
-                    break
-                case "motion": 
-                    deviceHandlerName = "Child Motion Sensor" 
-                    break
-                case "water": 
-                    deviceHandlerName = "Child Water Sensor" 
-                    break
-                case "illuminance": 
-                    deviceHandlerName = "Child Illuminance Sensor" 
-                    break
-                case "voltage": 
-                    deviceHandlerName = "Child Voltage Sensor" 
-                    break
-                case "smoke": 
-                    deviceHandlerName = "Child Smoke Detector" 
-                    break    
-                case "carbonMonoxide": 
-                    deviceHandlerName = "Child Carbon Monoxide Detector" 
-                    break    
-                case "alarm": 
-                    deviceHandlerName = "Child Alarm" 
-                    break    
-                case "doorControl": 
-                    deviceHandlerName = "Child Door Control" 
-                    break    
-                default: 
-                    log.error "No Child Device Handler case for ${deviceName}"
-            }
+                    break                    
+         		case "relaySwitch": 
+                	deviceHandlerName = "Child Relay Switch" 
+                	break
+				case "temperature": 
+                	deviceHandlerName = "Child Temperature Sensor" 
+                	break
+         		case "humidity": 
+                	deviceHandlerName = "Child Humidity Sensor" 
+                	break
+         		case "motion": 
+                	deviceHandlerName = "Child Motion Sensor" 
+                	break
+         		case "water": 
+                	deviceHandlerName = "Child Water Sensor" 
+                	break
+         		case "illuminance": 
+                	deviceHandlerName = "Child Illuminance Sensor" 
+                	break
+         		case "voltage": 
+                	deviceHandlerName = "Child Voltage Sensor" 
+                	break
+				case "smoke": 
+                	deviceHandlerName = "Child Smoke Detector" 
+                	break    
+				case "carbonMonoxide": 
+                	deviceHandlerName = "Child Carbon Monoxide Detector" 
+                	break    
+         		case "alarm": 
+                	deviceHandlerName = "Child Alarm" 
+                	break    
+         		case "doorControl": 
+                	deviceHandlerName = "Child Door Control" 
+                	break    
+				default: 
+                	log.error "No Child Device Handler case for ${deviceName}"
+      		}
             if (deviceHandlerName != "") {
-                addChildDevice(deviceHandlerName, "${device.deviceNetworkId}-${deviceName}${deviceNumber}", null,
-                    [completedSetup: true, label: "${device.displayName} (${deviceName}${deviceNumber})", 
-                    isComponent: false, componentName: "${deviceName}${deviceNumber}", componentLabel: "${deviceName} ${deviceNumber}"])
-            }   
-        } catch (e) {
-            log.error "Child device creation failed with error = ${e}"
-            state.alertMessage = "Child device creation failed. Please make sure that the '${deviceHandlerName}' is installed and published."
-            runIn(2, "sendAlert")
-        }
-    } else 
+				addChildDevice(deviceHandlerName, "${device.deviceNetworkId}-${deviceName}${deviceNumber}", null,
+		      		[completedSetup: true, label: "${device.displayName} (${deviceName}${deviceNumber})", 
+                	isComponent: false, componentName: "${deviceName}${deviceNumber}", componentLabel: "${deviceName} ${deviceNumber}"])
+        	}   
+    	} catch (e) {
+        	log.error "Child device creation failed with error = ${e}"
+        	state.alertMessage = "Child device creation failed. Please make sure that the '${deviceHandlerName}' is installed and published."
+	    	runIn(2, "sendAlert")
+    	}
+	} else 
     {
         state.alertMessage = "ST_Anything Parent Device has not yet been fully configured. Click the 'Gear' icon, enter data for all fields, and click 'Done'"
         runIn(2, "sendAlert")
@@ -394,10 +393,10 @@ private void createChildDevice(String deviceName, String deviceNumber) {
 private sendAlert() {
    sendEvent(
       descriptionText: state.alertMessage,
-      eventType: "ALERT",
-      name: "childDeviceCreation",
-      value: "failed",
-      displayed: true,
+	  eventType: "ALERT",
+	  name: "childDeviceCreation",
+	  value: "failed",
+	  displayed: true,
    )
 }
 
@@ -405,8 +404,8 @@ private boolean containsDigit(String s) {
     boolean containsDigit = false;
 
     if (s != null && !s.isEmpty()) {
-//      log.debug "containsDigit .matches = ${s.matches(".*\\d+.*")}"
-        containsDigit = s.matches(".*\\d+.*")
+//		log.debug "containsDigit .matches = ${s.matches(".*\\d+.*")}"
+		containsDigit = s.matches(".*\\d+.*")
     }
     return containsDigit
 }

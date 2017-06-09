@@ -213,18 +213,6 @@ void childDoorClose(String dni) {
     sendThingShield("${name} on")
 }
 
-void childOn(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childOn($dni), name = ${name}"
-    sendThingShield("${name} on")
-}
-
-void childOff(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childOff($dni), name = ${name}"
-    sendThingShield("${name} off")
-}
-
 void childOpen(String dni) {
     def name = dni.split("-")[-1]
     log.debug "childOpen($dni), name = ${name}"
@@ -235,6 +223,18 @@ void childClose(String dni) {
     def name = dni.split("-")[-1]
     log.debug "childClose($dni), name = ${name}"
     sendEthernet("${name} close")
+}
+
+void childOn(String dni) {
+    def name = dni.split("-")[-1]
+    log.debug "childOn($dni), name = ${name}"
+    sendThingShield("${name} on")
+}
+
+void childOff(String dni) {
+    def name = dni.split("-")[-1]
+    log.debug "childOff($dni), name = ${name}"
+    sendThingShield("${name} off")
 }
 
 void childRelayOn(String dni) {
@@ -301,7 +301,7 @@ private void createChildDevice(String deviceName, String deviceNumber) {
             break
             case "blind": 
             deviceHandlerName = "Child Blind" 
-            break
+            break            
             case "relaySwitch": 
             deviceHandlerName = "Child Relay Switch" 
             break
