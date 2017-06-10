@@ -86,8 +86,8 @@
 //******************************************************************************************
 //ESP8266 WiFi Information
 //******************************************************************************************
-String str_ssid     = "Atheist TeslaNet";                           //  <---You must edit this line!
-String str_password = "Powerlocksarebetterthanpadlocks!";                   //  <---You must edit this line!
+String str_ssid     = "";                           //  <---You must edit this line!
+String str_password = "";                   //  <---You must edit this line!
 IPAddress ip(192, 168, 3, 234);       //Device IP Address       //  <---You must edit this line!
 IPAddress gateway(192, 168, 3, 1);    //Router gateway          //  <---You must edit this line!
 IPAddress subnet(255, 255, 255, 0);   //LAN subnet mask         //  <---You must edit this line!
