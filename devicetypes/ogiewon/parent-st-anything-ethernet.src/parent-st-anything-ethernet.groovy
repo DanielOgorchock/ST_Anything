@@ -20,6 +20,7 @@
  *    2017-02-12  Dan Ogorchock  Modified to work with Ethernet based devices instead of ThingShield
  *    2017-02-24  Dan Ogorchock  Created the new "Multiples" device handler as a new example
  *    2017-04-16  Dan Ogorchock  Updated to use the new Composite Device Handler feature
+ *    2017-06-10  Dan Ogorchock  Added Dimmer Switch support
  *
  */
  
@@ -131,6 +132,7 @@ def parse(String description) {
             
             if (childDevice != null) {
                 //log.debug "parse() found child device ${childDevice.deviceNetworkId}"
+                if (namebase == "dimmerSwitch") { namebase = "switch"}  //use a "switch" attribute to maintain standards
                 childDevice.sendEvent(name: namebase, value: value)
                 log.debug "${childDevice.deviceNetworkId} - name: ${namebase}, value: ${value}"
                 //If event was dor a "Door Control" device, also update the child door control device's "Contact Sensor" to keep everything in synch
@@ -242,6 +244,12 @@ void childOff(String dni) {
     sendEthernet("${name} off")
 }
 
+void childSetLevel(String dni, value) {
+    def name = dni.split("-")[-1]
+    log.debug "childSetLevel($dni), name = ${name}, level = ${value}"
+    sendEthernet("${name} ${value}")
+}
+
 void childRelayOn(String dni) {
     def name = dni.split("-")[-1]
     log.debug "childRelayOn($dni), name = ${name}"
@@ -311,7 +319,6 @@ private void createChildDevice(String deviceName, String deviceNumber) {
     {
 		log.trace "createChildDevice:  Creating Child Device '${device.displayName} (${deviceName}${deviceNumber})'"
 
-		//Child Contact Sensors
 		try 
         {
         	def deviceHandlerName = ""
@@ -321,6 +328,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	break
          		case "switch": 
                 	deviceHandlerName = "Child Switch" 
+                	break
+         		case "dimmerSwitch": 
+                	deviceHandlerName = "Child Dimmer Switch" 
                 	break
          		case "relaySwitch": 
                 	deviceHandlerName = "Child Relay Switch" 
@@ -354,7 +364,7 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	break    
          		case "doorControl": 
                 	deviceHandlerName = "Child Door Control" 
-                	break    
+                	break
 				default: 
                 	log.error "No Child Device Handler case for ${deviceName}"
       		}

@@ -19,6 +19,7 @@
  *    2017-02-08  Dan Ogorchock  Original Creation
  *    2017-02-24  Dan Ogorchock  Created the new "Multiples" device handler as a new example
  *    2017-04-25  Dan Ogorchock  Updated to use the new Composite Device Handler feature
+ *    2017-06-10  Dan Ogorchock  Added Dimmer Switch support
  *
  */
  
@@ -131,6 +132,7 @@ def parse(String description) {
             
             if (childDevice != null) {
                 //log.debug "parse() found child device ${childDevice.deviceNetworkId}"
+                if (namebase == "dimmerSwitch") { namebase = "switch"}  //use a "switch" attribute to maintain standards
                 childDevice.sendEvent(name: namebase, value: value)
                 log.debug "${childDevice.deviceNetworkId} - name: ${namebase}, value: ${value}"
                 //If event was dor a "Door Control" device, also update the child door control device's "Contact Sensor" to keep everything in synch
@@ -225,6 +227,12 @@ void childOff(String dni) {
     sendThingShield("${name} off")
 }
 
+void childSetLevel(String dni, value) {
+    def name = dni.split("-")[-1]
+    log.debug "childSetLevel($dni), name = ${name}, level = ${value}"
+    sendThingShield("${name} ${value}")
+}
+
 void childRelayOn(String dni) {
     def name = dni.split("-")[-1]
     log.debug "childRelayOn($dni), name = ${name}"
@@ -276,50 +284,52 @@ private void createChildDevice(String deviceName, String deviceNumber) {
 
 	log.trace "createChildDevice:  Creating Child Device '${device.displayName} (${deviceName}${deviceNumber})'"
 
-    //Child Contact Sensors
     try 
     {
         def deviceHandlerName = ""
         switch (deviceName) {
             case "contact": 
-            deviceHandlerName = "Child Contact Sensor" 
-            break
+            	deviceHandlerName = "Child Contact Sensor" 
+            	break
             case "switch": 
-            deviceHandlerName = "Child Switch" 
-            break
+            	deviceHandlerName = "Child Switch" 
+            	break
+         	case "dimmerSwitch": 
+                deviceHandlerName = "Child Dimmer Switch" 
+                break
             case "relaySwitch": 
-            deviceHandlerName = "Child Relay Switch" 
-            break
+            	deviceHandlerName = "Child Relay Switch" 
+            	break
             case "temperature": 
-            deviceHandlerName = "Child Temperature Sensor" 
-            break
+            	deviceHandlerName = "Child Temperature Sensor" 
+            	break
             case "humidity": 
-            deviceHandlerName = "Child Humidity Sensor" 
-            break
+            	deviceHandlerName = "Child Humidity Sensor" 
+            	break
             case "motion": 
-            deviceHandlerName = "Child Motion Sensor" 
-            break
+            	deviceHandlerName = "Child Motion Sensor" 
+            	break
             case "water": 
-            deviceHandlerName = "Child Water Sensor" 
-            break
+            	deviceHandlerName = "Child Water Sensor" 
+            	break
             case "illuminance": 
-            deviceHandlerName = "Child Illuminance Sensor" 
-            break
+            	deviceHandlerName = "Child Illuminance Sensor" 
+            	break
             case "voltage": 
-            deviceHandlerName = "Child Voltage Sensor" 
-            break
+            	deviceHandlerName = "Child Voltage Sensor" 
+            	break
             case "smoke": 
-            deviceHandlerName = "Child Smoke Detector" 
-            break    
+            	deviceHandlerName = "Child Smoke Detector" 
+            	break    
             case "carbonMonoxide": 
-            deviceHandlerName = "Child Carbon Monoxide Detector" 
-            break    
+            	deviceHandlerName = "Child Carbon Monoxide Detector" 
+            	break    
             case "alarm": 
-            deviceHandlerName = "Child Alarm" 
-            break    
+            	deviceHandlerName = "Child Alarm" 
+            	break    
             case "doorControl": 
-            deviceHandlerName = "Child Door Control" 
-            break    
+            	deviceHandlerName = "Child Door Control" 
+            	break    
             default: 
                 log.error "No Child Device Handler case for ${deviceName}"
         }
