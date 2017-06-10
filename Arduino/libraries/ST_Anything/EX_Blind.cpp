@@ -34,16 +34,16 @@ namespace st
 	void EX_Blind::writeStateToPin()
 	{
         if (m_bCurrentState == HIGH) {
-            if (st::Executor::debug) {Serial.print(F("EX_Blind::Going Up"));}
+            if (st::Executor::debug) {Serial.println(F("EX_Blind::Going Up"));}
             digitalWrite(m_nPin, m_bInvertLogic ? HIGH : LOW);
-            delay(1000);
+            delay(500);
             digitalWrite(m_nPin, m_bInvertLogic ? LOW : HIGH);
         }
         else
         {
-            if (st::Executor::debug) {Serial.print(F("EX_Blind::Going Down"));}
+            if (st::Executor::debug) {Serial.println(F("EX_Blind::Going Down"));}
             digitalWrite(m_dPin, m_bInvertLogic ? HIGH : LOW);
-            delay(1000);
+            delay(500);
             digitalWrite(m_dPin, m_bInvertLogic ? LOW : HIGH);
         }
 	}
@@ -87,7 +87,17 @@ namespace st
 		{
 			m_bCurrentState=LOW;
 		}
-		
+        else if(s==F("stop"))
+        {
+            byte stop_pin = 14;
+            pinMode(stop_pin, OUTPUT);
+            if (st::Executor::debug) {Serial.println(F("EX_Blind::My"));}
+            digitalWrite(stop_pin, m_bInvertLogic ? HIGH : LOW);
+            delay(500);
+            digitalWrite(stop_pin, m_bInvertLogic ? LOW : HIGH);
+            return;
+        }
+        
 		writeStateToPin();
 		
 		Everything::sendSmartString(getName() + " " + (m_bCurrentState == HIGH?F("open"):F("closed")));

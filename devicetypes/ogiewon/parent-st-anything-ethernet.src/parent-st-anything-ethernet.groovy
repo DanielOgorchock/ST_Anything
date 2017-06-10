@@ -242,6 +242,12 @@ void childClose(String dni) {
     sendEthernet("${name} close")
 }
 
+void childCustom(String dni, String command) {
+    def name = dni.split("-")[-1]
+    log.debug "childCustom($dni), name = ${name}, command = ${command}"
+    sendEthernet("${name} ${command}")
+}
+
 void childOn(String dni) {
     def name = dni.split("-")[-1]
     log.debug "childOn($dni), name = ${name}"
