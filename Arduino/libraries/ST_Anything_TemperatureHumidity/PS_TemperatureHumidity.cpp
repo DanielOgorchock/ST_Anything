@@ -33,7 +33,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //	  2015-01-17  Dan Ogorchock	 Added optional temperature and humidity device names in constructor to allow multiple Temp/Humidity sensors
 //    2015-03-29  Dan Ogorchock	 Optimized use of the DHT library (made it static) to reduce SRAM memory usage at runtime.
-//    2017-06-27  Dan Ogorchock  Added optional Celsius reading argument//
+//    2017-06-27  Dan Ogorchock  Added optional Celsius reading argument
 //
 //******************************************************************************************
 
