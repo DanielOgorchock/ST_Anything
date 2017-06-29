@@ -8,7 +8,7 @@
 //			  temperature and humidity from a DHT series sensor.  This was tested with both the DHT11 and DHT22.  
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_TemperatureHumidity sensor2("temphumid", 120000, 3000, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
+//			  For Example:  st::PS_TemperatureHumidity sensor2("temphumid1", 120, 7, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22, "temperature1", "humidity1", false);
 //
 //			  st::PS_TemperatureHumidity() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -18,6 +18,7 @@
 //				- DHT_SENSOR DHTSensorType - REQUIRED - the type of DHT sensor (DHT11, DHT21, DHT22, DHT33, or DHT44)
 //				- String strTemp - OPTIONAL - name of temperature sensor to send to ST Cloud (defaults to "temperature")
 //				- String strHumid - OPTIONAL - name of humidity sensor to send to ST Cloud (defaults to "humidity")
+//				- bool In_C - OPTIONAL - true = Report Celsius, false = Report Farenheit (Farentheit is the default)
 //
 //			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
@@ -32,7 +33,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //	  2015-01-17  Dan Ogorchock	 Added optional temperature and humidity device names in constructor to allow multiple Temp/Humidity sensors
 //    2015-03-29  Dan Ogorchock	 Optimized use of the DHT library (made it static) to reduce SRAM memory usage at runtime.
-//
+//    2017-06-27  Dan Ogorchock  Added optional Celsius reading argument//
 //
 //******************************************************************************************
 
@@ -49,13 +50,14 @@ namespace st
 
 //public
 	//constructor - called in your sketch's global variable declaration section
-	PS_TemperatureHumidity::PS_TemperatureHumidity(const __FlashStringHelper *name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp, String strHumid) :
+	PS_TemperatureHumidity::PS_TemperatureHumidity(const __FlashStringHelper *name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp, String strHumid, bool In_C) :
 		PollingSensor(name, interval, offset),
 		m_nTemperatureSensorValue(0),
 		m_nHumiditySensorValue(0),
 		m_bDHTSensorType(DHTSensorType),
 		m_strTemperature(strTemp),
-		m_strHumidity(strHumid)
+		m_strHumidity(strHumid),
+		m_In_C(In_C)
 	{
 		setPin(digitalInputPin);
 	}
@@ -133,7 +135,15 @@ namespace st
 			//	Serial.print("OK,\t");
 			//}
 			m_nHumiditySensorValue = DHT.humidity;
-			m_nTemperatureSensorValue = (DHT.temperature * 1.8) + 32.0;		//Scale from Celsius to Farenheit
+
+			if (m_In_C == true)
+			{
+				m_nTemperatureSensorValue = DHT.temperature;
+			}
+			else
+			{
+				m_nTemperatureSensorValue = (DHT.temperature * 1.8) + 32.0;		//Scale from Celsius to Farenheit
+			}
 			break;
 		case DHTLIB_ERROR_CHECKSUM:
 			if (st::PollingSensor::debug) {

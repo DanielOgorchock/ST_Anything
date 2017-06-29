@@ -8,7 +8,7 @@
 //			  temperature and humidity from a DHT series sensor.  This was tested with both the DHT11 and DHT22.  
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_TemperatureHumidity sensor2("temphumid", 120000, 3000, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22);
+//			  For Example:  st::PS_TemperatureHumidity sensor2("temphumid1", 120, 7, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22, "temperature1", "humidity1", false);
 //
 //			  st::PS_TemperatureHumidity() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -18,6 +18,7 @@
 //				- DHT_SENSOR DHTSensorType - REQUIRED - the type of DHT sensor (DHT11, DHT21, DHT22, DHT33, or DHT44)
 //				- String strTemp - OPTIONAL - name of temperature sensor to send to ST Cloud (defaults to "temperature")
 //				- String strHumid - OPTIONAL - name of humidity sensor to send to ST Cloud (defaults to "humidity")
+//				- bool In_C - OPTIONAL - true = Report Celsius, false = Report Farenheit (Farentheit is the default)
 //
 //			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
@@ -33,7 +34,7 @@
 //	  2015-01-17  Dan Ogorchock	 Added optional temperature and humidity device names in constructor to allow multiple Temp/Humidity sensors
 //    2015-01-17  Dan Ogorchock	 Added optional temperature and humidity device names in constructor to allow multiple Temp/Humidity sensors
 //    2015-03-29  Dan Ogorchock	 Optimized use of the DHT library (made it static) to reduce SRAM memory usage at runtime.
-//
+//    2017-06-27  Dan Ogorchock  Added optional Celsius reading argument
 //
 //******************************************************************************************
 
@@ -53,15 +54,16 @@ namespace st
 			int m_nHumiditySensorValue;		//current Humidity Value
 			static dht DHT;					//DHT library object
 			byte m_bDHTSensorType;			//DHT Sensor Type
-			String m_strTemperature;			//name of temparature sensor to use when transferring data to ST Cloud
+			String m_strTemperature;		//name of temparature sensor to use when transferring data to ST Cloud
 			String m_strHumidity;			//name of temparature sensor to use when transferring data to ST Cloud		
+			bool m_In_C;					//Return temp in C
 
 		public:
 			//types of DHT sensors supported by the dht library
 			enum DHT_SENSOR { DHT11, DHT21, DHT22, DHT33, DHT44 };
 
 			//constructor - called in your sketch's global variable declaration section
-			PS_TemperatureHumidity(const __FlashStringHelper *name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp="temperature", String strHumid="humidity");
+			PS_TemperatureHumidity(const __FlashStringHelper *name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp="temperature1", String strHumid="humidity1", bool In_C = false);
 			
 			//destructor
 			virtual ~PS_TemperatureHumidity();
