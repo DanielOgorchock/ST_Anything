@@ -101,6 +101,11 @@ namespace st
 		Serial.println(F(""));
 		Serial.println(F("SmartThingsESP8266WiFI: Intialized"));
 		Serial.println(F(""));
+
+		//Turn off Wirelss Access Point
+		Serial.println(F("Disabling ESP8266 WiFi Access Point"));
+		Serial.println(F(""));
+		WiFi.mode(WIFI_STA);
 	}
 
 	//*****************************************************************************
