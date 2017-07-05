@@ -12,7 +12,7 @@
 //              - 2 x Door Control devices (used typically for Garage Doors - input pin (contact sensor) and output pin (relay switch)
 //              - 2 x Contact Sensor devices (used to monitor magnetic door sensors)
 //              - 2 x Switch devices (used to turn on a digital output (e.g. LED, relay, etc...)
-//              - 2 x Water Sensor devices (using an analog input pin to measure voltage from a water detector baord)
+//              - 2 x Water Sensor devices (using an analog input pin to measure voltage from a water detector board)
 //              - 2 x Illuminance Measurement devices (using a photoresitor attached to ananlog input)
 //              - 2 x Voltage Measurement devices (using a photoresitor attached to ananlog input)
 //              - 2 x Smoke Detector devices (using simple digital input)
@@ -23,6 +23,8 @@
 //              - 2 x Relay Switch devices (used to turn on a digital output for a set number of cycles And On/Off times (e.g.relay, etc...))
 //              - 2 x Button devices (sends "pushed" if held for less than 1 second, else sends "held"
 //              - 2 x Alarm devices - 1 siren only, 1 siren and strobe (using simple digital outputs)
+//              - 2 x Dimmer Switch devices - uses 2 digital outputs, one for on/off and one for pwm level
+//              - 2 x MQ-2 Smoke Detector devices (using simple analog input compared to user defined limit)
 //
 //            During the development of this re-usable library, it became apparent that the 
 //            Arduino UNO R3's very limited 2K of SRAM was very limiting in the number of 
@@ -40,6 +42,7 @@
 //    2017-02-12  Dan Ogorchock  Revised to use the new SMartThings v2.0 library
 //    2017-04-16  Dan Ogorchock  New sketch to demonstrate multiple SmartThings Capabilties of each type
 //    2017-04-22  Dan Ogorchock  Added Voltage, Carbon Monoxide, and Alarm with Strobe
+//    2017-07-04  Dan Ogorchock  Added MQ-2 based Smoke Detection
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -62,6 +65,7 @@
 #include <PS_Voltage.h>      //Implements a Polling Sensor (PS) to measure voltage on an analog input pin 
 #include <PS_TemperatureHumidity.h>  //Implements a Polling Sensor (PS) to measure Temperature and Humidity via DHT library
 #include <PS_Water.h>        //Implements a Polling Sensor (PS) to measure presence of water (i.e. leak detector) on an analog input pin 
+#include <PS_MQ2_Smoke.h>    //Implements an Polling Sensor (PS) to monitor the status of an analog input pin from a MQ2 sensor
 #include <IS_Motion.h>       //Implements an Interrupt Sensor (IS) to detect motion via a PIR sensor on a digital input pin
 #include <IS_Contact.h>      //Implements an Interrupt Sensor (IS) to monitor the status of a digital input pin
 #include <IS_Smoke.h>        //Implements an Interrupt Sensor (IS) to monitor the status of a digital input pin
@@ -71,6 +75,7 @@
 #include <EX_Switch.h>       //Implements an Executor (EX) via a digital output to a relay
 #include <EX_Alarm.h>        //Implements Executor (EX)as an Alarm capability with Siren and Strobe via digital outputs to relays
 #include <S_TimedRelay.h>    //Implements a Sensor to control a digital output pin with timing/cycle repeat capabilities
+#include <EX_Switch_Dim.h>   //Implements an Executor (EX) for a switch (on/off) and pwm output (level) uses 2 digital output pins
 
 //**********************************************************************************************************
 //Define which Arduino Pins will be used for each device
@@ -101,6 +106,8 @@
 #define PIN_ILLUMINANCE_2         A3  //SmartThings Capability "Illuminance Measurement"
 #define PIN_VOLTAGE_1             A4  //SmartThings Capability "Voltage Measurement"
 #define PIN_VOLTAGE_2             A5  //SmartThings Capability "Voltage Measurement"
+#define PIN_SMOKE_3               A8  //SmartThings Capability "Smoke Detector"
+#define PIN_SMOKE_4               A9  //SmartThings Capability "Smoke Detector"
 
 //Digital Pins
 #define PIN_TEMPERATUREHUMIDITY_1 22  //SmartThings Capabilities "Temperature Measurement" and "Relative Humidity Measurement"
@@ -120,6 +127,12 @@
 #define PIN_STROBE_2              41  //SmartThings Capability "Alarm"              
 #define PIN_CO_1                  42  //SmartThings Capability "Carbon Monoxide Detector"
 #define PIN_CO_2                  43  //SmartThings Capability "Carbon Monoxide Detector"
+
+//Dimmer Switch Pins
+#define PIN_DIMMERLEVEL_1         44  //SmartThings Capability "Switch Level"  NOTE: MUST BE A PWM CAPABLE PIN!
+#define PIN_DIMMERSWITCH_1        45  //SmartThings Capability "Switch"
+#define PIN_DIMMERLEVEL_2         46  //SmartThings Capability "Switch Level"  NOTE: MUST BE A PWM CAPABLE PIN!
+#define PIN_DIMMERSWITCH_2        47  //SmartThings Capability "Switch"
 
 //Garage Door Pins 
 #define PIN_DOORCONTROL_CONTACT_1 35  //SmartThings Capabilty "Door Control" 
@@ -193,6 +206,8 @@ void setup()
   static st::PS_TemperatureHumidity sensor6(F("temphumid2"), 60, 50, PIN_TEMPERATUREHUMIDITY_2, st::PS_TemperatureHumidity::DHT22,"temperature2","humidity2");
   static st::PS_Voltage             sensor7(F("voltage1"), 60, 55, PIN_VOLTAGE_1, 0, 1023, 0, 5000);
   static st::PS_Voltage             sensor8(F("voltage2"), 60, 57, PIN_VOLTAGE_2, 0, 1023, 0, 5000);
+  static st::PS_MQ2_Smoke           sensor23(F("smoke3"), 10, 3, PIN_SMOKE_3, 300);
+  static st::PS_MQ2_Smoke           sensor24(F("smoke4"), 10, 5, PIN_SMOKE_4, 300);
   
   //Interrupt Sensors 
   static st::IS_Motion              sensor9(F("motion1"), PIN_MOTION_1, HIGH, false, 500);
@@ -217,7 +232,9 @@ void setup()
   static st::EX_Switch              executor2(F("switch2"), PIN_SWITCH_2, LOW, true);
   static st::EX_Alarm               executor3(F("alarm1"), PIN_ALARM_1, LOW, true);
   static st::EX_Alarm               executor4(F("alarm2"), PIN_ALARM_2, LOW, true, PIN_STROBE_2);
-    
+  static st::EX_Switch_Dim          executor5(F("dimmerSwitch1"), PIN_DIMMERSWITCH_1, PIN_DIMMERLEVEL_1, LOW, false);   
+  static st::EX_Switch_Dim          executor6(F("dimmerSwitch2"), PIN_DIMMERSWITCH_2, PIN_DIMMERLEVEL_2, LOW, false);    
+
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //*****************************************************************************
@@ -269,7 +286,9 @@ void setup()
   st::Everything::addSensor(&sensor20); 
   st::Everything::addSensor(&sensor21); 
   st::Everything::addSensor(&sensor22); 
-    
+  st::Everything::addSensor(&sensor23);
+  st::Everything::addSensor(&sensor24);
+      
   //*****************************************************************************
   //Add each executor to the "Everything" Class
   //*****************************************************************************
@@ -277,6 +296,8 @@ void setup()
   st::Everything::addExecutor(&executor2);
   st::Everything::addExecutor(&executor3);
   st::Everything::addExecutor(&executor4);
+  st::Everything::addExecutor(&executor5);
+  st::Everything::addExecutor(&executor6);
   
   //*****************************************************************************
   //Initialize each of the devices which were added to the Everything Class
