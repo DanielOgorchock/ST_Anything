@@ -48,8 +48,8 @@
 #include <IS_DoorControl.h>  //Implements an Interrupt Sensor (IS) and Executor to monitor the status of a digital input pin and control a digital output pin
 #include <IS_Button.h>       //Implements an Interrupt Sensor (IS) to monitor the status of a digital input pin for button presses
 #include <EX_Switch.h>       //Implements an Executor (EX) via a digital output to a relay
-#include <EX_Blind.h>        //Implements Executor (EX)as an Window Shade capability with seperate up and down pins
 #include <EX_Alarm.h>        //Implements Executor (EX)as an Alarm capability with Siren and Strobe via digital outputs to relays
+#include <EX_Blind.h>        //Implements Executor (EX)as an Blind capability
 #include <S_TimedRelay.h>    //Implements a Sensor to control a digital output pin with timing/cycle repeat capabilities
 
 //*************************************************************************************************
@@ -73,27 +73,29 @@
 //******************************************************************************************
 
 
-#define PIN_ALARM_1               D0  //SmartThings Capabilty "Alarm"
-#define PIN_CONTACT_1             D1  //SmartThings Capabilty "Contact Sensor"
-#define PIN_CONTACT_2             D2  //SmartThings Capabilty "Contact Sensor"
-#define PIN_CONTACT_3             D5  //SmartThings Capabilty "Contact Sensor"
-#define PIN_CONTACT_4             D6  //SmartThings Capabilty "Contact Sensor"
-#define PIN_CONTACT_5             D7  //SmartThings Capabilty "Contact Sensor"
+#define PIN_UP               D6  //SmartThings Capabilty "Alarm"
+#define PIN_DOWN               D7  //
+#define PIN_MY                     D5  //My Button
+//#define PIN_CONTACT_1             D1  //SmartThings Capabilty "Contact Sensor"
+//#define PIN_CONTACT_2             D2  //SmartThings Capabilty "Contact Sensor"
+//#define PIN_CONTACT_3             D5  //SmartThings Capabilty "Contact Sensor"
+//#define PIN_CONTACT_4             D6  //SmartThings Capabilty "Contact Sensor"
+//#define PIN_CONTACT_5             D7  //SmartThings Capabilty "Contact Sensor"
 
 
 //******************************************************************************************
 //ESP8266 WiFi Information
 //******************************************************************************************
-String str_ssid     = "yourSSIDhere";                           //  <---You must edit this line!
-String str_password = "yourWiFiPasswordhere";                   //  <---You must edit this line!
-IPAddress ip(192, 168, 1, 234);       //Device IP Address       //  <---You must edit this line!
-IPAddress gateway(192, 168, 1, 1);    //Router gateway          //  <---You must edit this line!
+String str_ssid     = "";                           //  <---You must edit this line!
+String str_password = "";                   //  <---You must edit this line!
+IPAddress ip(192, 168, 3, 234);       //Device IP Address       //  <---You must edit this line!
+IPAddress gateway(192, 168, 3, 1);    //Router gateway          //  <---You must edit this line!
 IPAddress subnet(255, 255, 255, 0);   //LAN subnet mask         //  <---You must edit this line!
-IPAddress dnsserver(192, 168, 1, 1);  //DNS server              //  <---You must edit this line!
+IPAddress dnsserver(192, 168, 3, 1);  //DNS server              //  <---You must edit this line!
 const unsigned int serverPort = 8090; // port to run the http server on
 
 // Smartthings Hub Information
-IPAddress hubIp(192, 168, 1, 149);    // smartthings hub ip     //  <---You must edit this line!
+IPAddress hubIp(192, 168, 3, 174);    // smartthings hub ip     //  <---You must edit this line!
 const unsigned int hubPort = 39500;   // smartthings hub port
 
 //******************************************************************************************
@@ -137,16 +139,15 @@ void setup()
   //Polling Sensors
     
   //Interrupt Sensors 
-  static st::IS_Contact             sensor1(F("contact1"), PIN_CONTACT_1, LOW, true, 500);
-  static st::IS_Contact             sensor2(F("contact2"), PIN_CONTACT_2, LOW, true, 500);
-  static st::IS_Contact             sensor3(F("contact3"), PIN_CONTACT_3, LOW, true, 500);
-  static st::IS_Contact             sensor4(F("contact4"), PIN_CONTACT_4, LOW, true, 500);
-  static st::IS_Contact             sensor5(F("contact5"), PIN_CONTACT_5, LOW, true, 500);
+//  static st::IS_Contact             sensor1(F("contact1"), PIN_CONTACT_1, LOW, true, 500);
+// static st::IS_Contact             sensor2(F("contact2"), PIN_CONTACT_2, LOW, true, 500);
+//static st::IS_Contact             sensor3(F("contact3"), PIN_CONTACT_3, LOW, true, 500);
+//  static st::IS_Contact             sensor4(F("contact4"), PIN_CONTACT_4, LOW, true, 500);
+//  static st::IS_Contact             sensor5(F("contact5"), PIN_CONTACT_5, LOW, true, 500);
 
   
   //Executors
-  static st::EX_Alarm               executor1(F("alarm1"), PIN_ALARM_1, LOW, false);
-  //Example for using blinds: static st::EX_Blind               executor1(F("blind1"), PIN_SWITCH_1, PIN_SWITCH_2, LOW, false);
+  static st::EX_Blind               executor1(F("blind1"), PIN_UP, PIN_DOWN, LOW, false);
   
   //*****************************************************************************
   //  Configure debug print output from each main class 
@@ -179,11 +180,11 @@ void setup()
   //*****************************************************************************
   //Add each sensor to the "Everything" Class
   //*****************************************************************************
-  st::Everything::addSensor(&sensor1);
-  st::Everything::addSensor(&sensor2);
-  st::Everything::addSensor(&sensor3);
-  st::Everything::addSensor(&sensor4); 
-  st::Everything::addSensor(&sensor5); 
+  //st::Everything::addSensor(&sensor1);
+  //st::Everything::addSensor(&sensor2);
+  //st::Everything::addSensor(&sensor3);
+  //st::Everything::addSensor(&sensor4); 
+  //st::Everything::addSensor(&sensor5); 
        
   //*****************************************************************************
   //Add each executor to the "Everything" Class

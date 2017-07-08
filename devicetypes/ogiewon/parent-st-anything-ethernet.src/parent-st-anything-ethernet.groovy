@@ -232,6 +232,24 @@ void childDoorClose(String dni) {
     sendEthernet("${name} on")
 }
 
+void childOpen(String dni) {
+    def name = dni.split("-")[-1]
+    log.debug "childOpen($dni), name = ${name}"
+    sendEthernet("${name} open")
+}
+
+void childClose(String dni) {
+    def name = dni.split("-")[-1]
+    log.debug "childClose($dni), name = ${name}"
+    sendEthernet("${name} close")
+}
+
+void childCustom(String dni, String command) {
+    def name = dni.split("-")[-1]
+    log.debug "childCustom($dni), name = ${name}, command = ${command}"
+    sendEthernet("${name} ${command}")
+}
+
 void childOn(String dni) {
     def name = dni.split("-")[-1]
     log.debug "childOn($dni), name = ${name}"
@@ -328,7 +346,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	break
          		case "switch": 
                 	deviceHandlerName = "Child Switch" 
-                	break
+            case "blind": 
+                  deviceHandlerName = "Child Blind" 
+                  break
          		case "dimmerSwitch": 
                 	deviceHandlerName = "Child Dimmer Switch" 
                 	break
