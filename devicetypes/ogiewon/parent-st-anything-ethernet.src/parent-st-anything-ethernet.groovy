@@ -21,6 +21,7 @@
  *    2017-02-24  Dan Ogorchock  Created the new "Multiples" device handler as a new example
  *    2017-04-16  Dan Ogorchock  Updated to use the new Composite Device Handler feature
  *    2017-06-10  Dan Ogorchock  Added Dimmer Switch support
+ *    2017-07-09  Dan Ogorchock  Added number of defined buttons tile
  *
  */
  
@@ -45,14 +46,18 @@ metadata {
 
 	// Tile Definitions
 	tiles (scale: 2){
-		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 3, height: 2) {
+		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "default", label:'Refresh', action: "refresh.refresh", icon: "st.secondary.refresh-icon"
 		}
         
-		standardTile("configure", "device.configure", inactiveLabel: false, decoration: "flat", width: 3, height: 2) {
+		standardTile("configure", "device.configure", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "configure", label:'Configure', action:"configuration.configure", icon:"st.secondary.tools"
 		}
 
+        valueTile("numberOfButtons", "device.numberOfButtons", inactiveLabel: false, width: 2, height: 2) {
+			state "numberOfButtons", label:'${currentValue} buttons', unit:""
+		}
+ 
 		childDeviceTiles("all")
 	}
 }
