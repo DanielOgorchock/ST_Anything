@@ -22,19 +22,23 @@
 
 // Example creating a thermocouple instance with software SPI on any three
 // digital IO pins.
-#define DO   3
-#define CS   4
-#define CLK  5
-Adafruit_MAX31855 thermocouple(CLK, CS, DO);
+#define MAXDO   3
+#define MAXCS   4
+#define MAXCLK  5
 
-// Example creating a thermocouple instance with hardware SPI (Uno/Mega only)
+// initialize the Thermocouple
+Adafruit_MAX31855 thermocouple(MAXCLK, MAXCS, MAXDO);
+
+// Example creating a thermocouple instance with hardware SPI
 // on a given CS pin.
-//#define CS   10
-//Adafruit_MAX31855 thermocouple(CS);
+//#define MAXCS   10
+//Adafruit_MAX31855 thermocouple(MAXCS);
 
 void setup() {
   Serial.begin(9600);
-  
+ 
+  while (!Serial) delay(1); // wait for Serial on Leonardo/Zero, etc
+
   Serial.println("MAX31855 test");
   // wait for MAX chip to stabilize
   delay(500);

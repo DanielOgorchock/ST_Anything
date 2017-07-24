@@ -15,40 +15,45 @@
  ****************************************************/
 
 #include "Adafruit_MAX31855.h"
-#include <avr/pgmspace.h>
-#include <util/delay.h>
+#ifdef __AVR
+  #include <avr/pgmspace.h>
+#elif defined(ESP8266)
+  #include <pgmspace.h>
+#endif
+
 #include <stdlib.h>
 #include <SPI.h>
 
 
-Adafruit_MAX31855::Adafruit_MAX31855(int8_t SCLK, int8_t CS, int8_t MISO) {
-  sclk = SCLK;
-  cs = CS;
-  miso = MISO;
-  hSPI = 0;
+Adafruit_MAX31855::Adafruit_MAX31855(int8_t _sclk, int8_t _cs, int8_t _miso) {
+  sclk = _sclk;
+  cs = _cs;
+  miso = _miso;
 
-  //define pin modes
-  pinMode(cs, OUTPUT);
-  pinMode(sclk, OUTPUT); 
-  pinMode(miso, INPUT);
-
-  digitalWrite(cs, HIGH);
+  initialized = false;
 }
 
-Adafruit_MAX31855::Adafruit_MAX31855(int8_t CS) {
-  cs = CS;
-  hSPI = 1;
+Adafruit_MAX31855::Adafruit_MAX31855(int8_t _cs) {
+  cs = _cs;
+  sclk = miso = -1;
 
+  initialized = false;
+}
+
+void Adafruit_MAX31855::begin(void) {
   //define pin modes
   pinMode(cs, OUTPUT);
-  
-  //start and configure hardware SPI
-  SPI.begin();
-  SPI.setBitOrder(MSBFIRST);
-  SPI.setDataMode(SPI_MODE0);
-  SPI.setClockDivider(SPI_CLOCK_DIV4);
-  
   digitalWrite(cs, HIGH);
+
+  if (sclk == -1) {
+    // hardware SPI
+    //start and configure hardware SPI
+    SPI.begin();
+  } else {
+    pinMode(sclk, OUTPUT); 
+    pinMode(miso, INPUT);
+  }
+  initialized = true;
 }
 
 double Adafruit_MAX31855::readInternal(void) {
@@ -126,50 +131,48 @@ uint32_t Adafruit_MAX31855::spiread32(void) {
   int i;
   uint32_t d = 0;
 
-  if(hSPI) {
-    return hspiread32();
+  // backcompatibility!
+  if (! initialized) {
+    begin();
   }
 
-  digitalWrite(sclk, LOW);
-  _delay_ms(1);
   digitalWrite(cs, LOW);
-  _delay_ms(1);
+  delay(1);
 
-  for (i=31; i>=0; i--)
-  {
+  if(sclk == -1) {
+    // hardware SPI
+
+    SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0));
+
+    d = SPI.transfer(0);
+    d <<= 8;
+    d |= SPI.transfer(0);
+    d <<= 8;
+    d |= SPI.transfer(0);
+    d <<= 8;
+    d |= SPI.transfer(0);
+
+    SPI.endTransaction();
+  } else {
+    // software SPI
+
     digitalWrite(sclk, LOW);
-    _delay_ms(1);
-    d <<= 1;
-    if (digitalRead(miso)) {
-      d |= 1;
-    }
+    delay(1);
 
-    digitalWrite(sclk, HIGH);
-    _delay_ms(1);
+    for (i=31; i>=0; i--) {
+      digitalWrite(sclk, LOW);
+      delay(1);
+      d <<= 1;
+      if (digitalRead(miso)) {
+	d |= 1;
+      }
+      
+      digitalWrite(sclk, HIGH);
+      delay(1);
+    }
   }
 
   digitalWrite(cs, HIGH);
   //Serial.println(d, HEX);
   return d;
-}
-
-uint32_t Adafruit_MAX31855::hspiread32(void) {
-  int i;
-  // easy conversion of four uint8_ts to uint32_t
-  union bytes_to_uint32 {
-    uint8_t bytes[4];
-    uint32_t integer;
-  } buffer;
-  
-  digitalWrite(cs, LOW);
-  _delay_ms(1);
-  
-  for (i=3;i>=0;i--) {
-    buffer.bytes[i] = SPI.transfer(0x00);
-  }
-  
-  digitalWrite(cs, HIGH);
-  
-  return buffer.integer;
-  
 }

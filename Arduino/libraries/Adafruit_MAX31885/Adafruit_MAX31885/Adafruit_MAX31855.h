@@ -25,18 +25,20 @@
 
 class Adafruit_MAX31855 {
  public:
-  Adafruit_MAX31855(int8_t SCLK, int8_t CS, int8_t MISO);
-  Adafruit_MAX31855(int8_t CS);
+  Adafruit_MAX31855(int8_t _sclk, int8_t _cs, int8_t _miso);
+  Adafruit_MAX31855(int8_t _cs);
 
+  void begin(void);
   double readInternal(void);
   double readCelsius(void);
   double readFarenheit(void);
   uint8_t readError();
 
  private:
-  int8_t sclk, miso, cs, hSPI;
+  boolean initialized;
+
+  int8_t sclk, miso, cs;
   uint32_t spiread32(void);
-  uint32_t hspiread32(void);
 };
 
 #endif
