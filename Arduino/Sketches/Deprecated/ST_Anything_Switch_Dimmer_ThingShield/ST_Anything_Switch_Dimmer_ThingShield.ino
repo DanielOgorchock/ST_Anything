@@ -95,7 +95,7 @@ void setup()
   //Interrupt Sensors 
   
   //Executors
-  static st::EX_Switch_Dim executor1(F("switch"), PIN_SWITCH, PIN_LEVEL, LOW, false);
+  static st::EX_Switch_Dim executor1(F("dimmerSwitch1"), PIN_SWITCH, PIN_LEVEL, LOW, false);
   
   //*****************************************************************************
   //  Configure debug print output from each main class 
