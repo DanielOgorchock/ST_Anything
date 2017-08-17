@@ -3,6 +3,7 @@ History:
 - v2.1 2017-02-20 Added support for Arduino + ESP-01 hardware combination
 - v2.2 2017-04-26 Added additional optional argument to each constructor which can be queried to determine maximum data transfer rate for each type of communication.  This field is not used directly by the SmartThings library.  It is used by ST_Anything's Everything Class.
 - v2.3 2017-05-25 Added support for the W5500 Ethernet Shield.  This required the library to be split into multiple library folders to avoid duplicate class defintions at compile/link time.
+- v2.4 2018-08-116 Added support for the ESP32 
 
 SmartThings v2.x
 ================
@@ -16,6 +17,7 @@ This library currently implements the following C++ Classes and associated const
      -st::SmartThingsEthernetW5500 (use this class "#include <SmartThingsEthernetW5500.h" if connecting an Arduino UNO/MEGA using a W5500 Ethernet shield)
 	 -st::SmartThingsWiFiEsp (use this class "#include <SmartThingsWiFiEsp.h>" if using an Arduino attached to a ESP-01 (AT Firmware) for WiFi)
      -st::SmartThingsESP8266WiFi (use this class "#include <SmartThingsESP8266.h" if using a standalone NodeMCU ESP8266 or ESP-01)
+     -st::SmartThingsESP32WiFi (use this class "#include <SmartThingsESP32.h" if using a standalone ESP32)
 
 All five of the usable classes implement the following methods:
 - send(String) used to send an ASCII string to the SmartThings Device Handler
@@ -47,7 +49,7 @@ SmartThings library consists of:
   - On Windows, it's located in `C:\My Documents\Arduino\libraries`
   - On Mac, it's located in `~/Documents/Arduino/libraries`
   - Restart the Arduino IDE so it will scan the new library
-  - Assumption: If you're using an ESP8266 based board, you should already have added support for it to the IDE (Google it if needed.)
+  - Assumption: If you're using an ESP8266 or ESP32 based board, you should already have added support for it to the IDE (Google it if needed.)
 
 ##Pre-Requisites for using Ethernet based connectivity (Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, ESP-01)
 - Your SmartThings HUB must have a Static TCP/IP Address assigned via your router's DHCP Server.  Since this procedure varies by router model, Google it!
@@ -64,7 +66,7 @@ SmartThings library consists of:
  	- Note:  If using an ESP-01 with an Arduino, the example assumes you're using an Arduino MEGA 2560.  Attach the ESP-01 to Hardware Serial "Serial1"  *** THE ARDUINO + ESP01 is currently not very stable!
   - Your IDE Serial Monitor Window should be set to 9600 baud
   - With the Serial Monitor windows open, load your sketch and watch the output
-    - If using an Arduino/ESP-01, NodeMCU ESP8266 board, or ESP-01 the MAC Address will be printed out in the serial monitor window.  Write this down as you will need it to configure the Device using your ST App on your phone. (Note: MAC Address must later be entered with no delimeters in the form of "06AB23CD45EF" (without quotes!))
+    - If using an Arduino/ESP-01, NodeMCU ESP8266 board, ESP-01, or ESP32 the MAC Address will be printed out in the serial monitor window.  Write this down as you will need it to configure the Device using your ST App on your phone. (Note: MAC Address must later be entered with no delimeters in the form of "06AB23CD45EF" (without quotes!))
   
 ##SmartThings IDE Device Handler Installation Instructions
 - Create an account and/or log into the SmartThings Developers Web IDE.
@@ -86,7 +88,7 @@ Arduino/ThingShield
   - Click the Update button at the bottom of the screen
   - On your phone, you should now see a device that has simple On/Off tile
 
-Ethernet Arduino/W5100, Arduino/W5500, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01   
+Ethernet Arduino/W5100, Arduino/W5500, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, or ESP32   
 - Install the Ethernet example Device Handler
   - Click on  "+ New Device Handler" button.
   - Select the "From Code" Tab near the top of the page
