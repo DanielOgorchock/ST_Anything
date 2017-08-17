@@ -52,7 +52,7 @@ namespace st
 
 	public:
 		//constructor
-		EX_Alarm(const __FlashStringHelper *name, byte Pin, bool startingState = LOW, bool invertLogic = false, byte pingStrobe = 255);
+		EX_Alarm(const __FlashStringHelper *name, byte Pin, bool startingState = LOW, bool invertLogic = false, byte pinStrobe = 255);
 
 		//destructor
 		virtual ~EX_Alarm();

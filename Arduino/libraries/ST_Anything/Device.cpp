@@ -11,7 +11,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
-//
+//    2018-08-15  Dan Ogorchock  Workaround for strcpy_P() ESP32 crash bug
 //
 //******************************************************************************************
 
@@ -52,10 +52,14 @@ namespace st
 	
 	const String Device::getName() const
 	{
+#if defined(ARDUINO_ARCH_ESP32)   
+		return String((const char*)m_pName);  //strcpy_P() causes ESP32 to crash
+#else
 		char tmp[Constants::MAX_NAME_LENGTH];
 		strcpy_P(tmp, (const char*)m_pName);
-		
-		return String(tmp);	
+		return String(tmp);
+#endif
+
 	}
 	
 

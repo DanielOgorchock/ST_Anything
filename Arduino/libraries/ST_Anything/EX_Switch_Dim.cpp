@@ -20,6 +20,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2016-04-30  Dan Ogorchock  Original Creation
+//    2018-08-14  Dan Ogorchock  Modified to avoid compiler errors on ESP32 since it currently does not support "analogWrite()"
 //
 //
 //******************************************************************************************
@@ -38,7 +39,13 @@ namespace st
 
 	void EX_Switch_Dim::writeLevelToPin()
 	{
+#if defined(ARDUINO_ARCH_ESP32)
+	if (st::Executor::debug) {
+		Serial.println(F("EX_Switch_Dim:: analogWrite not currently supported on ESP32!"));
+	}
+#else
 		analogWrite(m_nPinPWM, map(m_nCurrentLevel, 0, 100, 0, 255));
+#endif
 	}
 
 //public

@@ -39,6 +39,7 @@
 //                               Adjusted MAX Sensor and Executor counts for the Arduino MEGA to allow 16 relay system to function properly.
 //    2016-06-04  Dan Ogorchock  Added improved support for Arduino Leonardo
 //    2017-02-07  Dan Ogorchock  Added support for new SmartThings v2.0 library (ThingShield, W5100, ESP8266)
+//    2017-08-14  Dan Ogorchock  Added support for ESP32
 //
 //******************************************************************************************
 
@@ -62,6 +63,8 @@
 #define BOARD_MKR1000
 #elif defined(ARDUINO_ARCH_ESP8266)
 #define BOARD_ESP8266
+#elif defined(ARDUINO_ARCH_ESP32)
+#define BOARD_ESP32
 #else	
 #define BOARD_UNO	//assume user is using an UNO for the unknown case
 #endif
@@ -77,7 +80,7 @@ namespace st
 			//Serial debug console baud rate
 			static const unsigned long SERIAL_BAUDRATE=115200;			//Uncomment If NOT using pins 0,1 for ST Shield communications (default)
 			//static const unsigned int SERIAL_BAUDRATE=2400;			//Uncomment if using Pins 0,1 for ST Shield Communications
-			#if defined(BOARD_MEGA) || defined(BOARD_MKR1000) || defined(BOARD_ESP8266)
+			#if defined(BOARD_MEGA) || defined(BOARD_MKR1000) || defined(BOARD_ESP8266) || defined(BOARD_ESP32)
 				//Maximum number of SENSOR objects
 				static const byte MAX_SENSOR_COUNT=30;					//Used to limit the number of sensor devices allowed.  Be careful on Arduino UNO due to 2K SRAM limitation 
 				//Maximum number of EXECUTOR objects

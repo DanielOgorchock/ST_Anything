@@ -1,11 +1,10 @@
-ST_Anything v2.71
+ST_Anything v2.8
 ================
 
 Recent History:
-- v2.5  2017-04-23 New SmartThings Composite Device Handler (i.e. Parent/Child Device Handlers) which eliminates the need for the Multiplexer SmartApps!  Also added Carbon Monoxide, Alarm with Strobe, and Voltage Measurement capabilities. Support for LAN devices only at this time.
-- v2.6  2017-04-26 Added support for ThingShield using new Composite Device Handler.  Includes new version of SmartThings library, updates to ST_Anything library, and new ST_Anything_Multiples_Thingshield.ino sketch.  Minor tweak to EX_Alarm logic to better handle whether or not the Strobe Pin is defined.
 - v2.7  2017-05-25 Added support for the Arduino W5500 Ethernet Shield.  Added new ST_Anything_AlarmPanel_ESP8266WiFi.ino sketch.  Revised the ST_Anything_Multiples_ESP8266WiFi.ino sketch to take into account NodeMCU ESP8266 GPIO limitations. 
 - v2.71 2017-05-28 Fix for Arduino + ESP01 (WiFi only) combination.  Arduino IDE Serial Monitor window must now be set to 115200 baud to prevent ESP-01 timeouts.  Also added support for Arduino MKR1000 board and Arduino + WiFi101 Shield (or Adafruit ATWINC1500 module).
+- v2.8  2017-08-16 Added support for ESP32 microcontroller - I used the following HiLetgo ESP Board from Amazon (https://www.amazon.com/gp/product/B0718T232Z/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
 
 ## Architecture Flow Chart
 
@@ -13,9 +12,9 @@ Recent History:
 
 Note: The ST_Anything v1.6 release was created on 2017-02-11 to make sure everyone can still get back to the original ThingShield-only code if necessary.  
 Note: If you want the old ST_Anything v2.2 code, please pull it by the v2.2 release number and follow the old v2.2 ReadMe 
-Note: ST_Anything v2.7 was built using the Arduino IDE v1.8.2.  Please make sure to upgrade your IDE.
+Note: ST_Anything v2.8 was built using the Arduino IDE v1.8.3.  Please make sure to upgrade your IDE.
 
-Turn your Arduino UNO/MEGA/MKR1000 or NodeMCU ESP8266 into a Anything you can imagine! ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
+Turn your Arduino UNO/MEGA/MKR1000, NodeMCU ESP8266, or ESP32 into a Anything you can imagine! ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
 - Arduino with W5100 Ethernet shield
 - Arduino with W5500 Ethernet shield
@@ -24,14 +23,12 @@ Turn your Arduino UNO/MEGA/MKR1000 or NodeMCU ESP8266 into a Anything you can im
 - Arduino with ESP-01 for WiFi
 - Standalone NodeMCU v1.0 ESP8266-12e
 - Standalone ESP-01 (or really any ESP8266 based board)
+- Standalone ESP32 board
 
 v2.0 Note:  There are some significant changes as compared to the old v1.x platform.  A signiciant rewrite of the "SmartThings" Arduino library was completed to incorporate Ethernet communications support.  To use ST_Anything v2.x, you must also use all of the other supporting libaries found in this GitHub repository.  Included is a the new SmartThings v2.x Arduino library which can be used standalone (examples are included in the library), or in conjunction with the ST_Anything library.
-
 v2.6 Note:  Version 2.6 builds upon the changes in v2.x to incorporate SmartThings new Composite Device Handler (DH).  This new functionality allows one Parent DH to create many Child Devices (using Child DHs).  This allows more than one of each SmartThings capability per Arduino.  Previously, this was only possible through the use of a Multiplexer SmartApp and virtual devices.  The only manual device that has to be create within the ST IDE is the Parent.  The ST_Anything Parent DH has been written to automagically create Child Devices that exist, or are added to, the Arduino ST_Anything sketch.
 
-For now, I focused on getting the new Parent/Child Device Handlers ready along with the new "ST_Anything_Multiples_xxxxx.ino" example sketch files. All of my previous examples have not been modified yet to support the new SmartThings v2.6 library and Device Handlers. Therefore I have removed them from the v2.6 release to avoid confusion. The "ST_Anything_Multiples_xxxx.ino" examples are here to get you started. I hope to add other example sketches when I have more time.
-
-THIS DOCUMENT IS A WORK IN PROGRESS!  So please be patient.  The essential code is all here and has been tested.  Documentation is still lacking somewhat, so feel free to submit a pull request to improve this ReadMe as you try to get things working.
+THIS DOCUMENT IS A WORK IN PROGRESS!  The essential code is all here and has been tested.  Documentation is still lacking somewhat, so feel free to submit a pull request to improve this ReadMe as you try to get things working.
 
 New v2.6+ Parent / Child Devices 
 ![screenshot](https://cloud.githubusercontent.com/assets/5206084/25319004/8b6ab50a-2866-11e7-9f47-6f2b4863311a.PNG)
@@ -69,18 +66,19 @@ ST_Anything consists of four main parts:
   - ST_Anything_Multiples_ESP8266WiFi.ino - NodeMCU v1.0 ESP8266-12e development board (no Arduino!)
   - ST_Anything_Multiples_ESP01WiFi.ino - ESP-01 (ESP8266-01) module (no Arduino!)
   - ST_Anything_Multiples_ThingShield.ino - Arduino UNO/MEGA + ST ThingShield
+  - ST_Anything_Multiples_ESP32WiFi.ino - ESP32 development board (no Arduino!)
   - ST_Anything_AlarmPanel_ESP8266WiFi.ino - NodeMCU v1.0 ESP8266-12e development board (no Arduino!)
 - The ST_Anything Arduino libraries + required 3rd party libraries
 - The SmartThings libraries - A modified, more efficient version, now with added support for LAN-to-Hub based communications too! 
 - The SmartThings Parent and Child Device Handlers that support sketches above.
-  - parent-st-anything-ethernet.groovy (LAN-to-Hub, Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01)
+  - parent-st-anything-ethernet.groovy (LAN-to-Hub, Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01, ESP32)
   - parent-st-anything-thingshield.groovy (Thingshield-to-Hub)
   - child-xxxxxx.groovy 
     - currently 13 child device handlers are available!
 
-## Pre-Requisites for using LAN-to-HUB Ethernet connectivity (Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, ESP-01)
+## Pre-Requisites for using LAN-to-HUB Ethernet connectivity (Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, ESP32)
 - Your SmartThings HUB must have a Static TCP/IP Address assigned via your router's DHCP Server. Since this procedure varies by router model, Google it!
-- You'll need to identify a static TCP/IP address for your Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01, as you'll need this later when setting up the sketch. Choose an unused IP address outside of the range your router's DHCP server uses, but in the same subnet.
+- You'll need to identify a static TCP/IP address for your Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01, ESP32 as you'll need this later when setting up the sketch. Choose an unused IP address outside of the range your router's DHCP server uses, but in the same subnet.
 
 ## Arduino IDE Setup Instructions 
 - Download the ST_Anything repository, focusing on the ST_Anything/Arduino/ folders
@@ -93,11 +91,12 @@ ST_Anything consists of four main parts:
 - Copy and paste both the `ST_Anything` and `SmartThings` folders (as well as all of the other library folders) into your local Arduino libraries directory. 
 - Open one of the ST_Anything_Multiples_xxxxx.ino sketches for the hardware you're using and see if it successfully compiles.
   - Make sure you select the correct model of board you are compiling for. 
-  - If building for a standalone ESP8266 board, make sure you have configured the Arduino IDE to include support for these boards.  Follow the guide at https://learn.sparkfun.com/tutorials/esp8266-thing-hookup-guide/installing-the-esp8266-arduino-addon.
+  - If building for a standalone ESP8266 board, make sure you have configured the Arduino IDE to include support for these boards.  Follow the guide at https://learn.sparkfun.com/tutorials/esp8266-thing-hookup-guide/installing-the-esp8266-arduino-addon
+  - If building for a standalone ESP32 board, make sure you have configured the Arduino IDE to include support for these boards.  Follow the guide at https://github.com/espressif/arduino-esp32/blob/master/README.md
 - If using a LAN-to-Hub (Ethernet) based device
   -Find the lines of the Sketch where it says "<---You must edit this line!"
     - You must ensure your hub's LAN IP address does not change.  Use your router's static DHCP assignment feature to make sure your hub always gets the same IP Address!  Enter that address in the corresponding line in the sketch.
-    - The Arduino must be assigned a static TCP/IP address, Gateway, DNS, Subnet Mask, MAC Address(W5100/W5500 only), SSID+Password(ESP8266,ESP01,WiFi101,MKR1000)
+    - The Arduino must be assigned a static TCP/IP address, Gateway, DNS, Subnet Mask, MAC Address(W5100/W5500 only), SSID+Password(ESP8266,ESP01,ESP32,WiFi101,MKR1000)
     - *** NOTE: If using the W5100 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch! Please leave the first octet in the MAC Address '06' as certain MAC addresses are UNICAST while others are MULTICAST. Your MAC must be UNICAST and be a 'Locally Administered Address' Please see https://en.wikipedia.org/wiki/MAC_address#Address_details for more information ***
     - *** NOTE: If using the W5500 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch! Use the one packaged with the W5500 shield.
     - Note: If using an ESP-01 for WiFi only with an Arduino, the example assumes you're using an Arduino MEGA 2560. Attach the ESP-01 to Hardware Serial "Serial1"
@@ -105,7 +104,7 @@ ST_Anything consists of four main parts:
   - With the Serial Monitor window open, load your sketch and watch the output
   - The MAC Address will be printed out in the serial monitor window. Write this down as you will need it to configure the Device using your ST App on your phone. (Note: MAC Address must later be entered with no delimeters in the form of "06AB23CD45EF" (without quotes!))
 
-WARNING:  If you are using an Arduino UNO, you may need to comment out some of the devices in the sketch (both in the global variable declaration section as well as the setup() function) due to the UNO's limited 2 kilobytes of SRAM.  Failing to do so will most likely result in unpredictable behavior. The Arduino MEGA 2560 has 8k of SRAM and has four Hardware Serial ports (UARTs).  If you plan on using many devices, get an Arduino MEGA 2560 or a NodeMCU v1.0 ESP8266-12e board.
+WARNING:  If you are using an Arduino UNO, you may need to comment out some of the devices in the sketch (both in the global variable declaration section as well as the setup() function) due to the UNO's limited 2 kilobytes of SRAM.  Failing to do so will most likely result in unpredictable behavior. The Arduino MEGA 2560 has 8k of SRAM and has four Hardware Serial ports (UARTs).  If you plan on using many devices, get an Arduino MEGA 2560, a MKR1000, a NodeMCU v1.0 ESP8266-12e, or a ESP32 board.
 
 ## SmartThings IDE Setup Instructions
 - Create an account and/or log into the SmartThings Developers Web IDE.
@@ -153,7 +152,7 @@ Your screen should look like the following image:
 ![screenshot](https://cloud.githubusercontent.com/assets/5206084/25320424/f0a8f84c-2874-11e7-820e-98e2cd0ef9d2.PNG)
 
 - Click "Done" at the top right
-- Wait a few seconds (you can watch Live Logging in the ST IDE if you'd like) while all of the Child Devices are being automagically created, assuming your Arduino or ESP8266 board is powered up and connected to your home network 
+- Wait a few seconds (you can watch Live Logging in the ST IDE if you'd like) while all of the Child Devices are being automagically created, assuming your Arduino or ESP8266/ESP32 board is powered up and connected to your home network 
 - Pull/Drag down on the screen to refresh the page which should now have all of your child devices created!
 
 
@@ -172,7 +171,7 @@ Your screen should look like the following image:
 
 
 ## Items to be aware of
-1) Please do not start changing any code before getting one of the examples up and running on both the Arduino/ESP8266 and the Device Handlers.  It is always best to start with known working code before editing it.  This greatly reduces the amount of troubleshooting later.
+1) Please do not start changing any code before getting one of the examples up and running on both the Arduino/ESP8266/ESP32 and the Device Handlers.  It is always best to start with known working code before editing it.  This greatly reduces the amount of troubleshooting later.
 
 2) I am moving away from the old SmartApp Multiplexer + Virtual Devices with the v2.5 release of ST_Anything. I believe the ST Composite Device Handler architecture is far superior and much simpler for all users.
   - Assuming you're keeping things fairly standard, you should never need to modify the groovy code within the Parent or Child Device Handlers!  Pretty much all changes are kept within the Arduino Sketch .ino file!
@@ -185,7 +184,7 @@ Your screen should look like the following image:
   - You can rename any of the Child Devices via the ST Phone App as you see fit.  Just click the gear icon within any child device in the phone app.  
   - You can assign the child devices to any "Room" you have defined to keep things organized.
 
-3) The names of the devices you create in the Arduino setup() routine must match exactly the names the Parent Device Handler code expects.  The names are CaSe SenSiTiVe!  Do not get creative with naming in the Arduino sketch as the Child Devices will not be created.  Follow the naming convention as seen in the "ST_Anything_Multiples_xxxx.ino" sketches
+3) The names of the devices you create in the Arduino setup() routine MUST MATCH EXACTLY the names the Parent Device Handler code expects.  The names are CaSe SenSiTiVe!  Do not get creative with naming in the Arduino sketch as the Child Devices will not be created.  Follow the naming convention as seen in the "ST_Anything_Multiples_xxxx.ino" sketches
   - Contact Sensors:  "contact1", "contact2", "contact3", ...
   - Alarm: "alarm1", "alarm2", "alarm3", ...
   - Motion: "motion1", "motion2", "motion3", ...
@@ -210,7 +209,12 @@ Your screen should look like the following image:
 6) When using a NodeMCU ESP8266 board, you need to be aware of some GPIO limitations.  I have assembled my findings in this image:
 ![screenshot](https://cloud.githubusercontent.com/assets/5206084/26479180/53488d08-419f-11e7-824f-aa1649335c02.png)
 
-7) Button Devices - "where do they show up?"  Buttons show up in the SmartApps that use them.  The Aeon Minimote Device Handler, for example, has one tile with a remote control icon on it.  Nothing else.  It also has zero configuration options as well.  I used this as a model for adding "Button" capabilities to ST_Anything per a user request.  When you define the number of buttons (via the gear-based configuration menu in the parent DH) you are announcing to all SmartApps the number of buttons defined.  This in turn allows SmartApps like "Smart Lighting", "CoRE", and "WebCoRE" to know how many "buttons" to offer you to configure an action.  So, the easiest test is to create a new "Smart Lighting" automation, where you define the action to be based on a button "pushed" or "held" event from the Parent Device (no child devices are created for buttons).  Give it a try! I have used this successfully in the past for testing purposes.
+7) When using a ESP32 board, you need to be aware of some GPIO limitations
+  - GPIO 34-39 are input only and do NOT support internal pullup resistors
+  - GPIO  6-11 are reserved for FLASH.  Do not use these!
+  - The Arduino analogWrite() function is not supported as of 8/18/2017.  This means the EX_Switch_Dim ST_Anything Class does not support PWM output on the ESP32.
+
+8) Button Devices - "where do they show up?"  Buttons show up in the SmartApps that use them.  The Aeon Minimote Device Handler, for example, has one tile with a remote control icon on it.  Nothing else.  It also has zero configuration options as well.  I used this as a model for adding "Button" capabilities to ST_Anything per a user request.  When you define the number of buttons (via the gear-based configuration menu in the parent DH) you are announcing to all SmartApps the number of buttons defined.  This in turn allows SmartApps like "Smart Lighting", "CoRE", and "WebCoRE" to know how many "buttons" to offer you to configure an action.  So, the easiest test is to create a new "Smart Lighting" automation, where you define the action to be based on a button "pushed" or "held" event from the Parent Device (no child devices are created for buttons).  Give it a try! I have used this successfully in the past for testing purposes.
 
 
 ## Final Notes for now...
@@ -229,3 +233,5 @@ Look at the documentation in the 'ST_Anything_Multiples_xxxx.ino' files for expl
 - v2.0  2017-02-12 Initial release of v2.x platform with additonal support for Ethernet connectivity to SmartThings
 - v2.1  2017-02-20 Added support for using the ESP-01 as WiFi communications for Arduino MEGA 2560 (SmartThings and ST_Anything libraries updated)
 - v2.2  2017-03-25 Added new IS_Button class, sample sketches, updated Device Handler, etc... to support ST "Button" capability
+- v2.5  2017-04-23 New SmartThings Composite Device Handler (i.e. Parent/Child Device Handlers) which eliminates the need for the Multiplexer SmartApps!  Also added Carbon Monoxide, Alarm with Strobe, and Voltage Measurement capabilities. Support for LAN devices only at this time.
+- v2.6  2017-04-26 Added support for ThingShield using new Composite Device Handler.  Includes new version of SmartThings library, updates to ST_Anything library, and new ST_Anything_Multiples_Thingshield.ino sketch.  Minor tweak to EX_Alarm logic to better handle whether or not the Strobe Pin is defined.
