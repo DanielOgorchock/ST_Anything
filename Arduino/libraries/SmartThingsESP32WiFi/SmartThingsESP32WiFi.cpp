@@ -57,12 +57,11 @@ namespace st
 	//*******************************************************************************
 	void SmartThingsESP32WiFi::init(void)
 	{
-		//wait for ESP32 to be ready on startup
-		delay(1000); 
-
 		if (!st_preExistingConnection) {
 			Serial.println(F(""));
 			Serial.println(F("Initializing ESP32 WiFi network.  Please be patient..."));
+			//wait for ESP32 to be ready on startup
+			delay(1000); //may not be necessary, but seems to help my test board start up cleanly
 
 			// attempt to connect to WiFi network
 			WiFi.begin(st_ssid, st_password);
@@ -104,6 +103,11 @@ namespace st
 		Serial.println(F(""));
 		Serial.println(F("SmartThingsESP32WiFI: Intialized"));
 		Serial.println(F(""));
+		
+		//Turn off Wirelss Access Point
+		Serial.println(F("Disabling ESP32 WiFi Access Point"));
+		Serial.println(F(""));
+		WiFi.mode(WIFI_STA);		
 	}
 
 	//*****************************************************************************

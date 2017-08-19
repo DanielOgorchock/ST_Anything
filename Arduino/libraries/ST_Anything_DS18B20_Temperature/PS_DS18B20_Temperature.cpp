@@ -31,6 +31,7 @@
 //    2015-10-08  Matt Boykin    Original Creation
 //	  2016-02-19  Dan Ogorchock	 Cleaned Up for inclusing in the ST_Anything Project
 //    2016-02-27  Dan Ogorchock  Added support for multiple DS18B20 sensors
+//    2017-08-18  Dan Ogorchock  Modified to send floating point values to SmartThings
 //
 //
 //******************************************************************************************
@@ -142,11 +143,11 @@ namespace st
 
 			if (m_numSensors == 1)
 			{
-				Everything::sendSmartString(getName() + " " + String(int(m_dblTemperatureSensorValue)));
+				Everything::sendSmartString(getName() + " " + String(m_dblTemperatureSensorValue));
 			}
 			else
 			{
-				Everything::sendSmartString(getName() + index + " " + String(int(m_dblTemperatureSensorValue)));
+				Everything::sendSmartString(getName() + index + " " + String(m_dblTemperatureSensorValue));
 			}
 		}
 	}

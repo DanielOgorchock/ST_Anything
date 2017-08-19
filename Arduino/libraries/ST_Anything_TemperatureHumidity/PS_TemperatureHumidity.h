@@ -19,6 +19,13 @@
 //				- String strTemp - OPTIONAL - name of temperature sensor to send to ST Cloud (defaults to "temperature")
 //				- String strHumid - OPTIONAL - name of humidity sensor to send to ST Cloud (defaults to "humidity")
 //				- bool In_C - OPTIONAL - true = Report Celsius, false = Report Farenheit (Farentheit is the default)
+//				- byte filterConstant - OPTIONAL - Value from 5% to 100% to determine how much filtering/averaging is performed 100 = none (default), 5 = maximum
+//
+//            Filtering/Averaging
+//
+//            Filtering the value sent to ST is performed per the following equation
+//
+//            filteredValue = (filterConstant/100 * currentValue) + ((1 - filterConstant/100) * filteredValue) 
 //
 //			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
@@ -35,6 +42,7 @@
 //    2015-01-17  Dan Ogorchock	 Added optional temperature and humidity device names in constructor to allow multiple Temp/Humidity sensors
 //    2015-03-29  Dan Ogorchock	 Optimized use of the DHT library (made it static) to reduce SRAM memory usage at runtime.
 //    2017-06-27  Dan Ogorchock  Added optional Celsius reading argument
+//    2017-08-17  Dan Ogorchock  Added optional filter constant argument and to transmit floating point values to SmartThings
 //
 //******************************************************************************************
 
@@ -50,20 +58,21 @@ namespace st
 	{
 		private:
 			byte m_nDigitalInputPin;		//digital pin connected to the DHT sensor
-			int m_nTemperatureSensorValue;	//current Temperature value
-			int m_nHumiditySensorValue;		//current Humidity Value
+			float m_fTemperatureSensorValue;//current Temperature value
+			float m_fHumiditySensorValue;	//current Humidity Value
 			static dht DHT;					//DHT library object
 			byte m_bDHTSensorType;			//DHT Sensor Type
 			String m_strTemperature;		//name of temparature sensor to use when transferring data to ST Cloud
 			String m_strHumidity;			//name of temparature sensor to use when transferring data to ST Cloud		
 			bool m_In_C;					//Return temp in C
+			float m_fFilterConstant;        //Filter constant % as floating point from 0.00 to 1.00
 
 		public:
 			//types of DHT sensors supported by the dht library
 			enum DHT_SENSOR { DHT11, DHT21, DHT22, DHT33, DHT44 };
 
 			//constructor - called in your sketch's global variable declaration section
-			PS_TemperatureHumidity(const __FlashStringHelper *name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp="temperature1", String strHumid="humidity1", bool In_C = false);
+			PS_TemperatureHumidity(const __FlashStringHelper *name, unsigned int interval, int offset, byte digitalInputPin, DHT_SENSOR DHTSensorType, String strTemp = "temperature1", String strHumid = "humidity1", bool In_C = false, byte filterConstant = 100);
 			
 			//destructor
 			virtual ~PS_TemperatureHumidity();
@@ -79,8 +88,8 @@ namespace st
 			
 			//gets
 			inline byte getPin() const { return m_nDigitalInputPin; }
-			inline byte getTemperatureSensorValue() const { return m_nTemperatureSensorValue; }
-			inline byte getHumiditySensorValue() const { return m_nHumiditySensorValue; }
+			inline float getTemperatureSensorValue() const { return m_fTemperatureSensorValue; }
+			inline float getHumiditySensorValue() const { return m_fHumiditySensorValue; }
 				
 			//sets
 			void setPin(byte pin);

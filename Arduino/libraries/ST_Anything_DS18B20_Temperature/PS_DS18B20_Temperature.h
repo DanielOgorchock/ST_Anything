@@ -7,7 +7,7 @@
 //			  temperature from a Dallas Semiconductor One Wire DS18B20 series sensor. 
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_DS18B20_Temperature sensor1("temperature", 120, 0, PIN_TEMPERATURE, false);
+//			  For Example:  st::PS_DS18B20_Temperature sensor1("temperature1", 120, 0, PIN_TEMPERATURE, false);
 //
 //			  st::PS_DS18B20_Temperature() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -31,6 +31,7 @@
 //    2015-10-08  Matt Boykin    Original Creation
 //	  2016-02-19  Dan Ogorchock	 Cleaned Up for inclusing in the ST_Anything Project
 //    2016-02-27  Dan Ogorchock  Added support for multiple DS18B20 sensors
+//    2017-08-18  Dan Ogorchock  Modified to send floating point values to SmartThings
 //
 //
 //******************************************************************************************
@@ -73,7 +74,7 @@ namespace st
 			virtual void getData();
 
 			//gets
-			inline int getTemperatureSensorValue() const { return int(m_dblTemperatureSensorValue); }
+			inline float getTemperatureSensorValue() const { return float(m_dblTemperatureSensorValue); }
 
 			//sets
 

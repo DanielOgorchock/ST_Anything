@@ -11,17 +11,17 @@
 //			  defaults for this sensor are based on the device used during testing.  
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_Voltage sensor1("voltage", 120, 0, PIN_VOLTAGE, 0, 1023, 0, 5);
+//			  For Example:  st::PS_Voltage sensor1("voltage1", 120, 0, PIN_VOLTAGE, 0, 1023, 0, 5);
 //
 //			  st::PS_Voltage() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
 //				- long interval - REQUIRED - the polling interval in seconds
 //				- long offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
 //				- byte pin - REQUIRED - the Arduino Pin to be used as an analog input
-//				- int s_l - OPTIONAL - first argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
-//				- int s_h - OPTIONAL - second argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
-//				- int m_l - OPTIONAL - third argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
-//				- int m_h - OPTIONAL - fourth argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
+//				- double s_l - OPTIONAL - first argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
+//				- double s_h - OPTIONAL - second argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
+//				- double m_l - OPTIONAL - third argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
+//				- double m_h - OPTIONAL - fourth argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
 //
 //			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
@@ -34,9 +34,11 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-04-19  Dan & Daniel   Original Creation
+//    2017-08-18  Dan Ogorchock  Modified to return floating point values instead of integer
 //
 //
 //******************************************************************************************
+
 
 #include "PS_Voltage.h"
 
@@ -46,13 +48,16 @@
 namespace st
 {
 //private
-	
+	float map_double(double x, double in_min, double in_max, double out_min, double out_max)
+	{
+		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	}
 
 //public
 	//constructor - called in your sketch's global variable declaration section
-	PS_Voltage::PS_Voltage(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, int s_l, int s_h, int m_l, int m_h):
+	PS_Voltage::PS_Voltage(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, double s_l, double s_h, double m_l, double m_h):
 		PollingSensor(name, interval, offset),
-		m_nSensorValue(0),
+		m_fSensorValue(0),
 		SENSOR_LOW(s_l),
 		SENSOR_HIGH(s_h),
 		MAPPED_LOW(m_l),
@@ -92,9 +97,9 @@ namespace st
 	//function to get data from sensor and queue results for transfer to ST Cloud 
 	void PS_Voltage::getData()
 	{
-		int m_nSensorValue=map(analogRead(m_nAnalogInputPin), SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH);
+		m_fSensorValue= map_double(analogRead(m_nAnalogInputPin), SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH);
 		
-		Everything::sendSmartString(getName() + " " + String(m_nSensorValue));
+		Everything::sendSmartString(getName() + " " + String(m_fSensorValue));
 	}
 	
 	void PS_Voltage::setPin(byte pin)

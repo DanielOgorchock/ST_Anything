@@ -11,17 +11,17 @@
 //			  defaults for this sensor are based on the device used during testing.  
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_Voltage sensor1("voltage", 120, 0, PIN_VOLTAGE, 0, 1023, 0, 5);
+//			  For Example:  st::PS_Voltage sensor1("voltage1", 120, 0, PIN_VOLTAGE, 0, 1023, 0, 5);
 //
 //			  st::PS_Voltage() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
 //				- long interval - REQUIRED - the polling interval in seconds
 //				- long offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
 //				- byte pin - REQUIRED - the Arduino Pin to be used as an analog input
-//				- int s_l - OPTIONAL - first argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
-//				- int s_h - OPTIONAL - second argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
-//				- int m_l - OPTIONAL - third argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
-//				- int m_h - OPTIONAL - fourth argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
+//				- double s_l - OPTIONAL - first argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
+//				- double s_h - OPTIONAL - second argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
+//				- double m_l - OPTIONAL - third argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
+//				- double m_h - OPTIONAL - fourth argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
 //
 //			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
@@ -34,6 +34,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-04-19  Dan & Daniel   Original Creation
+//    2017-08-18  Dan Ogorchock  Modified to return floating point values instead of integer
 //
 //
 //******************************************************************************************
@@ -49,12 +50,12 @@ namespace st
 	{
 		private:
 			byte m_nAnalogInputPin;
-			int m_nSensorValue;
+			float m_fSensorValue;
 			const int SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH;
 			
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			PS_Voltage(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, int s_l=0, int s_h=1023, int m_l=0, int m_h=5000);
+			PS_Voltage(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, double s_l=0, double s_h=1023, double m_l=0, double m_h=5000);
 			
 			//destructor
 			virtual ~PS_Voltage();
@@ -67,7 +68,7 @@ namespace st
 			
 			//gets
 			inline byte getPin() const {return m_nAnalogInputPin;}
-			inline byte getSensorValue() const {return m_nSensorValue;}
+			inline float getSensorValue() const {return m_fSensorValue;}
 				
 			//sets
 			void setPin(byte pin);
