@@ -21,6 +21,7 @@
  *    2017-04-25  Dan Ogorchock  Updated to use the new Composite Device Handler feature
  *    2017-06-10  Dan Ogorchock  Added Dimmer Switch support
  *    2017-07-09  Dan Ogorchock  Added number of defined buttons tile
+ *    2017-08-24  Allan (vseven) Change the way values are pushed to child devices to allow a event to be executed allowing future customization
  *
  */
  
@@ -138,11 +139,11 @@ def parse(String description) {
             if (childDevice != null) {
                 //log.debug "parse() found child device ${childDevice.deviceNetworkId}"
                 if (namebase == "dimmerSwitch") { namebase = "switch"}  //use a "switch" attribute to maintain standards
-                childDevice.sendEvent(name: namebase, value: value)
+                childDevice.generateEvent(namebase, value)
                 log.debug "${childDevice.deviceNetworkId} - name: ${namebase}, value: ${value}"
                 //If event was dor a "Door Control" device, also update the child door control device's "Contact Sensor" to keep everything in synch
                 if (namebase == "doorControl") {
-                	childDevice.sendEvent(name: "contact", value: value)
+                	childDevice.generateEvent("contact", value)
                     log.debug "${childDevice.deviceNetworkId} - name: contact, value: ${value}"
                 }
             }
