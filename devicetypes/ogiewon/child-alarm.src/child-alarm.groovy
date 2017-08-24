@@ -17,6 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2017-04-10  Dan Ogorchock  Original Creation
+ *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *
  * 
  */
@@ -27,7 +28,12 @@ metadata {
 	capability "Switch"
 
 	command "test"
- }
+	 
+	}
+
+	simulator {
+
+	}
 
 	tiles(scale: 2) {
         multiAttributeTile(name:"alarm", type: "generic", width: 6, height: 4){
@@ -86,4 +92,10 @@ def both() {
 
 def test() {
 	parent.childAlarmTest(device.deviceNetworkId)
+}
+
+def generateEvent(String name, String value) {
+	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
+	// Update device
+	sendEvent(name: name,value: value)
 }
