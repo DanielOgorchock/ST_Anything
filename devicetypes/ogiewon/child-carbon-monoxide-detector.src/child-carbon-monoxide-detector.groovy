@@ -17,13 +17,14 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2017-04-19  Dan Ogorchock  Original Creation
+ *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *
  * 
  */
 metadata {
 	definition (name: "Child Carbon Monoxide Detector", namespace: "ogiewon", author: "Dan Ogorchock") {
 		capability "Carbon Monoxide Detector"
-        capability "Smoke Detector"
+        	capability "Smoke Detector"
 		capability "Sensor"
 	}
 
@@ -36,4 +37,10 @@ metadata {
 		}
 	}
 
+}
+
+def generateEvent(String name, String value) {
+	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
+	// Update device
+	sendEvent(name: name,value: value)
 }
