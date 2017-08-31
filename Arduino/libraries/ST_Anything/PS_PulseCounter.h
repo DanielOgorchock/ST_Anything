@@ -20,7 +20,7 @@
 //				- int offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
 //				- byte pin - REQUIRED - the Arduino Pin to be used as an digital input (Hardware Interrupt)
 //				- byte inttype - REQUIRED - which type of Arduino interrupt to trigger the ISR (RISING, FALLING, CHANGE)
-//				- byte inputmode - REQUIRED - Mode of the difital input Pin (INPUT, INPUT_PULLUP)
+//				- byte inputmode - REQUIRED - Mode of the digital input Pin (INPUT, INPUT_PULLUP)
 //				- float cnvslope - REQUIRED - Conversion to Engineering Units Slope
 //				- float cnvoffset - REQUIRED - Conversion to Engineering Units Offset
 //

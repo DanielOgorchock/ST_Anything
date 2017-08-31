@@ -6,7 +6,7 @@
 //			  It inherits from the st::InterruptSensor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::IS_Smoke sensor6("smoke", PIN_SMOKE, HIGH, 500);
+//			  For Example:  st::IS_Smoke sensor6("smoke1", PIN_SMOKE, HIGH, false, 500);
 //
 //			  st::IS_Smoke() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -20,7 +20,8 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
-//	  2015-03-17  Dan			 Added optional "numReqCounts" constructor argument/capability
+//	  2015-03-17  Dan Ogorchock  Added optional "numReqCounts" constructor argument/capability
+//    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //
 //
 //******************************************************************************************

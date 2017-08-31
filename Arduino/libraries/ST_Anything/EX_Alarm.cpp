@@ -9,7 +9,7 @@
 //			  TODO:  Possibly add Strobe capability in the future
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_Alarm executor2("alarm", PIN_ALARM, LOW, true, PIN_STROBE);
+//			  For Example:  st::EX_Alarm executor2("alarm1", PIN_ALARM, LOW, true, PIN_STROBE);
 //
 //			  st::EX_Alarm() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -25,6 +25,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //	  2017-04-20  Dan Ogorchock	 Add optional Strobe functionality
 //    2017-04-26  Dan Ogorchock  Improved Logic if Strobe pin not defined 
+//    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //
 //
 //******************************************************************************************

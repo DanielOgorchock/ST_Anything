@@ -10,7 +10,7 @@
 //			  It inherits from the st::InterruptSensor class and clones much from the st::Executor Class
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::IS_DoorControl sensor3("leftDoor", PIN_CONTACT_LEFTGARAGE_DOOR, LOW, true, PIN_RELAY_LEFTGARAGE_DOOR, LOW, true, 1000);
+//			  For Example:  st::IS_DoorControl sensor3("doorControl1", PIN_CONTACT_DOOR_1, LOW, true, PIN_RELAY_DOOR_1, LOW, true, 1000);
 //
 //			  st::IS_DoorControl() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -19,7 +19,7 @@
 //				- bool internalPullup - REQUIRED - true == INTERNAL_PULLUP
 //				- byte pinOutput - REQUIRED - the Arduino Pin to be used as a digital output
 //				- bool startingState - REQUIRED - the value desired for the initial state of the switch.  LOW = "off", HIGH = "on"
-//				- bool invertLogic - REQUIRED - determines whether the Arduino Digital Ouput should use inverted logic
+//				- bool invertLogic - REQUIRED - determines whether the Arduino Digital Output should use inverted logic
 //				- long delayTime - REQUIRED - the number of milliseconds to keep the output on
 //
 //  Change History:
@@ -27,6 +27,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-07  Dan Ogorchock  Original Creation
+//    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //
 //
 //******************************************************************************************

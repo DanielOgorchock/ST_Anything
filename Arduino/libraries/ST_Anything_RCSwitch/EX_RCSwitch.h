@@ -6,7 +6,7 @@
 //			  It inherits from the st::Executor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_RCSwitch executor1("rcswitch", PIN_RCSWITCH, 35754004, 26, 18976788, 26, 174, 1, 15, LOW);
+//			  For Example:  st::EX_RCSwitch executor1("switch1", PIN_RCSWITCH, 35754004, 26, 18976788, 26, 174, 1, 15, LOW);
 //
 //			  st::EX_RCSwitch() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -24,8 +24,9 @@
 //
 //    Date        Who            What
 //    ----        ---            ----
-//    2015-01-26  Dan			Original Creation
-//    2015-05-20  Dan			Improved to work with Etekcity ZAP 3F 433Mhz RF Outlets
+//    2015-01-26  Dan Ogorchock  Original Creation
+//    2015-05-20  Dan Ogorchock  Improved to work with Etekcity ZAP 3F 433Mhz RF Outlets
+//    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //
 //******************************************************************************************
 #ifndef ST_EX_RCSWITCH

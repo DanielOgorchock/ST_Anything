@@ -8,7 +8,7 @@
 //			  temperature Adafruit MAX31855 series thermocouple sensor.    
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_AdafruitThermocouple sensor1("temperature", 120, 3, PIN_SCLK, PIN_CS, PIN_MISO);
+//			  For Example:  st::PS_AdafruitThermocouple sensor1("temperature1", 120, 3, PIN_SCLK, PIN_CS, PIN_MISO);
 //
 //			  st::PS_TemperatureHumidity() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -29,6 +29,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-03-24  Dan Ogorchock  Original Creation
+//    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //
 //
 //******************************************************************************************

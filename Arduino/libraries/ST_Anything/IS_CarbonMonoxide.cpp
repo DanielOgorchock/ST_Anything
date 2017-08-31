@@ -6,7 +6,7 @@
 //			  It inherits from the st::IS_Smoke class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::IS_CarbonMonoxide sensor6("carbonMonoxide", PIN_CO, HIGH, 500);
+//			  For Example:  st::IS_CarbonMonoxide sensor6("carbonMonoxide1", PIN_CO, HIGH, false, 500);
 //
 //			  st::IS_CarbonMonoxide() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -20,10 +20,10 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-04-19  Dan & Daniel   Original Creation
+//    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //
 //
 //******************************************************************************************
-
 
 #include "IS_CarbonMonoxide.h"
 

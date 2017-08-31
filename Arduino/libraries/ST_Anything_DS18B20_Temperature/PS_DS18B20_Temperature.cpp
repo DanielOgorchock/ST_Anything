@@ -7,7 +7,7 @@
 //			  temperature from a Dallas Semiconductor One Wire DS18B20 series sensor. 
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_DS18B20_Temperature sensor1("temperature", 120, 0, PIN_TEMPERATURE, false);
+//			  For Example:  st::PS_DS18B20_Temperature sensor1("temperature1", 120, 0, PIN_TEMPERATURE, false);
 //
 //			  st::PS_DS18B20_Temperature() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -32,6 +32,7 @@
 //	  2016-02-19  Dan Ogorchock	 Cleaned Up for inclusing in the ST_Anything Project
 //    2016-02-27  Dan Ogorchock  Added support for multiple DS18B20 sensors
 //    2017-08-18  Dan Ogorchock  Modified to send floating point values to SmartThings
+//    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //
 //
 //******************************************************************************************
