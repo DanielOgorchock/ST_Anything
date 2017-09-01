@@ -22,6 +22,14 @@
 //				- double s_h - OPTIONAL - second argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
 //				- double m_l - OPTIONAL - third argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
 //				- double m_h - OPTIONAL - fourth argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
+//				- byte numSamples - OPTIONAL - defaults to 1, number of analog readings to average per scheduled reading of the analog input
+//				- byte filterConstant - OPTIONAL - Value from 5% to 100% to determine how much filtering/averaging is performed 100 = none (default), 5 = maximum
+//
+//            Filtering/Averaging
+//
+//				Filtering the value sent to ST is performed per the following equation
+//
+//				filteredValue = (filterConstant/100 * currentValue) + ((1 - filterConstant/100) * filteredValue) 
 //
 //			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
@@ -35,10 +43,11 @@
 //    ----        ---            ----
 //    2015-04-19  Dan & Daniel   Original Creation
 //    2017-08-18  Dan Ogorchock  Modified to return floating point values instead of integer
+//    2017-08-31  Dan Ogorchock  Added oversampling optional argument to help reduce noisy signals
+//    2017-08-31  Dan Ogorchock  Added filtering optional argument to help reduce noisy signals
 //
 //
 //******************************************************************************************
-
 #ifndef ST_PS_VOLTAGE_H
 #define ST_PS_VOLTAGE_H
 
@@ -51,11 +60,13 @@ namespace st
 		private:
 			byte m_nAnalogInputPin;
 			float m_fSensorValue;
-			const int SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH;
-			
+			double SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH;
+			int m_nNumSamples;
+			float m_fFilterConstant;        //Filter constant % as floating point from 0.00 to 1.00
+
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			PS_Voltage(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, double s_l=0, double s_h=1023, double m_l=0, double m_h=5000);
+			PS_Voltage(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, double s_l=0, double s_h=1023, double m_l=0, double m_h=5000, int NumSamples=1, byte filterConstant = 100);
 			
 			//destructor
 			virtual ~PS_Voltage();
