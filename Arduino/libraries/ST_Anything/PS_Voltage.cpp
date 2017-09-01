@@ -22,6 +22,14 @@
 //				- double s_h - OPTIONAL - second argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
 //				- double m_l - OPTIONAL - third argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
 //				- double m_h - OPTIONAL - fourth argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
+//				- byte numSamples - OPTIONAL - defaults to 1, number of analog readings to average per scheduled reading of the analog input
+//				- byte filterConstant - OPTIONAL - Value from 5% to 100% to determine how much filtering/averaging is performed 100 = none (default), 5 = maximum
+//
+//            Filtering/Averaging
+//
+//				Filtering the value sent to ST is performed per the following equation
+//
+//				filteredValue = (filterConstant/100 * currentValue) + ((1 - filterConstant/100) * filteredValue) 
 //
 //			  This class supports receiving configuration data from the SmartThings cloud via the ST App.  A user preference
 //			  can be configured in your phone's ST App, and then the "Configure" tile will send the data for all sensors to 
@@ -35,11 +43,11 @@
 //    ----        ---            ----
 //    2015-04-19  Dan & Daniel   Original Creation
 //    2017-08-18  Dan Ogorchock  Modified to return floating point values instead of integer
+//    2017-08-31  Dan Ogorchock  Added oversampling optional argument to help reduce noisy signals
+//    2017-08-31  Dan Ogorchock  Added filtering optional argument to help reduce noisy signals
 //
 //
 //******************************************************************************************
-
-
 #include "PS_Voltage.h"
 
 #include "Constants.h"
@@ -55,15 +63,31 @@ namespace st
 
 //public
 	//constructor - called in your sketch's global variable declaration section
-	PS_Voltage::PS_Voltage(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, double s_l, double s_h, double m_l, double m_h):
+	PS_Voltage::PS_Voltage(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, double s_l, double s_h, double m_l, double m_h, int NumSamples, byte filterConstant):
 		PollingSensor(name, interval, offset),
-		m_fSensorValue(0),
+		m_fSensorValue(-1.0),
 		SENSOR_LOW(s_l),
 		SENSOR_HIGH(s_h),
 		MAPPED_LOW(m_l),
-		MAPPED_HIGH(m_h)
+		MAPPED_HIGH(m_h),
+		m_nNumSamples(NumSamples)
 	{
 		setPin(analogInputPin);
+
+		//check for upper and lower limit and adjust accordingly
+		if ((filterConstant <= 0) || (filterConstant >= 100))
+		{
+			m_fFilterConstant = 1.0;
+		}
+		else if (filterConstant <= 5)
+		{
+			m_fFilterConstant = 0.05;
+		}
+		else
+		{
+			m_fFilterConstant = float(filterConstant) / 100;
+		}
+
 	}
 	
 	//destructor
@@ -97,7 +121,36 @@ namespace st
 	//function to get data from sensor and queue results for transfer to ST Cloud 
 	void PS_Voltage::getData()
 	{
-		m_fSensorValue= map_double(analogRead(m_nAnalogInputPin), SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH);
+		int i;
+		double tempValue = 0;
+
+		//implement oversampling / averaging
+		for (i = 0; i < m_nNumSamples; i++) {
+
+			tempValue += map_double(analogRead(m_nAnalogInputPin), SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH);
+
+			//if (st::PollingSensor::debug)
+			//{
+			//	Serial.print(F("PS_Voltage::tempValue = "));
+			//	Serial.print(tempValue);
+			//	Serial.println();
+			//}
+		}
+		
+		tempValue = tempValue / m_nNumSamples; //calculate the average value over the number of samples
+
+		//implement filtering
+		if (m_fSensorValue == -1.0)
+		{
+			//first time through, no filtering
+			m_fSensorValue = tempValue;  
+		}
+		else
+		{
+			m_fSensorValue = (m_fFilterConstant * tempValue) + (1 - m_fFilterConstant) * m_fSensorValue;
+		}
+
+		//m_fSensorValue = map_double(analogRead(m_nAnalogInputPin), SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH);
 		
 		Everything::sendSmartString(getName() + " " + String(m_fSensorValue));
 	}
