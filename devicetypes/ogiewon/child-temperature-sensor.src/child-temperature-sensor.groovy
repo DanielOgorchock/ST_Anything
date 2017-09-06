@@ -17,21 +17,27 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2017-04-10  Dan Ogorchock  Original Creation
+ *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
+ *    2017-08-24  Allan (vseven) Added a lastUpdated attribute that will display on the multitile.
  *
  * 
  */
 metadata {
 	definition (name: "Child Temperature Sensor", namespace: "ogiewon", author: "Daniel Ogorchock") {
 		capability "Temperature Measurement"
-//        capability "Relative Humidity Measurement"
 		capability "Sensor"
+        
+        	attribute "lastUpdated", "String"
+	}
+
+	simulator {
+
 	}
 
 	tiles(scale: 2) {
 		multiAttributeTile(name: "temperature", type: "generic", width: 6, height: 4, canChangeIcon: true) {
 			tileAttribute("device.temperature", key: "PRIMARY_CONTROL") {
-				attributeState("temperature", label: '${currentValue}°', unit:"F", defaultState: true, 
-						backgroundColors: [
+				attributeState("temperature", label: '${currentValue}°', unit:"F", defaultState: true, backgroundColors: [
                                 // Celsius
                                 [value: 0, color: "#153591"],
                                 [value: 7, color: "#1e9cbb"],
@@ -48,11 +54,24 @@ metadata {
                                 [value: 84, color: "#f1d801"],
                                 [value: 95, color: "#d04e00"],
                                 [value: 96, color: "#bc2323"]
-						])
-			}
-//			tileAttribute("device.humidity", key: "SECONDARY_CONTROL") {
-//                attributeState("humidity", label:'${currentValue}%', unit:"%", defaultState: true)
-//    		}
-		}
+				])
+                	}
+                
+             tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+    			attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+             }
 	}
+	main(["temperature"])
+        details(["temperature", "lastUpdate"])
+	}
+}
+
+def generateEvent(String name, String value) {
+	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
+	// Update device
+	sendEvent(name: name,value: value)
+    	// Update lastUpdated date and time
+   	 def nowDay = new Date().format("MMM dd", location.timeZone)
+    	def nowTime = new Date().format("h:mm a", location.timeZone)
+    	sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime)
 }
