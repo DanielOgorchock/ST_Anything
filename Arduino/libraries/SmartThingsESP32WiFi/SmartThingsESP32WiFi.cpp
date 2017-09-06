@@ -6,6 +6,8 @@
 //
 //	History
 //	2017-08-15  Dan Ogorchock  Created with the help of Joshua Spain
+//  2017-09-05  Dan Ogorchock  Added automatic WiFi reconnect logic as ESP32 
+//                             doesn't do this automatically currently
 //*******************************************************************************
 
 #include "SmartThingsESP32WiFi.h"
@@ -52,11 +54,55 @@ namespace st
 
 	}
 
+	//**************************************************************************************
+	/// Event Handler for ESP32 WiFi Events (needed to implement reconnect logic for now...)
+	//**************************************************************************************
+	void SmartThingsESP32WiFi::WiFiEvent(WiFiEvent_t event)
+	{
+		Serial.printf("[WiFi-event] event: %d\n", event);
+
+		switch (event) {
+		case SYSTEM_EVENT_STA_GOT_IP:
+			Serial.println("WiFi connected");
+			Serial.println("IP address: ");
+			Serial.println(WiFi.localIP());
+			break;
+		case SYSTEM_EVENT_STA_DISCONNECTED:
+			Serial.println("WiFi lost connection.  Attempting to reconnect...");
+			WiFi.reconnect();
+			break;
+		case SYSTEM_EVENT_STA_START:
+			Serial.println("ESP32 station start");
+			break;
+		case SYSTEM_EVENT_STA_CONNECTED:
+			Serial.println("ESP32 station connected to AP");
+			break;
+		}
+
+	}
+
 	//*******************************************************************************
 	/// Initialize SmartThingsESP32WiFI Library
 	//*******************************************************************************
 	void SmartThingsESP32WiFi::init(void)
 	{
+		// delete old config
+		WiFi.disconnect(true);
+		delay(1000);
+		WiFi.onEvent(SmartThingsESP32WiFi::WiFiEvent);
+
+		//Turn off Wirelss Access Point
+		Serial.println(F("Disabling ESP32 WiFi Access Point"));
+		Serial.println(F(""));
+		WiFi.mode(WIFI_STA);
+		//WiFi.setAutoReconnect(true);
+		//WiFi.setAutoConnect(true);
+
+		if (st_DHCP == false)
+		{
+			WiFi.config(st_localIP, st_localGateway, st_localSubnetMask, st_localDNSServer);
+		}
+
 		if (!st_preExistingConnection) {
 			Serial.println(F(""));
 			Serial.println(F("Initializing ESP32 WiFi network.  Please be patient..."));
@@ -69,17 +115,18 @@ namespace st
 			Serial.println(st_ssid);
 		}
 
+		int count =0;
 		while (WiFi.status() != WL_CONNECTED) {
+			count++;
 			Serial.print(F("."));
 			delay(500);	// wait for connection:
+			if (count > 10) {
+				Serial.println(F("what is taking so long?"));
+				count = 0;
+			}
 		}
 
 		Serial.println();
-
-		if (st_DHCP == false)
-		{
-			WiFi.config(st_localIP, st_localGateway, st_localSubnetMask, st_localDNSServer);
-		}
 
 		st_server.begin();
 
@@ -104,10 +151,6 @@ namespace st
 		Serial.println(F("SmartThingsESP32WiFI: Intialized"));
 		Serial.println(F(""));
 		
-		//Turn off Wirelss Access Point
-		Serial.println(F("Disabling ESP32 WiFi Access Point"));
-		Serial.println(F(""));
-		WiFi.mode(WIFI_STA);		
 	}
 
 	//*****************************************************************************
@@ -123,10 +166,10 @@ namespace st
 			if (_isDebugEnabled)
 			{
 				Serial.println(F("**********************************************************"));
-				Serial.println(F("**** WiFi Disconnected.  ESP32 should auto-reconnect ***"));
+				Serial.println(F("**** WiFi Disconnected.  ESP32 should auto-reconnect.  ***"));
 				Serial.println(F("**********************************************************"));
 			}
-
+			//WiFi.reconnect();
 			//init();
 		}
 
@@ -213,10 +256,11 @@ namespace st
 			if (_isDebugEnabled)
 			{
 				Serial.println(F("**********************************************************"));
-				Serial.println(F("**** WiFi Disconnected.  ESP32 should auto-reconnect ***"));
+				Serial.println(F("**** WiFi Disconnected.  ESP32 should auto-reconnect.  ***"));
 				Serial.println(F("**********************************************************"));
 			}
 
+			//WiFi.reconnect();
 			//init();
 		}
 
@@ -251,10 +295,11 @@ namespace st
 				Serial.println(st_hubPort);
 
 				Serial.println(F("***********************************************************"));
-				Serial.println(F("**** WiFi Disconnected.  ESP32 should auto-reconnect ****"));
+				Serial.println(F("**** WiFi Disconnected.  ESP32 should auto-reconnect.  ***"));
 				Serial.println(F("***********************************************************"));
 			}
 
+			//WiFi.reconnect();
 			//init();      //Re-Init connection to get things working again
 
 			if (_isDebugEnabled)
