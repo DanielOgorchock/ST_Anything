@@ -171,6 +171,16 @@ void callback(const String &msg)
 void setup()
 {
   //******************************************************************************************
+  // Setup the default values for the ADC.  Used for analog voltage reads.
+  //  Notes:  analogReadResolution(12) sets the resolution for all pins. 12 = 0-4095, 11 = 0-2047, 10 = 0-1024, 9 = 0-512 
+  //          analogSetAttenuation(ADC_11db) sets the attenuation for all pins.  11db = 0-3.3v, 6dB range = 0-2.2v, 2.5db = 0-1.5v, 0db = 0-1v
+  //          analogSetPinAttenuation(A7, ADC_11db) sets the attenuation for individual pins.
+  //******************************************************************************************
+  
+  analogReadResolution(11);        // Default of 12 is not very linear.  Recommended to use 10 or 11 depending on needed resolution.
+  analogSetAttenuation(ADC_6db);   // Default is 11db which is very noisy.  Recommended to use 2.5 or 6.
+  
+  //******************************************************************************************
   //Declare each Device that is attached to the Arduino
   //  Notes: - For each device, there is typically a corresponding "tile" defined in your 
   //           SmartThings Device Hanlder Groovy code, except when using new COMPOSITE Device Handler
@@ -192,7 +202,7 @@ void setup()
   static st::PS_Water               sensor2(F("water2"), 60, 10, PIN_WATER_2, 500);
   static st::PS_Illuminance         sensor3(F("illuminance1"), 60, 20, PIN_ILLUMINANCE_1, 0, 4095, 0, 10000);
   static st::PS_Illuminance         sensor4(F("illuminance2"), 60, 30, PIN_ILLUMINANCE_2, 0, 4095, 0, 10000);
-  static st::PS_Voltage             sensor5(F("voltage1"), 60, 40, PIN_VOLTAGE_1, 0, 4095, 0, 3300);
+  static st::PS_Voltage             sensor5(F("voltage1"), 60, 40, PIN_VOLTAGE_1, 0, 2047, 0, 2200, 5, 100);
   static st::PS_MQ2_Smoke           sensor6(F("smoke1"), 10, 3, PIN_SMOKE_1, 1000);
   static st::PS_TemperatureHumidity sensor7(F("temphumid1"), 15, 5, PIN_TEMPERATUREHUMIDITY_1, st::PS_TemperatureHumidity::DHT22,"temperature1","humidity1");
   static st::PS_DS18B20_Temperature sensor8(F("temperature2"), 60, 55, PIN_TEMPERATURE_2, false, 10, 1); 
