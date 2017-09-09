@@ -355,6 +355,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
          		case "illuminance": 
                 	deviceHandlerName = "Child Illuminance Sensor" 
                 	break
+         		case "illuminancergb": 
+                	deviceHandlerName = "Child IlluminanceRGB Sensor" 
+                	break
          		case "voltage": 
                 	deviceHandlerName = "Child Voltage Sensor" 
                 	break
