@@ -17,6 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2017-04-10  Dan Ogorchock  Original Creation
+ *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *
  * 
  */
@@ -26,13 +27,22 @@
 		capability "Sensor"
 	}
 
+	simulator {
+
+	}
+
 	tiles(scale: 2) {
 		multiAttributeTile(name:"motion", type: "generic"){
 			tileAttribute ("device.motion", key: "PRIMARY_CONTROL") {
 				attributeState "active", label:'${name}', icon:"st.motion.motion.active", backgroundColor:"#00A0DC"
 				attributeState "inactive", label:'${name}', icon:"st.motion.motion.inactive", backgroundColor:"#ffffff"
-            }
-        }
+            		}
+		}
 	}
+}
 
+def generateEvent(String name, String value) {
+	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
+	// Update device
+	sendEvent(name: name,value: value)
 }
