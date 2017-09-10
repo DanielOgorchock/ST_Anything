@@ -19,7 +19,7 @@
  *    2017-04-10	Dan Ogorchock  	Original Creation
  *	  2017-08-23  	Allan (vseven) 	Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *	  2017-08-24  	Allan (vseven) 	Added a lastUpdated attribute that will display on the multitile.
- *    2017-09-09    Allan (vseven)  Added preference to offset the temperature.
+ *    2017-09-09    Allan (vseven)  Added preference to offset the humidity.
  *
  * 
  */
@@ -29,6 +29,8 @@ metadata {
 		capability "Sensor"
         
         attribute "lastUpdated", "String"
+        
+		command "generateEvent", ["string", "string"]
 	}
 
 	simulator {

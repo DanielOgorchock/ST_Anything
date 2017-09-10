@@ -25,6 +25,10 @@
 	definition (name: "Child Motion Sensor", namespace: "ogiewon", author: "Dan Ogorchock") {
 		capability "Motion Sensor"
 		capability "Sensor"
+
+		attribute "lastUpdated", "String"
+
+		command "generateEvent", ["string", "string"]
 	}
 
 	simulator {
@@ -36,7 +40,10 @@
 			tileAttribute ("device.motion", key: "PRIMARY_CONTROL") {
 				attributeState "active", label:'${name}', icon:"st.motion.motion.active", backgroundColor:"#00A0DC"
 				attributeState "inactive", label:'${name}', icon:"st.motion.motion.inactive", backgroundColor:"#ffffff"
-            		}
+            }
+ 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+            }
 		}
 	}
 }
@@ -44,5 +51,9 @@
 def generateEvent(String name, String value) {
 	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
 	// Update device
-	sendEvent(name: name,value: value)
+	sendEvent(name: name, value: value)
+   	// Update lastUpdated date and time
+    def nowDay = new Date().format("MMM dd", location.timeZone)
+    def nowTime = new Date().format("h:mm a", location.timeZone)
+    sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime)
 }

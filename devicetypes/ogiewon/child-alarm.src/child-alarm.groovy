@@ -22,13 +22,15 @@
  * 
  */
 metadata {
- definition (name: "Child Alarm", namespace: "ogiewon", author: "Dan Ogorchock") {
-	capability "Actuator"
-	capability "Alarm"
-	capability "Switch"
+	definition (name: "Child Alarm", namespace: "ogiewon", author: "Dan Ogorchock") {
+		capability "Actuator"
+		capability "Alarm"
+		capability "Switch"
 
-	command "test"
-	 
+		attribute "lastUpdated", "String"
+
+		command "test"
+		command "generateEvent", ["string", "string"] 
 	}
 
 	simulator {
@@ -43,7 +45,10 @@ metadata {
                 attributeState "strobe", label:'strobe!', action:'alarm.off', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
                 attributeState "siren", label:'siren!', action:'alarm.off', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
     		}
-		}
+ 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+            }
+	}
         standardTile("siren", "device.alarm", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 //            state "default", label:'', action:"alarm.siren", icon:"st.secondary.siren"
 			state "off", label:'', action:"alarm.siren", icon:"st.secondary.siren", backgroundColor:"#ffffff"
@@ -97,5 +102,10 @@ def test() {
 def generateEvent(String name, String value) {
 	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
 	// Update device
-	sendEvent(name: name,value: value)
+	sendEvent(name: name, value: value)
+   	 // Update lastUpdated date and time
+    def nowDay = new Date().format("MMM dd", location.timeZone)
+    def nowTime = new Date().format("h:mm a", location.timeZone)
+    sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime)
 }
+

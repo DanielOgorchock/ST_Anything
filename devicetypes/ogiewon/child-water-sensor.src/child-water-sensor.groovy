@@ -25,6 +25,10 @@ metadata {
 	definition (name: "Child Water Sensor", namespace: "ogiewon", author: "Dan Ogorchock") {
 		capability "Water Sensor"
 		capability "Sensor"
+
+		attribute "lastUpdated", "String"
+
+		command "generateEvent", ["string", "string"]
 	}
 
 	simulator {
@@ -37,6 +41,9 @@ metadata {
 				attributeState("dry", label: "Dry", icon:"st.alarm.water.dry", backgroundColor:"#ffffff")
 				attributeState("wet", label: "Wet", icon:"st.alarm.water.wet", backgroundColor:"#00a0dc")
 			}
+ 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+            }
 		}
 	}
 }
@@ -44,5 +51,10 @@ metadata {
 def generateEvent(String name, String value) {
 	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
 	// Update device
-	sendEvent(name: name,value: value)
+	sendEvent(name: name, value: value)
+   	// Update lastUpdated date and time
+    def nowDay = new Date().format("MMM dd", location.timeZone)
+    def nowTime = new Date().format("h:mm a", location.timeZone)
+    sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime)
 }
+

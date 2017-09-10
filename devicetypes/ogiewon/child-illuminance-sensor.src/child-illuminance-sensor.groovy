@@ -27,7 +27,7 @@ metadata {
 		capability "Illuminance Measurement"
 		capability "Sensor"
         
-        	attribute "lastUpdated", "String"
+        attribute "lastUpdated", "String"
 	}
 
 	simulator {
@@ -49,16 +49,16 @@ metadata {
              		}
 		}
 		main(["illuminance"])
-        	details(["illuminance", "lastUpdate"])
+        details(["illuminance", "lastUpdated"])
 	}
 }
 
 def generateEvent(String name, String value) {
 	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
 	// Update device
-	sendEvent(name: name,value: value)
+	sendEvent(name: name, value: value)
    	 // Update lastUpdated date and time
-    	def nowDay = new Date().format("MMM dd", location.timeZone)
-    	def nowTime = new Date().format("h:mm a", location.timeZone)
-    	sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime)
+    def nowDay = new Date().format("MMM dd", location.timeZone)
+    def nowTime = new Date().format("h:mm a", location.timeZone)
+    sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime)
 }
