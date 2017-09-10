@@ -24,7 +24,7 @@
 metadata {
 	definition (name: "Child Dimmer Switch", namespace: "ogiewon", author: "Dan Ogorchock") {
 		capability "Switch Level"
-        	capability "Switch"
+        capability "Switch"
 		capability "Relay Switch"
 		capability "Actuator"
 		capability "Sensor"
