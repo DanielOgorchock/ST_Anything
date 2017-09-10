@@ -45,17 +45,17 @@ metadata {
    			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
 				attributeState "level", action:"switch level.setLevel"
 			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
 		}
         
  		valueTile("level", "device.level", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "level", label:'${currentValue} %', unit:"%", backgroundColor:"#ffffff"
 		}
+ 		valueTile("lastUpdated", "device.lastUpdated", inactiveLabel: false, decoration: "flat", width: 4, height: 2) {
+    		state "default", label:'Last Updated ${currentValue}', backgroundColor:"#ffffff"
+        }
        
 		main(["switch"])
-		details(["switch", "level"])       
+		details(["switch", "level", "lastUpdated"])       
 	}
 }
 
