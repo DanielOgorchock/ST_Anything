@@ -28,6 +28,7 @@ namespace st
 		//ESP32 WiFi Specific
 		char st_ssid[50];
 		char st_password[50];
+        int disconnectCounter = 0;	
 		boolean st_preExistingConnection = false;
 		WiFiServer st_server; //server
 		WiFiClient st_client; //client

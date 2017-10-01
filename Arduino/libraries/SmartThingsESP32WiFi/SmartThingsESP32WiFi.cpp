@@ -11,7 +11,6 @@
 //*******************************************************************************
 
 #include "SmartThingsESP32WiFi.h"
-int disconnectCounter = 0;	
 
 namespace st
 {
