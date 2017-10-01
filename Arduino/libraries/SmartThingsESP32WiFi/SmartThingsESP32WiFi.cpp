@@ -11,6 +11,7 @@
 //*******************************************************************************
 
 #include "SmartThingsESP32WiFi.h"
+int disconnectCounter = 0;	
 
 namespace st
 {
@@ -70,12 +71,18 @@ namespace st
 		case SYSTEM_EVENT_STA_DISCONNECTED:
 			Serial.println("WiFi lost connection.  Attempting to reconnect...");
 			WiFi.reconnect();
+			disconnectCounter++;
+			if (disconnectCounter > 10) {
+				Serial.println("We have recieved the STA_DISCONNECTED event over 10 times now.  Reboot...");
+				ESP.restart();
+			}
 			break;
 		case SYSTEM_EVENT_STA_START:
 			Serial.println("ESP32 station start");
 			break;
 		case SYSTEM_EVENT_STA_CONNECTED:
 			Serial.println("ESP32 station connected to AP");
+			disconnectCounter = 0;
 			break;
 		}
 
