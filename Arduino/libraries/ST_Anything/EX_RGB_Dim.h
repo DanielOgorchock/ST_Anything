@@ -46,7 +46,7 @@ namespace st
 			byte m_nChannelR;	//PWM Channel used for Red output
 			byte m_nChannelG;	//PWM Channel used for Green output
 			byte m_nChannelB;	//PWM Channel used for Blue output
-			char m_nHEX;		//HEX value of color to set
+			char m_nHEX;		//HEX value of color currently set
 
 			void writePWMToPins();	//function to update the Arduino PWM Output Pins
 
@@ -60,7 +60,7 @@ namespace st
 			//initialization routine
 			virtual void init();
 
-			//SmartThings Shield data handler (receives HEX values for writting to the outputs.  Turns on and off based on HEX (00000 = off, otherwise on))
+			//SmartThings Shield data handler (receives command to turn "on" or "off" the switch along with HEX value for LEDs)
 			virtual void beSmart(const String &str);
 			
 			//called periodically to ensure state of the switch is up to date in the SmartThings Cloud (in case an event is missed)
