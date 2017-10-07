@@ -24,13 +24,13 @@
  *    2017-07-09  Dan Ogorchock  Added number of defined buttons tile
  *    2017-08-24  Allan (vseven) Change the way values are pushed to child devices to allow a event to be executed allowing future customization
  *    2007-09-24  Allan (vseven) Added RGB LED light support with a setColor routine
+ *    2017-10-07  Dan Ogorchock  Cleaned up formatting for readability
  *
  */
  
 metadata {
 	definition (name: "Parent_ST_Anything_Ethernet", namespace: "ogiewon", author: "Dan Ogorchock") {
-	
-	capability "Configuration"
+        capability "Configuration"
         capability "Refresh"
         capability "Button"
         capability "Holdable Button"
@@ -44,7 +44,7 @@ metadata {
 		input "ip", "text", title: "Arduino IP Address", description: "IP Address in form 192.168.1.226", required: true, displayDuringSetup: true
 		input "port", "text", title: "Arduino Port", description: "port in form of 8090", required: true, displayDuringSetup: true
 		input "mac", "text", title: "Arduino MAC Addr", description: "MAC Address in form of 02A1B2C3D4E5", required: true, displayDuringSetup: true
-		input "numButtons", "number", title: "Number of Buttons", description: "Number of Buttons to be implemented", required: true, displayDuringSetup: true
+		input "numButtons", "number", title: "Number of Buttons", description: "Number of Buttons, 0 to n", required: true, displayDuringSetup: true
 	}
 
 	// Tile Definitions
@@ -339,8 +339,10 @@ def updateDeviceNetworkID() {
 
 private void createChildDevice(String deviceName, String deviceNumber) {
     if ( device.deviceNetworkId =~ /^[A-Z0-9]{12}$/) {
-	log.trace "createChildDevice:  Creating Child Device '${device.displayName} (${deviceName}${deviceNumber})'"
-	try {
+    
+		log.trace "createChildDevice:  Creating Child Device '${device.displayName} (${deviceName}${deviceNumber})'"
+        
+		try {
         	def deviceHandlerName = ""
         	switch (deviceName) {
          		case "contact": 
@@ -358,7 +360,7 @@ private void createChildDevice(String deviceName, String deviceNumber) {
          		case "relaySwitch": 
                 		deviceHandlerName = "Child Relay Switch" 
                 	break
-			case "temperature": 
+         		case "temperature": 
                 		deviceHandlerName = "Child Temperature Sensor" 
                 	break
          		case "humidity": 
@@ -376,13 +378,13 @@ private void createChildDevice(String deviceName, String deviceNumber) {
          		case "illuminancergb": 
                 		deviceHandlerName = "Child IlluminanceRGB Sensor" 
                 	break
-			case "voltage": 
+         		case "voltage": 
                 		deviceHandlerName = "Child Voltage Sensor" 
                 	break
-			case "smoke": 
+         		case "smoke": 
                 		deviceHandlerName = "Child Smoke Detector" 
                 	break    
-			case "carbonMonoxide": 
+         		case "carbonMonoxide": 
                 		deviceHandlerName = "Child Carbon Monoxide Detector" 
                 	break    
          		case "alarm": 
@@ -395,8 +397,8 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 		log.error "No Child Device Handler case for ${deviceName}"
       		}
             if (deviceHandlerName != "") {
-		addChildDevice(deviceHandlerName, "${device.deviceNetworkId}-${deviceName}${deviceNumber}", null,
-		      	[completedSetup: true, label: "${device.displayName} (${deviceName}${deviceNumber})", 
+         		addChildDevice(deviceHandlerName, "${device.deviceNetworkId}-${deviceName}${deviceNumber}", null,
+         			[completedSetup: true, label: "${device.displayName} (${deviceName}${deviceNumber})", 
                 	isComponent: false, componentName: "${deviceName}${deviceNumber}", componentLabel: "${deviceName} ${deviceNumber}"])
         	}   
     	} catch (e) {
