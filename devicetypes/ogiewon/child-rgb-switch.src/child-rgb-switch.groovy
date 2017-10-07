@@ -21,7 +21,7 @@
 
 // for the UI
 metadata {
-	definition (name: "Child RGB Switch", namespace: "vseven", author: "Alan (vseven) - based on code by Dan Ogorchock") {
+	definition (name: "Child RGB Switch", namespace: "ogiewon", author: "Alan (vseven) - based on code by Dan Ogorchock") {
 	capability "Switch"		
 	capability "Switch Level"
 	capability "Actuator"
@@ -124,7 +124,7 @@ void on() {
     sendEvent(name: "switch", value: "on")
     def lastColor = device.latestValue("color")
     log.debug("On pressed.  Sending last known color value of $lastColor or if null command to white.")
-    //parent.childOn(device.deviceNetworkId)
+    parent.childOn(device.deviceNetworkId)
     if ( lastColor == Null ) {
     	white() 
     } else {
