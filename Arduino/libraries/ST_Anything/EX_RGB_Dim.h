@@ -48,7 +48,6 @@ namespace st
 			byte m_nChannelB;	//PWM Channel used for Blue output
 			char m_nHEX;		//HEX value of color currently set
 			
-			void writeStatetoDevice(); //function to update the devices status
 			void writeRGBToPins();	//function to update the Arduino PWM Output Pins for RGB
 
 		public:
