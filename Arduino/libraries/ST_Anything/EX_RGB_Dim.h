@@ -49,7 +49,7 @@ namespace st
 			char m_nHEX;		//HEX value of color currently set
 			
 			void writeStatetoDevice(); //function to update the devices status
-			void writePWMToPins();	//function to update the Arduino PWM Output Pins
+			void writeRGBToPins();	//function to update the Arduino PWM Output Pins for RGB
 
 		public:
 			//constructor - called in your sketch's global variable declaration section
