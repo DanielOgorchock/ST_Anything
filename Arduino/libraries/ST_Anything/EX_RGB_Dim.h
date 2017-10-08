@@ -77,7 +77,8 @@ namespace st
 			virtual byte getBlueChannel() const { return m_nChannelB; }
 
 			virtual bool getStatus() const { return m_bCurrentState; } //whether the switch is HIGH or LOW
-
+			virtual char getHEX() const { return m_nHEX; }	// color value in HEX
+			
 			//sets
 			virtual void setRedPin(byte pin);
 			virtual void setGreenPin(byte pin);
