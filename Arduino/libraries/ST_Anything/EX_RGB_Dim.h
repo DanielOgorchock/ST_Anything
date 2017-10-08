@@ -53,7 +53,7 @@ namespace st
 
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			EX_RGB_Dim(const __FlashStringHelper *name, byte PinR, byte PinG, byte PinB, bool CommonAnode, byte ChannelR, byte ChannelG, byte ChannelB);
+			EX_RGB_Dim(const __FlashStringHelper *name, byte PinR, byte PinG, byte PinB, bool CommonAnode, byte ChannelR = 0, byte ChannelG = 0, byte ChannelB = 0);
 			
 			//destructor
 			virtual ~EX_RGB_Dim();
