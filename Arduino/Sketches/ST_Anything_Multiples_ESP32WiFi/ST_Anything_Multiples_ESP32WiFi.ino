@@ -68,6 +68,7 @@
 #include <EX_Alarm.h>        //Implements Executor (EX)as an Alarm capability with Siren and Strobe via digital outputs to relays
 #include <S_TimedRelay.h>    //Implements a Sensor to control a digital output pin with timing/cycle repeat capabilities
 #include <EX_Switch_Dim.h>   //Implements an Executor (EX) for a switch (on/off) and pwm output (level) uses 2 digital output pins
+#include <EX_RGB_Dim.h>      //Implements an Executor (EX) for a RGB device using 3 digital output pins
 
 //****************************************************************************************************************************
 //NodeMCU-32s ESP32 Pin Definitions (just for reference from ..hardware\espressif\esp32\variants\nodemcu-32s\pins_arduino.h)
@@ -108,18 +109,18 @@
 
 //Analog Pins
 #define PIN_WATER_1               A0  //(GPIO 36) SmartThings Capability "Water Sensor"
-#define PIN_WATER_2               A3  //(GPIO 39) SmartThings Capability "Water Sensor"
-#define PIN_ILLUMINANCE_1         A6  //(GPIO 34) SmartThings Capability "Illuminance Measurement"
-#define PIN_ILLUMINANCE_2         A7  //(GPIO 35) SmartThings Capability "Illuminance Measurement"
-#define PIN_VOLTAGE_1             A4  //(GPIO 32) SmartThings Capability "Voltage Measurement"
-#define PIN_SMOKE_1               A5  //(GPIO 33) SmartThings Capability "Smoke Detector" (MQ-2)
+#define PIN_RGB1_Red              A3  //(GPIO 39) SmartThings Capability "Color Control"
+#define PIN_RGB1_Green            A6  //(GPIO 34) SmartThings Capability "Color Control"
+#define PIN_RGB1_Blue             A7  //(GPIO 35) SmartThings Capability "Color Control"
+#define PIN_ILLUMINANCE_1         A4  //(GPIO 32) SmartThings Capability "Illuminance Measurement"
+#define PIN_VOLTAGE_1             A5  //(GPIO 33) SmartThings Capability "Voltage Measurement"
+#define PIN_SMOKE_1               A18 //(GPIO 25) SmartThings Capability "Smoke Detector" (MQ-2)
 
 //Digital Pins
-#define PIN_TEMPERATUREHUMIDITY_1 25  //SmartThings Capabilities "Temperature Measurement" and "Relative Humidity Measurement"
-#define PIN_TEMPERATURE_2         26  //SmartThings Capabilty "Temperature Measurement" (Dallas Semiconductor DS18B20)
+#define PIN_TEMPERATUREHUMIDITY_1 26  //SmartThings Capabilities "Temperature Measurement" and "Relative Humidity Measurement"
+#define PIN_TEMPERATURE_2         27  //SmartThings Capabilty "Temperature Measurement" (Dallas Semiconductor DS18B20)
 
-#define PIN_MOTION_1              27  //SmartThings Capability "Motion Sensor"
-#define PIN_MOTION_2              14  //SmartThings Capability "Motion Sensor"
+#define PIN_MOTION_1              14  //SmartThings Capability "Motion Sensor"
 #define PIN_CONTACT_1             12  //SmartThings Capability "Contact Sensor"
 #define PIN_CONTACT_2             13  //SmartThings Capability "Contact Sensor"
 #define PIN_SWITCH_1              23  //SmartThings Capability "Switch"
@@ -199,32 +200,30 @@ void setup()
   //******************************************************************************************
   //Polling Sensors
   static st::PS_Water               sensor1(F("water1"), 60, 0, PIN_WATER_1, 500);
-  static st::PS_Water               sensor2(F("water2"), 60, 10, PIN_WATER_2, 500);
-  static st::PS_Illuminance         sensor3(F("illuminance1"), 60, 20, PIN_ILLUMINANCE_1, 0, 4095, 0, 10000);
-  static st::PS_Illuminance         sensor4(F("illuminance2"), 60, 30, PIN_ILLUMINANCE_2, 0, 4095, 0, 10000);
-  static st::PS_Voltage             sensor5(F("voltage1"), 60, 40, PIN_VOLTAGE_1, 0, 2047, 0, 2200, 5, 100);
-  static st::PS_MQ2_Smoke           sensor6(F("smoke1"), 10, 3, PIN_SMOKE_1, 1000);
-  static st::PS_TemperatureHumidity sensor7(F("temphumid1"), 15, 5, PIN_TEMPERATUREHUMIDITY_1, st::PS_TemperatureHumidity::DHT22,"temperature1","humidity1");
-  static st::PS_DS18B20_Temperature sensor8(F("temperature2"), 60, 55, PIN_TEMPERATURE_2, false, 10, 1); 
+  static st::PS_Illuminance         sensor2(F("illuminance1"), 60, 20, PIN_ILLUMINANCE_1, 0, 4095, 0, 10000);
+  static st::PS_Voltage             sensor3(F("voltage1"), 60, 40, PIN_VOLTAGE_1, 0, 2047, 0, 2200, 5, 100);
+  static st::PS_MQ2_Smoke           sensor4(F("smoke1"), 10, 3, PIN_SMOKE_1, 1000);
+  static st::PS_TemperatureHumidity sensor5(F("temphumid1"), 15, 5, PIN_TEMPERATUREHUMIDITY_1, st::PS_TemperatureHumidity::DHT22,"temperature1","humidity1");
+  static st::PS_DS18B20_Temperature sensor6(F("temperature2"), 60, 55, PIN_TEMPERATURE_2, false, 10, 1); 
   
   //Interrupt Sensors 
-  static st::IS_Motion              sensor9(F("motion1"), PIN_MOTION_1, HIGH, false, 500);
-  static st::IS_Motion              sensor10(F("motion2"), PIN_MOTION_2, HIGH, false, 500);
-  static st::IS_Contact             sensor11(F("contact1"), PIN_CONTACT_1, LOW, true, 500);
-  static st::IS_Contact             sensor12(F("contact2"), PIN_CONTACT_2, LOW, true, 500);
-  static st::IS_Smoke               sensor13(F("smoke2"), PIN_SMOKE_2, HIGH, true, 500);
-  static st::IS_Button              sensor14(F("button1"), PIN_BUTTON_1, 1000, LOW, true, 500);
-  static st::IS_Button              sensor15(F("button2"), PIN_BUTTON_2, 1000, LOW, true, 500);
-  static st::IS_CarbonMonoxide      sensor16(F("carbonMonoxide1"), PIN_CO_1, HIGH, true, 500);
+  static st::IS_Motion              sensor7(F("motion1"), PIN_MOTION_1, HIGH, false, 500);
+  static st::IS_Contact             sensor8(F("contact1"), PIN_CONTACT_1, LOW, true, 500);
+  static st::IS_Contact             sensor9(F("contact2"), PIN_CONTACT_2, LOW, true, 500);
+  static st::IS_Smoke               sensor10(F("smoke2"), PIN_SMOKE_2, HIGH, true, 500);
+  static st::IS_Button              sensor11(F("button1"), PIN_BUTTON_1, 1000, LOW, true, 500);
+  static st::IS_Button              sensor12(F("button2"), PIN_BUTTON_2, 1000, LOW, true, 500);
+  static st::IS_CarbonMonoxide      sensor13(F("carbonMonoxide1"), PIN_CO_1, HIGH, true, 500);
   
   //Special sensors/executors (uses portions of both polling and executor classes)
-  static st::IS_DoorControl         sensor17(F("doorControl1"), PIN_DOORCONTROL_CONTACT_1, LOW, true, PIN_DOORCONTROL_RELAY_1, LOW, true, 1000);
-  static st::S_TimedRelay           sensor18(F("relaySwitch1"), PIN_TIMEDRELAY_1, LOW, false, 3000, 0, 1);
+  static st::IS_DoorControl         sensor14(F("doorControl1"), PIN_DOORCONTROL_CONTACT_1, LOW, true, PIN_DOORCONTROL_RELAY_1, LOW, true, 1000);
+  static st::S_TimedRelay           sensor15(F("relaySwitch1"), PIN_TIMEDRELAY_1, LOW, false, 3000, 0, 1);
   
   //Executors
   static st::EX_Switch              executor1(F("switch1"), PIN_SWITCH_1, LOW, true);
   static st::EX_Alarm               executor2(F("alarm1"), PIN_ALARM_1, LOW, true);
   static st::EX_Alarm               executor3(F("alarm2"), PIN_ALARM_2, LOW, true, PIN_STROBE_2);
+  static st::EX_RGB_Dim             executor4(F("rgbSwitch1"), PIN_RGB1_Red, PIN_RGB1_Green, PIN_RGB1_Blue, false, 0, 1, 2);
   
   //*****************************************************************************
   //  Configure debug print output from each main class 
@@ -272,9 +271,6 @@ void setup()
   st::Everything::addSensor(&sensor13);
   st::Everything::addSensor(&sensor14); 
   st::Everything::addSensor(&sensor15); 
-  st::Everything::addSensor(&sensor16); 
-  st::Everything::addSensor(&sensor17);
-  st::Everything::addSensor(&sensor18);  
       
   //*****************************************************************************
   //Add each executor to the "Everything" Class
@@ -282,6 +278,7 @@ void setup()
   st::Everything::addExecutor(&executor1);
   st::Everything::addExecutor(&executor2);
   st::Everything::addExecutor(&executor3);
+  st::Everything::addExecutor(&executor4);
       
   //*****************************************************************************
   //Initialize each of the devices which were added to the Everything Class
