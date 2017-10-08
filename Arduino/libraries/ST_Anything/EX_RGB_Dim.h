@@ -9,14 +9,14 @@
 //			  For Example:  st::EX_RGB_Dim executor1("rgbSwitch1", PIN_R, PIN_G, PIN_B, true, 0, 1, 2);
 //
 //			  st::EX_RGB_Dim() constructor requires the following arguments
-//				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
-//				- byte pin_r - REQUIRED - the Arduino Pin to be used as a digital output for Red
-//				- byte pin_g - REQUIRED - the Arduino Pin to be used as a digital output for Green
-//				- byte pin_b - REQUIRED - the Arduino Pin to be used as a digital output for Blue
+//				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name.
+//				- byte pin_r - REQUIRED - the Arduino Pin to be used as a digital output for Red.
+//				- byte pin_g - REQUIRED - the Arduino Pin to be used as a digital output for Green.
+//				- byte pin_b - REQUIRED - the Arduino Pin to be used as a digital output for Blue.
 //				- bool commonAnode - REQUIRED - determines whether the LED uses a common Anode or Cathode.  True for Anode.
-//				- byte channel_r - OPTIONAL - PWM channel used for Red on a ESP32
-//				- byte channel_g - OPTIONAL - PWM channel used for Green on a ESP32
-//				- byte channel_b - OPTIONAL - PWM channel used for Blue on a ESP32
+//				- byte channel_r - OPTIONAL - PWM channel used for Red on a ESP32.
+//				- byte channel_g - OPTIONAL - PWM channel used for Green on a ESP32.
+//				- byte channel_b - OPTIONAL - PWM channel used for Blue on a ESP32.
 //
 //  Change History:
 //
@@ -46,13 +46,13 @@ namespace st
 			byte m_nChannelR;	//PWM Channel used for Red output
 			byte m_nChannelG;	//PWM Channel used for Green output
 			byte m_nChannelB;	//PWM Channel used for Blue output
-			char m_nHEX;		//HEX value of color currently set
-			
-			void writeRGBToPins();	//function to update the Arduino PWM Output Pins for RGB
+			String m_sCurrentHEX;	//HEX value of color currently set
+
+			void writeRGBToPins();	//function to update the Arduino PWM Output Pins
 
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			EX_RGB_Dim(const __FlashStringHelper *name, byte PinR, byte PinG, byte PinB, bool CommonAnode, byte ChannelR = 0, byte ChannelG = 0, byte ChannelB = 0);
+			EX_RGB_Dim(const __FlashStringHelper *name, byte pinR, byte pinG, byte pinB, bool commonAnode, byte channelR = 0, byte channelG = 0, byte channelB = 0);
 			
 			//destructor
 			virtual ~EX_RGB_Dim();
@@ -76,16 +76,12 @@ namespace st
 			virtual byte getBlueChannel() const { return m_nChannelB; }
 
 			virtual bool getStatus() const { return m_bCurrentState; } //whether the switch is HIGH or LOW
-			virtual char getHEX() const { return m_nHEX; }	// color value in HEX
-			
+			virtual String getHEX() const { return m_sCurrentHEX; }	// color value in HEX
+
 			//sets
-			virtual void setRedPin(byte pin);
-			virtual void setGreenPin(byte pin);
-			virtual void setBluePin(byte pin);
-			
-			virtual void setRedChannel(byte pin);
-			virtual void setGreenChannel(byte pin);
-			virtual void setBlueChannel(byte pin);
+			virtual void setRedPin(byte pin,byte channel);
+			virtual void setGreenPin(byte pin,byte channel);
+			virtual void setBluePin(byte pin,byte channel);
 		
 	};
 }
