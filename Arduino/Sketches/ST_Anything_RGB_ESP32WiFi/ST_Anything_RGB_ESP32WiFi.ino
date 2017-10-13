@@ -17,7 +17,8 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2017-08-14  Dan Ogorchock  Original Creation - Adapted from ESP8266 to work with ESP32 board
-//    2017-10-06  Allan (vseven) Modified for RGB examples
+//    2017-10-06  Allan (vseven) Modified for RGB example
+//    2017-10-13  Allan (vseven) Modified for RGBW example
 //
 //   Special thanks to Joshua Spain for his contributions in porting ST_Anything to the ESP32!
 //
@@ -39,6 +40,7 @@
 #include <Everything.h>      //Master Brain of ST_Anything library that ties everything together and performs ST Shield communications
 
 #include <EX_RGB_Dim.h>      //Implements an Executor (EX) for a RGB LED or strip with PWM using 3 digital output pins
+#include <EX_RGB_Dim.h>      //Implements an Executor (EX) for a RGBW strip with PWM using 4 digital output pins
 
 //****************************************************************************************************************************
 //NodeMCU-32s ESP32 Pin Definitions (just for reference from ..hardware\espressif\esp32\variants\nodemcu-32s\pins_arduino.h)
@@ -86,6 +88,10 @@
 #define PIN_RGB2_Red           A4  //(GPIO 32) SmartThings Capability "Color Control"
 #define PIN_RGB2_Green         A5  //(GPIO 33) SmartThings Capability "Color Control"
 #define PIN_RGB2_Blue          A18 //(GPIO 25) SmartThings Capability "Color Control"
+#define PIN_RGBW1_Red          A19 //(GPIO 32) SmartThings Capability "Color Control"
+#define PIN_RGBW1_Green        A17 //(GPIO 33) SmartThings Capability "Color Control"
+#define PIN_RGBW1_Blue         A16 //(GPIO 25) SmartThings Capability "Color Control"
+#define PIN_RGBW1_White        A15 //(GPIO 25) SmartThings Capability "Color Control"
 
 //******************************************************************************************
 //ESP832 WiFi Information
@@ -150,6 +156,8 @@ void setup()
   static st::EX_RGB_Dim         executor1(F("RGBLED1"), PIN_RGB1_Red, PIN_RGB1_Green, PIN_RGB1_Blue, true, 0, 1, 2);  // channels (0,1,2) must be unique per ESP32
   static st::EX_RGB_Dim         executor2(F("RGBLED2"), PIN_RGB2_Red, PIN_RGB2_Green, PIN_RGB2_Blue, true, 3, 4, 5);  // therefor we continue the sequence (3,4,5) here
   
+  static st::EX_RGBW_Dim        executor3(F("RGBWLED1"), PIN_RGBW1_Red, PIN_RGBW1_Green, PIN_RGBW1_Blue, PIN_RGBW1_White, false, 8, 9, 10, 11);  //ledc Channels are 0 - 15, two sets of 8, so start with the second set (8 - 15).  Not needed for ESP8266
+  
   //*****************************************************************************
   //  Configure debug print output from each main class 
   //  -Note: Set these to "false" if using Hardware Serial on pins 0 & 1
@@ -187,6 +195,7 @@ void setup()
   //*****************************************************************************
   st::Everything::addExecutor(&executor1);
   st::Everything::addExecutor(&executor2);
+  st::Everything::addExecutor(&executor3);
       
   //*****************************************************************************
   //Initialize each of the devices which were added to the Everything Class
