@@ -40,7 +40,7 @@
 #include <Everything.h>      //Master Brain of ST_Anything library that ties everything together and performs ST Shield communications
 
 #include <EX_RGB_Dim.h>      //Implements an Executor (EX) for a RGB LED or strip with PWM using 3 digital output pins
-#include <EX_RGB_Dim.h>      //Implements an Executor (EX) for a RGBW strip with PWM using 4 digital output pins
+#include <EX_RGBW_Dim.h>     //Implements an Executor (EX) for a RGBW strip with PWM using 4 digital output pins
 
 //****************************************************************************************************************************
 //NodeMCU-32s ESP32 Pin Definitions (just for reference from ..hardware\espressif\esp32\variants\nodemcu-32s\pins_arduino.h)
