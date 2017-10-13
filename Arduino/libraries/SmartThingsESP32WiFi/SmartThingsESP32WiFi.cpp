@@ -14,8 +14,10 @@
 
 namespace st
 {
+	int SmartThingsESP32WiFi::disconnectCounter = 0;
+
 	//*******************************************************************************
-	// SmartThingsESP32WiFI Constructor - Static IP
+	// SmartThingsESP32WiFi Constructor - Static IP
 	//*******************************************************************************
 	SmartThingsESP32WiFi::SmartThingsESP32WiFi(String ssid, String password, IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
 		SmartThingsEthernet(localIP, localGateway, localSubnetMask, localDNSServer, serverPort, hubIP, hubPort, callout, shieldType, enableDebug, transmitInterval, false),
