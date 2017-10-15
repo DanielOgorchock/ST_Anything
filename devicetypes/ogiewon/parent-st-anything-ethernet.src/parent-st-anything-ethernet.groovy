@@ -23,8 +23,9 @@
  *    2017-06-10  Dan Ogorchock  Added Dimmer Switch support
  *    2017-07-09  Dan Ogorchock  Added number of defined buttons tile
  *    2017-08-24  Allan (vseven) Change the way values are pushed to child devices to allow a event to be executed allowing future customization
- *    2007-09-24  Allan (vseven) Added RGB LED light support with a setColor routine
+ *    2007-09-24  Allan (vseven) Added RGB LED light support with a setColorRGB routine
  *    2017-10-07  Dan Ogorchock  Cleaned up formatting for readability
+ *    2007-09-24  Allan (vseven) Added RGBW LED strip support with a setColorRGBW routine
  *
  */
  
@@ -271,6 +272,12 @@ void childSetColorRGB(String dni, value) {
     sendEthernet("${name} ${value}")
 }
 
+void childSetColorRGBW(String dni, value) {
+    def name = dni.split("-")[-1]
+    log.debug "childSetColorRGBW($dni), name = ${name}, colorRGBW = ${value}"
+    sendEthernet("${name} ${value}")
+}
+
 void childRelayOn(String dni) {
     def name = dni.split("-")[-1]
     log.debug "childRelayOn($dni), name = ${name}"
@@ -356,6 +363,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	break
          		case "rgbSwitch": 
                 		deviceHandlerName = "Child RGB Switch" 
+                	break
+         		case "rgbwSwitch": 
+                		deviceHandlerName = "Child RGBW Switch" 
                 	break
          		case "relaySwitch": 
                 		deviceHandlerName = "Child Relay Switch" 
