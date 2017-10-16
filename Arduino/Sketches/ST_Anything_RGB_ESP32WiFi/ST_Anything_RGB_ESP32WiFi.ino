@@ -153,10 +153,10 @@ void setup()
   //Special sensors/executors (uses portions of both polling and executor classes)
   
   //Executors
-  static st::EX_RGB_Dim         executor1(F("RGBLED1"), PIN_RGB1_Red, PIN_RGB1_Green, PIN_RGB1_Blue, true, 0, 1, 2);  // channels (0,1,2) must be unique per ESP32
-  static st::EX_RGB_Dim         executor2(F("RGBLED2"), PIN_RGB2_Red, PIN_RGB2_Green, PIN_RGB2_Blue, true, 3, 4, 5);  // therefor we continue the sequence (3,4,5) here
+  static st::EX_RGB_Dim         executor1(F("rgbSwitch1"), PIN_RGB1_Red, PIN_RGB1_Green, PIN_RGB1_Blue, true, 0, 1, 2);  // channels (0,1,2) must be unique per ESP32
+  static st::EX_RGB_Dim         executor2(F("rgbSwitch2"), PIN_RGB2_Red, PIN_RGB2_Green, PIN_RGB2_Blue, true, 3, 4, 5);  // therefor we continue the sequence (3,4,5) here
   
-  static st::EX_RGBW_Dim        executor3(F("RGBWLED1"), PIN_RGBW1_Red, PIN_RGBW1_Green, PIN_RGBW1_Blue, PIN_RGBW1_White, false, 8, 9, 10, 11);  //ledc Channels are 0 - 15, two sets of 8, so start with the second set (8 - 15).  Not needed for ESP8266
+  static st::EX_RGBW_Dim        executor3(F("rgbwSwitch1"), PIN_RGBW1_Red, PIN_RGBW1_Green, PIN_RGBW1_Blue, PIN_RGBW1_White, false, 8, 9, 10, 11);  //ledc Channels are 0 - 15, two sets of 8, so start with the second set (8 - 15).  Not needed for ESP8266
   
   //*****************************************************************************
   //  Configure debug print output from each main class 
