@@ -54,4 +54,8 @@ def generateEvent(String name, String value) {
 	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
 	// Update our device.  If you are sending in multiple values then you should split them up here and assign them to your tiles
 	sendEvent(name: "genericValue",value: value)
+ 	// Update lastUpdated date and time
+	def nowDay = new Date().format("MMM dd", location.timeZone)
+	def nowTime = new Date().format("h:mm a", location.timeZone)
+	sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
 }
