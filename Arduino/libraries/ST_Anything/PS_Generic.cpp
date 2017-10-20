@@ -29,6 +29,7 @@
 //    2017-10-20  Allan (vseven) Modified original PS_Illuminance library for use with a generic sensor
 //
 //******************************************************************************************
+#include "PS_Generic.h"
 
 #include "Constants.h"
 #include "Everything.h"
