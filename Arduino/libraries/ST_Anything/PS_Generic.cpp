@@ -46,6 +46,10 @@ void init() {
 
 //public
 	//constructor - called in your sketch's global variable declaration section
+	//this can be modified to accepting more varialbes into it by modifying the
+	//next line.  For example if you wanted to assign a pin or a variable you could add
+	//a  ", myVariable" after the offset below and then use that within your program.
+	//you would need to also update the associated line in the header file.
 	PS_Generic::PS_Generic(const __FlashStringHelper *name, unsigned int interval, int offset):
 		PollingSensor(name, interval, offset),m_nSensorValue(0)
 	{
