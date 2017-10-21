@@ -21,7 +21,7 @@
 
 // for the UI
 metadata {
-	definition (name: "Child RGB Switch", namespace: "ogiewon", author: "Alan (vseven) - based on code by Dan Ogorchock") {
+	definition (name: "Child RGB Switch", namespace: "ogiewon", author: "Allan (vseven) - based on code by Dan Ogorchock") {
 	capability "Switch"		
 	capability "Switch Level"
 	capability "Actuator"
