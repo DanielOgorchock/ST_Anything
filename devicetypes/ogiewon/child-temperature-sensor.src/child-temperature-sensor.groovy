@@ -84,13 +84,13 @@ def generateEvent(String name, String value) {
     }
     
     if (tempUnitConversion == "2") {
-    	log.debug "tempUnitConversion = ${tempUnitConversion}"
+    	//log.debug "tempUnitConversion = ${tempUnitConversion}"
         double tempC = fahrenheitToCelsius(offsetValue.toFloat())  //convert from Fahrenheit to Celsius
         offsetValue = tempC.round(2)
 	}
     
     if (tempUnitConversion == "3") {
-    	log.debug "tempUnitConversion = ${tempUnitConversion}"
+    	//log.debug "tempUnitConversion = ${tempUnitConversion}"
         double tempC = celsiusToFahrenheit(offsetValue.toFloat())  //convert from Celsius to Fahrenheit
         offsetValue = tempC.round(2)
 	}
