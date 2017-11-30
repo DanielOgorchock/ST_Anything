@@ -1,5 +1,5 @@
 //******************************************************************************************
-// File: ST_Anything_relays_ESP8266.ino
+// File: ST_Anything_Relays_ESP8266.ino
 // Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son)
 //
 // Summary: This Arduino Sketch, along with the ST_Anything library and the revised SmartThings
@@ -9,7 +9,7 @@
 //          The ST_Anything library takes care of all of the work to schedule device updates
 //          as well as all communications with the NodeMCU ESP8266’s WiFi.
 //
-//          ST_Anything_relays_ESP8266 implements the following ST Capabilities as a demo of what is possible with a single NodeMCU ESP8266
+//          ST_Anything_Relays_ESP8266 implements the following ST Capabilities as a demo of what is possible with a single NodeMCU ESP8266
 //            - 3 x Relay Switch devices
 //
 //
@@ -23,7 +23,7 @@
 //                               used with new Parent/Child Device Handlers (i.e. Composite DH)
 //    2017-05-25  Dan Ogorchock  Revised example sketch, taking into account limitations of NodeMCU GPIO pins
 //    2017-11-27  Kai Lenk       Modified to 3 relaySwitch
-//    2017-05-25  Dan Ogorchock  Revisions to make sure works for Kai Lenk
+//    2017-11-29  Dan Ogorchock  Revisions to make sure works for Kai Lenk
 //
 //******************************************************************************************
 //******************************************************************************************
