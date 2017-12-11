@@ -320,11 +320,6 @@ namespace st
 			Serial.println(message);
 		}
 		
-		if(Everything::callOnMsgRcvd!=0)
-		{
-			Everything::callOnMsgRcvd(message);
-		}
-
 		if (message == "refresh")
 		{
 			Everything::refreshDevices();
@@ -337,6 +332,12 @@ namespace st
 				p->beSmart(message);	//pass the incoming SmartThings Shield message to the correct Device's beSmart() routine
 			}
 		}
+		
+		if(Everything::callOnMsgRcvd!=0)
+		{
+			Everything::callOnMsgRcvd(message);
+		}
+
 	}
 	
 	//initialize static members
