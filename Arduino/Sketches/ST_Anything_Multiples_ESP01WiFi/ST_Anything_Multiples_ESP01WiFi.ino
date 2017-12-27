@@ -23,7 +23,7 @@
 //    2017-02-12  Dan Ogorchock  Revised to use the new SmartThings v2.0 library
 //    2017-02-21  Dan Ogorchock  New example specifically for running everythin on a ESP-01 (no Arduino required!)
 //    2017-04-24  Dan Ogorchock  Updated for use with new v2.5 Parent/Child Device handlers
-//    2017-12-27  Rodney Yates    Adds support for OTA updating through ArduinoOTA and/or Web
+//    2017-12-27  Rodney Yates   Adds support for OTA updating through ArduinoOTA and/or Web
 //
 //******************************************************************************************
 //******************************************************************************************
