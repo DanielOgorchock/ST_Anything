@@ -23,12 +23,34 @@
 //    2017-02-12  Dan Ogorchock  Revised to use the new SmartThings v2.0 library
 //    2017-02-21  Dan Ogorchock  New example specifically for running everythin on a ESP-01 (no Arduino required!)
 //    2017-04-24  Dan Ogorchock  Updated for use with new v2.5 Parent/Child Device handlers
+//    2017-12-27 Rodney Yates    Adds support for OTA updating through ArduinoOTA and/or Web
 //
 //******************************************************************************************
 //******************************************************************************************
 // SmartThings Library for ESP8266WiFi
 //******************************************************************************************
 #include <SmartThingsESP8266WiFi.h>
+
+//******************************************************************************************
+// ArduinoOTA Library for ESP8266WiFi
+//******************************************************************************************
+//   Configuration
+#define ArdOTA  // Enables ArduinoOTA, uncomment to enable
+#define WebOTA  // Enables web updating, uncomment to enable
+
+#ifdef ArdOTA
+  #include <ESP8266mDNS.h>
+  #include <WiFiUdp.h>
+  #include <ArduinoOTA.h>
+#endif
+#ifdef WebOTA
+  #include <ESP8266WiFi.h>
+  #include <ESP8266WebServer.h>
+  #include <ESP8266mDNS.h>
+  #include <ESP8266HTTPUpdateServer.h>
+  ESP8266WebServer httpServer(80);
+  ESP8266HTTPUpdateServer httpUpdater;
+#endif
 
 //******************************************************************************************
 // ST_Anything Library 
@@ -62,6 +84,8 @@
 //******************************************************************************************
 String str_ssid     = "yourSSIDhere";                           //  <---You must edit this line!
 String str_password = "yourWiFiPasswordhere";                   //  <---You must edit this line!
+const char* deviceName = "yourDeviceName";                      //  <---You must edit this line!
+WiFi.hostname(deviceName);
 IPAddress ip(192, 168, 1, 230);       //Device IP Address       //  <---You must edit this line!
 IPAddress gateway(192, 168, 1, 1);    //Router gateway          //  <---You must edit this line!
 IPAddress subnet(255, 255, 255, 0);   //LAN subnet mask         //  <---You must edit this line!
@@ -158,6 +182,60 @@ void setup()
   //Initialize each of the devices which were added to the Everything Class
   //*****************************************************************************
   st::Everything::initDevices();
+
+  //*****************************************************************************
+  //  ArduinoOTA setup
+  //*****************************************************************************
+  #ifdef ArdOTA
+    //ArduinoOTA.setPassword((const char *)"123");  // Set ArduinoOTA Password. No authentication by default.
+    const unsigned int portOTA = 8266;                // Port default is 8266
+    ArduinoOTA.setPort(portOTA);
+    ArduinoOTA.setHostname(deviceName);
+    
+    ArduinoOTA.onStart([]() {
+    String type;
+    if (ArduinoOTA.getCommand() == U_FLASH)
+      type = "sketch";
+    else // U_SPIFFS
+      type = "filesystem";
+      // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+      Serial.println("Start updating " + type);
+    });
+    ArduinoOTA.onEnd([]() {
+      Serial.println("\nEnd");
+    });
+    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+      Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+    });
+    ArduinoOTA.onError([](ota_error_t error) {
+      Serial.printf("Error[%u]: ", error);
+      if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+      else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+      else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+      else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+      else if (error == OTA_END_ERROR) Serial.println("End Failed");
+     });
+    ArduinoOTA.begin();
+    Serial.println("ArduinoOTA Ready!");
+    Serial.println("At IP address: " + WiFi.localIP().toString());
+    Serial.println("Port: " + portOTA);    
+  #endif
+  
+  //*****************************************************************************
+  //  WebpageOTA setup
+  //*****************************************************************************
+  #ifdef WebOTA
+    
+    const char* update_username = "admin";  // Set ArduinoOTA Password. No authentication by default.
+    const char* update_password = "esp8266";
+    const char* update_path = "/"; // update path = http://yourip/firmware
+    
+    MDNS.begin(deviceName);
+    httpUpdater.setup(&httpServer, update_path, update_username, update_password);
+    httpServer.begin();
+    MDNS.addService("http", "tcp", 80);
+    Serial.printf("HTTPUpdateServer ready! Open http://%s%s in your browser and login with username '%s' and password '%s'\n", WiFi.localIP().toString(), update_path, update_username, update_password);
+  #endif
 }
 
 //******************************************************************************************
@@ -169,4 +247,6 @@ void loop()
   //Execute the Everything run method which takes care of "Everything"
   //*****************************************************************************
   st::Everything::run();
+  
+  httpServer.handleClient(); //ESP8266 web updater
 }
