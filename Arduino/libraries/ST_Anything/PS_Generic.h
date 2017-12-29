@@ -7,7 +7,7 @@
 //                for more complicated programming
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_Generic sensor1("generic1", 120, 0);
+//			  For Example:  st::PS_Generic sensor1(F("generic1"), 120, 0);
 //
 //			  st::PS_Generic() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -27,6 +27,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2017-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2017-10-20  Allan (vseven) Modified original PS_Illuminance library for use with a generic sensor
+//    2017-12-28  Dan Ogorchock  Fixed bug with improper init() definition
 //
 //
 //******************************************************************************************
@@ -53,6 +54,9 @@ namespace st
 			
 			//SmartThings Shield data handler (receives configuration data from ST - polling interval, and adjusts on the fly)
 			virtual void beSmart(const String &str);
+
+			//initialization routine
+			virtual void init();
 
 			//function to get data from sensor and queue results for transfer to ST Cloud 
 			virtual void getData();

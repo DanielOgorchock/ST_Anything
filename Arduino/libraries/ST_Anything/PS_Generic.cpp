@@ -7,7 +7,7 @@
 //                for more complicated programming
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_Generic sensor1("generic1", 120, 0);
+//			  For Example:  st::PS_Generic sensor1(F("generic1"), 120, 0);
 //
 //			  st::PS_Generic() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -27,6 +27,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2017-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2017-10-20  Allan (vseven) Modified original PS_Illuminance library for use with a generic sensor
+//    2017-12-28  Dan Ogorchock  Fixed bug with improper init() definition
 //
 //******************************************************************************************
 #include "PS_Generic.h"
@@ -37,11 +38,6 @@
 namespace st
 {
 //private
-void init() {
-  // This is where you would add any initialization for your custom code.  For example if you 
-  // are using a Adafruit sensor this is where you would setup the sensor. 
-  Serial.println("Initiating the generic class.");
-}
 
 
 //public
@@ -82,6 +78,12 @@ void init() {
 				Serial.println(F(" to an Integer."));
 			}
 		}
+	}
+
+	void PS_Generic::init() {
+		// This is where you would add any initialization for your custom code.  For example if you 
+		// are using a Adafruit sensor this is where you would setup the sensor. 
+		Serial.println("Initiating the generic class.");
 	}
 
 	//function to get data from sensor and queue results for transfer to ST Cloud 
