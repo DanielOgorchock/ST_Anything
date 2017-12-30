@@ -31,6 +31,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2017-09-07  Allan (vseven) Modified original PS_Illuminance library for use with the Adafruit TCS34725 sensor
+//    2017-12-29  Allan (vseven) Fixed bug with improper init() definition per Dans guidance
 //
 //
 //******************************************************************************************
@@ -51,15 +52,6 @@ Adafruit_TCS34725 tcs = Adafruit_TCS34725();
 namespace st
 {
 //private
-void init() {
-  Serial.println("Initiating the TCS34725 sensor...");
-  if (tcs.begin()) {
-	Serial.println("Found sensor.   tcs.begin = true");
-  } else {
-	Serial.println("No TCS34725 found ... check your connections");
-  }
-}
-
 
 //public
 	//constructor - called in your sketch's global variable declaration section
@@ -97,6 +89,15 @@ void init() {
 		}
 	}
 
+	void PS_AdafruitTCS34725_Illum_Color::init() {
+	  	Serial.println("Initiating the TCS34725 sensor...");
+  		if (tcs.begin()) {
+			Serial.println("Found sensor.   tcs.begin = true");
+		} else {
+			Serial.println("No TCS34725 found ... check your connections");
+		}
+	}
+	
 	//function to get data from sensor and queue results for transfer to ST Cloud 
 	void PS_AdafruitTCS34725_Illum_Color::getData()
 	{
