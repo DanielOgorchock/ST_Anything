@@ -6,6 +6,7 @@
 //
 //	History
 //	2017-02-05  Dan Ogorchock  Created
+//  2017-12-29  Dan Ogorchock  Added WiFi.RSSI() data collection
 //*******************************************************************************
 
 #ifndef __SMARTTHINGSESP8266WIFI_H__
@@ -29,6 +30,8 @@ namespace st
 		boolean st_preExistingConnection = false;
 		WiFiServer st_server; //server
 		WiFiClient st_client; //client
+		long previousMillis;
+		long RSSIsendInterval;
 
 	public:
 

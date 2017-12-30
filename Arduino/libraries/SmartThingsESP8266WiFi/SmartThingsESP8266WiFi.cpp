@@ -6,6 +6,7 @@
 //
 //	History
 //	2017-02-10  Dan Ogorchock  Created
+//  2017-12-29  Dan Ogorchock  Added WiFi.RSSI() data collection
 //*******************************************************************************
 
 #include "SmartThingsESP8266WiFi.h"
@@ -98,6 +99,8 @@ namespace st
 		Serial.println(st_hubIP);
 		Serial.print(F("hubPort = "));
 		Serial.println(st_hubPort);
+		Serial.print(F("RSSI = "));
+		Serial.println(WiFi.RSSI());
 		Serial.println(F(""));
 		Serial.println(F("SmartThingsESP8266WiFI: Intialized"));
 		Serial.println(F(""));
@@ -106,6 +109,10 @@ namespace st
 		Serial.println(F("Disabling ESP8266 WiFi Access Point"));
 		Serial.println(F(""));
 		WiFi.mode(WIFI_STA);
+
+		RSSIsendInterval = 5000;
+		previousMillis = millis() - RSSIsendInterval;
+
 	}
 
 	//*****************************************************************************
@@ -115,6 +122,7 @@ namespace st
 	{
 		String readString;
 		String tempString;
+		String strRSSI;
 
 		if (WiFi.isConnected() == false)
 		{
@@ -126,6 +134,27 @@ namespace st
 			}
 
 			//init();
+		}
+		else
+		{
+			if (millis() - previousMillis > RSSIsendInterval)
+			{
+
+				previousMillis = millis();
+
+				if (RSSIsendInterval < 60000)
+				{
+					RSSIsendInterval = RSSIsendInterval + 1000;
+				}
+				
+				strRSSI = String("rssi ") + String(WiFi.RSSI());
+				send(strRSSI);
+
+				if (_isDebugEnabled)
+				{
+					Serial.println(strRSSI);
+				}
+			}
 		}
 
 		WiFiClient client = st_server.available();
