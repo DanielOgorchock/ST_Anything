@@ -7,6 +7,7 @@
 //
 //	History
 //	2017-05-06  Dan Ogorchock  Created
+//  2018-01-01  Dan Ogorchock  Added WiFi.RSSI() data collection
 //*******************************************************************************
 
 #ifndef __SMARTTHINGSWIFI101_H__ 
@@ -32,6 +33,8 @@ namespace st
 		char st_password[50];
 		WiFiServer st_server; //server
 		WiFiClient st_client; //client
+		long previousMillis;
+		long RSSIsendInterval;
 
 	public:
 

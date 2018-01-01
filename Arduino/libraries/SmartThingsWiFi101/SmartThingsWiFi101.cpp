@@ -8,6 +8,7 @@
 //	History
 //	2017-05-06  Dan Ogorchock  Created
 //  2017-05-29  Dan Ogorchock  Implemented Low Power Mode to reduce power usage/chip heat
+//  2018-01-01  Dan Ogorchock  Added WiFi.RSSI() data collection
 //*******************************************************************************
 
 #include "SmartThingsWiFi101.h"
@@ -105,9 +106,14 @@ namespace st
 		Serial.println(st_hubIP);
 		Serial.print(F("hubPort = "));
 		Serial.println(st_hubPort);
+		Serial.print(F("RSSI = "));
+		Serial.println(WiFi.RSSI());
 		Serial.println();
 		Serial.println(F("SmartThingsWiFi101: Intialized"));
 		Serial.println();
+
+		RSSIsendInterval = 5000;
+		previousMillis = millis() - RSSIsendInterval;
 	}
 
 	//*****************************************************************************
@@ -117,6 +123,7 @@ namespace st
 	{
 		String readString;
 		String tempString;
+		String strRSSI;
 
 		if (WiFi.status() != WL_CONNECTED)
 		{
@@ -127,6 +134,27 @@ namespace st
 				Serial.println(F("**********************************************************"));
 				WiFi.end();
 				init();
+			}
+		}
+		else
+		{
+			if (millis() - previousMillis > RSSIsendInterval)
+			{
+
+				previousMillis = millis();
+
+				if (RSSIsendInterval < 60000)
+				{
+					RSSIsendInterval = RSSIsendInterval + 1000;
+				}
+
+				strRSSI = String("rssi ") + String(WiFi.RSSI());
+				send(strRSSI);
+
+				if (_isDebugEnabled)
+				{
+					Serial.println(strRSSI);
+				}
 			}
 		}
 

@@ -8,6 +8,7 @@
 //	2017-08-15  Dan Ogorchock  Created with the help of Joshua Spain
 //  2017-09-05  Dan Ogorchock  Added automatic WiFi reconnect logic as ESP32 
 //                             doesn't do this automatically currently
+//  2018-01-01  Dan Ogorchock  Added WiFi.RSSI() data collection
 //*******************************************************************************
 
 #ifndef __SMARTTHINGSESP32WIFI_H__
@@ -32,6 +33,8 @@ namespace st
 		boolean st_preExistingConnection = false;
 		WiFiServer st_server; //server
 		WiFiClient st_client; //client
+		long previousMillis;
+		long RSSIsendInterval;
 
 		//**************************************************************************************
 		/// Event Handler for ESP32 WiFi Events (needed to implement reconnect logic for now...)

@@ -8,6 +8,7 @@
 //	2017-08-15  Dan Ogorchock  Created with the help of Joshua Spain
 //  2017-09-05  Dan Ogorchock  Added automatic WiFi reconnect logic as ESP32 
 //                             doesn't do this automatically currently
+//  2018-01-01  Dan Ogorchock  Added WiFi.RSSI() data collection
 //*******************************************************************************
 
 #include "SmartThingsESP32WiFi.h"
@@ -155,10 +156,15 @@ namespace st
 		Serial.println(st_hubIP);
 		Serial.print(F("hubPort = "));
 		Serial.println(st_hubPort);
+		Serial.print(F("RSSI = "));
+		Serial.println(WiFi.RSSI());
 		Serial.println(F(""));
 		Serial.println(F("SmartThingsESP32WiFI: Intialized"));
 		Serial.println(F(""));
-		
+
+		RSSIsendInterval = 5000;
+		previousMillis = millis() - RSSIsendInterval;
+
 	}
 
 	//*****************************************************************************
@@ -168,6 +174,7 @@ namespace st
 	{
 		String readString;
 		String tempString;
+		String strRSSI;
 
 		if (WiFi.isConnected() == false)
 		{
@@ -179,6 +186,27 @@ namespace st
 			}
 			//WiFi.reconnect();
 			//init();
+		}
+		else
+		{
+			if (millis() - previousMillis > RSSIsendInterval)
+			{
+
+				previousMillis = millis();
+
+				if (RSSIsendInterval < 60000)
+				{
+					RSSIsendInterval = RSSIsendInterval + 1000;
+				}
+
+				strRSSI = String("rssi ") + String(WiFi.RSSI());
+				send(strRSSI);
+
+				if (_isDebugEnabled)
+				{
+					Serial.println(strRSSI);
+				}
+			}
 		}
 
 		WiFiClient client = st_server.available();
