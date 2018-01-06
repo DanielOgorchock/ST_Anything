@@ -9,6 +9,7 @@
 //  2017-09-05  Dan Ogorchock  Added automatic WiFi reconnect logic as ESP32 
 //                             doesn't do this automatically currently
 //  2018-01-01  Dan Ogorchock  Added WiFi.RSSI() data collection
+//  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
 //*******************************************************************************
 
 #include "SmartThingsESP32WiFi.h"
@@ -146,7 +147,9 @@ namespace st
 		Serial.print(F("serverPort = "));
 		Serial.println(st_serverPort);
 		Serial.print(F("MAC Address = "));
-		Serial.println(WiFi.macAddress());
+		String strMAC(WiFi.macAddress());
+		strMAC.replace(":", "");
+		Serial.println(strMAC);
 		Serial.println(F(""));
 		Serial.print(F("SSID = "));
 		Serial.println(st_ssid);
@@ -194,7 +197,7 @@ namespace st
 
 				previousMillis = millis();
 
-				if (RSSIsendInterval < 60000)
+				if (RSSIsendInterval < RSSI_TX_INTERVAL)
 				{
 					RSSIsendInterval = RSSIsendInterval + 1000;
 				}

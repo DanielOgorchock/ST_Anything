@@ -7,6 +7,7 @@
 //	History
 //	2017-02-10  Dan Ogorchock  Created
 //  2017-12-29  Dan Ogorchock  Added WiFi.RSSI() data collection
+//  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
 //*******************************************************************************
 
 #include "SmartThingsESP8266WiFi.h"
@@ -89,7 +90,9 @@ namespace st
 		Serial.print(F("serverPort = "));
 		Serial.println(st_serverPort);
 		Serial.print(F("MAC Address = "));
-		Serial.println(WiFi.macAddress());
+		String strMAC(WiFi.macAddress());
+		strMAC.replace(":", "");
+		Serial.println(strMAC);
 		Serial.println(F(""));
 		Serial.print(F("SSID = "));
 		Serial.println(st_ssid);
@@ -142,7 +145,7 @@ namespace st
 
 				previousMillis = millis();
 
-				if (RSSIsendInterval < 60000)
+				if (RSSIsendInterval < RSSI_TX_INTERVAL)
 				{
 					RSSIsendInterval = RSSIsendInterval + 1000;
 				}

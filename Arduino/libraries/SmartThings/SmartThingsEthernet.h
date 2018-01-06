@@ -7,12 +7,18 @@
 //	History
 //	2017-02-04  Dan Ogorchock  Created
 //  2017-05-02  Dan Ogorchock  Add support for W5500 Ethernet2 Shield
+//  2018-01-06  Dan Ogorchock  Added RSSI Interval as user-definable interval
 //*******************************************************************************
 
 #ifndef __SMARTTHINGSETHERNET_H__ 
 #define __SMARTTHINGSETHERNET_H__
 
 #include "SmartThings.h"
+
+//Adjust the RSSI Transmit Interval below as you see fit (in milliseconds)
+//  Note:  When the board first boots, it transmits frequently, then slows over 
+//         time to the interval below.
+#define RSSI_TX_INTERVAL 60000
 
 //*******************************************************************************
 // Using Ethernet Shield

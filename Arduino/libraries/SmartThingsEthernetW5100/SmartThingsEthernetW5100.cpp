@@ -6,6 +6,7 @@
 //
 //	History
 //	2017-02-04  Dan Ogorchock  Created
+//  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
 //*******************************************************************************
 
 #include "SmartThingsEthernetW5100.h"
@@ -79,7 +80,7 @@ namespace st
 		Serial.print(F("serverPort = "));
 		Serial.println(st_serverPort);
 		Serial.print(F("MAC Address = "));
-		sprintf(buf, "%02X:%02X:%02X:%02X:%02X:%02X", st_mac[0], st_mac[1], st_mac[2], st_mac[3], st_mac[4], st_mac[5]);
+		sprintf(buf, "%02X%02X%02X%02X%02X%02X", st_mac[0], st_mac[1], st_mac[2], st_mac[3], st_mac[4], st_mac[5]);
 		Serial.println(buf);
 		Serial.println(F(""));
 

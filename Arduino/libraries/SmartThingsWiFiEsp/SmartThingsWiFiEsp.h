@@ -6,6 +6,7 @@
 //
 //	History
 //	2017-02-20  Dan Ogorchock  Created
+//  2018-01-06  Dan Ogorchock  Added WiFi.RSSI() data collection
 //*******************************************************************************
 
 #ifndef __SMARTTHINGSWIFIESP_H__ 
@@ -31,6 +32,8 @@ namespace st
 		WiFiEspServer st_server; //server
 		WiFiEspClient st_client; //client
 		Stream* st_espSerial;    //Serial UART used to commincate with the ESP-01 board
+		long previousMillis;
+		long RSSIsendInterval;
 
 	public:
 

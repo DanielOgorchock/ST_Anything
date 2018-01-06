@@ -6,6 +6,8 @@
 //
 //	History
 //	2017-02-20  Dan Ogorchock  Created
+//  2018-01-06  Dan Ogorchock  Added WiFi.RSSI() data collection
+//  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
 //*******************************************************************************
 
 #include "SmartThingsWiFiEsp.h"
@@ -93,7 +95,7 @@ namespace st
 		Serial.println(st_serverPort);
 		WiFi.macAddress(mac);
 		Serial.print(F("MAC Address = "));
-		sprintf(buf, "%02X:%02X:%02X:%02X:%02X:%02X", mac[5], mac[4], mac[3], mac[2], mac[1], mac[0]);
+		sprintf(buf, "%02X%02X%02X%02X%02X%02X", mac[5], mac[4], mac[3], mac[2], mac[1], mac[0]);
 		Serial.println(buf);
 		Serial.println(F(""));
 
@@ -105,10 +107,14 @@ namespace st
 		Serial.println(st_hubIP);
 		Serial.print(F("hubPort = "));
 		Serial.println(st_hubPort);
-
+		Serial.print(F("RSSI = "));
+		Serial.println(WiFi.RSSI());
 		Serial.println(F(""));
 		Serial.println(F("SmartThingsWiFiEsp: Intialized"));
 		Serial.println(F(""));
+
+		RSSIsendInterval = 5000;
+		previousMillis = millis() - RSSIsendInterval;
 	}
 
 	//*****************************************************************************
@@ -118,6 +124,7 @@ namespace st
 	{
 		String readString;
 		String tempString;
+		String strRSSI;
 
 		//if (WiFi.status() != WL_CONNECTED)
 		//{
@@ -126,6 +133,27 @@ namespace st
 		//	Serial.println(F("**********************************************************"));
 		//	WiFi.reset();
 		//	init();
+		//}
+		//else
+		//{
+			if (millis() - previousMillis > RSSIsendInterval)
+			{
+
+				previousMillis = millis();
+
+				if (RSSIsendInterval < RSSI_TX_INTERVAL)
+				{
+					RSSIsendInterval = RSSIsendInterval + 1000;
+				}
+
+				strRSSI = String("rssi ") + String(WiFi.RSSI());
+				send(strRSSI);
+
+				if (_isDebugEnabled)
+				{
+					Serial.println(strRSSI);
+				}
+			}
 		//}
 
 		WiFiEspClient client = st_server.available();
