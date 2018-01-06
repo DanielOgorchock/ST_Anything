@@ -204,7 +204,7 @@ Your screen should look like the following image:
 
 4) If you are using a W5100 Ethernet Shield with an Arduino, the MAC address must start with '06' in order to be sure you're using a ***locally administered unicast MAC address***.  Make sure that you have unique MAC addresses if you use more than one W5100 on your network.
 
-5) When entering the MAC address into the Device Prerences in your phone's SmartThings App, please be sure to enter it without delimiters, and in uppercase.  It should be in the form '06AB02CD03EF' without the quotes.  The MAC address will be printed out in the Arduino IDE Serial Monitor window (115200 baud) when the board is restarted.
+5) When entering the MAC address into the Device Preferences in your phone's SmartThings App, please be sure to enter it without delimiters (i.e. NO COLONS!), and in uppercase.  It should be in the form '06AB02CD03EF' without the quotes.  The MAC address will be printed out in the Arduino IDE Serial Monitor window (115200 baud) when the board is restarted.
 
 6) When using a NodeMCU ESP8266 board, you need to be aware of some GPIO limitations.  I have assembled my findings in this image:
 ![screenshot](https://cloud.githubusercontent.com/assets/5206084/26479180/53488d08-419f-11e7-824f-aa1649335c02.png)
