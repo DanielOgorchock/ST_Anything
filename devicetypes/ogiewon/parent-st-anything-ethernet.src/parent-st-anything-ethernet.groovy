@@ -67,12 +67,10 @@ metadata {
         valueTile("rssi", "device.rssi", width: 2, height: 2) {
 			state("rssi", label:'RSSI ${currentValue}', unit:"",
 				backgroundColors:[
-					[value: -30, color: "#00cc00"],
-					[value: -45, color: "#33cc33"],
-					[value: -60, color: "#66ff33"],
-					[value: -70, color: "#99ff33"],
-					[value: -80, color: "#ffcc00"],
-					[value: -85, color: "#ff9900"],
+					[value: -30, color: "#006600"],
+					[value: -45, color: "#009900"],
+					[value: -60, color: "#99cc00"],
+					[value: -70, color: "#ff9900"],
 					[value: -90, color: "#ff0000"]
 				]
 			)
