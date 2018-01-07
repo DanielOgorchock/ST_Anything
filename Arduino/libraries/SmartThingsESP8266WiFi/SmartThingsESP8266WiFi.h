@@ -7,6 +7,7 @@
 //	History
 //	2017-02-05  Dan Ogorchock  Created
 //  2017-12-29  Dan Ogorchock  Added WiFi.RSSI() data collection
+//  2018-01-06  Dan Ogorchock  Added OTA update capability
 //*******************************************************************************
 
 #ifndef __SMARTTHINGSESP8266WIFI_H__
@@ -18,6 +19,7 @@
 // Using ESP8266 WiFi
 //*******************************************************************************
 #include <ESP8266WiFi.h>
+#include <ArduinoOTA.h>
 
 namespace st
 {
@@ -32,6 +34,7 @@ namespace st
 		WiFiClient st_client; //client
 		long previousMillis;
 		long RSSIsendInterval;
+		char st_devicename[50];
 
 	public:
 
