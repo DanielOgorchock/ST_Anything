@@ -326,6 +326,12 @@ sint8 nm_drv_init(void * arg)
 	}
 #endif
 	M2M_INFO("Chip ID %lx\n", nmi_get_chipid());
+#ifdef ARDUINO
+	if ((REV(GET_CHIPID()) & 0xff0) != REV_3A0 && (REV(GET_CHIPID()) & 0xff0) != REV_B0) {
+		ret = M2M_ERR_INVALID;
+		goto ERR2;
+	}
+#endif
 #ifdef CONF_WINC_USE_SPI
 	/* Must do this after global reset to set SPI data packet size. */
 	nm_spi_init();

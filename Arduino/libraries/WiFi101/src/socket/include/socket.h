@@ -791,7 +791,11 @@ typedef struct{
 	@SOCK_ERR_TIMEOUT	 			 : Socket receive timed out
 */
 typedef struct{
+#ifdef ARDUINO
+	uint32					pu8Buffer;
+#else
 	uint8					*pu8Buffer;
+#endif
 	/*!<
 		Pointer to the USER buffer (passed to @ref recv and @ref recvfrom function) containing the received data chunk.
 	*/
@@ -1201,8 +1205,11 @@ NMI_API SOCKET socket(uint16 u16Domain, uint8 u8Type, uint8 u8Flags);
 	}
 @endcode	
 */
+#ifdef ARDUINO
+NMI_API sint8 bindSocket(SOCKET sock, struct sockaddr *pstrAddr, uint8 u8AddrLen);
+#else
 NMI_API sint8 bind(SOCKET sock, struct sockaddr *pstrAddr, uint8 u8AddrLen);
-
+#endif
 
 /** @} */
 
@@ -1325,7 +1332,11 @@ This example demonstrates the call of the listen socket operation after a succes
 
 @endcode
 */
+#ifdef ARDUINO
+NMI_API sint8 listenSocket(SOCKET sock, uint8 backlog);
+#else
 NMI_API sint8 listen(SOCKET sock, uint8 backlog);
+#endif
 /** @} */
 /** @defgroup AcceptFn accept
  *    @ingroup SocketAPI
@@ -1809,7 +1820,11 @@ NMI_API sint16 send(SOCKET sock, void *pvSendBuffer, uint16 u16SendLength, uint1
 @return
 	The function  returns @ref SOCK_ERR_NO_ERROR for successful operation and a negative value (indicating the error) otherwise. 
 */
+#ifdef ARDUINO
+NMI_API sint16 sendtoSocket(SOCKET sock, void *pvSendBuffer, uint16 u16SendLength, uint16 flags, struct sockaddr *pstrDestAddr, uint8 u8AddrLen);
+#else
 NMI_API sint16 sendto(SOCKET sock, void *pvSendBuffer, uint16 u16SendLength, uint16 flags, struct sockaddr *pstrDestAddr, uint8 u8AddrLen);
+#endif
 /** @} */
 /** @defgroup CloseSocketFn close
  *  @ingroup SocketAPI
@@ -1838,8 +1853,11 @@ NMI_API sint16 sendto(SOCKET sock, void *pvSendBuffer, uint16 u16SendLength, uin
 @return		
 	The function returned @ref SOCK_ERR_NO_ERROR for successful operation and a negative value (indicating the error) otherwise. 
 */
+#ifdef ARDUINO
+NMI_API sint8 closeSocket(SOCKET sock);
+#else
 NMI_API sint8 close(SOCKET sock);
-
+#endif
 
 /** @} */
 /** @defgroup InetAddressFn nmi_inet_addr

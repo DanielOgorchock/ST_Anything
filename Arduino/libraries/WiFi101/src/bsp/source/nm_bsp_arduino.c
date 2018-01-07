@@ -79,9 +79,12 @@ static void chip_isr(void)
  */
 static void init_chip_pins(void)
 {
-	/* Configure RESETN pin as output. */
-	pinMode(gi8Winc1501ResetPin, OUTPUT);
-	digitalWrite(gi8Winc1501ResetPin, HIGH);
+	if (gi8Winc1501ResetPin > -1)
+	{
+		/* Configure RESETN pin as output. */
+		pinMode(gi8Winc1501ResetPin, OUTPUT);
+		digitalWrite(gi8Winc1501ResetPin, HIGH);
+	}
 
 	/* Configure INTN pins as input. */
 	pinMode(gi8Winc1501IntnPin, INPUT);
@@ -95,8 +98,11 @@ static void init_chip_pins(void)
 
 static void deinit_chip_pins(void)
 {
-	digitalWrite(gi8Winc1501ResetPin, LOW);
-	pinMode(gi8Winc1501ResetPin, INPUT);
+	if (gi8Winc1501ResetPin > -1)
+	{
+		digitalWrite(gi8Winc1501ResetPin, LOW);
+		pinMode(gi8Winc1501ResetPin, INPUT);
+	}
 
 	if (gi8Winc1501ChipEnPin > -1)
 	{
@@ -148,10 +154,13 @@ sint8 nm_bsp_deinit(void)
  */
 void nm_bsp_reset(void)
 {
-	digitalWrite(gi8Winc1501ResetPin, LOW);
-	nm_bsp_sleep(100);
-	digitalWrite(gi8Winc1501ResetPin, HIGH);
-	nm_bsp_sleep(100);
+	if (gi8Winc1501ResetPin > -1)
+	{
+		digitalWrite(gi8Winc1501ResetPin, LOW);
+		nm_bsp_sleep(100);
+		digitalWrite(gi8Winc1501ResetPin, HIGH);
+		nm_bsp_sleep(100);
+	}
 }
 
 /*

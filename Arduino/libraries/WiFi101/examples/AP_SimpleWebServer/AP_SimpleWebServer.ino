@@ -18,13 +18,13 @@
 
 #include <SPI.h>
 #include <WiFi101.h>
-
-int led =  LED_BUILTIN;
-
-char ssid[] = "wifi101-network"; // created AP name
-char pass[] = "1234567890";      // AP password (needed only for WEP, must be exactly 10 or 26 characters in length)
+#include "arduino_secrets.h" 
+///////please enter your sensitive data in the Secret tab/arduino_secrets.h
+char ssid[] = SECRET_SSID;        // your network SSID (name)
+char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
 int keyIndex = 0;                // your network key Index number (needed only for WEP)
 
+int led =  LED_BUILTIN;
 int status = WL_IDLE_STATUS;
 WiFiServer server(80);
 

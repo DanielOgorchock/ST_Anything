@@ -76,9 +76,9 @@
 //Define which Arduino Pins will be used for each device
 //******************************************************************************************
 
-#define PIN_RELAY_1 D5 //SmartThings Capability "Switch"
-#define PIN_RELAY_2 D6 //SmartThings Capability "Switch"
-#define PIN_RELAY_3 D7 //SmartThings Capability "Switch"
+#define PIN_RELAY_1 D5 //SmartThings Capability "Relay Switch"
+#define PIN_RELAY_2 D6 //SmartThings Capability "Relay Switch"
+#define PIN_RELAY_3 D7 //SmartThings Capability "Relay Switch"
 
 //---Begin Push Button declarations---
 #define MAX_PUSHBUTTONS 3

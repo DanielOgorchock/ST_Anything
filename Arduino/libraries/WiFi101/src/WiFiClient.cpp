@@ -17,80 +17,20 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-extern "C" {
-	#include "socket/include/socket.h"
-	#include "driver/include/m2m_periph.h"
-}
+#include "utility/WiFiSocket.h"
 
 #include "WiFi101.h"
 #include "WiFiClient.h"
 
-#define IS_CONNECTED	(_flag & SOCKET_BUFFER_FLAG_CONNECTED)
-
 WiFiClient::WiFiClient()
 {
 	_socket = -1;
-	_flag = 0;
-	_head = 0;
-	_tail = 0;
 }
 
-WiFiClient::WiFiClient(uint8_t sock, uint8_t parentsock)
+WiFiClient::WiFiClient(uint8_t sock)
 {
 	// Spawn connected TCP client from TCP server socket:
 	_socket = sock;
-	_flag = SOCKET_BUFFER_FLAG_CONNECTED;
-	if (parentsock) {
-		_flag |= ((uint32_t)parentsock) << SOCKET_BUFFER_FLAG_PARENT_SOCKET_POS;
-	}
-	_head = 0;
-	_tail = 0;
-	for (int sock = 0; sock < TCP_SOCK_MAX; sock++) {
-		if (WiFi._client[sock] == this)
-			WiFi._client[sock] = 0;
-	}
-	WiFi._client[_socket] = this;
-	
-	// Add socket buffer handler:
-	socketBufferRegister(_socket, &_flag, &_head, &_tail, (uint8 *)_buffer);
-	
-	// Enable receive buffer:
-	recv(_socket, _buffer, SOCKET_BUFFER_MTU, 0);
-
-	m2m_wifi_handle_events(NULL);
-}
-
-WiFiClient::WiFiClient(const WiFiClient& other)
-{
-	copyFrom(other);
-}
-
-void WiFiClient::copyFrom(const WiFiClient& other)
-{
-	_socket = other._socket;
-	_flag = other._flag;
-	_head = other._head;
-	_tail = other._tail;
-	if (_head > _tail) {
-		memcpy(_buffer + _tail, other._buffer + _tail, (_head - _tail));
-	}
-
-	for (int sock = 0; sock < TCP_SOCK_MAX; sock++) {
-		if (WiFi._client[sock] == this)
-			WiFi._client[sock] = 0;
-	}
-
-	if (_socket > -1) {
-		WiFi._client[_socket] = this;
-		
-		// Add socket buffer handler:
-		socketBufferRegister(_socket, &_flag, &_head, &_tail, (uint8 *)_buffer);
-		
-		// Enable receive buffer:
-		recv(_socket, _buffer, SOCKET_BUFFER_MTU, 0);
-	}
-
-	m2m_wifi_handle_events(NULL);
 }
 
 int WiFiClient::connectSSL(const char* host, uint16_t port)
@@ -131,40 +71,25 @@ int WiFiClient::connect(IPAddress ip, uint16_t port, uint8_t opt, const uint8_t 
 	addr.sin_port = _htons(port);
 	addr.sin_addr.s_addr = ip;
 
+	if (connected()) {
+		stop();
+	}
+
 	// Create TCP socket:
-	_flag = 0;
-	_head = 0;
-	_tail = 0;
-	if ((_socket = socket(AF_INET, SOCK_STREAM, opt)) < 0) {
+	if ((_socket = WiFiSocket.create(AF_INET, SOCK_STREAM, opt)) < 0) {
 		return 0;
 	}
 
 	if (opt & SOCKET_FLAGS_SSL && hostname) {
-		setsockopt(_socket, SOL_SSL_SOCKET, SO_SSL_SNI, hostname, m2m_strlen((uint8_t *)hostname));
+		WiFiSocket.setopt(_socket, SOL_SSL_SOCKET, SO_SSL_SNI, hostname, m2m_strlen((uint8_t *)hostname));
 	}
-
-	// Add socket buffer handler:
-	socketBufferRegister(_socket, &_flag, &_head, &_tail, (uint8 *)_buffer);
 
 	// Connect to remote host:
-	if (connectSocket(_socket, (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) < 0) {
-		close(_socket);
+	if (!WiFiSocket.connect(_socket, (struct sockaddr *)&addr, sizeof(struct sockaddr_in))) {
+		WiFiSocket.close(_socket);
 		_socket = -1;
 		return 0;
 	}
-
-	// Wait for connection or timeout:
-	unsigned long start = millis();
-	while (!IS_CONNECTED && millis() - start < 20000) {
-		m2m_wifi_handle_events(NULL);
-	}
-	if (!IS_CONNECTED) {
-		close(_socket);
-		_socket = -1;
-		return 0;
-	}
-
-	WiFi._client[_socket] = this;
 
 	return 1;
 }
@@ -176,52 +101,35 @@ size_t WiFiClient::write(uint8_t b)
 
 size_t WiFiClient::write(const uint8_t *buf, size_t size)
 {
-	sint16 err;
-
-	if (_socket < 0 || size == 0 || !IS_CONNECTED) {
+	if (_socket < 0 || size == 0 || !connected()) {
 		setWriteError();
 		return 0;
 	}
 
-	// Network led ON (rev A then rev B).
-	m2m_periph_gpio_set_val(M2M_PERIPH_GPIO16, 0);
-	m2m_periph_gpio_set_val(M2M_PERIPH_GPIO5, 0);
+	int result = WiFiSocket.write(_socket, buf, size);
 
-	m2m_wifi_handle_events(NULL);
-
-	while ((err = send(_socket, (void *)buf, size, 0)) < 0) {
-		// Exit on fatal error, retry if buffer not ready.
-		if (err != SOCK_ERR_BUFFER_FULL) {
-			setWriteError();
-			m2m_periph_gpio_set_val(M2M_PERIPH_GPIO16, 1);
-			m2m_periph_gpio_set_val(M2M_PERIPH_GPIO5, 1);
-			return 0;
-		}
-		m2m_wifi_handle_events(NULL);
+	if (result <= 0) {
+		setWriteError();
+		return 0;
 	}
-	
-	// Network led OFF (rev A then rev B).
-	m2m_periph_gpio_set_val(M2M_PERIPH_GPIO16, 1);
-	m2m_periph_gpio_set_val(M2M_PERIPH_GPIO5, 1);
-			
+
 	return size;
 }
 
 int WiFiClient::available()
 {
-	m2m_wifi_handle_events(NULL);
-	
-	if (_socket != -1) {
-		return _head - _tail;
+	if (_socket == -1) {
+		return 0;
 	}
-	return 0;
+
+	return WiFiSocket.available(_socket);
 }
 
 int WiFiClient::read()
 {
 	uint8_t b;
 
-	if (read(&b, sizeof(b)) == -1) {
+	if (read(&b, sizeof(b)) != 1) {
 		return -1;
 	}
 
@@ -242,51 +150,42 @@ int WiFiClient::read(uint8_t* buf, size_t size)
 		size_tmp = size;
 	}
 
-	for (uint32_t i = 0; i < size_tmp; ++i) {
-		buf[i] = _buffer[_tail++];
-	}
-	
-	if (_tail == _head) {
-		_tail = _head = 0;
-		_flag &= ~SOCKET_BUFFER_FLAG_FULL;
-		recv(_socket, _buffer, SOCKET_BUFFER_MTU, 0);
-		m2m_wifi_handle_events(NULL);
-	}
+	int result = WiFiSocket.read(_socket, buf, size);
 
-	return size_tmp;
+	return result;
 }
 
 int WiFiClient::peek()
 {
-	if (!available())
+	if (!available()) {
 		return -1;
+	}
 
-	return _buffer[_tail];
+	return WiFiSocket.peek(_socket);
 }
 
 void WiFiClient::flush()
 {
-	while (available())
-		read();
 }
 
 void WiFiClient::stop()
 {
-	if (_socket < 0)
+	if (_socket < 0) {
 		return;
-		
-	socketBufferUnregister(_socket);
-	close(_socket);
+	}
+
+	WiFiSocket.close(_socket);
+
 	_socket = -1;
-	_flag = 0;
 }
 
 uint8_t WiFiClient::connected()
 {
-	m2m_wifi_handle_events(NULL);
-	if (available())
-		return 1;
-	return IS_CONNECTED;
+	if (_socket < 0) {
+		return 0;
+	}
+
+	return WiFiSocket.connected(_socket);
 }
 
 uint8_t WiFiClient::status()
@@ -300,9 +199,30 @@ WiFiClient::operator bool()
 	return _socket != -1;
 }
 
-WiFiClient& WiFiClient::operator =(const WiFiClient& other)
+bool WiFiClient::operator==(const WiFiClient &other) const
 {
-	copyFrom(other);
+	return (_socket == other._socket);
+}
 
-	return *this;
+bool WiFiClient::operator!=(const WiFiClient &other) const
+{
+	return (_socket != other._socket);
+}
+
+IPAddress WiFiClient::remoteIP()
+{
+	if (_socket == -1) {
+		return IPAddress(0, 0, 0, 0);
+	}
+
+	return WiFiSocket.remoteIP(_socket);
+}
+
+uint16_t WiFiClient::remotePort()
+{
+	if (_socket == -1) {
+		return 0;
+	}
+
+	return _htons(WiFiSocket.remotePort(_socket));
 }

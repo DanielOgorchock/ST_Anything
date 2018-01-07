@@ -23,14 +23,16 @@
 #include <Arduino.h>
 #include <Client.h>
 #include <IPAddress.h>
-#include "socket/include/socket_buffer.h"
+
+extern "C" {
+	#include "socket/include/socket.h"
+}
 
 class WiFiClient : public Client {
 
 public:
 	WiFiClient();
-	WiFiClient(uint8_t sock, uint8_t parentsock = 0);
-	WiFiClient(const WiFiClient& other);
+	WiFiClient(uint8_t sock);
 
 	uint8_t status();
 	
@@ -48,21 +50,19 @@ public:
 	virtual void stop();
 	virtual uint8_t connected();
 	virtual operator bool();
-	virtual WiFiClient& operator =(const WiFiClient& other);
+	bool operator==(const WiFiClient &other) const;
+	bool operator!=(const WiFiClient &other) const;
 
 	using Print::write;
 
-	uint32_t _flag;
+	virtual IPAddress remoteIP();
+	virtual uint16_t remotePort();
 
 private:
 	SOCKET _socket;
-	uint32_t _head;
-	uint32_t _tail;
-	uint8_t	_buffer[SOCKET_BUFFER_TCP_SIZE];
+
 	int connect(const char* host, uint16_t port, uint8_t opt);
 	int connect(IPAddress ip, uint16_t port, uint8_t opt, const uint8_t *hostname);
-	void copyFrom(const WiFiClient& other);
-
 };
 
 #endif /* WIFICLIENT_H */

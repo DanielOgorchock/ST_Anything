@@ -24,14 +24,9 @@ WiFiSSLClient::WiFiSSLClient() :
 {
 }
 
-WiFiSSLClient::WiFiSSLClient(uint8_t sock, uint8_t parentsock) :
-	WiFiClient(sock, parentsock)
+WiFiSSLClient::WiFiSSLClient(uint8_t sock) :
+	WiFiClient(sock)
 {  
-}
-
-WiFiSSLClient::WiFiSSLClient(const WiFiSSLClient& other) :
-	WiFiClient(other)
-{
 }
 
 int WiFiSSLClient::connect(IPAddress ip, uint16_t port)

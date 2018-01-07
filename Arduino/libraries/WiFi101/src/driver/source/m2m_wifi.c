@@ -530,36 +530,10 @@ sint8  m2m_wifi_deinit(void * arg)
 	return M2M_SUCCESS;
 }
 
-
-#ifdef ARDUINO
-#include "socket/include/socket_buffer.h"
-extern tstrSocketBuffer gastrSocketBuffer[];
-#endif
-
 sint8 m2m_wifi_handle_events(void * arg)
 {
 #ifdef ARDUINO
 	(void)arg; // Silence "unused" warning
-
-	uint8 i;
-
-	/* Arduino API LIMITATION: */
-	/* To be compliant with the standard Arduino WiFi API socket must be buffered. */
-	/* WiFi101 shield does not have this ability and automatically pushes incoming */
-	/* data to the Arduino MCU. Function m2m_wifi_handle_events() is taking care of */
-	/* this transfer. Hence by ensuring that all the MCU socket buffers are available */
-	/* we can perform the transfer. */
-	/* However, if one socket buffer is full, we have to delay this transfer by */
-	/* returning an error value, as we have no way of knowing which socket is about */
-	/* to be used. */
-	/* Consequently, the Arduino sketch must NOT block on reading only one socket if */
-	/* several sockets are to be used. Instead, application must carefully read for */
-	/* all sockets, anytime. */
-	for (i = 0; i < MAX_SOCKET; ++i) {
-		if (gastrSocketBuffer[i].flag && (*(gastrSocketBuffer[i].flag) & SOCKET_BUFFER_FLAG_FULL)) {
-			return M2M_ERR_FAIL;
-		}
-	}
 #endif
 	return hif_handle_isr();
 }

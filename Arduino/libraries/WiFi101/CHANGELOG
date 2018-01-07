@@ -1,5 +1,12 @@
 WiFi101 ?.?.? - ????.??.??
 
+WiFi101 0.15.0 - 2018.01.02
+
+* Fixed WiFi.status() hanging if no shield was present
+* Reworked socket buffer layer to prevent (SAMD) and reduce lockups (AVR)
+* Make reset pin optional. Thanks @awatterott
+* Added ability to retrieve remote IP and port of WiFiClient
+
 WiFi101 0.14.3 - 2017.06.01
 
 * Fixed issues with WiFiMDNSResponder and large request packets

@@ -21,7 +21,7 @@
 #define WIFI_H
 
 #define WIFI_FIRMWARE_LATEST_MODEL_A "19.4.4"
-#define WIFI_FIRMWARE_LATEST_MODEL_B "19.5.2"
+#define WIFI_FIRMWARE_LATEST_MODEL_B "19.5.4"
 
 // for backwards compatibility
 #define WIFI_FIRMWARE_REQUIRED WIFI_FIRMWARE_LATEST_MODEL_B
@@ -30,7 +30,6 @@
 
 extern "C" {
 	#include "driver/include/m2m_wifi.h"
-	#include "socket/include/socket.h"
 }
 
 #include "WiFiClient.h"
@@ -80,20 +79,6 @@ typedef enum {
 class WiFiClass
 {
 public:
-	uint32_t _localip;
-	uint32_t _submask;
-	uint32_t _gateway;
-	int _dhcp;
-	uint32_t _resolve;
-	byte *_remoteMacAddress;
-	wl_mode_t _mode;
-	wl_status_t _status;
-	char _scan_ssid[M2M_MAX_SSID_LEN];
-	uint8_t _scan_auth;
-	uint8_t _scan_channel;
-	char _ssid[M2M_MAX_SSID_LEN];
-	WiFiClient *_client[TCP_SOCK_MAX];
-
 	WiFiClass();
 
 	void setPins(int8_t cs, int8_t irq, int8_t rst, int8_t en = -1);
@@ -177,9 +162,26 @@ public:
 	void maxLowPowerMode(void);
 	void noLowPowerMode(void);
 
+	void handleEvent(uint8_t u8MsgType, void *pvMsg);
+	void handleResolve(uint8_t * hostName, uint32_t hostIp);
+	void handlePingResponse(uint32 u32IPAddr, uint32 u32RTT, uint8 u8ErrorCode);
+
 private:
 	int _init;
 	char _version[9];
+
+	uint32_t _localip;
+	uint32_t _submask;
+	uint32_t _gateway;
+	int _dhcp;
+	uint32_t _resolve;
+	byte *_remoteMacAddress;
+	wl_mode_t _mode;
+	wl_status_t _status;
+	char _scan_ssid[M2M_MAX_SSID_LEN];
+	uint8_t _scan_auth;
+	uint8_t _scan_channel;
+	char _ssid[M2M_MAX_SSID_LEN];
 
 	uint8_t startConnect(const char *ssid, uint8_t u8SecType, const void *pvAuthInfo);
 	uint8_t startAP(const char *ssid, uint8_t u8SecType, const void *pvAuthInfo, uint8_t channel);

@@ -139,7 +139,7 @@
 //******************************************************************************************
 String str_ssid     = "yourSSIDhere";                           //  <---You must edit this line!
 String str_password = "yourWiFiPasswordhere";                   //  <---You must edit this line!
-IPAddress ip(192, 168, 1, 227);       //Device IP Address       //  <---You must edit this line!
+IPAddress ip(192, 168, 1, 233);       //Device IP Address       //  <---You must edit this line!
 IPAddress gateway(192, 168, 1, 1);    //Router gateway          //  <---You must edit this line!
 IPAddress subnet(255, 255, 255, 0);   //LAN subnet mask         //  <---You must edit this line!
 IPAddress dnsserver(192, 168, 1, 1);  //DNS server              //  <---You must edit this line!
@@ -156,6 +156,7 @@ const unsigned int hubPort = 39500;   // smartthings hub port
 //******************************************************************************************
 void callback(const String &msg)
 {
+//  String strTemp = msg;
 //  Serial.print(F("ST_Anything Callback: Sniffed data = "));
 //  Serial.println(msg);
   
@@ -163,6 +164,16 @@ void callback(const String &msg)
   
   //Masquerade as the ThingShield to send data to the Arduino, as if from the ST Cloud (uncomment and edit following line)
   //st::receiveSmartString("Put your command here!");  //use same strings that the Device Handler would send
+//  if (strTemp.startsWith("temperature1"))
+//  {
+//    strTemp.remove(0,13);
+//    Serial.println(strTemp);
+//  }
+//  if (strTemp.startsWith("humidity1"))
+//  {
+//    strTemp.remove(0,10);
+//    Serial.println(strTemp);
+//  }
 }
 
 //******************************************************************************************
@@ -202,11 +213,12 @@ void setup()
   static st::PS_Water               sensor2(F("water2"), 60, 10, PIN_WATER_2, 500);
   static st::PS_Illuminance         sensor3(F("illuminance1"), 60, 20, PIN_ILLUMINANCE_1, 0, 4095, 0, 10000);
   static st::PS_Illuminance         sensor4(F("illuminance2"), 60, 30, PIN_ILLUMINANCE_2, 0, 4095, 0, 10000);
-  static st::PS_Voltage             sensor5(F("voltage1"), 60, 40, PIN_VOLTAGE_1, 0, 2047, 0, 2200, 5, 100);
+  static st::PS_Voltage             sensor5(F("voltage1"), 60, 40, PIN_VOLTAGE_1, 0, 4095, 0, 3300, 1, 100);
+//  static st::PS_Voltage             sensor5(F("voltage1"), 5, 1, PIN_VOLTAGE_1, 0, 4095, 0, 4095, 20, 75,  -0.000000025934, 0.0001049656215,  0.9032840665333,  204.642825355678);
   static st::PS_MQ2_Smoke           sensor6(F("smoke1"), 10, 3, PIN_SMOKE_1, 1000);
   static st::PS_TemperatureHumidity sensor7(F("temphumid1"), 15, 5, PIN_TEMPERATUREHUMIDITY_1, st::PS_TemperatureHumidity::DHT22,"temperature1","humidity1");
   static st::PS_DS18B20_Temperature sensor8(F("temperature2"), 60, 55, PIN_TEMPERATURE_2, false, 10, 1); 
-  
+
   //Interrupt Sensors 
   static st::IS_Motion              sensor9(F("motion1"), PIN_MOTION_1, HIGH, false, 500);
   static st::IS_Motion              sensor10(F("motion2"), PIN_MOTION_2, HIGH, false, 500);

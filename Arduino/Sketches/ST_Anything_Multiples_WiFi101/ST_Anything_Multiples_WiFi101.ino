@@ -12,7 +12,7 @@
 //              - 2 x Door Control devices (used typically for Garage Doors - input pin (contact sensor) and output pin (relay switch)
 //              - 2 x Contact Sensor devices (used to monitor magnetic door sensors)
 //              - 2 x Switch devices (used to turn on a digital output (e.g. LED, relay, etc...)
-//              - 2 x Water Sensor devices (using an analog input pin to measure voltage from a water detector baord)
+//              - 2 x Water Sensor devices (using an analog input pin to measure voltage from a water detector board)
 //              - 2 x Illuminance Measurement devices (using a photoresitor attached to ananlog input)
 //              - 2 x Voltage Measurement devices (using a photoresitor attached to ananlog input)
 //              - 2 x Smoke Detector devices (using simple digital input)
