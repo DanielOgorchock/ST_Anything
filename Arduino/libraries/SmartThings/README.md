@@ -3,7 +3,8 @@ History:
 - v2.1 2017-02-20 Added support for Arduino + ESP-01 hardware combination
 - v2.2 2017-04-26 Added additional optional argument to each constructor which can be queried to determine maximum data transfer rate for each type of communication.  This field is not used directly by the SmartThings library.  It is used by ST_Anything's Everything Class.
 - v2.3 2017-05-25 Added support for the W5500 Ethernet Shield.  This required the library to be split into multiple library folders to avoid duplicate class defintions at compile/link time.
-- v2.4 2018-08-116 Added support for the ESP32 
+- v2.4 2017-08-16 Added support for the ESP32
+- v2.5 2017-01-06 Added Arduino OTA support for the ESP8266 boards
 
 SmartThings v2.x
 ================
