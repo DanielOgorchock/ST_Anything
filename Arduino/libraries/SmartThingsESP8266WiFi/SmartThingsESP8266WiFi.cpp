@@ -66,6 +66,11 @@ namespace st
 
 			// attempt to connect to WiFi network
 			WiFi.begin(st_ssid, st_password);
+			if (st_DHCP == false)
+			{
+				WiFi.config(st_localIP, st_localGateway, st_localSubnetMask, st_localDNSServer);
+			}
+
 			Serial.print(F("Attempting to connect to WPA SSID: "));
 			Serial.println(st_ssid);
 		}
@@ -77,10 +82,6 @@ namespace st
 
 		Serial.println();
 
-		if (st_DHCP == false)
-		{
-			WiFi.config(st_localIP, st_localGateway, st_localSubnetMask, st_localDNSServer);
-		}
 
 		st_server.begin();
 
