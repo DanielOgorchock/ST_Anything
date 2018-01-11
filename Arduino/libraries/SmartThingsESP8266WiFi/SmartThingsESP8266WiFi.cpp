@@ -64,6 +64,10 @@ namespace st
 			Serial.println(F(""));
 			Serial.println(F("Initializing ESP8266 WiFi network.  Please be patient..."));
 
+			if (st_DHCP == false)
+			{
+				WiFi.config(st_localIP, st_localGateway, st_localSubnetMask, st_localDNSServer);
+			}
 			// attempt to connect to WiFi network
 			WiFi.begin(st_ssid, st_password);
 			Serial.print(F("Attempting to connect to WPA SSID: "));
@@ -76,11 +80,6 @@ namespace st
 		}
 
 		Serial.println();
-
-		if (st_DHCP == false)
-		{
-			WiFi.config(st_localIP, st_localGateway, st_localSubnetMask, st_localDNSServer);
-		}
 
 		st_server.begin();
 
