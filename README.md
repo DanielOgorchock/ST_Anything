@@ -35,26 +35,27 @@ New v2.6+ Parent / Child Devices
 
 
 This package currently implements the following SmartThings Device Capabilities:
-- Alarm (Siren only currently) (digital output to a relay)
-- Configuration (to set polling intervals from ST Cloud)
-- Illuminance Measurement (photo resistor)
-- Motion Sensor (HC-SR501 Infrared PIR)
-- Relative Humidity Measurement (DHT22, DHT11)
-- Switch (Sunfounder Relay - http://amzn.com/B00E0NTPP4)
+- Alarm (Siren and Strobe both supported if desired, using 1 or 2 digital outputs to relay(s))
+- Contact Sensor  (Magnetic Door/Window Switch such as http://a.co/6iwkHwG)
+- Illuminance Measurement (using an analog input + photo resistor such as http://a.co/4zhbgEH)
+- Motion Sensor (using a HC-SR501 Infrared PIR, for example. Can also be any motion detector that outputs a digital signal)
+- Switch (simple digital output connected to a relay such Sunfounder Relay - http://amzn.com/B00E0NTPP4)
+- Relative Humidity Measurement (DHT22, DHT11, AM2320)
 - Temperature Measurement (DHT22 - requires Rob Tillaart's DHT 0.1.13 Library, included in this repo)
 - Temperature Measurement (using Dallas Semiconductor DS18B20's, requires OneWire and DallasTemperature libraries included in this repo)
-- Water Sensor (http://amzn.com/B00HTSL7QC)
-- Contact Sensor  (Magnetic Door Switch)
-- Door Control (i.e. Garage Door Contact Sensor + Relay Output) - See 'ST_Anything_Doors' example
-- RCSwitch Control (i.e. Radio Control Switch) - See 'ST_Anything_RCSwitch' example (Requires RCSwitch library, included in this repo)
-- Thermocouple Temperature Measurement (via the Adafruit MAX31855 library, included in this repo)
+- Temperature Measurement (via the Adafruit MAX31855 Thermocouple library, included in this repo)
+- Temperature Measurement (using AM2320 sensor) (also does humidity)
+- Water Sensor (using an analog input a a simple moisture sesnsor such as http://amzn.com/B00HTSL7QC or http://a.co/eZNTyIH)
+- Door Control / Garage Door Control (i.e. Garage Door Contact Sensor + Relay Output) - See 'ST_Anything_Doors' example
 - Smoke Detector (as a simple digital input)
+- Smoke Detector (using the MQ2 sensor)
 - Relay Switch (implemented as a timed relay, that turns off locally - i.e. no ST cloud command necessary to turn off)
-- Button (both pushed and held are supported)
-- Switch with Color Control (RGB) - used for analog RGB LED's
-- Switch with Color Control (RGBW) - used for analog RGBW LED's
+- Button (both pushed and held events are supported)
+- Switch + Color Control (RGB) - used for analog RGB LED's
+- Switch + Color Control (RGBW) - used for analog RGBW LED's
+- Switch (using RCSwitch (i.e. Radio Control Switch) - See 'ST_Anything_RCSwitch' example (Requires RCSwitch library, included in this repo)
 
-Note: Attempting to use all of these at once on an Arduino UNO R3 is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.
+Note: Attempting to use all of these at once on an Arduino UNO R3 is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.  The ESP8266, ESP32, and MKR1000 platforms also have a lot more memory available.
 
 
 ## Overview
@@ -74,7 +75,7 @@ ST_Anything consists of four main parts:
 - The ST_Anything Arduino libraries + required 3rd party libraries
 - The SmartThings libraries - A modified, more efficient version, now with added support for LAN-to-Hub based communications too! 
 - The SmartThings Parent and Child Device Handlers that support sketches above.
-  - parent-st-anything-ethernet.groovy (LAN-to-Hub, Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01, ESP32)
+  - parent-st-anything-ethernet.groovy (LAN-to-Hub, Arduino/W5100/W5500, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01, ESP32, MKR1000)
   - parent-st-anything-thingshield.groovy (Thingshield-to-Hub)
   - child-xxxxxx.groovy 
     - currently 18 child device handlers are available!
