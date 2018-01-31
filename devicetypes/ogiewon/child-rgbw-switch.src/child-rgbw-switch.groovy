@@ -17,7 +17,8 @@
  *    2017-10-01  Allan (vseven) Original Creation (based on Dan Ogorchock's child dimmer switch)
  *    2017-10-06  Allan (vseven) Added preset color buttons and logic behind them.
  *    2017-10-12  Allan (vseven) Added ability to change White and renamed to RGBW from RGB
- * 
+ *	  2017-12-17  Allan (vseven) Modified setColor to use the newer color attributes of only hue and saturation which
+ *                               it compatible with values passed in from things like Alexa or Goggle Home.
  */
 
 // for the UI
@@ -131,8 +132,8 @@ metadata {
 
 void on() {
     sendEvent(name: "switch", value: "on")
-    //log.debug("On pressed.  Sending last known color value of $lastColor or if null command to white.")
     def lastColor = device.latestValue("color")
+    //log.debug("On pressed.  Sending last known color value of $lastColor or if null command to white.")
     // Also since we are turning back on make sure we have at least one level turned up.
     def level = device.latestValue("level")
     def whiteLevel = device.latestValue("whiteLevel")
@@ -158,25 +159,40 @@ void off() {
     parent.childOff(device.deviceNetworkId)
 }
 
-def setColor(value) {
-    toggleTiles("off") //turn off the hard color tiles
-    sendEvent(name: "color", value: value.hex)
-    // Since the color selector takes into account lightness we have to reconvert the HEX and adjust the slider
-    def colorRGB = hexToRgb(value.hex)
-    def colorHSL = rgbToHSL(colorRGB)
-    def myLightness = colorHSL.l * 100
-    // log.debug("Lightness: $myLightness")
-    sendEvent(name: "level", value: myLightness)
-    adjustColor(value.hex)
+def setColor(Map color) {
+    log.debug "raw color map passed in: ${color}"
+    // Turn off the hard color tiles
+    toggleTiles("off") 
+    // If the color picker was selected we will have Red, Green, Blue, HEX, Hue, Saturation, and Alpha all present.
+    // Any other control will most likely only have Hue and Saturation
+    if (color.hex){
+        // came from the color picker.  Since the color selector takes into account lightness we have to reconvert
+        // the color values and adjust the level slider to better represent where it should be at based on the color picked
+        def colorHSL = rgbToHSL(color)
+        //log.debug "colorHSL: $colorHSL"
+        sendEvent(name: "level", value: (colorHSL.l * 100))
+        adjustColor(color.hex)
+    } else if (color.hue && color.saturation) {
+        // came from the ST cloud which only contains hue and saturation.  So convert to hex and pass it.
+        def colorRGB = hslToRGB(color.hue, color.saturation, 0.5)
+        def colorHEX = rgbToHex(colorRGB)
+        adjustColor(colorHEX)
+    }
 }
 
 def setLevel(value) {
     def level = Math.min(value as Integer, 100)
-    //log.debug("Level value in percentage: $level")
-    sendEvent(name: "level", value: level) 
-	def lastColor = device.latestValue("color")
-	//log.debug("lastColor value is $lastColor")
-	adjustColor(lastColor)
+    // log.debug("Level value in percentage: $level")
+    sendEvent(name: "level", value: level)
+	
+    // Turn on or off based on level selection
+    if (level == 0) { 
+	    off() 
+    } else {
+	    if (device.latestValue("switch") == "off") { on() }
+       def color = device.latestValue("color")
+	    adjustColor(color)
+    }
 }
 
 def setWhiteLevel(value) {
@@ -203,32 +219,29 @@ void checkOnOff() {
 }
 
 def adjustColor(colorInHEX) {
-    // Convert the hex color, apply the level after making sure its valid, then send to parent
-    log.debug("colorInHEX passed in: $colorInHEX")
+    sendEvent(name: "color", value: colorInHEX)
     def level = device.latestValue("level")
     def whiteLevel = device.latestValue("whiteLevel")
-    //log.debug("level value is $level")
-    //log.debug("whiteLevel value is $whiteLevel")
-    if(level == null) {
-    	level = 50
-        //log.debug "level is: ${level}"
-    }
+    // log.debug("level value is $level")
+    if(level == null) {level = 50}
+    //log.debug "level from adjustColor routine: ${level}"
+    //log.debug "color from adjustColor routine: ${colorInHEX}"
 
     def c = hexToRgb(colorInHEX)
     
-    def r = hex(c.r * (level/100))
-    def g = hex(c.g * (level/100))
-    def b = hex(c.b * (level/100))
-    
+    def r = hex(c.red * (level/100))
+    def g = hex(c.green * (level/100))
+    def b = hex(c.blue * (level/100))
+
     def w = hex(whiteLevel * 255 / 100)
-    
+
     def adjustedColor = "#${r}${g}${b}${w}"
     log.debug("Adjusted color is $adjustedColor")
-	
+    	
     // First check if we should be on or off based on the levels
     checkOnOff()
-    // Then send down the color info
-    parent.childSetColorRGBW(device.deviceNetworkId, adjustedColor)
+	// Then send down the color info
+    parent.childSetColorRGB(device.deviceNetworkId, adjustedColor)
 }
 
 def generateEvent(String name, String value) {
@@ -242,21 +255,18 @@ def generateEvent(String name, String value) {
 }
 
 def doColorButton(colorName) {
-    //log.debug "doColorButton: '${colorName}()'"
     toggleTiles(colorName.toLowerCase().replaceAll("\\s",""))
-    def colorButtonHEX = getColorData(colorName)
-    
-    // Update the devices color for the button.
-    sendEvent(name: "color", value: colorButtonHEX)
-    adjustColor(colorButtonHEX)
+    def colorButtonData = getColorData(colorName)
+    adjustColor(colorButtonData)
 }
 
 def getColorData(colorName) {
-    //log.debug "getColorData: ${colorName}"
+    //log.debug "getColorData colorName: ${colorName}"
     def colorRGB = colorNameToRgb(colorName)
-    def colorHex = rgbToHex(colorRGB)
-
-    colorHex
+    //log.debug "getColorData colorRGB: $colorRGB"
+    def colorHEX = rgbToHex(colorRGB)
+    //log.debug "getColorData colorHEX: $colorHEX"
+    colorHEX
 }
 
 private hex(value, width=2) {
@@ -274,25 +284,26 @@ def hexToRgb(colorHex) {
     def bbInt = Integer.parseInt(colorHex.substring(5,7),16)
 
     def colorData = [:]
-    colorData = [r: rrInt, g: ggInt, b: bbInt]
+    colorData = [red: rrInt, green: ggInt, blue: bbInt]
     
     colorData
 }
 
 def rgbToHex(rgb) {
-    def r = hex(rgb.r)
-    def g = hex(rgb.g)
-    def b = hex(rgb.b)
+    //log.debug "rgbToHex rgb value: $rgb"
+    def r = hex(rgb.red)
+    def g = hex(rgb.green)
+    def b = hex(rgb.blue)
 	
     def hexColor = "#${r}${g}${b}"
 
     hexColor
 }
 
-def rgbToHSL(rgb) {
-	def r = rgb.r / 255
-    def g = rgb.g / 255
-    def b = rgb.b / 255
+def rgbToHSL(color) {
+	def r = color.red / 255
+    def g = color.green / 255
+    def b = color.blue / 255
     def h = 0
     def s = 0
     def l = 0
@@ -327,23 +338,66 @@ def rgbToHSL(rgb) {
     hsl
 }
 
+def hslToRGB(float var_h, float var_s, float var_l) {
+	float h = var_h / 100
+    float s = var_s / 100
+    float l = var_l
+
+    def r = 0
+    def g = 0
+    def b = 0
+
+	if (s == 0) {
+    	r = l * 255
+        g = l * 255
+        b = l * 255
+	} else {
+    	float var_2 = 0
+    	if (l < 0.5) {
+        	var_2 = l * (1 + s)
+        } else {
+        	var_2 = (l + s) - (s * l)
+        }
+
+        float var_1 = 2 * l - var_2
+
+        r = 255 * hueToRgb(var_1, var_2, h + (1 / 3))
+        g = 255 * hueToRgb(var_1, var_2, h)
+        b = 255 * hueToRgb(var_1, var_2, h - (1 / 3))
+    }
+
+    def rgb = [:]
+    rgb = [red: Math.round(r), green: Math.round(g), blue: Math.round(b)]
+
+    rgb
+}
+
+def hueToRgb(v1, v2, vh) {
+	if (vh < 0) { vh += 1 }
+	if (vh > 1) { vh -= 1 }
+	if ((6 * vh) < 1) { return (v1 + (v2 - v1) * 6 * vh) }
+    if ((2 * vh) < 1) { return (v2) }
+    if ((3 * vh) < 2) { return (v1 + (v2 - $v1) * ((2 / 3 - vh) * 6)) }
+    return (v1)
+}
+
 def colorNameToRgb(color) {
     final colors = [
-	[name:"Soft White",	r: 255, g: 241, b: 224	],
-	[name:"Daylight", 	r: 255, g: 255, b: 251	],
-	[name:"Warm White", 	r: 255, g: 244, b: 229	],
+	[name:"Soft White",	red: 255, green: 241,   blue: 224],
+	[name:"Daylight", 	red: 255, green: 255,   blue: 251],
+	[name:"Warm White", 	red: 255, green: 244,   blue: 229],
 
-	[name:"Red", 		r: 255, g: 0,	b: 0	],
-	[name:"Green", 		r: 0, 	g: 255,	b: 0	],
-	[name:"Blue", 		r: 0, 	g: 0,	b: 255	],
+	[name:"Red", 		red: 255, green: 0,	blue: 0	],
+	[name:"Green", 		red: 0,   green: 255,	blue: 0	],
+	[name:"Blue", 		red: 0,   green: 0,	blue: 255],
 
-	[name:"Cyan", 		r: 0, 	g: 255,	b: 255	],
-	[name:"Magenta", 	r: 255, g: 0,	b: 33	],
-	[name:"Orange", 	r: 255, g: 102, b: 0	],
+	[name:"Cyan", 		red: 0,   green: 255,	blue: 255],
+	[name:"Magenta", 	red: 255, green: 0,	blue: 33],
+	[name:"Orange", 	red: 255, green: 102,   blue: 0	],
 
-	[name:"Purple", 	r: 170, g: 0,	b: 255	],
-	[name:"Yellow", 	r: 255, g: 255, b: 0	],
-	[name:"White", 		r: 255, g: 255, b: 255	]
+	[name:"Purple", 	red: 170, green: 0,	blue: 255],
+	[name:"Yellow", 	red: 255, green: 255,   blue: 0	],
+	[name:"White", 		red: 255, green: 255,   blue: 255]
     ]
     def colorData = [:]
     colorData = colors.find { it.name == color }
@@ -361,7 +415,7 @@ def toggleTiles(color) {
 
     state.colorTiles.each({
     	if ( it == color ) {
-            log.debug "Turning ${it} on"
+            //log.debug "Turning ${it} on"
             cmds << sendEvent(name: it, value: "on${it}", displayed: True, descriptionText: "${device.displayName} ${color} is 'ON'", isStateChange: true)
         } else {
             //log.debug "Turning ${it} off"
