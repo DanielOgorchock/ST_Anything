@@ -1,4 +1,4 @@
-﻿/**
+/**
  *  Child Temperature Sensor
  *
  *  Copyright 2017 Daniel Ogorchock
@@ -102,7 +102,6 @@ def generateEvent(String name, String value) {
     def nowTime = new Date().format("h:mm a", location.timeZone)
     sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
 }
-
 
 def installed() {
 
