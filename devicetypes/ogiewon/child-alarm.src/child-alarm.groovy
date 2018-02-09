@@ -109,3 +109,6 @@ def generateEvent(String name, String value) {
     sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
 }
 
+def installed() {
+
+}

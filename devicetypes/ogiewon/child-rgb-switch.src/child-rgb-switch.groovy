@@ -394,3 +394,7 @@ def orange() 	{ doColorButton("Orange") }
 def purple()	{ doColorButton("Purple") }
 def yellow() 	{ doColorButton("Yellow") }
 def white() 	{ doColorButton("White") }
+
+def installed() {
+
+}

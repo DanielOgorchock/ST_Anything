@@ -80,3 +80,7 @@ def generateEvent(String name, String value) {
     sendEvent(name: "blueValue", value: myValues[4])
     sendEvent(name: "clearValue", value: myValues[5])   
 }
+
+def installed() {
+
+}
