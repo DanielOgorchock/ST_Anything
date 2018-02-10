@@ -72,6 +72,7 @@ HubDuino/ST_Anything consists of four main parts:
 
 ## Pre-Requisites for using LAN-to-HUB Ethernet connectivity (Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, ESP32)
 - Your Hubitat HUB must have a Static TCP/IP Address assigned via your router's DHCP Server. Since this procedure varies by router model, Please Google it!
+- ***The Hubitat hub listens on port 39501.  This is different than the ST hub which uses 39501 - MODIFY YOUR ARDUINO SKETCH ACCORDINGLY!***
 - You'll need to identify a static TCP/IP address for your Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01, ESP32 as you'll need this later when setting up the sketch. Choose an unused IP address outside of the range your router's DHCP server uses, but in the same subnet.
 
 ## Arduino IDE Setup Instructions 
@@ -90,6 +91,7 @@ HubDuino/ST_Anything consists of four main parts:
 - If using a LAN-to-Hub (WiFi or Cat5 Ethernet) based device
   -Find the lines of the Sketch where it says "<---You must edit this line!"
     - You must ensure your Hubitat hub's LAN IP address does not change.  Use your router's static DHCP assignment feature to make sure your ST hub always gets the same IP Address!  Enter that address in the corresponding line in the sketch.
+    - ***The Hubitat hub listens on port 39501.  Make sure your Arduino sketch reflects this port number change!***
     - The Arduino must be assigned a static TCP/IP address, Gateway, DNS, Subnet Mask, MAC Address(W5100/W5500 only), SSID+Password(ESP8266,ESP01,ESP32,WiFi101,MKR1000)
     - *** NOTE: If using the W5100 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch! Please leave the first octet in the MAC Address '06' as certain MAC addresses are UNICAST while others are MULTICAST. Your MAC must be UNICAST and be a 'Locally Administered Address' Please see https://en.wikipedia.org/wiki/MAC_address#Address_details for more information ***
     - *** NOTE: If using the W5500 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch! Use the one packaged with the W5500 shield.
