@@ -23,6 +23,7 @@
 //    2017-02-12  Dan Ogorchock  Revised to use the new SmartThings v2.0 library
 //    2017-02-21  Dan Ogorchock  New example specifically for running everythin on a ESP-01 (no Arduino required!)
 //    2017-04-24  Dan Ogorchock  Updated for use with new v2.5 Parent/Child Device handlers
+//    2018-02-09  Dan Ogorchock  Added support for Hubitat Elevation Hub
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -68,9 +69,12 @@ IPAddress subnet(255, 255, 255, 0);   //LAN subnet mask         //  <---You must
 IPAddress dnsserver(192, 168, 1, 1);  //DNS server              //  <---You must edit this line!
 const unsigned int serverPort = 8090; // port to run the http server on
 
-// Smartthings Hub Information
-IPAddress hubIp(192, 168, 1, 149);    // smartthings hub ip     //  <---You must edit this line!
+// Smartthings / Hubitat Hub TCP/IP Address
+IPAddress hubIp(192, 168, 1, 149);    // smartthings/hubitat hub ip //  <---You must edit this line!
+
+// SmartThings / Hubitat Hub TCP/IP Address: UNCOMMENT line that corresponds to your hub, COMMENT the other
 const unsigned int hubPort = 39500;   // smartthings hub port
+//const unsigned int hubPort = 39501;   // hubitat hub port
 
 //******************************************************************************************
 //st::Everything::callOnMsgSend() optional callback routine.  This is a sniffer to monitor 

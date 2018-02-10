@@ -19,6 +19,7 @@
 //    2017-08-14  Dan Ogorchock  Original Creation - Adapted from ESP8266 to work with ESP32 board
 //    2017-10-06  Allan (vseven) Modified for RGB example
 //    2017-10-13  Allan (vseven) Modified for RGBW example
+//    2018-02-09  Dan Ogorchock  Added support for Hubitat Elevation Hub
 //
 //   Special thanks to Joshua Spain for his contributions in porting ST_Anything to the ESP32!
 //
@@ -104,9 +105,12 @@ IPAddress subnet(255, 255, 255, 0);   //LAN subnet mask         //  <---You must
 IPAddress dnsserver(192, 168, 1, 1);  //DNS server              //  <---You must edit this line!
 const unsigned int serverPort = 8090; // port to run the http server on
 
-// Smartthings Hub Information
-IPAddress hubIp(192, 168, 1, 149);    // smartthings hub ip     //  <---You must edit this line!
+// Smartthings / Hubitat Hub TCP/IP Address
+IPAddress hubIp(192, 168, 1, 149);    // smartthings/hubitat hub ip //  <---You must edit this line!
+
+// SmartThings / Hubitat Hub TCP/IP Address: UNCOMMENT line that corresponds to your hub, COMMENT the other
 const unsigned int hubPort = 39500;   // smartthings hub port
+//const unsigned int hubPort = 39501;   // hubitat hub port
 
 //******************************************************************************************
 //st::Everything::callOnMsgSend() optional callback routine.  This is a sniffer to monitor 
