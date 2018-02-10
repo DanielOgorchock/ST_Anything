@@ -122,7 +122,6 @@ def doubleTap(button) {
 }
    
 
-
 def configure() {
 	log.debug "Executing 'configure()'"
     updateDeviceNetworkID()
@@ -132,7 +131,6 @@ def configure() {
 def refresh() {
 	log.debug "Executing 'refresh()'"
 	sendEthernet("refresh")
-	//sendEvent(name: "numberOfButtons", value: numButtons)
 }
 
 

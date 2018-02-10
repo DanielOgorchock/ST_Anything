@@ -283,7 +283,7 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 		log.error "No Child Device Handler case for ${deviceName}"
       		}
             if (deviceHandlerName != "") {
-    			def child = addChildDevice("ogiewon", deviceHandlerName, "${HubDuino.deviceNetworkId}-${deviceName}${deviceNumber}", null, [name: "${app.id}-${deviceName}${deviceNumber}", label: "${app.label} ${deviceName}${deviceNumber}", completedSetup: true])
+    			def child = addChildDevice("ogiewon", deviceHandlerName, "${HubDuino.deviceNetworkId}-${deviceName}${deviceNumber}", null, [name: "${app.label}-${deviceName}${deviceNumber}", label: "${app.label} ${deviceName}${deviceNumber}", completedSetup: true])
         	}   
     	} catch (e) {
         	log.error "Child device creation failed with error = ${e}"
