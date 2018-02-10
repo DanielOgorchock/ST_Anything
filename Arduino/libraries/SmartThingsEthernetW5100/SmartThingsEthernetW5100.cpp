@@ -7,6 +7,7 @@
 //	History
 //	2017-02-04  Dan Ogorchock  Created
 //  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
+//  2018-02-03  Dan Ogorchock  Support for Hubitat
 //*******************************************************************************
 
 #include "SmartThingsEthernetW5100.h"
@@ -170,6 +171,7 @@ namespace st
 					Serial.println(tempString);
 				}
 				//Pass the message to user's SmartThings callout function
+				tempString.replace("%20", " ");  //Clean up for Hubitat
 				_calloutFunction(tempString);
 			}
 

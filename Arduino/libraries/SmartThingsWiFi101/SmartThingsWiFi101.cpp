@@ -10,6 +10,7 @@
 //  2017-05-29  Dan Ogorchock  Implemented Low Power Mode to reduce power usage/chip heat
 //  2018-01-01  Dan Ogorchock  Added WiFi.RSSI() data collection
 //  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
+//  2018-02-03  Dan Ogorchock  Support for Hubitat
 //*******************************************************************************
 
 #include "SmartThingsWiFi101.h"
@@ -224,6 +225,7 @@ namespace st
 					Serial.println(tempString);
 				}
 				//Pass the message to user's SmartThings callout function
+				tempString.replace("%20", " ");  //Clean up for Hubitat
 				_calloutFunction(tempString);
 			}
 

@@ -8,6 +8,7 @@
 //	2017-02-20  Dan Ogorchock  Created
 //  2018-01-06  Dan Ogorchock  Added WiFi.RSSI() data collection
 //  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
+//  2018-02-03  Dan Ogorchock  Support for Hubitat
 //*******************************************************************************
 
 #include "SmartThingsWiFiEsp.h"
@@ -221,6 +222,7 @@ namespace st
 					Serial.println(tempString);
 				}
 				//Pass the message to user's SmartThings callout function
+				tempString.replace("%20", " ");  //Clean up for Hubitat
 				_calloutFunction(tempString);
 			}
 
