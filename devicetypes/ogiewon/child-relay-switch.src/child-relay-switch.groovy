@@ -52,11 +52,11 @@ metadata {
 	}
 }
 
-void on() {
+def on() {
 	parent.childRelayOn(device.deviceNetworkId)
 }
 
-void off() {
+def off() {
 	parent.childRelayOff(device.deviceNetworkId)
 }
 
@@ -64,6 +64,7 @@ def generateEvent(String name, String value) {
 	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
 	// Update device
 	sendEvent(name: name, value: value)
+    sendEvent(name: "switch", value: value)
    	// Update lastUpdated date and time
     def nowDay = new Date().format("MMM dd", location.timeZone)
     def nowTime = new Date().format("h:mm a", location.timeZone)
@@ -71,5 +72,5 @@ def generateEvent(String name, String value) {
 }
 
 def installed() {
-
 }
+
