@@ -52,11 +52,11 @@ metadata {
 	}
 }
 
-void on() {
+def on() {
 	parent.childOn(device.deviceNetworkId)
 }
 
-void off() {
+def off() {
 	parent.childOff(device.deviceNetworkId)
 }
 

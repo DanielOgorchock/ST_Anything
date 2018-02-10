@@ -75,11 +75,11 @@ metadata {
 	}
 }
 
-void on() {
+def on() {
 	parent.childAlarmOn(device.deviceNetworkId)
 }
 
-void off() {
+def off() {
 	parent.childAlarmOff(device.deviceNetworkId)
 }
 

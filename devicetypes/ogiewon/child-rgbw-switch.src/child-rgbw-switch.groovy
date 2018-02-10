@@ -130,7 +130,7 @@ metadata {
 	}
 }
 
-void on() {
+def on() {
     sendEvent(name: "switch", value: "on")
     def lastColor = device.latestValue("color")
     //log.debug("On pressed.  Sending last known color value of $lastColor or if null command to white.")
@@ -152,7 +152,7 @@ void on() {
     }
 }
 
-void off() {
+def off() {
     toggleTiles("off")
     sendEvent(name: "switch", value: "off")
     //log.debug("Off pressed.  Update parent device.")
@@ -203,7 +203,7 @@ def setWhiteLevel(value) {
 	adjustColor(lastColor)
 }
 
-void checkOnOff() {
+def checkOnOff() {
  // Turn on or off based on level selection of both levels
     def level = device.latestValue("level")
     def whiteLevel = device.latestValue("whiteLevel")
