@@ -142,7 +142,7 @@ Your screen should look like the following image just before you click Save:
 
 Your screen should look like the following image just before you click Done:
 ![screenshot](https://user-images.githubusercontent.com/5206084/36057749-aa08b88a-0de0-11e8-8f14-e531c324897a.png)
-- Click the Done button at the bottom of the screen	
+- Click the Done button at the bottom of the screen.  This will cause a REFRESH command to be sent to your ST_Anything microcontroller, which in turn will send a status update for every device you configured in your sketch's setup() routine.  These updates from ST_Anything will cause child devices to be created if they do not yet exist.
 	
 ## Verify your Child Devices are automagically created	
 - Click on "Devices" from the left hand navigation menu
