@@ -58,7 +58,7 @@ def subscribe() {
 }
 
 def childHandler(evt) {
-	def parts = evt.value.split(":")
+    def parts = evt.value.split(":")
 	def name  = parts.length>0?parts[0].trim():null
 	def value = parts.length>0?parts[1].trim():null
     log.debug "HubDuino Event(name: ${name}, value: ${value}, deviceID: ${evt.deviceId})"
