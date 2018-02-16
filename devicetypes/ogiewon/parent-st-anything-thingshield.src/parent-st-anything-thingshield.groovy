@@ -22,7 +22,7 @@
  *    2017-06-10  Dan Ogorchock  Added Dimmer Switch support
  *    2017-07-09  Dan Ogorchock  Added number of defined buttons tile
  *    2017-08-24  Allan (vseven) Change the way values are pushed to child devices to allow a event to be executed allowing future customization
- *
+ *    2018-02-15  Dan Ogorchock  Added @saif76's Ultrasonic Sensor *
  */
  
 metadata {
@@ -304,6 +304,15 @@ private void createChildDevice(String deviceName, String deviceNumber) {
          	case "dimmerSwitch": 
                 deviceHandlerName = "Child Dimmer Switch" 
                 break
+            case "rgbSwitch": 
+            	deviceHandlerName = "Child RGB Switch" 
+            	break
+            case "generic": 
+            	deviceHandlerName = "Child Generic Sensor" 
+            	break
+            case "rgbwSwitch": 
+            	deviceHandlerName = "Child RGBW Switch" 
+            	break
             case "relaySwitch": 
             	deviceHandlerName = "Child Relay Switch" 
             	break
@@ -340,6 +349,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
             case "doorControl": 
             	deviceHandlerName = "Child Door Control" 
             	break    
+         	case "ultrasonic": 
+                		deviceHandlerName = "Child Ultrasonic Sensor" 
+                	break
             default: 
                 log.error "No Child Device Handler case for ${deviceName}"
         }

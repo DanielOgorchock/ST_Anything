@@ -27,6 +27,7 @@
  *    2017-10-07  Dan Ogorchock  Cleaned up formatting for readability
  *    2017-09-24  Allan (vseven) Added RGBW LED strip support with a setColorRGBW routine
  *    2017-12-29  Dan Ogorchock  Added WiFi RSSI value per request from ST user @stevesell
+ *    2018-02-15  Dan Ogorchock  Added @saif76's Ultrasonic Sensor
  *
  */
  
@@ -427,6 +428,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	break    
          		case "doorControl": 
                 		deviceHandlerName = "Child Door Control" 
+                	break
+         		case "ultrasonic": 
+                		deviceHandlerName = "Child Ultrasonic Sensor" 
                 	break
 			default: 
                 		log.error "No Child Device Handler case for ${deviceName}"
