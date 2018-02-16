@@ -2,6 +2,7 @@ HubDuino v1.0
 ================
 
 **Recent History:**
+2018-02-15 Added  HubDuino ThingShield Bridge - Driver
 
 ## Architecture Flow Chart
 
@@ -10,7 +11,7 @@ HubDuino v1.0
 Note: The HubDuino v1.0 release is based on the ST_Anything v2.9 baseline and was built using the Arduino IDE v1.8.5.  Please make sure to upgrade your IDE.
 
 Turn your Arduino UNO/MEGA/MKR1000, NodeMCU ESP8266, or ESP32 into Anything you can imagine! HubDuino/ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
-- Arduino with SmartThings ThingShield (under development)
+- Arduino with SmartThings ThingShield
 - Arduino with W5100 Ethernet shield
 - Arduino with W5500 Ethernet shield
 - Arduino with WiFi101 Shield (or Adafruit ATWINC1500 module)
@@ -158,7 +159,7 @@ Your screen should look similar to the following image:
 
 
 
-## ***UNDER DEVELOPMENT*** HubDuino ThingShield Bridge Device Instructions - FOR USE WITH A THINGSHIELD
+## HubDuino ThingShield Bridge Device Instructions - FOR USE WITH A THINGSHIELD
 - Join your Arduino/ThingShield to your hub using the hub's "Discover Devices" feature.  It will show up as a generic "Device"
 - Click on Devices from navigation menu
 - Select your "Arduino ThingShield" device from the list
