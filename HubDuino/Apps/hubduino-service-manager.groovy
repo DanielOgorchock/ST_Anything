@@ -17,7 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2018-02-08  Dan Ogorchock  Original Creation
- *
+ *    2018-02-15  Dan Ogorchock  Added @saif76's Ultrasonic Sensor *
  */
  
 definition(
@@ -58,7 +58,7 @@ def subscribe() {
 }
 
 def childHandler(evt) {
-    def parts = evt.value.split(":")
+	def parts = evt.value.split(":")
 	def name  = parts.length>0?parts[0].trim():null
 	def value = parts.length>0?parts[1].trim():null
     log.debug "HubDuino Event(name: ${name}, value: ${value}, deviceID: ${evt.deviceId})"
@@ -278,6 +278,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	break    
          		case "doorControl": 
                 		deviceHandlerName = "Child Door Control" 
+                	break
+         		case "ultrasonic": 
+                		deviceHandlerName = "Child Ultrasonic Sensor" 
                 	break
 			default: 
                 		log.error "No Child Device Handler case for ${deviceName}"
