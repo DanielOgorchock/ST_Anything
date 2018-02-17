@@ -19,7 +19,7 @@
  *    2017-04-10  Dan Ogorchock  Original Creation
  *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *    2017-11-04  Dan Ogorchock  Added preference for Temperature Unit Conversion: Fahrenheit to Celsius, Celsius to Fahrenheit, or none 
- *
+ *    2018-02-16  Dan OGorchock  Fixed preferences to work with Hubitat.
  * 
  */
 metadata {
@@ -38,10 +38,10 @@ metadata {
     
 	preferences {
 		section("Prefs") {
-			input title: "Temperature Offset", description: "This feature allows you to correct any temperature variations by selecting an offset. Ex: If your sensor consistently reports a temp that's 5 degrees too warm, you'd enter \"-5\". If 3 degrees too cold, enter \"+3\".", displayDuringSetup: false, type: "paragraph", element: "paragraph"
-			input "tempOffset", "number", title: "Temperature Offset in Degrees", description: "Adjust temperature by this many degrees", range: "*..*", displayDuringSetup: false
-			input title: "Temperature Unit Conversion", description: "This feature allows you to select F to C, C to F, or no conversion", displayDuringSetup: false, type: "paragraph", element: "paragraph"
-			input "tempUnitConversion", "enum", title: "Temperature Unit Conversion", description: "Conversion method", defaultValue: "1", required: true, multiple: false, options:["1":"none", "2":"Fahrenheit to Celsius", "3":"Celsius to Fahrenheit"], displayDuringSetup: false
+			//input title: "Temperature Offset", description: "This feature allows you to correct any temperature variations by selecting an offset. Ex: If your sensor consistently reports a temp that's 5 degrees too warm, you'd enter \"-5\". If 3 degrees too cold, enter \"+3\".", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+			input "tempOffset", "number", title: "Temperature Offset", description: "Adjust temperature by this many degrees", range: "*..*", displayDuringSetup: false
+			//input title: "Temperature Unit Conversion", description: "This feature allows you to select F to C, C to F, or no conversion", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+			input "tempUnitConversion", "enum", title: "Temperature Unit Conversion - select F to C, C to F, or no conversion", description: "", defaultValue: "1", required: true, multiple: false, options:[["1":"none"], ["2":"Fahrenheit to Celsius"], ["3":"Celsius to Fahrenheit"]], displayDuringSetup: false
 		}
 	}
     
@@ -103,6 +103,6 @@ def generateEvent(String name, String value) {
     sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
 }
 
-def installed() {
 
+def installed() {
 }
