@@ -6,7 +6,7 @@
 //			  It inherits from the st::Executor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_RGBW_Dim executor1("rgbSwitch1", PIN_R, PIN_G, PIN_B, true, 0, 1, 2);
+//			  For Example:  st::EX_RGBW_Dim executor1("rgbwSwitch1", PIN_R, PIN_G, PIN_B, PIN_W, true, 0, 1, 2, 3);
 //
 //			  st::EX_RGBW_Dim() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name.
