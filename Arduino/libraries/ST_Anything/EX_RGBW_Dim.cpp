@@ -6,7 +6,7 @@
 //			  It inherits from the st::Executor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_RGBW_Dim executor1("rgbSwitch1", PIN_R, PIN_G, PIN_B, true, 0, 1, 2);
+//			  For Example:  st::EX_RGBW_Dim executor1("rgbwSwitch1", PIN_R, PIN_G, PIN_B, PIN_W, true, 0, 1, 2, 3);
 //
 //			  st::EX_RGBW_Dim() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -42,72 +42,69 @@ namespace st
 //private
 	void EX_RGBW_Dim::writeRGBWToPins()
 	{
-		int subStringR;
-		int subStringG;
-		int subStringB;
-		int subStringW;
+	int subStringR;
+	int subStringG;
+	int subStringB;
+	int subStringW;
 
-		if (m_bCurrentState == HIGH)
-		{
+	if (m_bCurrentState == HIGH) {
 		// Our status is on so get the RGBW value from the hex
 		String hexstring = m_sCurrentHEX;
 		long number = (long) strtol( &hexstring[1], NULL, 16);
-      	// Split them up into r, g, b, w values
-      	subStringR = number >> 24;
-      	subStringG = number >> 16 & 0xFF;
-      	subStringB = number >> 8 & 0xFF;
+      		// Split them up into r, g, b, w values
+      		subStringR = number >> 24;
+      		subStringG = number >> 16 & 0xFF;
+      		subStringB = number >> 8 & 0xFF;
 		subStringW = number & 0xFF;
-	}
-	else
-	{
+	} else {
 		// Status is off so turn off LED
 		subStringR = 00;
-      	subStringG = 00;
-      	subStringB = 00;
-      	subStringW = 00;
+      		subStringG = 00;
+      		subStringB = 00;
+      		subStringW = 00;
 	}
-      	if(m_bCommonAnode)
-		{
-        		// A hex value of 00 will translate to 255 for a common anode.  However the  
-        		// ledcWrite seems to need a 256 to turn off so we are adding one here.
-        		subStringR = 255 - subStringR + 1;
-        		subStringG = 255 - subStringG + 1;
-        		subStringB = 255 - subStringB + 1;
-        		subStringW = 255 - subStringW + 1;
+		
+      	if(m_bCommonAnode) {
+        	// A hex value of 00 will translate to 255 for a common anode.  However the  
+        	// ledcWrite seems to need a 256 to turn off so we are adding one here.
+        	subStringR = 255 - subStringR + 1;
+        	subStringG = 255 - subStringG + 1;
+        	subStringB = 255 - subStringB + 1;
+        	subStringW = 255 - subStringW + 1;
       	} 
-		// Write to outputs.  Use ledc for ESP32, analogWrite for everything else.
+	// Write to outputs.  Use ledc for ESP32, analogWrite for everything else.
 
-		if (st::Executor::debug) {
-			Serial.print(F("subString R:G:B:W = "));
-			Serial.println(String(subStringR) + ":" + String(subStringG) + ":" + String(subStringB) + ":" + String(subStringW));
-		}
+	if (st::Executor::debug) {
+		Serial.print(F("subString R:G:B:W = "));
+		Serial.println(String(subStringR) + ":" + String(subStringG) + ":" + String(subStringB) + ":" + String(subStringW));
+	}
 
-		// Any adjustments to the colors can be done here before sending the commands.  For example if red is always too bright reduce it:
-		// subStringR = subStringR * 0.95
+	// Any adjustments to the colors can be done here before sending the commands.  For example if red is always too bright reduce it:
+	// subStringR = subStringR * 0.95
 
-		#if defined(ARDUINO_ARCH_ESP32)
-			ledcWrite(m_nChannelR, subStringR);
-		#else
-			analogWrite(m_nPinR, subStringR);
-		#endif
+	#if defined(ARDUINO_ARCH_ESP32)
+		ledcWrite(m_nChannelR, subStringR);
+	#else
+		analogWrite(m_nPinR, subStringR);
+	#endif
 
-		#if defined(ARDUINO_ARCH_ESP32)
-			ledcWrite(m_nChannelG, subStringG);
-		#else
-			analogWrite(m_nPinG, subStringG);
-		#endif
+	#if defined(ARDUINO_ARCH_ESP32)
+		ledcWrite(m_nChannelG, subStringG);
+	#else
+		analogWrite(m_nPinG, subStringG);
+	#endif
 
-		#if defined(ARDUINO_ARCH_ESP32)
-			ledcWrite(m_nChannelB, subStringB);
-		#else
-			analogWrite(m_nPinB, subStringB);
-		#endif
+	#if defined(ARDUINO_ARCH_ESP32)
+		ledcWrite(m_nChannelB, subStringB);
+	#else
+		analogWrite(m_nPinB, subStringB);
+	#endif
 
-		#if defined(ARDUINO_ARCH_ESP32)
-			ledcWrite(m_nChannelW, subStringW);
-		#else
-			analogWrite(m_nPinW, subStringW);
-		#endif
+	#if defined(ARDUINO_ARCH_ESP32)
+		ledcWrite(m_nChannelW, subStringW);
+	#else
+		analogWrite(m_nPinW, subStringW);
+	#endif
 
 	}
 
