@@ -24,6 +24,7 @@ metadata {
 	definition (name: "Child Ultrasonic Sensor", namespace: "ogiewon", author: "Daniel Ogorchock") {
 		capability "Sensor"
 		attribute "lastUpdated", "String"
+        attribute "ultrasonic", "Number"
 
 		command "generateEvent", ["string", "string"]
     }
@@ -49,11 +50,11 @@ metadata {
     
     preferences {
         input name: "height", type: "number", title: "Height", description: "Enter height of tank in cm", required: true
-        input name: "diameter", type: "number", title: "Diameter", description: "Enter radius of tank", required: true
+        input name: "diameter", type: "number", title: "Diameter", description: "Enter diameter of tank", required: true
     }
 }
 def generateEvent(String name, String value) {
-	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
+	log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
     def sensorValue = value as float
     def volume = 3.14159 * (diameter/2) * (diameter/2) * height
     def capacityLiters = volume / 1000 * 2
