@@ -55,13 +55,15 @@ metadata {
 }
 def generateEvent(String name, String value) {
 	log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
-    def sensorValue = value as float
+    double sensorValue = value as float
     def volume = 3.14159 * (diameter/2) * (diameter/2) * height
-    def capacityLiters = volume / 1000 * 2
+    double capacityLiters = volume / 1000 * 2
+    capacityLiters = capacityLiters.round(2)
     sendEvent(name: "liters", value: capacityLiters)
-    def capacityValue = 100 - (sensorValue/height * 100 )
+    double capacityValue = 100 - (sensorValue/height * 100 )
     if(capacityValue != 100)
     {
+    	capacityValue = capacityValue.round(2)
     	sendEvent(name: name, value: capacityValue)
     }
     // Update lastUpdated date and time
