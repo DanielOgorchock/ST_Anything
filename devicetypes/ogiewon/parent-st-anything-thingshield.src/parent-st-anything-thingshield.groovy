@@ -23,6 +23,8 @@
  *    2017-07-09  Dan Ogorchock  Added number of defined buttons tile
  *    2017-08-24  Allan (vseven) Change the way values are pushed to child devices to allow a event to be executed allowing future customization
  *    2018-02-15  Dan Ogorchock  Added @saif76's Ultrasonic Sensor *
+ *    2018-02-25  Dan Ogorchock  Added Child Presence Sensor
+ *	
  */
  
 metadata {
@@ -350,8 +352,11 @@ private void createChildDevice(String deviceName, String deviceNumber) {
             	deviceHandlerName = "Child Door Control" 
             	break    
          	case "ultrasonic": 
-                		deviceHandlerName = "Child Ultrasonic Sensor" 
-                	break
+                deviceHandlerName = "Child Ultrasonic Sensor" 
+                break
+         	case "presence": 
+                deviceHandlerName = "Child Presence Sensor" 
+                break
             default: 
                 log.error "No Child Device Handler case for ${deviceName}"
         }
