@@ -17,6 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2018-02-09  Dan Ogorchock  Original Creation
+ *    2018-03-03  Dan Ogorchock  Added custom command declaration
  *
  */
 metadata {
@@ -28,6 +29,8 @@ metadata {
         capability "Holdable Button"
         capability "DoubleTapableButton" }
 
+        command "sendEthernet"
+    
     // Preferences
 	preferences {
 		input "numButtons", "number", title: "Number of Buttons", description: "Number of Buttons, 0 to n", required: true, displayDuringSetup: true

@@ -17,6 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2018-02-07  Dan Ogorchock  Original Creation
+ *    2018-03-03  Dan Ogorchock  Added custom command declaration
  *
  */
 metadata {
@@ -30,6 +31,8 @@ metadata {
         capability "DoubleTapableButton"
         capability "Signal Strength" }
 
+        command "sendEthernet"
+    
     // Preferences
 	preferences {
 		input "ip", "text", title: "Arduino IP Address", description: "IP Address in form 192.168.1.226", required: true, displayDuringSetup: true
