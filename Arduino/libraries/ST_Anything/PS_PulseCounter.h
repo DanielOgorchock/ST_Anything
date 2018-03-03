@@ -7,18 +7,15 @@
 //			  the number of counts between polling intervals.  At the polling interval, the pulse count is converted
 //			  to engineering units via a linear conversion (engUnits = slope x counts + offset).
 //
-// ********** This class requires an Arduino MEGA 2560 as it requires an available pin that
-// *  NOTE! * supports External Hardware Interrupts.  Only Pins 21, 20, 19, and 18 on the MEGA
-// ********** are valid since Pins 2 and 3 are already used by the SmartThings ThingShield.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_PulseCounter sensor3("power", 60, 5, PIN_PULSE, FALLING, INPUT_PULLUP, 1.0, 0);
+//			  For Example:  st::PS_PulseCounter sensor3(F("power1"), 60, 5, PIN_PULSE, FALLING, INPUT_PULLUP, 1.0, 0);
 //
 //			  st::PS_PulseCounter() constructor requires the following arguments
-//				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
+//				- String &name - REQUIRED - the name of the object - must be in form of "power1", "power2", etc...
 //				- int interval - REQUIRED - the polling interval in seconds
 //				- int offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
-//				- byte pin - REQUIRED - the Arduino Pin to be used as an digital input (Hardware Interrupt)
+//				- byte pin - REQUIRED - the GPIO Pin to be used as an digital input (Hardware Interrupt)
 //				- byte inttype - REQUIRED - which type of Arduino interrupt to trigger the ISR (RISING, FALLING, CHANGE)
 //				- byte inputmode - REQUIRED - Mode of the digital input Pin (INPUT, INPUT_PULLUP)
 //				- float cnvslope - REQUIRED - Conversion to Engineering Units Slope
@@ -34,10 +31,12 @@
 //
 //    Date        Who            What
 //    ----        ---            ----
-//    2015-03-31  Dan Ogorchock   Original Creation
+//    2015-03-31  Dan Ogorchock  Original Creation
+//    2018-03-03  Dan Ogorchock  Improved code to make generic for all boards, not just Arduino MEGA 
 //
 //
 //******************************************************************************************
+
 
 #ifndef ST_PS_PULSECOUNTER_H
 #define ST_PS_PULSECOUNTER_H
