@@ -24,6 +24,7 @@
  *    2017-08-24  Allan (vseven) Change the way values are pushed to child devices to allow a event to be executed allowing future customization
  *    2018-02-15  Dan Ogorchock  Added @saif76's Ultrasonic Sensor *
  *    2018-02-25  Dan Ogorchock  Added Child Presence Sensor
+ *    2018-02-25  Dan Ogorchock  Added Child Presence Sensor
  *	
  */
  
@@ -356,6 +357,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 break
          	case "presence": 
                 deviceHandlerName = "Child Presence Sensor" 
+                break
+         	case "power": 
+                deviceHandlerName = "Child Power Meter" 
                 break
             default: 
                 log.error "No Child Device Handler case for ${deviceName}"

@@ -29,6 +29,7 @@
  *    2017-12-29  Dan Ogorchock  Added WiFi RSSI value per request from ST user @stevesell
  *    2018-02-15  Dan Ogorchock  Added @saif76's Ultrasonic Sensor
  *    2018-02-25  Dan Ogorchock  Added Child Presence Sensor
+ *    2018-03-03  Dan Ogorchock  Added Child Power Meter
  *	
  */
  
@@ -435,6 +436,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	break
          		case "presence": 
                 		deviceHandlerName = "Child Presence Sensor" 
+                	break
+         		case "power": 
+                		deviceHandlerName = "Child Power Meter" 
                 	break
 			default: 
                 		log.error "No Child Device Handler case for ${deviceName}"
