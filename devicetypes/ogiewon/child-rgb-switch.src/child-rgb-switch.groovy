@@ -155,7 +155,7 @@ def setColor(Map color) {
         //log.debug "colorHSL: $colorHSL"
         sendEvent(name: "level", value: (colorHSL.l * 100))
         adjustColor(color.hex)
-    } else if (color.hue && color.saturation) {
+    } else if (color.hue || color.saturation) {
         // came from the ST cloud which only contains hue and saturation.  So convert to hex and pass it.
         def colorRGB = hslToRGB(color.hue, color.saturation, 0.5)
         def colorHEX = rgbToHex(colorRGB)
@@ -331,7 +331,7 @@ def hueToRgb(v1, v2, vh) {
 	if (vh > 1) { vh -= 1 }
 	if ((6 * vh) < 1) { return (v1 + (v2 - v1) * 6 * vh) }
     if ((2 * vh) < 1) { return (v2) }
-    if ((3 * vh) < 2) { return (v1 + (v2 - $v1) * ((2 / 3 - vh) * 6)) }
+    if ((3 * vh) < 2) { return (v1 + (v2 - v1) * ((2 / 3 - vh) * 6)) }
     return (v1)
 }
 
