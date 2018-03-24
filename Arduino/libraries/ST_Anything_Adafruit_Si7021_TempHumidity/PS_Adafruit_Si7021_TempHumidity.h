@@ -1,21 +1,19 @@
 //******************************************************************************************
 //  File: PS_Adafruit_Si7021_TempHumidity.h
-//  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son) * Josh Hill
+//  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son) & Josh Hill
 //
 //  Summary:  PS_Adafruit_Si7021_TempHumidity is a class which implements both the SmartThings "Temperature Measurement" 
 //			  and "Relative Humidity Measurement" device capabilities.
-//			  It inherits from the st::PollingSensor class.  The current version uses a digital input to measure the 
-//			  temperature and humidity from a DHT series sensor.  This was tested with both the DHT11 and DHT22.  
+//			  It inherits from the st::PollingSensor class.  The current version uses I2C to measure the
+//			  temperature and humidity from an Si7021 sensor.  This was tested with a generic Si7021 sensor from AliExpress.  
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_Adafruit_Si7021_TempHumidity sensor2("temphumid1", 120, 7, PIN_TEMPERATUREHUMIDITY, st::PS_Adafruit_Si7021_TempHumidity::DHT22, "temperature1", "humidity1", false);
+//			  For Example:  st::PS_Adafruit_Si7021_TempHumidity sensor2("temphumid1", 120, 7, "temperature1", "humidity1", false);
 //
 //			  st::PS_Adafruit_Si7021_TempHumidity() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
 //				- long interval - REQUIRED - the polling interval in seconds
 //				- long offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
-//				- byte pin - REQUIRED - the Arduino Pin to be used as a digital output
-//				- DHT_SENSOR DHTSensorType - REQUIRED - the type of DHT sensor (DHT11, DHT21, DHT22, DHT33, or DHT44)
 //				- String strTemp - OPTIONAL - name of temperature sensor to send to ST Cloud (defaults to "temperature")
 //				- String strHumid - OPTIONAL - name of humidity sensor to send to ST Cloud (defaults to "humidity")
 //				- bool In_C - OPTIONAL - true = Report Celsius, false = Report Farenheit (Farentheit is the default)
@@ -43,6 +41,7 @@
 //    2015-03-29  Dan Ogorchock	 Optimized use of the DHT library (made it static) to reduce SRAM memory usage at runtime.
 //    2017-06-27  Dan Ogorchock  Added optional Celsius reading argument
 //    2017-08-17  Dan Ogorchock  Added optional filter constant argument and to transmit floating point values to SmartThings
+//    2018-03-24  Josh Hill      Modified library to use Si7021 over I2C
 //
 //******************************************************************************************
 
@@ -59,10 +58,7 @@ namespace st
 		private:
 			float m_fTemperatureSensorValue;//current Temperature value
 			float m_fHumiditySensorValue;	//current Humidity Value
-//			static dht DHT;					//DHT library object
 			static Adafruit_Si7021 Si7021Sensor;		//I2C
-			//Adafruit_BME280 bme(BME_CS); // hardware SPI
-			//Adafruit_BME280 bme(BME_CS, BME_MOSI, BME_MISO, BME_SCK); // software SPI
 
 			String m_strTemperature;		//name of temparature sensor to use when transferring data to ST Cloud
 			String m_strHumidity;			//name of temparature sensor to use when transferring data to ST Cloud	
@@ -70,8 +66,6 @@ namespace st
 			float m_fFilterConstant;        //Filter constant % as floating point from 0.00 to 1.00
 
 		public:
-			//types of DHT sensors supported by the dht library
-//			enum DHT_SENSOR { DHT11, DHT21, DHT22, DHT33, DHT44 };
 
 			//constructor - called in your sketch's global variable declaration section
 			PS_Adafruit_Si7021_TempHumidity(const __FlashStringHelper *name, unsigned int interval, int offset, String strTemp = "temperature1", String strHumid = "humidity1", bool In_C = false, byte filterConstant = 100);
@@ -92,8 +86,6 @@ namespace st
 			inline float getTemperatureSensorValue() const { return m_fTemperatureSensorValue; }
 			inline float getHumiditySensorValue() const { return m_fHumiditySensorValue; }
 				
-			//sets
-	
 	};
 }
 #endif
