@@ -50,7 +50,7 @@ namespace st
 	if (m_bCurrentState == HIGH) {
 		// Our status is on so get the RGBW value from the hex
 		String hexstring = m_sCurrentHEX;
-		long number = (long) strtol( &hexstring[1], NULL, 16);
+		unsigned long number = (unsigned long) strtoul( &hexstring[1], NULL, 16);
       		// Split them up into r, g, b, w values
       		subStringR = number >> 24;
       		subStringG = number >> 16 & 0xFF;
