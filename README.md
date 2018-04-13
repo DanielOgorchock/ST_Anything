@@ -96,6 +96,9 @@ ST_Anything consists of four main parts:
 - Open one of the ST_Anything_Multiples_xxxxx.ino sketches for the hardware you're using and see if it successfully compiles.
   - Make sure you select the correct model of board you are compiling for. 
   - If building for a standalone ESP8266 board, make sure you have configured the Arduino IDE to include support for these boards.  Follow the guide at https://learn.sparkfun.com/tutorials/esp8266-thing-hookup-guide/installing-the-esp8266-arduino-addon
+  
+**NOTE: The v2.4/v2.4.1 ESP8266 Board support package for the Arduino IDE has introduced a nasty memory leak. Please be sure to revert back to v2.3 to prevent your ESP8266 from crashing every few hours. This is an issue that the Arduino ESP8266 developers are aware of and I believe will be fixed when they release the next version. (here are the details https://community.hubitat.com/clicks/track?url=https%3A%2F%2Fgithub.com%2Fesp8266%2FArduino%2Fissues%2F4497&post_id=1971&topic_id=399)**
+  
   - If building for a standalone ESP32 board, make sure you have configured the Arduino IDE to include support for these boards.  Follow the guide at https://github.com/espressif/arduino-esp32/blob/master/README.md
 - If using a LAN-to-Hub (WiFi or Cat5 Ethernet) based device
   -Find the lines of the Sketch where it says "<---You must edit this line!"
