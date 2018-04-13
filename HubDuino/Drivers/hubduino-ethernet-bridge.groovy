@@ -18,6 +18,7 @@
  *    ----        ---            ----
  *    2018-02-07  Dan Ogorchock  Original Creation
  *    2018-03-03  Dan Ogorchock  Added custom command declaration
+ *    2018-04-12  Dan Ogorchock  Fixed URL space encoding issue caused by Hubitat firmware upgrade (v707?)
  *
  */
 metadata {
@@ -95,6 +96,10 @@ private getHostAddress() {
 }
 
 def sendEthernet(message) {
+    def parts = message.split(" ")
+    def name  = parts.length>0?parts[0].trim():null
+    def value = parts.length>0?parts[1].trim():null
+    message = name + "%20" + value
 	log.debug "Executing 'sendEthernet' ${message}"
 	if (settings.ip != null && settings.port != null) {
     	new hubitat.device.HubAction(
