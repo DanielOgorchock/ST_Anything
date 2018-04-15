@@ -1,5 +1,5 @@
 //******************************************************************************************
-//  File: ST_Anything_Multiples_EthernetW5100.ino
+//  File: ST_Anything_Multiples_EthernetW5100_UNO.ino
 //  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son)
 //
 //  Summary:  This Arduino Sketch, along with the ST_Anything library and the revised SmartThings 
@@ -8,23 +8,23 @@
 //            The ST_Anything library takes care of all of the work to schedule device updates
 //            as well as all communications with the Ethernet W5100 Shield.
 //
-//            ST_Anything_Multiples implements the following ST Capabilities in multiples of 2 as a demo of what is possible with a single Arduino
-//              - 2 x Door Control devices (used typically for Garage Doors - input pin (contact sensor) and output pin (relay switch)
+//            ST_Anything_Multiples implements the following ST Capabilities in multiples of 2 as a demo of what is possible with a single Arduino UNO
+//              - 0 x Door Control devices (used typically for Garage Doors - input pin (contact sensor) and output pin (relay switch)
 //              - 2 x Contact Sensor devices (used to monitor magnetic door sensors)
 //              - 2 x Switch devices (used to turn on a digital output (e.g. LED, relay, etc...)
-//              - 2 x Water Sensor devices (using an analog input pin to measure voltage from a water detector board)
-//              - 2 x Illuminance Measurement devices (using a photoresitor attached to ananlog input)
-//              - 2 x Voltage Measurement devices (using a photoresitor attached to ananlog input)
-//              - 2 x Smoke Detector devices (using simple digital input)
-//              - 2 x Carbon Monoxide Detector devices (using simple digital input)
-//              - 2 x Motion devices (used to detect motion)
-//              - 2 x Temperature Measurement devices (Temperature from DHT22 device)
-//              - 2 x Humidity Measurement devices (Humidity from DHT22 device)
+//              - 0 x Water Sensor devices (using an analog input pin to measure voltage from a water detector board)
+//              - 0 x Illuminance Measurement devices (using a photoresitor attached to ananlog input)
+//              - 0 x Voltage Measurement devices (using a photoresitor attached to ananlog input)
+//              - 0 x Smoke Detector devices (using simple digital input)
+//              - 0 x Carbon Monoxide Detector devices (using simple digital input)
+//              - 0 x Motion devices (used to detect motion)
+//              - 0 x Temperature Measurement devices (Temperature from DHT22 device)
+//              - 0 x Humidity Measurement devices (Humidity from DHT22 device)
 //              - 2 x Relay Switch devices (used to turn on a digital output for a set number of cycles And On/Off times (e.g.relay, etc...))
-//              - 2 x Button devices (sends "pushed" if held for less than 1 second, else sends "held"
-//              - 2 x Alarm devices - 1 siren only, 1 siren and strobe (using simple digital outputs)
-//              - 2 x Dimmer Switch devices - uses 2 digital outputs, one for on/off and one for pwm level
-//              - 2 x MQ-2 Smoke Detector devices (using simple analog input compared to user defined limit)
+//              - 0 x Button devices (sends "pushed" if held for less than 1 second, else sends "held"
+//              - 0 x Alarm devices - 1 siren only, 1 siren and strobe (using simple digital outputs)
+//              - 0 x Dimmer Switch devices - uses 2 digital outputs, one for on/off and one for pwm level
+//              - 0 x MQ-2 Smoke Detector devices (using simple analog input compared to user defined limit)
 //
 //            During the development of this re-usable library, it became apparent that the 
 //            Arduino UNO R3's very limited 2K of SRAM was very limiting in the number of 
@@ -32,7 +32,7 @@
 //            has gone into reducing the SRAM usage, including siginificant improvements to
 //            the SmartThings Arduino library.
 //
-//            Note: This sketch was fully tested on an Arduino MEGA 2560 using the Ethernet W5100 Shield.
+//            Note: This sketch was fully tested on an Arduino UNO using the Ethernet W5100 Shield.
 //    
 //  Change History:
 //
@@ -43,7 +43,7 @@
 //    2017-04-16  Dan Ogorchock  New sketch to demonstrate multiple SmartThings Capabilties of each type
 //    2017-04-22  Dan Ogorchock  Added Voltage, Carbon Monoxide, and Alarm with Strobe
 //    2017-07-04  Dan Ogorchock  Added MQ-2 based Smoke Detection
-//    2018-02-09  Dan Ogorchock  Added support for Hubitat Elevation Hub
+//    2018-04-15  Dan Ogorchock  Modified/simplified for use with an Arduino UNO R3
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -101,49 +101,49 @@
 
 
 //Analog Pins
-#define PIN_WATER_1               A0  //SmartThings Capability "Water Sensor"
-#define PIN_WATER_2               A1  //SmartThings Capability "Water Sensor"
-#define PIN_ILLUMINANCE_1         A2  //SmartThings Capability "Illuminance Measurement"
-#define PIN_ILLUMINANCE_2         A3  //SmartThings Capability "Illuminance Measurement"
-#define PIN_VOLTAGE_1             A4  //SmartThings Capability "Voltage Measurement"
-#define PIN_VOLTAGE_2             A5  //SmartThings Capability "Voltage Measurement"
-#define PIN_SMOKE_3               A8  //SmartThings Capability "Smoke Detector"
-#define PIN_SMOKE_4               A9  //SmartThings Capability "Smoke Detector"
+//#define PIN_WATER_1               A0  //SmartThings Capability "Water Sensor"
+//#define PIN_WATER_2               A1  //SmartThings Capability "Water Sensor"
+//#define PIN_ILLUMINANCE_1         A2  //SmartThings Capability "Illuminance Measurement"
+//#define PIN_ILLUMINANCE_2         A3  //SmartThings Capability "Illuminance Measurement"
+//#define PIN_VOLTAGE_1             A4  //SmartThings Capability "Voltage Measurement"
+//#define PIN_VOLTAGE_2             A5  //SmartThings Capability "Voltage Measurement"
+//#define PIN_SMOKE_3               A8  //SmartThings Capability "Smoke Detector"
+//#define PIN_SMOKE_4               A9  //SmartThings Capability "Smoke Detector"
 
 //Digital Pins
-#define PIN_TEMPERATUREHUMIDITY_1 22  //SmartThings Capabilities "Temperature Measurement" and "Relative Humidity Measurement"
-#define PIN_TEMPERATUREHUMIDITY_2 23  //SmartThings Capabilities "Temperature Measurement" and "Relative Humidity Measurement"
-#define PIN_MOTION_1              24  //SmartThings Capability "Motion Sensor"
-#define PIN_MOTION_2              25  //SmartThings Capability "Motion Sensor"
-#define PIN_CONTACT_1             26  //SmartThings Capability "Contact Sensor"
-#define PIN_CONTACT_2             27  //SmartThings Capability "Contact Sensor"
-#define PIN_SWITCH_1              28  //SmartThings Capability "Switch"
-#define PIN_SWITCH_2              29  //SmartThings Capability "Switch"
-#define PIN_TIMEDRELAY_1          30  //SmartThings Capability "Relay Switch"
-#define PIN_TIMEDRELAY_2          31  //SmartThings Capability "Relay Switch"
-#define PIN_SMOKE_1               32  //SmartThings Capability "Smoke Detector"
-#define PIN_SMOKE_2               33  //SmartThings Capability "Smoke Detector"
-#define PIN_ALARM_1               34  //SmartThings Capability "Alarm"
-#define PIN_ALARM_2               40  //SmartThings Capability "Alarm"
-#define PIN_STROBE_2              41  //SmartThings Capability "Alarm"              
-#define PIN_CO_1                  42  //SmartThings Capability "Carbon Monoxide Detector"
-#define PIN_CO_2                  43  //SmartThings Capability "Carbon Monoxide Detector"
+//#define PIN_TEMPERATUREHUMIDITY_1 22  //SmartThings Capabilities "Temperature Measurement" and "Relative Humidity Measurement"
+//#define PIN_TEMPERATUREHUMIDITY_2 23  //SmartThings Capabilities "Temperature Measurement" and "Relative Humidity Measurement"
+//#define PIN_MOTION_1              24  //SmartThings Capability "Motion Sensor"
+//#define PIN_MOTION_2              25  //SmartThings Capability "Motion Sensor"
+#define PIN_CONTACT_1             2  //SmartThings Capability "Contact Sensor"
+#define PIN_CONTACT_2             3  //SmartThings Capability "Contact Sensor"
+#define PIN_SWITCH_1              6  //SmartThings Capability "Switch"
+#define PIN_SWITCH_2              7  //SmartThings Capability "Switch"
+#define PIN_TIMEDRELAY_1          8  //SmartThings Capability "Relay Switch"
+#define PIN_TIMEDRELAY_2          9  //SmartThings Capability "Relay Switch"
+//#define PIN_SMOKE_1               32  //SmartThings Capability "Smoke Detector"
+//#define PIN_SMOKE_2               33  //SmartThings Capability "Smoke Detector"
+//#define PIN_ALARM_1               34  //SmartThings Capability "Alarm"
+//#define PIN_ALARM_2               40  //SmartThings Capability "Alarm"
+//#define PIN_STROBE_2              41  //SmartThings Capability "Alarm"              
+//#define PIN_CO_1                  42  //SmartThings Capability "Carbon Monoxide Detector"
+//#define PIN_CO_2                  43  //SmartThings Capability "Carbon Monoxide Detector"
 
 //Dimmer Switch Pins
-#define PIN_DIMMERLEVEL_1         44  //SmartThings Capability "Switch Level"  NOTE: MUST BE A PWM CAPABLE PIN!
-#define PIN_DIMMERSWITCH_1        45  //SmartThings Capability "Switch"
-#define PIN_DIMMERLEVEL_2         46  //SmartThings Capability "Switch Level"  NOTE: MUST BE A PWM CAPABLE PIN!
-#define PIN_DIMMERSWITCH_2        47  //SmartThings Capability "Switch"
+//#define PIN_DIMMERLEVEL_1         44  //SmartThings Capability "Switch Level"  NOTE: MUST BE A PWM CAPABLE PIN!
+//#define PIN_DIMMERSWITCH_1        45  //SmartThings Capability "Switch"
+//#define PIN_DIMMERLEVEL_2         46  //SmartThings Capability "Switch Level"  NOTE: MUST BE A PWM CAPABLE PIN!
+//#define PIN_DIMMERSWITCH_2        47  //SmartThings Capability "Switch"
 
 //Garage Door Pins 
-#define PIN_DOORCONTROL_CONTACT_1 35  //SmartThings Capability "Door Control" 
-#define PIN_DOORCONTROL_RELAY_1   36  //SmartThings Capability "Door Control" 
-#define PIN_DOORCONTROL_CONTACT_2 37  //SmartThings Capability "Door Control"  
-#define PIN_DOORCONTROL_RELAY_2   38  //SmartThings Capability "Door Control" 
+//#define PIN_DOORCONTROL_CONTACT_1 35  //SmartThings Capability "Door Control" 
+//#define PIN_DOORCONTROL_RELAY_1   36  //SmartThings Capability "Door Control" 
+//#define PIN_DOORCONTROL_CONTACT_2 37  //SmartThings Capability "Door Control"  
+//#define PIN_DOORCONTROL_RELAY_2   38  //SmartThings Capability "Door Control" 
 
 //Pushbutton Pins
-#define PIN_BUTTON1               48  //SmartThings Capability Button / Holdable Button
-#define PIN_BUTTON2               49  //SmartThings Capability Button / Holdable Button
+//#define PIN_BUTTON1               48  //SmartThings Capability Button / Holdable Button
+//#define PIN_BUTTON2               49  //SmartThings Capability Button / Holdable Button
 
 //******************************************************************************************
 //W5100 Ethernet Shield Information
@@ -202,30 +202,30 @@ void setup()
   //           to match your specific use case in the ST Phone Application.
   //******************************************************************************************
   //Polling Sensors 
-  static st::PS_Water               sensor1(F("water1"), 60, 0, PIN_WATER_1, 200);
-  static st::PS_Water               sensor2(F("water2"), 60, 10, PIN_WATER_2, 200);
-  static st::PS_Illuminance         sensor3(F("illuminance1"), 60, 20, PIN_ILLUMINANCE_1, 0, 1023, 0, 1000);
-  static st::PS_Illuminance         sensor4(F("illuminance2"), 60, 30, PIN_ILLUMINANCE_2, 0, 1023, 0, 1000);
-  static st::PS_TemperatureHumidity sensor5(F("temphumid1"), 60, 40, PIN_TEMPERATUREHUMIDITY_1, st::PS_TemperatureHumidity::DHT22,"temperature1","humidity1");
-  static st::PS_TemperatureHumidity sensor6(F("temphumid2"), 60, 50, PIN_TEMPERATUREHUMIDITY_2, st::PS_TemperatureHumidity::DHT22,"temperature2","humidity2");
-  static st::PS_Voltage             sensor7(F("voltage1"), 60, 55, PIN_VOLTAGE_1, 0, 1023, 0, 5000);
-  static st::PS_Voltage             sensor8(F("voltage2"), 60, 57, PIN_VOLTAGE_2, 0, 1023, 0, 5000);
-  static st::PS_MQ2_Smoke           sensor23(F("smoke3"), 10, 3, PIN_SMOKE_3, 300);
-  static st::PS_MQ2_Smoke           sensor24(F("smoke4"), 10, 5, PIN_SMOKE_4, 300);
+//  static st::PS_Water               sensor1(F("water1"), 60, 0, PIN_WATER_1, 200);
+//  static st::PS_Water               sensor2(F("water2"), 60, 10, PIN_WATER_2, 200);
+//  static st::PS_Illuminance         sensor3(F("illuminance1"), 60, 20, PIN_ILLUMINANCE_1, 0, 1023, 0, 1000);
+//  static st::PS_Illuminance         sensor4(F("illuminance2"), 60, 30, PIN_ILLUMINANCE_2, 0, 1023, 0, 1000);
+//  static st::PS_TemperatureHumidity sensor5(F("temphumid1"), 60, 40, PIN_TEMPERATUREHUMIDITY_1, st::PS_TemperatureHumidity::DHT22,"temperature1","humidity1");
+//  static st::PS_TemperatureHumidity sensor6(F("temphumid2"), 60, 50, PIN_TEMPERATUREHUMIDITY_2, st::PS_TemperatureHumidity::DHT22,"temperature2","humidity2");
+//  static st::PS_Voltage             sensor7(F("voltage1"), 60, 55, PIN_VOLTAGE_1, 0, 1023, 0, 5000);
+//  static st::PS_Voltage             sensor8(F("voltage2"), 60, 57, PIN_VOLTAGE_2, 0, 1023, 0, 5000);
+//  static st::PS_MQ2_Smoke           sensor23(F("smoke3"), 10, 3, PIN_SMOKE_3, 300);
+//  static st::PS_MQ2_Smoke           sensor24(F("smoke4"), 10, 5, PIN_SMOKE_4, 300);
   
   //Interrupt Sensors 
-  static st::IS_Motion              sensor9(F("motion1"), PIN_MOTION_1, HIGH, false, 500);
-  static st::IS_Motion              sensor10(F("motion2"), PIN_MOTION_2, HIGH, false, 500);
+//  static st::IS_Motion              sensor9(F("motion1"), PIN_MOTION_1, HIGH, false, 500);
+//  static st::IS_Motion              sensor10(F("motion2"), PIN_MOTION_2, HIGH, false, 500);
   static st::IS_Contact             sensor11(F("contact1"), PIN_CONTACT_1, LOW, true, 500);
   static st::IS_Contact             sensor12(F("contact2"), PIN_CONTACT_2, LOW, true, 500);
-  static st::IS_Smoke               sensor13(F("smoke1"), PIN_SMOKE_1, HIGH, true, 500);
-  static st::IS_Smoke               sensor14(F("smoke2"), PIN_SMOKE_2, HIGH, true, 500);
-  static st::IS_DoorControl         sensor15(F("doorControl1"), PIN_DOORCONTROL_CONTACT_1, LOW, true, PIN_DOORCONTROL_RELAY_1, LOW, true, 1000);
-  static st::IS_DoorControl         sensor16(F("doorControl2"), PIN_DOORCONTROL_CONTACT_2, LOW, true, PIN_DOORCONTROL_RELAY_2, LOW, true, 1000);
-  static st::IS_Button              sensor17(F("button1"), PIN_BUTTON1, 1000, LOW, true, 500);
-  static st::IS_Button              sensor18(F("button2"), PIN_BUTTON2, 1000, LOW, true, 500);
-  static st::IS_CarbonMonoxide      sensor19(F("carbonMonoxide1"), PIN_CO_1, HIGH, true, 500);
-  static st::IS_CarbonMonoxide      sensor20(F("carbonMonoxide2"), PIN_CO_2, HIGH, true, 500);
+//  static st::IS_Smoke               sensor13(F("smoke1"), PIN_SMOKE_1, HIGH, true, 500);
+//  static st::IS_Smoke               sensor14(F("smoke2"), PIN_SMOKE_2, HIGH, true, 500);
+//  static st::IS_DoorControl         sensor15(F("doorControl1"), PIN_DOORCONTROL_CONTACT_1, LOW, true, PIN_DOORCONTROL_RELAY_1, LOW, true, 1000);
+//  static st::IS_DoorControl         sensor16(F("doorControl2"), PIN_DOORCONTROL_CONTACT_2, LOW, true, PIN_DOORCONTROL_RELAY_2, LOW, true, 1000);
+//  static st::IS_Button              sensor17(F("button1"), PIN_BUTTON1, 1000, LOW, true, 500);
+//  static st::IS_Button              sensor18(F("button2"), PIN_BUTTON2, 1000, LOW, true, 500);
+//  static st::IS_CarbonMonoxide      sensor19(F("carbonMonoxide1"), PIN_CO_1, HIGH, true, 500);
+//  static st::IS_CarbonMonoxide      sensor20(F("carbonMonoxide2"), PIN_CO_2, HIGH, true, 500);
 
   //Special sensors/executors (uses portions of both polling and executor classes)
   static st::S_TimedRelay           sensor21(F("relaySwitch1"), PIN_TIMEDRELAY_1, LOW, true, 3000, 0, 1);
@@ -234,10 +234,10 @@ void setup()
   //Executors
   static st::EX_Switch              executor1(F("switch1"), PIN_SWITCH_1, LOW, true);
   static st::EX_Switch              executor2(F("switch2"), PIN_SWITCH_2, LOW, true);
-  static st::EX_Alarm               executor3(F("alarm1"), PIN_ALARM_1, LOW, true);
-  static st::EX_Alarm               executor4(F("alarm2"), PIN_ALARM_2, LOW, true, PIN_STROBE_2);
-  static st::EX_Switch_Dim          executor5(F("dimmerSwitch1"), PIN_DIMMERSWITCH_1, PIN_DIMMERLEVEL_1, LOW, false);   
-  static st::EX_Switch_Dim          executor6(F("dimmerSwitch2"), PIN_DIMMERSWITCH_2, PIN_DIMMERLEVEL_2, LOW, false);    
+//  static st::EX_Alarm               executor3(F("alarm1"), PIN_ALARM_1, LOW, true);
+//  static st::EX_Alarm               executor4(F("alarm2"), PIN_ALARM_2, LOW, true, PIN_STROBE_2);
+//  static st::EX_Switch_Dim          executor5(F("dimmerSwitch1"), PIN_DIMMERSWITCH_1, PIN_DIMMERLEVEL_1, LOW, false);   
+//  static st::EX_Switch_Dim          executor6(F("dimmerSwitch2"), PIN_DIMMERSWITCH_2, PIN_DIMMERLEVEL_2, LOW, false);    
 
   //*****************************************************************************
   //  Configure debug print output from each main class 
@@ -268,40 +268,40 @@ void setup()
   //*****************************************************************************
   //Add each sensor to the "Everything" Class
   //*****************************************************************************
-  st::Everything::addSensor(&sensor1);
-  st::Everything::addSensor(&sensor2);
-  st::Everything::addSensor(&sensor3);
-  st::Everything::addSensor(&sensor4); 
-  st::Everything::addSensor(&sensor5); 
-  st::Everything::addSensor(&sensor6);
-  st::Everything::addSensor(&sensor7);
-  st::Everything::addSensor(&sensor8);
-  st::Everything::addSensor(&sensor9); 
-  st::Everything::addSensor(&sensor10); 
+//  st::Everything::addSensor(&sensor1);
+//  st::Everything::addSensor(&sensor2);
+//  st::Everything::addSensor(&sensor3);
+//  st::Everything::addSensor(&sensor4); 
+//  st::Everything::addSensor(&sensor5); 
+//  st::Everything::addSensor(&sensor6);
+//  st::Everything::addSensor(&sensor7);
+//  st::Everything::addSensor(&sensor8);
+//  st::Everything::addSensor(&sensor9); 
+//  st::Everything::addSensor(&sensor10); 
   st::Everything::addSensor(&sensor11);
   st::Everything::addSensor(&sensor12);
-  st::Everything::addSensor(&sensor13);
-  st::Everything::addSensor(&sensor14); 
-  st::Everything::addSensor(&sensor15); 
-  st::Everything::addSensor(&sensor16); 
-  st::Everything::addSensor(&sensor17); 
-  st::Everything::addSensor(&sensor18); 
-  st::Everything::addSensor(&sensor19); 
-  st::Everything::addSensor(&sensor20); 
+//  st::Everything::addSensor(&sensor13);
+//  st::Everything::addSensor(&sensor14); 
+//  st::Everything::addSensor(&sensor15); 
+//  st::Everything::addSensor(&sensor16); 
+//  st::Everything::addSensor(&sensor17); 
+//  st::Everything::addSensor(&sensor18); 
+//  st::Everything::addSensor(&sensor19); 
+//  st::Everything::addSensor(&sensor20); 
   st::Everything::addSensor(&sensor21); 
   st::Everything::addSensor(&sensor22); 
-  st::Everything::addSensor(&sensor23);
-  st::Everything::addSensor(&sensor24);
+//  st::Everything::addSensor(&sensor23);
+//  st::Everything::addSensor(&sensor24);
       
   //*****************************************************************************
   //Add each executor to the "Everything" Class
   //*****************************************************************************
   st::Everything::addExecutor(&executor1);
   st::Everything::addExecutor(&executor2);
-  st::Everything::addExecutor(&executor3);
-  st::Everything::addExecutor(&executor4);
-  st::Everything::addExecutor(&executor5);
-  st::Everything::addExecutor(&executor6);
+//  st::Everything::addExecutor(&executor3);
+//  st::Everything::addExecutor(&executor4);
+//  st::Everything::addExecutor(&executor5);
+//  st::Everything::addExecutor(&executor6);
   
   //*****************************************************************************
   //Initialize each of the devices which were added to the Everything Class
