@@ -18,6 +18,7 @@
  *    ----        ---            ----
  *    2017-06-10  Dan Ogorchock  Original Creation
  *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
+ *    2018-05-19  Dan Ogorchock  Added support to receive the dimmer level from the microcontroller
  *
  * 
  */
@@ -84,7 +85,13 @@ def setLevel(value) {
 def generateEvent(String name, String value) {
 	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
     // The name coming in from ST_Anything will be "dimmerSwitch", but we want to the ST standard "switch" attribute for compatibility with normal SmartApps
-	sendEvent(name: "switch", value: value)
+    if ((value == "on") || (value == "off")) {
+    	sendEvent(name: "switch", value: value)
+    }
+    else
+    {
+    	sendEvent(name: "level", value: value)
+    }
    	// Update lastUpdated date and time
     def nowDay = new Date().format("MMM dd", location.timeZone)
     def nowTime = new Date().format("h:mm a", location.timeZone)
@@ -92,5 +99,4 @@ def generateEvent(String name, String value) {
 }
 
 def installed() {
-
 }
