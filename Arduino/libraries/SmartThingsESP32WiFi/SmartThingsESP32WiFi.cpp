@@ -305,7 +305,9 @@ namespace st
 			//init();
 		}
 
-		//Make sure the client is stopped, to free up socket for new conenction
+		//WiFiClient st_client;
+
+		//Make sure the client is stopped, to free up socket for new connection
 		st_client.stop();
 
 		if (st_client.connect(st_hubIP, st_hubPort))
@@ -316,7 +318,7 @@ namespace st
 			st_client.print(F(":"));
 			st_client.println(st_hubPort);
 			st_client.println(F("CONTENT-TYPE: text"));
-            st_client.print(F("CONNECTION: CLOSE"));
+            st_client.println(F("CONNECTION: CLOSE"));
 			st_client.print(F("CONTENT-LENGTH: "));
 			st_client.println(message.length());
 			st_client.println();
@@ -372,12 +374,12 @@ namespace st
 
         // Wait for a response
         unsigned long timeout = millis();
-        while(!client.available())
+        while(!st_client.available())
         {
             if(millis() - timeout > 1000)
             {
                 Serial.println(F("Post request timed out\n"));
-                client.stop();
+                st_client.stop();
                 return;
             }
         }
