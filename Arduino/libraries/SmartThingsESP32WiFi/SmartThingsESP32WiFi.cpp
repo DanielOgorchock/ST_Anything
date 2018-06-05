@@ -316,10 +316,11 @@ namespace st
 			st_client.print(F(":"));
 			st_client.println(st_hubPort);
 			st_client.println(F("CONTENT-TYPE: text"));
+            st_client.print(F("CONNECTION: CLOSE"));
 			st_client.print(F("CONTENT-LENGTH: "));
 			st_client.println(message.length());
 			st_client.println();
-			st_client.println(message);
+			st_client.print(message);
 		}
 		else
 		{
@@ -369,17 +370,34 @@ namespace st
 
 		}
 
+        // Wait for a response
+        unsigned long timeout = millis();
+        while(!client.available())
+        {
+            if(millis() - timeout > 1000)
+            {
+                Serial.println(F("Post request timed out\n"));
+                client.stop();
+                return;
+            }
+        }
+
+
 		//if (_isDebugEnabled) { Serial.println(F("WiFi.send(): Reading for reply data "));}
 		// read any data returned from the POST
-		while (st_client.connected()) {
-			//while (st_client.available()) {
+        //while (st_client.connected()) {
+        while (st_client.available() && st_client.connected()) {
 			char c = st_client.read(); //gets byte from ethernet buffer
-									   //if (_isDebugEnabled) { Serial.print(c); } //prints byte to serial monitor
-									   //}
+            /*if((int) c == 255)
+            {
+                if(_isDebugEnabled)
+                    Serial.println(F("Breaking due to invalid value"));
+                break;
+            }*/
+            if (_isDebugEnabled) { Serial.print(c); } //prints byte to serial monitor
 		}
 
 		delay(1);
 		st_client.stop();
 	}
-
 }
