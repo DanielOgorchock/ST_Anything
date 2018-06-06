@@ -130,7 +130,8 @@ Your "Drivers Code" page should now look similar to the following
 Your screen should look like the following image just before you click Save:
 ![screenshot](https://user-images.githubusercontent.com/5206084/41034615-21f17256-6958-11e8-84cf-1f22eb7969eb.png)
 
-Afterwards, go into the device page of the Parent and enter in the highlighted information for your ST_Anything device as shown below.
+Afterwards, go into the device page of the Parent and enter in the highlighted information for your ST_Anything device
+
 ![screenshot](https://user-images.githubusercontent.com/5206084/41034778-aeb2160a-6958-11e8-818e-0ca25a2c9f98.png)
 
 - Click the SAVE button at the bottom of the screen.  This will cause a REFRESH command to be sent to your ST_Anything microcontroller, which in turn will send a status update for every device you configured in your sketch's setup() routine.  These updates from ST_Anything will cause child devices to be created if they do not yet exist.
