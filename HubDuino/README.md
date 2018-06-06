@@ -6,7 +6,7 @@ HubDuino v1.1
 
 ## Architecture Flow Chart
 
-![screenshot](https://user-images.githubusercontent.com/5206084/36057017-8b557c7e-0dd7-11e8-8009-5c64e8bf575e.png)
+![screenshot](https://user-images.githubusercontent.com/5206084/41016005-e382479e-691a-11e8-871f-e62964c0e0c0.png)
 
 Note: The HubDuino v1.1 release is based on the ST_Anything v2.9 baseline and was built using the Arduino IDE v1.8.5.  Please make sure to upgrade your IDE.
 
