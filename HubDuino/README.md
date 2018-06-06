@@ -1,14 +1,14 @@
-HubDuino v1.0
+HubDuino v1.1
 ================
 
 **Recent History:**
-2018-02-15 Added  HubDuino ThingShield Bridge - Driver
+2018-06-05 HubDuino v1.1 - Converted to use Hubitat Composite Device Driver Model
 
 ## Architecture Flow Chart
 
 ![screenshot](https://user-images.githubusercontent.com/5206084/36057017-8b557c7e-0dd7-11e8-8009-5c64e8bf575e.png)
 
-Note: The HubDuino v1.0 release is based on the ST_Anything v2.9 baseline and was built using the Arduino IDE v1.8.5.  Please make sure to upgrade your IDE.
+Note: The HubDuino v1.1 release is based on the ST_Anything v2.9 baseline and was built using the Arduino IDE v1.8.5.  Please make sure to upgrade your IDE.
 
 Turn your Arduino UNO/MEGA/MKR1000, NodeMCU ESP8266, or ESP32 into Anything you can imagine! HubDuino/ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
@@ -64,10 +64,9 @@ HubDuino/ST_Anything consists of four main parts:
   - + a few more based of user requests
 - The ST_Anything Arduino libraries + required 3rd party libraries
 - The SmartThings libraries - A modified, more efficient version, now with added support for LAN-to-Hub based communications too! 
-- The HubDuino Bridge + Child Drivers AND Service Manager App that support sketches above.
-  - hubduino-service-manager.groovy (Bridge to Child service manager app - automagically creates child devices based on your Arduino sketch)
-  - hubduino-ethernet-bridge.groovy (LAN-to-Hub, Arduino/W5100/W5500, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01, ESP32, MKR1000)
-  - hubduino-thinghsield-bridge.groovy (Thingshield-to-Hub)
+- The HubDuino Parent + Child Drivers that support sketches above.
+  - hubduino-parent-ethernet.groovy (LAN-to-Hub, - automagically creates child devices based on your Arduino sketch,Arduino/W5100/W5500, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01, ESP32, MKR1000)
+  - hubduino-parent-thingshield.groovy (Thingshield-to-Hub - automagically creates child devices based on your Arduino sketch)
   - child-xxxxxx.groovy (get these from the ST_Anything SmartThings folder at https://github.com/DanielOgorchock/ST_Anything/tree/master/devicetypes/ogiewon)
     - currently 18 child device handlers are available!
 
@@ -102,7 +101,7 @@ HubDuino/ST_Anything consists of four main parts:
     - Note: If using an ESP-01 for WiFi-connecticity (i.e. as a WiFi dongle/shield) with an Arduino, the example assumes you're using an Arduino MEGA 2560. Attach the ESP-01 to Hardware Serial "Serial1" and make sure your ESP01 has current 'AT Firmware' installed.
   - Your IDE Serial Monitor Window must be set to 115200 baud  **** Please note recent change to 115200 ****
   - With the Serial Monitor window open, load your sketch and watch the output
-  - The MAC Address will be printed out in the serial monitor window. Write this down as you will need it to configure the Device using your ST App on your phone. (Note: MAC Address must later be entered with no delimeters (i.e. NO COLONS!) in the form of "06AB23CD45EF" (without quotes!))
+  - The MAC Address will be printed out in the serial monitor window. Write this down as you will need it to configure the Device using your web browser connected to the Hubitat hub. (Note: MAC Address must later be entered with no delimeters (i.e. NO COLONS!) in the form of "06AB23CD45EF" (all UPPERCASE and without quotes!))
 
 WARNING:  If you are using an Arduino UNO, you may need to comment out some of the devices in the sketch (in the setup() function) due to the UNO's limited 2 kilobytes of SRAM.  Failing to do so will most likely result in unpredictable behavior. The Arduino MEGA 2560 has 8k of SRAM and has four Hardware Serial ports (UARTs).  If you plan on using many devices, get an Arduino MEGA 2560, a MKR1000, a NodeMCU v1.0 ESP8266-12e, or a ESP32 board.
 
@@ -111,50 +110,32 @@ WARNING:  If you are using an Arduino UNO, you may need to comment out some of t
 - Click on "Drivers Code" from the left hand navigation menu
 - Click on "+New Driver" button in top right corner
 - One at a time, Copy, Paste, and Save the source code for ALL of the "child-***.groovy" Drivers found in https://github.com/DanielOgorchock/ST_Anything/tree/master/devicetypes/ogiewon
-- One at a time, Copy, Paste, and Save the source code for ALL of the "hubduino-***-bridge.groovy" Drivers found in https://github.com/DanielOgorchock/ST_Anything/tree/master/HubDuino/Drivers
-- Click on "Apps Code" from the left hand navigation menu.
-- Click on "+New App" button in top right corner
-- Copy, Paste, and Save the source code for the "hubduino-service-manager.groovy" App found in https://github.com/DanielOgorchock/ST_Anything/tree/master/HubDuino/Apps
-- You should now have all of the necessary Hubitat Drivers and App added to your Hubitat Elevation Hub
+- One at a time, Copy, Paste, and Save the source code for ALL of the "hubduino-parent-***.groovy" Drivers found in https://github.com/DanielOgorchock/ST_Anything/tree/master/HubDuino/Drivers
+- You should now have all of the necessary Hubitat Drivers added to your Hubitat Elevation Hub
 
 Your "Drivers Code" page should now look similar to the following
 ![screenshot](https://user-images.githubusercontent.com/5206084/36056798-8962892c-0dd5-11e8-90a6-c0335fb54399.png)
 
-Your "Apps Code" page should now look similar to the following
-![screenshot](https://user-images.githubusercontent.com/5206084/36057463-77321a2c-0ddc-11e8-9fa7-ebd852307b0c.png)
 
-## HubDuino Ethernet Bridge Device Instructions - FOR USE WITH LAN-to-HUB WiFi/Cat5 Ethernet Devices
+## HubDuino Parent Ethernet Device Instructions - FOR USE WITH LAN-to-HUB WiFi/Cat5 Ethernet Devices
 - Click on "Devices" from the left hand navigation menu
 - Click the "+ Add Virtual Device" button in top right corner
 - 
 - Enter in the following REQUIRED fields
-    - Device Name: anything you want (tip: keep it short)
+    - Device Name: anything you want (tip: keep it short as this will be the prefix for all Child Devices that are created)
     - Device Label: anything you want (tip: keep it short)
     - Device Network ID: any unique name (this will be overwritten with your device's MAC address automatically)
-    - Type: "HubDuino Ethernet Bridge"
+    - Type: "HubDuino Parent Ethernet"
 
 Your screen should look like the following image just before you click Save:
 ![screenshot](https://user-images.githubusercontent.com/5206084/36057621-389db756-0dde-11e8-8f8a-f1c177924a4b.png)
-- Click the SAVE button at the bottom of the screen
-
-## HubDuino Service Manager Instructions
-- Click on "Apps" from the left hand navigation menu
-- Click the "+ Load New App" button in top right corner
-- Select the "HubDuino Service Manager App" from the bottom of the list
-- Enter in the following REQUIRED fields
-    - Click the grey "Select the HubDuino Bridge Device" box
-    - Click the radio-button next to your recently created "HubDuino Bridge" device you created above	
-    - In the "Assign a name" text box, enter a name (tip: keep it short as this will be the prefix for all Child Devices that are created)
-
-Your screen should look like the following image just before you click Done:
-![screenshot](https://user-images.githubusercontent.com/5206084/36057749-aa08b88a-0de0-11e8-8f14-e531c324897a.png)
-- Click the Done button at the bottom of the screen.  This will cause a REFRESH command to be sent to your ST_Anything microcontroller, which in turn will send a status update for every device you configured in your sketch's setup() routine.  These updates from ST_Anything will cause child devices to be created if they do not yet exist.
+- Click the SAVE button at the bottom of the screen.  This will cause a REFRESH command to be sent to your ST_Anything microcontroller, which in turn will send a status update for every device you configured in your sketch's setup() routine.  These updates from ST_Anything will cause child devices to be created if they do not yet exist.
 	
 ## Verify your Child Devices are automagically created	
 - Click on "Devices" from the left hand navigation menu
-- You should see your "HubDuino Ethernet Bridge" in the list
-- For every device you created in your sketch, you see see a corresponding Child Device
-- Select the "Logs" from the left hand navigation menu to view debug data from the Bridge Device, Service Mgr App, and Child Devices
+- You should see your "HubDuino Parenr Ethernet" in the list
+- For every device you created in your sketch, you see see a corresponding Child Device under the Parent
+- Select the "Logs" from the left hand navigation menu to view debug data from the Parent Device and Child Devices
 	
 
 Your screen should look similar to the following image:
@@ -162,28 +143,29 @@ Your screen should look similar to the following image:
 
 
 
-## HubDuino ThingShield Bridge Device Instructions - FOR USE WITH A THINGSHIELD
-- Join your Arduino/ThingShield to your hub using the hub's "Discover Devices" feature.  It will show up as a generic "Device"
+## HubDuino Parent ThingShield Device Instructions - FOR USE WITH A THINGSHIELD
+- Join your Arduino/ThingShield to your hub using the hub's "Discover Devices" feature.  It will show up as a generic "Device" or a "SmartThings sensor"
 - Click on Devices from navigation menu
 - Select your "Arduino ThingShield" device from the list
-- Change the Type to "HubDuino ThingShield Bridge"
+- Change the Type to "HubDuino Parent ThingShield"
 - Configure the correct number of "Button Devices" to match what you defined in the Arduino Sketch.  Set to 0 if none.
-- Click Save
+- Click the SAVE button at the bottom of the screen.  This will cause a REFRESH command to be sent to your ST_Anything microcontroller, which in turn will send a status update for every device you configured in your sketch's setup() routine.  These updates from ST_Anything will cause child devices to be created if they do not yet exist.
+
 
 
 
 ## Items to be aware of
 1) Please do not start changing any code before getting one of the examples up and running on both the Arduino/ESP8266/ESP32 and the Device Handlers.  It is always best to start with known working code before editing it.  This greatly reduces the amount of troubleshooting later.
 
-2) Since Hubitat does not yet support Composite (i.e. Parent/Child) Device Drivers, I have added a Bridge Driver + Service Manager App to take care of creating, updating, and deleting child devices
-  - Assuming you're keeping things fairly standard, you should never need to modify the groovy code within the Bridge / Child Drivers or the Service Manager App!  Pretty much all changes are kept within the Arduino Sketch .ino file!
-  - Child Devices are automatically created by the HubDuino Service Manager App - no manual creation of Virtual Devices
-  - If you delete the HubDuino Service Manger App, all of its children are also deleted.  PLEASE NOTE that you can simply delete any child device individually if necessary (no need to delete the Service Manager!)  If the Arduino sketch no longer sends updates for those child devices, they will not be re-created.
-  - You can add additional devices to the Arduino sketch at a later date.  Doing so will cause the Svc Mgr to automagically create the new child devices once data from the Arduino sketch makes its way to the ST Cloud.
+2) Hubitat now supports Composite (i.e. Parent/Child) Device Drivers.  The Parent Device takes care of creating, updating, and deleting child devices
+  - Assuming you're keeping things fairly standard, you should never need to modify the groovy code within the Parent / Child Drivers!  Pretty much all changes are kept within the Arduino Sketch .ino file!
+  - Child Devices are automatically created by the HubDuino Parent Device - no manual creation of Virtual Devices
+  - If you delete the HubDuino Parent Device, all of its children are also deleted.  PLEASE NOTE that you can simply delete any child device individually if necessary (no need to delete the Parent Device!)  If the Arduino sketch no longer sends updates for those child devices, they will not be re-created.
+  - You can add additional devices to the Arduino sketch at a later date.  Doing so will cause the Parent Device to automagically create the new child devices once data from the Arduino sketch makes its way to the Hubitat hub.
   - You can rename any of the Child Devices via the Hubitat web IDE as you see fit.  Just select a Child Device, and simply change its "Device Label" field and click save.  
-  - Do NOT change the Child Devices' Device Network ID - The Service Manager uses this field to link the Child device to the Bridge device
+  - Do NOT change the Child Devices' Device Network ID - The Service Manager uses this field to link the Child device to the Parent device
 
-3) The names of the devices you create in the Arduino setup() routine MUST MATCH EXACTLY the names the HubDuino Bridge Driver and Service Manager App code expects.  The names are CaSe SenSiTiVe!  Do not get creative with naming in the Arduino sketch as the Child Devices will not be created.  Follow the naming convention as seen in the "ST_Anything_Multiples_xxxx.ino" sketches
+3) The names of the devices you create in the Arduino setup() routine MUST MATCH EXACTLY the names the HubDuino Parent Driver code expects.  The names are CaSe SenSiTiVe!  Do not get creative with naming in the Arduino sketch as the Child Devices will not be created.  Follow the naming convention as seen in the "ST_Anything_Multiples_xxxx.ino" sketches
   - Contact Sensors:  "contact1", "contact2", "contact3", ...
   - Alarm: "alarm1", "alarm2", "alarm3", ...
   - Motion: "motion1", "motion2", "motion3", ...
@@ -205,7 +187,7 @@ Your screen should look similar to the following image:
 
 4) If you are using a W5100 Ethernet Shield with an Arduino, the MAC address must start with '06' in order to be sure you're using a ***locally administered unicast MAC address***.  Make sure that you have unique MAC addresses if you use more than one W5100 on your network.
 
-5) When entering the MAC address into the Device Preferences in your phone's SmartThings App, ***please be sure to enter it without delimiters (i.e. NO COLONS!), and in UPPERCASE***.  It should be in the form '06AB02CD03EF' without the quotes.  The MAC address will be printed out in the Arduino IDE Serial Monitor window (115200 baud) when the board is restarted.
+5) When entering the MAC address into the Device Preferences in the Hubitat hub parent device web page, ***please be sure to enter it without delimiters (i.e. NO COLONS!), and in UPPERCASE***.  It should be in the form '06AB02CD03EF' without the quotes.  The MAC address will be printed out in the Arduino IDE Serial Monitor window (115200 baud) when the board is restarted.
 
 6) When using a NodeMCU ESP8266 board, you need to be aware of some GPIO limitations.  I have assembled my findings in this image:
 ![screenshot](https://cloud.githubusercontent.com/assets/5206084/26479180/53488d08-419f-11e7-824f-aa1649335c02.png)
@@ -215,7 +197,7 @@ Your screen should look similar to the following image:
   - GPIO  6-11 are reserved for FLASH.  Do not use these!
   - The Arduino analogWrite() function is not supported as of 8/18/2017.  This means the EX_Switch_Dim ST_Anything Class does not support PWM output on the ESP32.
 
-8) Button Devices - "where do they show up?"  Buttons show up in the Apps that use them. When you define the number of buttons (via the HubDuino Bridge Device option) you are announcing to all Apps the number of buttons defined.  This in turn allows Apps like "Simple Lighting" and "Rule Machine" to know how many "buttons" to offer you to configure an action.  So, the easiest test is to create a new "Simple Lighting" automation, where you define the action to be based on a button "pushed" or "held" event from the HubDuino Bridge Device (no child devices are created for buttons).  Give it a try! I have used this successfully in the past for testing purposes.
+8) Button Devices - "where do they show up?"  Buttons show up in the Apps that use them. When you define the number of buttons (via the HubDuino Parent Device option) you are announcing to all Apps the number of buttons defined.  This in turn allows Apps like "Simple Lighting" and "Rule Machine" to know how many "buttons" to offer you to configure an action.  So, the easiest test is to create a new "Simple Lighting" automation, where you define the action to be based on a button "pushed" or "held" event from the HubDuino Parent Device (no child devices are created for buttons).  Give it a try! I have used this successfully in the past for testing purposes.
 
 
 ## Final Notes for now...
