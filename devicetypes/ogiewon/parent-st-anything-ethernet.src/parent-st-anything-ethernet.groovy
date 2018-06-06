@@ -30,6 +30,7 @@
  *    2018-02-15  Dan Ogorchock  Added @saif76's Ultrasonic Sensor
  *    2018-02-25  Dan Ogorchock  Added Child Presence Sensor
  *    2018-03-03  Dan Ogorchock  Added Child Power Meter
+ *    2018-06-05  Dan Ogorchock  Simplified Parent & Child Device Handlers
  *	
  */
  
@@ -39,7 +40,9 @@ metadata {
         capability "Refresh"
         capability "Button"
         capability "Holdable Button"
-        capability "Signal Strength"   
+        capability "Signal Strength"
+        
+        command "sendData", ["string"]
 	}
 
     simulator {
@@ -166,21 +169,8 @@ def parse(String description) {
             
             if (childDevice != null) {
                 //log.debug "parse() found child device ${childDevice.deviceNetworkId}"
-                
-//                if (namebase == "temperature") {
-//                	double tempC = fahrenheitToCelsius(value.toFloat())  //convert from Farenheit to Celsius
-//                   	value = tempC.round(2)
-//				}
-                
-//                if (namebase == "dimmerSwitch") { namebase = "switch"}  //use a "switch" attribute to maintain standards
-//                childDevice.sendEvent(name: namebase, value: value)
-                childDevice.generateEvent(namebase, value)
+                childDevice.parse("${namebase} ${value}")
 				log.debug "${childDevice.deviceNetworkId} - name: ${namebase}, value: ${value}"
-                //If event was dor a "Door Control" device, also update the child door control device's "Contact Sensor" to keep everything in synch
-//                if (namebase == "doorControl") {
-//                	childDevice.sendEvent(name: "contact", value: value)
-//                    log.debug "${childDevice.deviceNetworkId} - name: contact, value: ${value}"
-//                }
             }
             else  //must not be a child, perform normal update
             {
@@ -204,6 +194,10 @@ private getHostAddress() {
     return ip + ":" + port
 }
 
+def sendData(message) {
+    sendEthernet(message) 
+}
+
 def sendEthernet(message) {
 	log.debug "Executing 'sendEthernet' ${message}"
 	if (settings.ip != null && settings.port != null) {
@@ -220,101 +214,6 @@ def sendEthernet(message) {
 }
 
 // handle commands
-def childAlarmOn(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childAlarmOn($dni), name = ${name}"
-    sendEthernet("${name} both")
-}
-
-def childAlarmSiren(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childAlarmOn($dni), name = ${name}"
-    sendEthernet("${name} siren")
-}
-
-def childAlarmStrobe(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childAlarmOn($dni), name = ${name}"
-    sendEthernet("${name} strobe")
-}
-
-def childAlarmBoth(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childAlarmOn($dni), name = ${name}"
-    sendEthernet("${name} both")
-}
-
-def childAlarmOff(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childAlarmOff($dni), name = ${name}"
-    sendEthernet("${name} off")
-}
-
-def childAlarmTest(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childAlarmTest($dni), name = ${name}"
-    sendEthernet("${name} both")
-	runIn(3, childAlarmTestOff, [data: [devicenetworkid: dni]])
-}
-
-def childAlarmTestOff(data) {
-	childAlarmOff(data.devicenetworkid)
-}
-
-void childDoorOpen(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childDoorOpen($dni), name = ${name}"
-    sendEthernet("${name} on")
-}
-
-void childDoorClose(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childDoorClose($dni), name = ${name}"
-    sendEthernet("${name} on")
-}
-
-void childOn(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childOn($dni), name = ${name}"
-    sendEthernet("${name} on")
-}
-
-void childOff(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childOff($dni), name = ${name}"
-    sendEthernet("${name} off")
-}
-
-void childSetLevel(String dni, value) {
-    def name = dni.split("-")[-1]
-    log.debug "childSetLevel($dni), name = ${name}, level = ${value}"
-    sendEthernet("${name} ${value}")
-}
-
-void childSetColorRGB(String dni, value) {
-    def name = dni.split("-")[-1]
-    log.debug "childSetColorRGB($dni), name = ${name}, colorRGB = ${value}"
-    sendEthernet("${name} ${value}")
-}
-
-void childSetColorRGBW(String dni, value) {
-    def name = dni.split("-")[-1]
-    log.debug "childSetColorRGBW($dni), name = ${name}, colorRGBW = ${value}"
-    sendEthernet("${name} ${value}")
-}
-
-void childRelayOn(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childRelayOn($dni), name = ${name}"
-    sendEthernet("${name} on")
-}
-
-void childRelayOff(String dni) {
-    def name = dni.split("-")[-1]
-    log.debug "childRelayOff($dni), name = ${name}"
-    sendEthernet("${name} off")
-}
-
 def configure() {
 	log.debug "Executing 'configure()'"
     updateDeviceNetworkID()

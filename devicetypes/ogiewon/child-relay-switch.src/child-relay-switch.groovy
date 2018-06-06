@@ -18,6 +18,7 @@
  *    ----        ---            ----
  *    2017-04-16  Dan Ogorchock  Original Creation
  *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
+ *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *
  * 
  */
@@ -29,8 +30,6 @@ metadata {
 		capability "Sensor"
 
 		attribute "lastUpdated", "String"
-
-		command "generateEvent", ["string", "string"]
 	}
 
 	simulator {
@@ -38,8 +37,8 @@ metadata {
 	}
 
 	tiles(scale: 2) {
-		multiAttributeTile(name:"relaySwitch", type: "lighting", width: 3, height: 4, canChangeIcon: true){
-			tileAttribute ("device.relaySwitch", key: "PRIMARY_CONTROL") {
+		multiAttributeTile(name:"switch", type: "lighting", width: 3, height: 4, canChangeIcon: true){
+			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
 				attributeState "off", label: '${name}', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff", nextState:"turningOn"
 				attributeState "on", label: '${name}', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#00A0DC", nextState:"turningOff"
 				attributeState "turningOn", label:'${name}', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#00A0DC", nextState:"turningOff"
@@ -53,17 +52,25 @@ metadata {
 }
 
 def on() {
-	parent.childRelayOn(device.deviceNetworkId)
+	sendData("on")
 }
 
 def off() {
-	parent.childRelayOff(device.deviceNetworkId)
+	sendData("off")
 }
 
-def generateEvent(String name, String value) {
-	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
-	// Update device
-	sendEvent(name: name, value: value)
+def sendData(String value) {
+    def name = device.deviceNetworkId.split("-")[-1]
+    parent.sendData("${name} ${value}")  
+}
+
+def parse(String description) {
+    log.debug "parse(${description}) called"
+	def parts = description.split(" ")
+    def name  = parts.length>0?parts[0].trim():null
+    def value = parts.length>1?parts[1].trim():null
+    // Update device
+	//sendEvent(name: name, value: value)
     sendEvent(name: "switch", value: value)
    	// Update lastUpdated date and time
     def nowDay = new Date().format("MMM dd", location.timeZone)

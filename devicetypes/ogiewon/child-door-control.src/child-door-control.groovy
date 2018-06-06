@@ -18,6 +18,7 @@
  *    ----        ---            ----
  *    2015-04-14  Dan Ogorchock  Original Creation
  *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
+ *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *
  *
  */
@@ -31,8 +32,6 @@ metadata {
 		capability "Momentary"
 
 		attribute "lastUpdated", "String"
-
-		command "generateEvent", ["string", "string"]
 	}
 
 	simulator {
@@ -40,8 +39,8 @@ metadata {
 	}
 
 	tiles(scale: 2) {
-		multiAttributeTile(name:"doorControl", type: "generic"){
-			tileAttribute ("device.doorControl", key: "PRIMARY_CONTROL") {
+		multiAttributeTile(name:"door", type: "generic"){
+			tileAttribute ("device.door", key: "PRIMARY_CONTROL") {
                		attributeState "open", label: 'Open', action: "doorControl.close", icon: "st.doors.garage.garage-open", backgroundColor: "#e86d13", nextState: "open"
                 	attributeState "closed", label: 'Closed', action: "doorControl.open", icon: "st.doors.garage.garage-closed", backgroundColor: "#00a0dc", nextState: "closed"
                 	attributeState "opening", label: 'Opening', action: "doorControl.close", icon: "st.doors.garage.garage-opening", backgroundColor: "#e86d13", nextState: "closing"
@@ -57,29 +56,36 @@ metadata {
 			state("closed", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#00a0dc")
 		}
         
- 		main (["doorControl", "contact"])
-		details (["doorControl", "contact"])
+ 		main (["door", "contact"])
+		details (["door", "contact"])
     }
 }
 
 // handle commands
 def open() {
-	parent.childDoorOpen(device.deviceNetworkId)
+	push()
 }
 
 def close() {
-	parent.childDoorClose(device.deviceNetworkId)
+	push()
 }
 
 def push() {
-	open()
+	sendData("on")
 }
 
+def sendData(String value) {
+    def name = device.deviceNetworkId.split("-")[-1]
+    parent.sendData("${name} ${value}")  
+}
 
-def generateEvent(String name, String value) {
-	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
-	// Update device
-	sendEvent(name: name, value: value)
+def parse(String description) {
+    log.debug "parse(${description}) called"
+	def parts = description.split(" ")
+    def name  = parts.length>0?parts[0].trim():null
+    def value = parts.length>1?parts[1].trim():null
+    // Update device
+	sendEvent(name: "door", value: value)
     // Also update the "Contact Sensor" device as this is useful for SmartApps that do not support the "Door Control" capability
 	if((value == "open") || (value == "closed")) {
 		sendEvent(name: "contact", value: value)
@@ -91,5 +97,4 @@ def generateEvent(String name, String value) {
 }
 
 def installed() {
-
 }

@@ -17,6 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2018-02-24  Dan Ogorchock  Original Creation
+ *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  * 
  */
 metadata {
@@ -26,8 +27,6 @@ metadata {
 
 		attribute "lastUpdated", "String"
         attribute "level", "Number"
-
-		command "generateEvent", ["string", "string"]
 	}
 
 	simulator {
@@ -57,8 +56,11 @@ metadata {
 	}
 }
 
-def generateEvent(String name, String value) {
-	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
+def parse(String description) {
+    log.debug "parse(${description}) called"
+	def parts = description.split(" ")
+    def name  = parts.length>0?parts[0].trim():null
+    def value = parts.length>1?parts[1].trim():null
 	if (value.isNumber()) {
     	sendEvent(name: "level", value: value)
        	if (presenceTriggerValue) {
@@ -69,9 +71,6 @@ def generateEvent(String name, String value) {
             else {
             	value = invertTriggerLogic?"present":"not present"
             }
-//            if (invertTriggerLogic) {
-//            	if (value == "present") { value = "not present" } else { value = "present" }
-//            }
         }
         else {
         	log.error "Please configure the Presence Trigger Value in device settings!"
@@ -81,10 +80,8 @@ def generateEvent(String name, String value) {
     	log.debug "Presence received a string.  value = ${value}"
     	if (value != "present") { value = "not present" }
     }
-    
     // Update device
 	sendEvent(name: name, value: value)
-    
     // Update lastUpdated date and time
     def nowDay = new Date().format("MMM dd", location.timeZone)
     def nowTime = new Date().format("h:mm a", location.timeZone)

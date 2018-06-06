@@ -17,6 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2017-10-20  Allan (vseven) Original Creation (based on Dan Ogorchock's child illuminance switch)
+ *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  * 
  */
 metadata {
@@ -25,8 +26,6 @@ metadata {
 
 		attribute "lastUpdated", "String"
 		attribute "genericValue", "String"
-
-		command "generateEvent", ["string", "string"]
 	}
 
 	simulator {
@@ -49,17 +48,19 @@ metadata {
 		details(["primaryTile", "lastUpdated"])
 	}
 }
-    
-def generateEvent(String name, String value) {
-	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
-	// Update our device.  If you are sending in multiple values then you should split them up here and assign them to your tiles
-	sendEvent(name: "genericValue",value: value)
- 	// Update lastUpdated date and time
-	def nowDay = new Date().format("MMM dd", location.timeZone)
-	def nowTime = new Date().format("h:mm a", location.timeZone)
-	sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+
+def parse(String description) {
+    log.debug "parse(${description}) called"
+	def parts = description.split(" ")
+    def name  = parts.length>0?parts[0].trim():null
+    def value = parts.length>1?parts[1].trim():null
+    // Update device
+	sendEvent(name: "genericValue", value: value)
+   	// Update lastUpdated date and time
+    def nowDay = new Date().format("MMM dd", location.timeZone)
+    def nowTime = new Date().format("h:mm a", location.timeZone)
+    sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
 }
 
 def installed() {
-
 }

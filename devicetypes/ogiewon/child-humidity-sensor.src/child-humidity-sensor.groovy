@@ -14,12 +14,13 @@
  *
  *  Change History:
  *
- *    Date			Who				What
- *    ----			---				----
- *    2017-04-10	Dan Ogorchock  	Original Creation
- *	  2017-08-23  	Allan (vseven) 	Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
- *	  2017-08-24  	Allan (vseven) 	Added a lastUpdated attribute that will display on the multitile.
- *    2017-09-09    Allan (vseven)  Added preference to offset the humidity.
+ *    Date        Who            What
+ *    ----        ---            ----
+ *    2017-04-10  Dan Ogorchock  Original Creation
+ *	  2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
+ *	  2017-08-24  Allan (vseven) Added a lastUpdated attribute that will display on the multitile.
+ *    2017-09-09  Allan (vseven) Added preference to offset the humidity.
+ *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *
  * 
  */
@@ -29,8 +30,6 @@ metadata {
 		capability "Sensor"
         
         attribute "lastUpdated", "String"
-        
-		command "generateEvent", ["string", "string"]
 	}
 
 	simulator {
@@ -39,7 +38,7 @@ metadata {
     
 	preferences {
 		section("Prefs") {
-			input title: "Humidity Offset", description: "This feature allows you to correct any humidity variations by selecting an offset. Ex: If your sensor consistently reports a humidity that's 6% higher then a similiar calibrated sensor, you'd enter \"-6\".", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+//			input title: "Humidity Offset", description: "This feature allows you to correct any humidity variations by selecting an offset. Ex: If your sensor consistently reports a humidity that's 6% higher then a similiar calibrated sensor, you'd enter \"-6\".", displayDuringSetup: false, type: "paragraph", element: "paragraph"
 			input "humidityOffset", "number", title: "Humidity Offset in Percent", description: "Adjust humidity by this percentage", range: "*..*", displayDuringSetup: false
 		}
 	}
@@ -68,15 +67,18 @@ metadata {
 	}
 }
 
-def generateEvent(String name, String value) {
-	//log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
+def parse(String description) {
+    log.debug "parse(${description}) called"
+	def parts = description.split(" ")
+    def name  = parts.length>0?parts[0].trim():null
+    def value = parts.length>1?parts[1].trim():null
 	// Offset the humidity based on preference
     def offsetValue = Math.round((Float.parseFloat(value))*100.0)/100.0d
     if (humidityOffset) {
     	offsetValue = offsetValue + humidityOffset
     }
     // Update device
-	sendEvent(name: name,value: offsetValue)
+	sendEvent(name: name, value: offsetValue)
     // Update lastUpdated date and time
     def nowDay = new Date().format("MMM dd", location.timeZone)
     def nowTime = new Date().format("h:mm a", location.timeZone)
@@ -84,5 +86,4 @@ def generateEvent(String name, String value) {
 }
 
 def installed() {
-
 }

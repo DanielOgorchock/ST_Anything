@@ -18,6 +18,7 @@
  *    2017-10-06  Allan (vseven) Added preset color buttons and logic behind them.
  *	  2017-12-17  Allan (vseven) Modified setColor to use the newer color attributes of only hue and saturation which
  *                               it compatible with values passed in from things like Alexa or Goggle Home.
+ *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  * 
  */
 
@@ -31,7 +32,6 @@ metadata {
 	capability "Sensor"
 	capability "Light"
 
-	command "generateEvent", ["string", "string"]
 	command "softwhite"
 	command "daylight"
 	command "warmwhite"
@@ -47,7 +47,7 @@ metadata {
 	}
 
 	simulator {
-		// TODO: define status and reply messages here
+
 	}
 
 	tiles (scale: 2){
@@ -126,7 +126,7 @@ def on() {
     sendEvent(name: "switch", value: "on")
     def lastColor = device.latestValue("color")
     //log.debug("On pressed.  Sending last known color value of $lastColor or if null command to white.")
-    parent.childOn(device.deviceNetworkId)
+    sendData("on")
     if ( lastColor == Null ) {  // For initial run
     	white() 
     } else {
@@ -139,7 +139,7 @@ def off() {
     toggleTiles("off")
     sendEvent(name: "switch", value: "off")
     //log.debug("Off pressed.  Update parent device.")
-    parent.childOff(device.deviceNetworkId)
+    sendData("off")
 }
 
 def setColor(Map color) {
@@ -155,7 +155,7 @@ def setColor(Map color) {
         //log.debug "colorHSL: $colorHSL"
         sendEvent(name: "level", value: (colorHSL.l * 100))
         adjustColor(color.hex)
-    } else if (color.hue || color.saturation) {
+    } else if (color.hue && color.saturation) {
         // came from the ST cloud which only contains hue and saturation.  So convert to hex and pass it.
         def colorRGB = hslToRGB(color.hue, color.saturation, 0.5)
         def colorHEX = rgbToHex(colorRGB)
@@ -195,18 +195,28 @@ def adjustColor(colorInHEX) {
     def adjustedColor = "#${r}${g}${b}"
     log.debug("Adjusted color is $adjustedColor")
 	
-    parent.childSetColorRGB(device.deviceNetworkId, adjustedColor)
+    sendData("${adjustedColor}")
 }
 
-def generateEvent(String name, String value) {
-    //log.debug("Passed values to routine generateEvent in device named $device: Name - $name  -  Value - $value")
+def sendData(String value) {
+    def name = device.deviceNetworkId.split("-")[-1]
+    parent.sendData("${name} ${value}")  
+}
+
+def parse(String description) {
+    log.debug "parse(${description}) called"
+	def parts = description.split(" ")
+    def name  = parts.length>0?parts[0].trim():null
+    def value = parts.length>1?parts[1].trim():null
+    // Update device
     // The name coming in from ST_Anything will be "dimmerSwitch", but we want to the ST standard "switch" attribute for compatibility with normal SmartApps
-    sendEvent(name: "switch", value: value)
-    // Update lastUpdated date and time
+	sendEvent(name: "switch", value: value)
+   	// Update lastUpdated date and time
     def nowDay = new Date().format("MMM dd", location.timeZone)
     def nowTime = new Date().format("h:mm a", location.timeZone)
     sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
 }
+
 
 def doColorButton(colorName) {
     toggleTiles(colorName.toLowerCase().replaceAll("\\s",""))
@@ -331,7 +341,7 @@ def hueToRgb(v1, v2, vh) {
 	if (vh > 1) { vh -= 1 }
 	if ((6 * vh) < 1) { return (v1 + (v2 - v1) * 6 * vh) }
     if ((2 * vh) < 1) { return (v2) }
-    if ((3 * vh) < 2) { return (v1 + (v2 - v1) * ((2 / 3 - vh) * 6)) }
+    if ((3 * vh) < 2) { return (v1 + (v2 - $v1) * ((2 / 3 - vh) * 6)) }
     return (v1)
 }
 
@@ -395,6 +405,6 @@ def purple()	{ doColorButton("Purple") }
 def yellow() 	{ doColorButton("Yellow") }
 def white() 	{ doColorButton("White") }
 
-def installed() {
 
+def installed() {
 }
