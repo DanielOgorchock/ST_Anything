@@ -114,7 +114,7 @@ WARNING:  If you are using an Arduino UNO, you may need to comment out some of t
 - You should now have all of the necessary Hubitat Drivers added to your Hubitat Elevation Hub
 
 Your "Drivers Code" page should now look similar to the following
-![screenshot](https://user-images.githubusercontent.com/5206084/36056798-8962892c-0dd5-11e8-90a6-c0335fb54399.png)
+![screenshot](https://user-images.githubusercontent.com/5206084/41035111-a3dbac5e-6959-11e8-963c-60c33a44986c.png)
 
 
 ## HubDuino Parent Ethernet Device Instructions - FOR USE WITH LAN-to-HUB WiFi/Cat5 Ethernet Devices
@@ -141,10 +141,7 @@ Afterwards, go into the device page of the Parent and enter in the highlighted i
 - You should see your "HubDuino Parenr Ethernet" in the list
 - For every device you created in your sketch, you see see a corresponding Child Device under the Parent
 - Select the "Logs" from the left hand navigation menu to view debug data from the Parent Device and Child Devices
-	
 
-Your screen should look similar to the following image:
-![screenshot](https://user-images.githubusercontent.com/5206084/36056884-510de674-0dd6-11e8-9630-a0e0fcf5b323.png)
 
 
 
