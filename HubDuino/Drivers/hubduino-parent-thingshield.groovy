@@ -79,7 +79,7 @@ def parse(String description) {
         
 		if (name.startsWith("button")) {
 			//log.debug "In parse:  name = ${name}, value = ${value}, btnName = ${name}, btnNum = ${namemun}"
-        	results << createEvent(name: value, value: namenum)
+        	results << createEvent(name: value, value: namenum, isStateChange: true)
 			log.debug results
 			return results
         }
