@@ -81,7 +81,7 @@ def setLevel(value) {
 //	} else {
 //		sendEvent(name: "switch", value: "off")
 //	}
-//	sendEvent(name: "level", value: level, unit: "%")
+	sendEvent(name: "level", value: level, unit: "%")
 }
 
 def sendData(String value) {
