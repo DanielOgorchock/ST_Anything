@@ -59,21 +59,26 @@ def parse(String description) {
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
-    double sensorValue = value as float
-    def volume = 3.14159 * (diameter/2) * (diameter/2) * height
-    double capacityLiters = volume / 1000 * 2
-    capacityLiters = capacityLiters.round(2)
-    sendEvent(name: "liters", value: capacityLiters)
-    double capacityValue = 100 - (sensorValue/height * 100 )
-    if(capacityValue != 100)
-    {
-    	capacityValue = capacityValue.round(2)
-    	sendEvent(name: name, value: capacityValue)
+    if (name && value) {
+        double sensorValue = value as float
+        def volume = 3.14159 * (diameter/2) * (diameter/2) * height
+        double capacityLiters = volume / 1000 * 2
+        capacityLiters = capacityLiters.round(2)
+        sendEvent(name: "liters", value: capacityLiters)
+        double capacityValue = 100 - (sensorValue/height * 100 )
+        if(capacityValue != 100)
+        {
+            capacityValue = capacityValue.round(2)
+            sendEvent(name: name, value: capacityValue)
+        }
+        // Update lastUpdated date and time
+        def nowDay = new Date().format("MMM dd", location.timeZone)
+        def nowTime = new Date().format("h:mm a", location.timeZone)
+        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
-    // Update lastUpdated date and time
-    def nowDay = new Date().format("MMM dd", location.timeZone)
-    def nowTime = new Date().format("h:mm a", location.timeZone)
-    sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+    else {
+    	log.debug "Missing either name or value.  Cannot parse!"
+    }
 }
 
 def installed() {

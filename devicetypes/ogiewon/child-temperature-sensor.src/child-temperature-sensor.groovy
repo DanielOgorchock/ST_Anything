@@ -79,30 +79,35 @@ def parse(String description) {
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
-	// Offset the temperature based on preference
-    def offsetValue = Math.round((Float.parseFloat(value))*100.0)/100.0d
-    if (tempOffset) {
-    	offsetValue = offsetValue + tempOffset
+    if (name && value) {
+    	// Offset the temperature based on preference
+        def offsetValue = Math.round((Float.parseFloat(value))*100.0)/100.0d
+        if (tempOffset) {
+            offsetValue = offsetValue + tempOffset
+        }
+
+        if (tempUnitConversion == "2") {
+            //log.debug "tempUnitConversion = ${tempUnitConversion}"
+            double tempC = fahrenheitToCelsius(offsetValue.toFloat())  //convert from Fahrenheit to Celsius
+            offsetValue = tempC.round(2)
+        }
+
+        if (tempUnitConversion == "3") {
+            //log.debug "tempUnitConversion = ${tempUnitConversion}"
+            double tempC = celsiusToFahrenheit(offsetValue.toFloat())  //convert from Celsius to Fahrenheit
+            offsetValue = tempC.round(2)
+        }
+
+        // Update device
+        sendEvent(name: name, value: offsetValue)
+        // Update lastUpdated date and time
+        def nowDay = new Date().format("MMM dd", location.timeZone)
+        def nowTime = new Date().format("h:mm a", location.timeZone)
+        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
-    
-    if (tempUnitConversion == "2") {
-    	//log.debug "tempUnitConversion = ${tempUnitConversion}"
-        double tempC = fahrenheitToCelsius(offsetValue.toFloat())  //convert from Fahrenheit to Celsius
-        offsetValue = tempC.round(2)
-	}
-    
-    if (tempUnitConversion == "3") {
-    	//log.debug "tempUnitConversion = ${tempUnitConversion}"
-        double tempC = celsiusToFahrenheit(offsetValue.toFloat())  //convert from Celsius to Fahrenheit
-        offsetValue = tempC.round(2)
-	}
-    
-    // Update device
-	sendEvent(name: name, value: offsetValue)
-    // Update lastUpdated date and time
-    def nowDay = new Date().format("MMM dd", location.timeZone)
-    def nowTime = new Date().format("h:mm a", location.timeZone)
-    sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+    else {
+    	log.debug "Missing either name or value.  Cannot parse!"
+    }
 }
 
 def installed() {

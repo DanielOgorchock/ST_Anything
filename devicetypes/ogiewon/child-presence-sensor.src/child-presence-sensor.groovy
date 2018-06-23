@@ -61,32 +61,38 @@ def parse(String description) {
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
-	if (value.isNumber()) {
-    	sendEvent(name: "level", value: value)
-       	if (presenceTriggerValue) {
-        	log.debug "Presence received a numeric value. Perform comparison of value: ${Float.valueOf(value.trim())} versus presenceTriggerValue: ${presenceTriggerValue}"
-        	if (Float.valueOf(value.trim()) >= presenceTriggerValue) {
-                value = invertTriggerLogic?"not present":"present"
-            } 
+    if (name && value) {
+        if (value.isNumber()) {
+            sendEvent(name: "level", value: value)
+            if (presenceTriggerValue) {
+                log.debug "Presence received a numeric value. Perform comparison of value: ${Float.valueOf(value.trim())} versus presenceTriggerValue: ${presenceTriggerValue}"
+                if (Float.valueOf(value.trim()) >= presenceTriggerValue) {
+                    value = invertTriggerLogic?"not present":"present"
+                } 
+                else {
+                    value = invertTriggerLogic?"present":"not present"
+                }
+            }
             else {
-            	value = invertTriggerLogic?"present":"not present"
+                log.error "Please configure the Presence Trigger Value in device settings!"
             }
         }
         else {
-        	log.error "Please configure the Presence Trigger Value in device settings!"
+            log.debug "Presence received a string.  value = ${value}"
+            if (value != "present") { value = "not present" }
         }
+        // Update device
+        sendEvent(name: name, value: value)
+        // Update lastUpdated date and time
+        def nowDay = new Date().format("MMM dd", location.timeZone)
+        def nowTime = new Date().format("h:mm a", location.timeZone)
+        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)    
     }
     else {
-    	log.debug "Presence received a string.  value = ${value}"
-    	if (value != "present") { value = "not present" }
+    	log.debug "Missing either name or value.  Cannot parse!"
     }
-    // Update device
-	sendEvent(name: name, value: value)
-    // Update lastUpdated date and time
-    def nowDay = new Date().format("MMM dd", location.timeZone)
-    def nowTime = new Date().format("h:mm a", location.timeZone)
-    sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)    
 }
+
 
 def installed() {
 }

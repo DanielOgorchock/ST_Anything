@@ -94,18 +94,22 @@ def parse(String description) {
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
-    // Update device
-    if ((value == "on") || (value == "off")) {
-    	sendEvent(name: "switch", value: value)
+    if (name && value) {    // Update device
+        if ((value == "on") || (value == "off")) {
+            sendEvent(name: "switch", value: value)
+        }
+        else
+        {
+            sendEvent(name: "level", value: value)
+        }
+        // Update lastUpdated date and time
+        def nowDay = new Date().format("MMM dd", location.timeZone)
+        def nowTime = new Date().format("h:mm a", location.timeZone)
+        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
-    else
-    {
-    	sendEvent(name: "level", value: value)
+    else {
+    	log.debug "Missing either name or value.  Cannot parse!"
     }
-   	// Update lastUpdated date and time
-    def nowDay = new Date().format("MMM dd", location.timeZone)
-    def nowTime = new Date().format("h:mm a", location.timeZone)
-    sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
 }
 
 def installed() {

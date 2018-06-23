@@ -71,20 +71,25 @@ def parse(String description) {
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
-    // Update device
-    // The value is a string containing all the information seperated by colons.   
-    // For a Adafruit TCS34725 the order is  Color Temp, Lux, Red, Green, Blue, then Clear.   Modify as needed.
-    def myValues = value.split(':')
-	sendEvent(name: "illuminance",value: myValues[0])
-    sendEvent(name: "colorTemperature", value: myValues[1])
-    sendEvent(name: "redValue", value: myValues[2])
-    sendEvent(name: "greenValue", value: myValues[3])
-    sendEvent(name: "blueValue", value: myValues[4])
-    sendEvent(name: "clearValue", value: myValues[5])
-   	// Update lastUpdated date and time
-    def nowDay = new Date().format("MMM dd", location.timeZone)
-    def nowTime = new Date().format("h:mm a", location.timeZone)
-    sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+    if (name && value) {
+        // Update device
+        // The value is a string containing all the information seperated by colons.   
+        // For a Adafruit TCS34725 the order is  Color Temp, Lux, Red, Green, Blue, then Clear.   Modify as needed.
+        def myValues = value.split(':')
+        sendEvent(name: "illuminance",value: myValues[0])
+        sendEvent(name: "colorTemperature", value: myValues[1])
+        sendEvent(name: "redValue", value: myValues[2])
+        sendEvent(name: "greenValue", value: myValues[3])
+        sendEvent(name: "blueValue", value: myValues[4])
+        sendEvent(name: "clearValue", value: myValues[5])
+        // Update lastUpdated date and time
+        def nowDay = new Date().format("MMM dd", location.timeZone)
+        def nowTime = new Date().format("h:mm a", location.timeZone)
+        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+    }
+    else {
+    	log.debug "Missing either name or value.  Cannot parse!"
+    }
 }
 
 def installed() {
