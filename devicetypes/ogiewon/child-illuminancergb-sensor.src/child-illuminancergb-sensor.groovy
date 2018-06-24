@@ -1,5 +1,5 @@
 /**
- *  Child Illuminance Sensor
+ *  Child IlluminanceRGB Sensor
  *
  *  Copyright 2017 Daniel Ogorchock
  *

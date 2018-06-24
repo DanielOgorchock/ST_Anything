@@ -18,11 +18,14 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2018-06-23  Dan Ogorchock  Original Creation
+//    2018-06-24  Dan Ogorchock  Since ESP32 does not support SERVO library, exclude all code to prevent compiler error
 //
 //
 //******************************************************************************************
 #ifndef ST_EX_SERVO
 #define ST_EX_SERVO
+
+#if not defined(ARDUINO_ARCH_ESP32)
 
 #include "Executor.h"
 #include <Servo.h>
@@ -66,4 +69,5 @@ namespace st
 	};
 }
 
+#endif
 #endif
