@@ -26,6 +26,7 @@
  *    2018-02-25  Dan Ogorchock  Added Child Presence Sensor
  *    2018-02-25  Dan Ogorchock  Added Child Presence Sensor
  *    2018-06-05  Dan Ogorchock  Simplified Parent & Child Device Handlers
+ *    2018-06-24  Dan Ogorchock  Added Child Servo
  *	
  */
  
@@ -277,6 +278,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 break
          	case "power": 
                 deviceHandlerName = "Child Power Meter" 
+                break
+         	case "servo": 
+                	deviceHandlerName = "Child Servo" 
                 break
             default: 
                 log.error "No Child Device Handler case for ${deviceName}"
