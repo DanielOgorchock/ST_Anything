@@ -54,6 +54,7 @@ This package currently implements the following SmartThings Device Capabilities:
 - Switch + Color Control (RGB) - used for analog RGB LED's
 - Switch + Color Control (RGBW) - used for analog RGBW LED's
 - Switch (using RCSwitch (i.e. Radio Control Switch) - See 'ST_Anything_RCSwitch' example (Requires RCSwitch library, included in this repo)
+- Servo Motor (using Capability Switch Level (0-99) to map to Motor Angles (0-180) - See the 'ST_Anything_Servos...' example sketch
 
 Note: Attempting to use all of these at once on an Arduino UNO R3 is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.  The ESP8266, ESP32, and MKR1000 platforms also have a lot more memory available.
 
@@ -210,7 +211,9 @@ Your screen should look like the following image:
   - RelaySwitch: "relaySwitch1", "relaySwitch2", "relaySwitch3", ...
   - Temperature: "temperature1", "temperature2", "temperature3", ...
   - Humidity: "humidity1", "humidity2", "humidity3", ...
+  - Servo: "servo1", "servo2", "servo3", ...
   - ***Special Case*** DHT22 Temp/Humid: "temphumid1" along with last two arguments being "temperature1" and "humidity1", ... 
+  - ***Special Case*** DS18B20 Temperature: "temperature1" if only one sensor, "temperature" if using multiples as the 1, 2, 3 will be auto added to the end of the name
 
 4) If you are using a W5100 Ethernet Shield with an Arduino, the MAC address must start with '06' in order to be sure you're using a ***locally administered unicast MAC address***.  Make sure that you have unique MAC addresses if you use more than one W5100 on your network.
 
