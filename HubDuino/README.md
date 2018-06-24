@@ -1,14 +1,17 @@
-HubDuino v1.1
+HubDuino v1.1.1
 ================
 
+**WARNING** - If using an ESP8266, make sure you are using v2.3 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anythign to crash after an hour or two.) 
+
 **Recent History:**
+2018-06-24 HubDuino v1.1.1 - Added Servo Motor support
 2018-06-05 HubDuino v1.1 - Converted to use Hubitat Composite Device Driver Model
 
 ## Architecture Flow Chart
 
 ![screenshot](https://user-images.githubusercontent.com/5206084/41016005-e382479e-691a-11e8-871f-e62964c0e0c0.png)
 
-Note: The HubDuino v1.1 release is based on the ST_Anything v2.9 baseline and was built using the Arduino IDE v1.8.5.  Please make sure to upgrade your IDE.
+Note: The HubDuino v1.1.1 release is based on the ST_Anything v2.9.1 baseline and was built using the Arduino IDE v1.8.5.  Please make sure to upgrade your IDE.
 
 Turn your Arduino UNO/MEGA/MKR1000, NodeMCU ESP8266, or ESP32 into Anything you can imagine! HubDuino/ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
@@ -185,8 +188,10 @@ Afterwards, go into the device page of the Parent and enter in the highlighted i
   - RelaySwitch: "relaySwitch1", "relaySwitch2", "relaySwitch3", ...
   - Temperature: "temperature1", "temperature2", "temperature3", ...
   - Humidity: "humidity1", "humidity2", "humidity3", ...
+  - Servo: "servo1", "servo2", "servo3", ...
   - ***Special Case*** DHT22 Temp/Humid: "temphumid1" along with last two arguments being "temperature1" and "humidity1", ... 
-
+  - ***Special Case*** DS18B20 Temperature: "temperature1" if only one sensor, "temperature" if using multiples as the 1, 2, 3 will be auto added to the end of the name
+  
 4) If you are using a W5100 Ethernet Shield with an Arduino, the MAC address must start with '06' in order to be sure you're using a ***locally administered unicast MAC address***.  Make sure that you have unique MAC addresses if you use more than one W5100 on your network.
 
 5) When entering the MAC address into the Device Preferences in the Hubitat hub parent device web page, ***please be sure to enter it without delimiters (i.e. NO COLONS!), and in UPPERCASE***.  It should be in the form '06AB02CD03EF' without the quotes.  The MAC address will be printed out in the Arduino IDE Serial Monitor window (115200 baud) when the board is restarted.
