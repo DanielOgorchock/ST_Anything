@@ -38,7 +38,7 @@ metadata {
 			state "level", action:"switch level.setLevel"
 		}
  		valueTile("level", "device.level", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-			state "level", label:'${currentValue} %', unit:"%", backgroundColor:"#ffffff"
+			state "level", label:'${currentValue}%', unit:"%", backgroundColor:"#ffffff"
 		}
  		valueTile("angle", "device.angle", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "angle", label:'${currentValue}°', unit:"degrees", backgroundColor:"#ffffff"
@@ -74,7 +74,8 @@ def parse(String description) {
     if (name && value) {    
         // Update device
         sendEvent(name: "level", value: value)
-        def angleValue = value.toInteger() * 1.8
+        def angleValue = value.toFloat() * 1.81818
+        angleValue = angleValue.round(2)
         sendEvent(name: "angle", value: angleValue)
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
