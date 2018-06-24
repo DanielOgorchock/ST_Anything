@@ -1,10 +1,13 @@
-ST_Anything v2.9
+ST_Anything v2.9.1
 ================
 
-**Recent History:**
-- v2.9  2018-01-06 **Added Arduino OTA support for ESP8266;** added RSSI updates to the Parent Device for ESP8266, ESP32, WiFi101, and WiFiEsp; various new example sketches; support for analog RGB/RGBW LED strips; C to F and F to C temperature conversions in the Child Temperature DH; improved ESP32 WiFi stability; "Last Updated" date and time on all Child Devices; added support for the Adafruit TCS34725 Color Illuminance sensor; added noise filtering and linearization algorithm to PS_Voltage class; plus numerous small tweaks (view Github History for details)
+**WARNING** - You must use the SmartThings Classic App with ST_Anything. 
 
-Special thanks to Allan (@vseven) for his many contributions to ST_Anything!
+**WARNING** - If using an ESP8266, make sure you are using v2.3 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anythign to crash after an hour or two.) 
+
+**Recent History:**
+- v2.9.1 - Added Servo Motor support, tweaked all device handlers for simplification and supportability, numerous small enhancements and bug fixes over the past few months (view Github History for details)
+
 
 ## Architecture Flow Chart
 
@@ -251,3 +254,4 @@ Look at the documentation in the 'ST_Anything_Multiples_xxxx.ino' files for expl
 - v2.7 2017-05-25 Added support for the Arduino W5500 Ethernet Shield. Added new ST_Anything_AlarmPanel_ESP8266WiFi.ino sketch. Revised the ST_Anything_Multiples_ESP8266WiFi.ino sketch to take into account NodeMCU ESP8266 GPIO limitations.
 - v2.71 2017-05-28 Fix for Arduino + ESP01 (WiFi only) combination. Arduino IDE Serial Monitor window must now be set to 115200 baud to prevent ESP-01 timeouts. Also added support for Arduino MKR1000 board and Arduino + WiFi101 Shield (or Adafruit ATWINC1500 module).
 - v2.8  2017-08-16 Added support for ESP32 microcontroller - I used the following HiLetgo ESP Board from Amazon (https://www.amazon.com/gp/product/B0718T232Z/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
+- v2.9  2018-01-06 **Added Arduino OTA support for ESP8266;** added RSSI updates to the Parent Device for ESP8266, ESP32, WiFi101, and WiFiEsp; various new example sketches; support for analog RGB/RGBW LED strips; C to F and F to C temperature conversions in the Child Temperature DH; improved ESP32 WiFi stability; "Last Updated" date and time on all Child Devices; added support for the Adafruit TCS34725 Color Illuminance sensor; added noise filtering and linearization algorithm to PS_Voltage class; plus numerous small tweaks (view Github History for details)
