@@ -7,8 +7,7 @@
 //			  voltage on an anlog input pin and then scale it to engineering units.
 //
 //			  The last four arguments of the constructor are used as arguments to an Arduino map() function which 
-//			  is used to scale the analog input readings (0 to 1024) to Lux before sending to SmartThings.  The
-//			  defaults for this sensor are based on the device used during testing.  
+//			  is used to scale the analog input readings (e.g. 0 to 1024) to Engineering Units before sending to SmartThings. 
 //
 //			  Create an instance of this class in your sketch's global variable section
 //			  For Example:  st::PS_Voltage sensor1("voltage1", 120, 0, PIN_VOLTAGE, 0, 1023, 0.0, 5.0);
@@ -18,10 +17,10 @@
 //				- long interval - REQUIRED - the polling interval in seconds
 //				- long offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
 //				- byte pin - REQUIRED - the Arduino Pin to be used as an analog input
-//				- double s_l - OPTIONAL - first argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
-//				- double s_h - OPTIONAL - second argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
-//				- double m_l - OPTIONAL - third argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
-//				- double m_h - OPTIONAL - fourth argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
+//				- double s_l - OPTIONAL - first argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output - minimum raw AI value
+//				- double s_h - OPTIONAL - second argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output - maximum raw AI value
+//				- double m_l - OPTIONAL - third argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output - Engineering Unit Min (or Max if inverting)
+//				- double m_h - OPTIONAL - fourth argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output - Engineering Unit Max (or Min if inverting)
 //				- byte numSamples - OPTIONAL - defaults to 1, number of analog readings to average per scheduled reading of the analog input
 //				- byte filterConstant - OPTIONAL - Value from 5% to 100% to determine how much filtering/averaging is performed 100 = none (default), 5 = maximum
 //
@@ -42,10 +41,10 @@
 //				- long interval - REQUIRED - the polling interval in seconds
 //				- long offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
 //				- byte pin - REQUIRED - the Arduino Pin to be used as an analog input
-//				- double s_l - REQUIRED - first argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
-//				- double s_h - REQUIRED - second argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
-//				- double m_l - REQUIRED - third argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
-//				- double m_h - REQUIRED - fourth argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output
+//				- double s_l - OPTIONAL - first argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output - minimum raw AI value
+//				- double s_h - OPTIONAL - second argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output - maximum raw AI value
+//				- double m_l - OPTIONAL - third argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output - Engineering Unit Min (or Max if inverting)
+//				- double m_h - OPTIONAL - fourth argument of Arduino map(s_l,s_h,m_l,m_h) function to scale the output - Engineering Unit Max (or Min if inverting)
 //				- byte numSamples - REQUIRED - number of analog readings to average per scheduled reading of the analog input
 //				- byte filterConstant - REQUIRED - Value from 5% to 100% to determine how much filtering/averaging is performed 100 = none, 5 = maximum
 //				- double Coeff1 - REQUIRED - 3rd order polynomial coefficient #1
@@ -72,6 +71,7 @@
 //    2017-08-31  Dan Ogorchock  Added oversampling optional argument to help reduce noisy signals
 //    2017-08-31  Dan Ogorchock  Added filtering optional argument to help reduce noisy signals
 //    2017-09-01  Dan Ogorchock  Added 3rd order polynomial nonlinear correction compensation
+//    2018-06-24  Dan Ogorchock  Improved documentation / comments (above)
 //
 //
 //******************************************************************************************

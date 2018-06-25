@@ -18,6 +18,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2018-06-23  Dan Ogorchock  Original Creation
+//    2018-06-24  Dan Ogorchock  Since ESP32 does not support SERVO library, exclude all code to prevent compiler error
 //
 //
 //******************************************************************************************
@@ -26,17 +27,13 @@
 #include "Constants.h"
 #include "Everything.h"
 
+#if not defined(ARDUINO_ARCH_ESP32)
+
 namespace st
 {
 	//private
 	void EX_Servo::writeAngleToPin()
 	{
-//#if defined(ARDUINO_ARCH_ESP32)
-//		if (st::Executor::debug) {
-//			Serial.println(F("EX_Servo:: analogWrite not currently supported on ESP32!"));
-//		}
-//#else
-		
 		m_nCurrentAngle = map(m_nCurrentLevel, 0, 99, 0, 180);
 		m_Servo.write(m_nCurrentAngle);
 
@@ -45,7 +42,7 @@ namespace st
 			Serial.println(m_nCurrentAngle);
 		}
 
-//#endif
+
 	}
 
 	//public
@@ -100,3 +97,5 @@ namespace st
 		m_nPinPWM = pin;
 	}
 }
+
+#endif
