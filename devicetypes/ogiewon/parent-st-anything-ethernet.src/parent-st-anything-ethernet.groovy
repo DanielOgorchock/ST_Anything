@@ -32,6 +32,7 @@
  *    2018-03-03  Dan Ogorchock  Added Child Power Meter
  *    2018-06-05  Dan Ogorchock  Simplified Parent & Child Device Handlers
  *    2018-06-24  Dan Ogorchock  Added Child Servo
+ *    2018-07-01  Dan Ogorchock  Added Pressure Measurement
  *	
  */
  
@@ -342,6 +343,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	break
          		case "servo": 
                 		deviceHandlerName = "Child Servo" 
+                	break
+         		case "pressure": 
+                		deviceHandlerName = "Child Pressure Measurement ST" 
                 	break
 			default: 
                 		log.error "No Child Device Handler case for ${deviceName}"
