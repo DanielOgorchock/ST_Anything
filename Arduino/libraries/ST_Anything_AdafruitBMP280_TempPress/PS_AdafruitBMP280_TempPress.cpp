@@ -127,7 +127,7 @@ namespace st
 			//Temperature
 			if (m_fTemperatureSensorValue == -1.0)
 			{
-				Serial.println("First time through Termperature)");
+				Serial.println("First time through Termperature");
 				//first time through, no filtering
 				if (m_In_C == false)
 				{
@@ -154,7 +154,7 @@ namespace st
 			//Pressure
 			if (m_fPressureSensorValue == -1.0)
 			{
-				Serial.println("First time through Pressure)");
+				Serial.println("First time through Pressure");
 				m_fPressureSensorValue = (bmp.readPressure() / 100.0F);  //first time through, no filtering
 			}
 			else
