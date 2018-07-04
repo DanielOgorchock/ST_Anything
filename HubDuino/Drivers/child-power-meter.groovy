@@ -1,5 +1,5 @@
 /**
- *  Child Pressure Measurement ST
+ *  Child Power Meter
  *
  *  Copyright 2018 Daniel Ogorchock
  *
@@ -16,22 +16,29 @@
  *
  *    Date        Who            What
  *    ----        ---            ----
- *    2018-07-01  Dan Ogorchock  Original Creation - Unique for SmartThings as there is no standard Pressure Measurement Capability
- *
+ *    2018-03-03  Dan Ogorchock  Original Creation
+ *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  * 
  */
 metadata {
-	definition (name: "Child Pressure Measurement", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Power Meter", namespace: "ogiewon", author: "Daniel Ogorchock") {
+		capability "Power Meter"
 		capability "Sensor"
 
 		attribute "lastUpdated", "String"
-        attribute "pressure", "Number"   //ST does not have a standard Capability for Pressure Measurement
 	}
-        
+
+	simulator {
+
+	}
+    
+	preferences {
+	}
+    
 	tiles(scale: 2) {
-		multiAttributeTile(name: "pressure", type: "generic", width: 6, height: 4, canChangeIcon: true) {
-			tileAttribute("device.pressure", key: "PRIMARY_CONTROL") {
-				attributeState("pressure", label: '${currentValue} ${unit}', unit: "hPa", defaultState: true)
+		multiAttributeTile(name: "power", type: "generic", width: 6, height: 4, canChangeIcon: true) {
+			tileAttribute("device.power", key: "PRIMARY_CONTROL") {
+				attributeState("default", label: '${currentValue}', unit:"W", defaultState: true)
 			}
  			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
     				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
@@ -47,7 +54,7 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
         // Update device
-        sendEvent(name: name, value: value, unit:"hPa")
+        sendEvent(name: name, value: value)
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
@@ -57,6 +64,7 @@ def parse(String description) {
     	log.debug "Missing either name or value.  Cannot parse!"
     }
 }
+
 
 def installed() {
 }

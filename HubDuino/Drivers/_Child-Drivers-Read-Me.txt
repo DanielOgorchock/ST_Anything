@@ -1,0 +1,3 @@
+Please make a copy of all of the child-*.groovy device drivers from this folder
+
+and load them into you Hubitat Hub's "Drivers Code" section via the web interface.

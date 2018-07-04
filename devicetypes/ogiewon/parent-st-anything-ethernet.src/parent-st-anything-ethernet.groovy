@@ -345,7 +345,7 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 		deviceHandlerName = "Child Servo" 
                 	break
          		case "pressure": 
-                		deviceHandlerName = "Child Pressure Measurement ST" 
+                		deviceHandlerName = "Child Pressure Measurement" 
                 	break
 			default: 
                 		log.error "No Child Device Handler case for ${deviceName}"

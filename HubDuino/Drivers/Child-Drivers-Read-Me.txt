@@ -1,7 +1,0 @@
-Please make a copy of all of the child-*.groovy device drivers from 
-
-https://github.com/DanielOgorchock/ST_Anything/tree/master/devicetypes/ogiewon
-
-and load them into you Hubitat Hub's "Drivers Code" section via the web interface.
-
-These are the exact same Child Drivers (aka Device Handlers) used in SmartThings.

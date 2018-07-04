@@ -1,7 +1,7 @@
 /**
- *  Child Pressure Measurement ST
+ *  Child Generic Sensor
  *
- *  Copyright 2018 Daniel Ogorchock
+ *  Copyright 2017 Daniel Ogorchock
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -16,27 +16,36 @@
  *
  *    Date        Who            What
  *    ----        ---            ----
- *    2018-07-01  Dan Ogorchock  Original Creation - Unique for SmartThings as there is no standard Pressure Measurement Capability
- *
+ *    2017-10-20  Allan (vseven) Original Creation (based on Dan Ogorchock's child illuminance switch)
+ *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  * 
  */
 metadata {
-	definition (name: "Child Pressure Measurement", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Generic Sensor", namespace: "ogiewon", author: "Allan (vseven) - based on code by Daniel Ogorchock") {
 		capability "Sensor"
 
 		attribute "lastUpdated", "String"
-        attribute "pressure", "Number"   //ST does not have a standard Capability for Pressure Measurement
+		attribute "genericValue", "String"
 	}
-        
+
+	simulator {
+
+	}
+
 	tiles(scale: 2) {
-		multiAttributeTile(name: "pressure", type: "generic", width: 6, height: 4, canChangeIcon: true) {
-			tileAttribute("device.pressure", key: "PRIMARY_CONTROL") {
-				attributeState("pressure", label: '${currentValue} ${unit}', unit: "hPa", defaultState: true)
+		multiAttributeTile(name: "primaryTile", type: "generic", width: 6, height: 4, canChangeIcon: true) {
+			tileAttribute("device.genericValue", key: "PRIMARY_CONTROL") {
+				attributeState("genericValue", label: '${currentValue}')
 			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
+			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+    			attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+			}
 		}
+
+		// Since this is a generic DTH there is only the main tile to hold the value and the last updated tile
+		// If you are using multiple values you should add more tiles and update the details line below
+        main(["primaryTile"])
+		details(["primaryTile", "lastUpdated"])
 	}
 }
 
@@ -47,7 +56,7 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
         // Update device
-        sendEvent(name: name, value: value, unit:"hPa")
+        sendEvent(name: "genericValue", value: value)
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)

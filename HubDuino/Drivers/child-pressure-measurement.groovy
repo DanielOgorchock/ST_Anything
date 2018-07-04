@@ -1,5 +1,5 @@
 /**
- *  Child Pressure Measurement ST
+ *  Child Pressure Measurement
  *
  *  Copyright 2018 Daniel Ogorchock
  *
@@ -16,22 +16,22 @@
  *
  *    Date        Who            What
  *    ----        ---            ----
- *    2018-07-01  Dan Ogorchock  Original Creation - Unique for SmartThings as there is no standard Pressure Measurement Capability
+ *    2018-07-01  Dan Ogorchock  Original Creation
  *
  * 
  */
 metadata {
 	definition (name: "Child Pressure Measurement", namespace: "ogiewon", author: "Daniel Ogorchock") {
+		capability "PressureMeasurement"
 		capability "Sensor"
 
 		attribute "lastUpdated", "String"
-        attribute "pressure", "Number"   //ST does not have a standard Capability for Pressure Measurement
 	}
         
 	tiles(scale: 2) {
-		multiAttributeTile(name: "pressure", type: "generic", width: 6, height: 4, canChangeIcon: true) {
-			tileAttribute("device.pressure", key: "PRIMARY_CONTROL") {
-				attributeState("pressure", label: '${currentValue} ${unit}', unit: "hPa", defaultState: true)
+		multiAttributeTile(name: "pressureMeasurement", type: "generic", width: 6, height: 4, canChangeIcon: true) {
+			tileAttribute("device.pressureMeasurement", key: "PRIMARY_CONTROL") {
+				attributeState("pressureMeasurement", label: '${currentValue} ${unit}', unit: "hPa", defaultState: true)
 			}
  			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
     				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
@@ -47,7 +47,7 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
         // Update device
-        sendEvent(name: name, value: value, unit:"hPa")
+        sendEvent(name: "pressureMeasurement", value: value, unit:"hPa")
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
