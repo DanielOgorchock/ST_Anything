@@ -6,7 +6,7 @@ ST_Anything v2.9.2
 **WARNING** - If using an ESP8266, make sure you are using v2.3 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anythign to crash after an hour or two.) 
 
 **Recent History:**
-- v2.9.2 - Added support for I2C devices - TSL2561(lux), MAX44009(lux), BH1750(lux), BME280(temp,humid,pressure), BMP280(temp, pressure), and improved TCS34725(color lux).  Added ST_Anything_I2C_ESP8266WiFi.ino example sketch to demonstrate I2C sensors.
+- v2.9.2 - Added support for I2C devices - AM2320(temp, humid), TSL2561(lux), MAX44009(lux), BH1750(lux), BME280(temp,humid,pressure), BMP280(temp, pressure), and improved TCS34725(color lux).  Added ST_Anything_I2C_ESP8266WiFi.ino example sketch to demonstrate I2C sensors.
 
 - v2.9.1 - Added Servo Motor support, tweaked all device handlers for simplification and supportability, numerous small enhancements and bug fixes over the past few months (view Github History for details)
 
@@ -64,6 +64,8 @@ This package currently implements the following SmartThings Device Capabilities:
 - Illuminance Measurement (using a MAX44009 I2C sensor)
 - Illuminance Measurement (using a BH1750 I2C sensor)
 - Illuminance Measurement (using a Color TCS34725 I2C sensor)
+- Temperature Measurement (using a AM2320 I2C sensor)
+- Relative Humidity  Measurement (using a AM2320 I2C sensor)
 - Temperature Measurement (using a BME280 I2C sensor)
 - Relative Humidity  Measurement (using a BME280 I2C sensor)
 - Pressure Measurement (using a BME280 I2C sensor)
