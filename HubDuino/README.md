@@ -1,9 +1,10 @@
-HubDuino v1.1.1
+HubDuino v1.1.2
 ================
 
 **WARNING** - If using an ESP8266, make sure you are using v2.3 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anythign to crash after an hour or two.) 
 
 **Recent History:**
+2018-07-04 HubDuino v1.1.2 - Added support for I2C devices - AM2320(temp, humid), TSL2561(lux), MAX44009(lux), BH1750(lux), BME280(temp,humid,pressure), BMP280(temp, pressure), and improved TCS34725(color lux). Added ST_Anything_I2C_ESP8266WiFi.ino example sketch to demonstrate I2C sensors.
 2018-06-24 HubDuino v1.1.1 - Added Servo Motor support
 2018-06-05 HubDuino v1.1 - Converted to use Hubitat Composite Device Driver Model
 
@@ -47,6 +48,18 @@ This package currently implements the following Hubitat Device Capabilities:
 - Switch + Color Control (RGB) - used for analog RGB LED's
 - Switch + Color Control (RGBW) - used for analog RGBW LED's
 - Switch (using RCSwitch (i.e. Radio Control Switch) - See 'ST_Anything_RCSwitch' example (Requires RCSwitch library, included in this repo)
+- Servo Motor (using Capability Switch Level (0-99) to map to Motor Angles (0-180) - See the 'ST_Anything_Servos...' example sketch
+- Illuminance Measurement (using a TSL2561 I2C sensor)
+- Illuminance Measurement (using a MAX44009 I2C sensor)
+- Illuminance Measurement (using a BH1750 I2C sensor)
+- Illuminance Measurement (using a Color TCS34725 I2C sensor)
+- Temperature Measurement (using a AM2320 I2C sensor)
+- Relative Humidity  Measurement (using a AM2320 I2C sensor)
+- Temperature Measurement (using a BME280 I2C sensor)
+- Relative Humidity  Measurement (using a BME280 I2C sensor)
+- Pressure Measurement (using a BME280 I2C sensor)
+- Temperature Measurement (using a BMP280 I2C sensor)
+- Pressure Measurement (using a BMP280 I2C sensor)
 
 Note: Attempting to use all of these at once on an Arduino UNO R3 is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.  The ESP8266, ESP32, and MKR1000 platforms also have a lot more memory available.
 
