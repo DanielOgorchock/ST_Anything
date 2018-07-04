@@ -95,7 +95,6 @@ namespace st
 	}
 
 	void PS_AdafruitTCS34725_Illum_Color::init() {
-		firstTime = true;
 		Serial.println("Initializing the TCS34725 sensor...");
 		if (tcs.begin()) {
 			Serial.println("Found sensor.   tcs.begin = true");
@@ -103,6 +102,8 @@ namespace st
 		else {
 			Serial.println("No TCS34725 found... check your connections");
 		}
+
+		delay(1000); //give sensor time to get its first data sample ready to be read
 		getData();
 	}
 	
@@ -123,11 +124,9 @@ namespace st
 
 		String strSensorValue = String(m_nlux, DEC) + ':' + String(m_ncolorTemp, DEC) + ':' + String(m_nred, DEC) + ':' + String(m_ngreen, DEC) + ':' + String(m_nblue, DEC) + ':' + String(m_nclear, DEC);
 
-		//Sensor data is invalid for first measurement, therefore do not send it to SmartThings/Hubitat
-		if (!firstTime) {
-			Everything::sendSmartString(getName() + " " + strSensorValue);
-		}
-		firstTime = false;
+		//Send data to SmartThings/Hubitat
+		Everything::sendSmartString(getName() + " " + String(m_nlux));
+
 	}
 	
 }

@@ -66,7 +66,6 @@ namespace st
 			uint16_t m_ngreen;		//green value
 			uint16_t m_nblue;		//blue value
 			uint16_t m_nclear;		//clear value
-			bool firstTime;			//First reading is not good, so don't send it
 
 		public:
 			//constructor - called in your sketch's global variable declaration section

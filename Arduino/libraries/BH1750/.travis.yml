@@ -1,0 +1,27 @@
+language: cpp
+env:
+  global:
+    - ARDUINO_PACKAGE_VERSION=1.8.5
+    - DISPLAY=:1.0
+
+before_install:
+  # arduino requires an X server even with command line
+  - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/xvfb_$TRAVIS_JOB_NUMBER.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16
+
+install:
+  - wget -q -O- http://downloads.arduino.cc/arduino-$ARDUINO_PACKAGE_VERSION-linux64.tar.xz | tar -Jxf -
+  - sudo mv arduino-$ARDUINO_PACKAGE_VERSION /usr/local/share/arduino
+  - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
+  # Add esp8266 board support
+  # - arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --save-prefs
+  # - arduino --install-boards esp8266:esp8266
+  # link project directory into Arduino libraries area.
+  - ln -s $PWD /usr/local/share/arduino/libraries/BH1750
+
+script:
+  # uno
+  - arduino --verify --board arduino:avr:uno $PWD/examples/BH1750test/BH1750test.ino
+  - arduino --verify --board arduino:avr:uno $PWD/examples/BH1750advanced/BH1750advanced.ino
+  # esp8266
+  # - arduino --verify --board esp8266:esp8266:generic $PWD/examples/BH1570test/BH1750test.ino
+  # - arduino --verify --board esp8266:esp8266:generic $PWD/examples/BH1570advanced/BH1750advanced.ino

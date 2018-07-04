@@ -1,0 +1,33 @@
+#######################################
+# Syntax Coloring Map For BH1750
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+BH1750	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+configure	KEYWORD2
+readLightLevel	KEYWORD2
+
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+BH1750_CONTINUOUS_HIGH_RES_MODE	LITERAL1
+BH1750_CONTINUOUS_HIGH_RES_MODE_2	LITERAL1
+BH1750_CONTINUOUS_LOW_RES_MODE	LITERAL1
+BH1750_ONE_TIME_HIGH_RES_MODE	LITERAL1
+BH1750_ONE_TIME_HIGH_RES_MODE_2	LITERAL1
+BH1750_ONE_TIME_LOW_RES_MODE	LITERAL1

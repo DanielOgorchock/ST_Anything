@@ -1,0 +1,11 @@
+{
+  "name": "BH1750",
+  "keywords": "light, sensor",
+  "description": "Digital light sensor breakout boards containing the BH1750FVI IC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/claws/BH1750.git"
+  },
+  "frameworks": "arduino",
+  "platforms": ["atmelavr", "atmelsam", "espressif8266"]
+}

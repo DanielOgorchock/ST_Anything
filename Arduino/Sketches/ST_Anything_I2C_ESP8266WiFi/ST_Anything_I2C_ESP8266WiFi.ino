@@ -14,6 +14,8 @@
 //              - 1 x BMP280 Temperature and Pressure sensor (same I2C address as BEP280)
 //              - 1 x TCS34725 Color Illuminance sensor
 //              - 1 x TSL2561 Illuminance sensor
+//              - 1 x MAX44009 Illuminance sensor
+//              - 1 x BH1750 Illuminance sensor
 //    
 //  Change History:
 //
@@ -21,6 +23,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2018-07-02  Dan Ogorchock  Revised to demonstrate I2C sensors
+//    2018-07-04  Dan Ogorchock  Added MAX44009 and BH1750 Lux Sensors
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -57,6 +60,8 @@
 #include <PS_AdafruitAM2320_TempHumid.h>      //Implements a Polling Sensor (PS) to measure Temperature and humidity using AM2320 via I2C
 #include <PS_AdafruitTCS34725_Illum_Color.h>  //Implements a Polling Sensor (PS) to measure Color Illuminance using TCS34725 via I2C
 #include <PS_AdafruitTSL2561_Illuminance.h>   //Implements a Polling Sensor (PS) to measure Illuminance using TSL2561 via I2C
+#include <PS_MAX44009_Illuminance.h>          //Implements a Polling Sensor (PS) to measure Illuminance using MAX44009 via I2C
+#include <PS_BH1750_Illuminance.h>            //Implements a Polling Sensor (PS) to measure Illuminance using BH1750 via I2C
 
 //*************************************************************************************************
 //NodeMCU v1.0 ESP8266-12e Pin Definitions (makes it much easier as these match the board markings)
@@ -141,10 +146,12 @@ void setup()
 
   //Polling Sensors (eaxmples of various I2C sensors supported in ST_Anything)
   static st::PS_AdafruitBME280_TempHumidPress sensor1(F("BME280_1"), 60, 0, "temperature1", "humidity1", "pressure1", false, 100, 0x77);  //both BME280 and BMP280 use address 0x77 - only use one at a time
-  //static st::PS_AdafruitBMP280_TempPress sensor2(F("BMP280_1"), 60, 10, "temperature2", "pressure2", false, 100, 0x77);  //both BME280 and BMP280 use address 0x77 - only use one at a time
+//  static st::PS_AdafruitBMP280_TempPress sensor2(F("BMP280_1"), 60, 10, "temperature2", "pressure2", false, 100, 0x77);  //both BME280 and BMP280 use address 0x77 - only use one at a time
   static st::PS_AdafruitAM2320_TempHumid sensor3(F("AM2320_1"), 60, 20, "temperature3", "humidity3", false, 100);  
   static st::PS_AdafruitTCS34725_Illum_Color sensor4(F("illuminancergb1"), 60, 30, TCS34725_INTEGRATIONTIME_154MS, TCS34725_GAIN_4X);
   static st::PS_AdafruitTSL2561_Illuminance sensor5(F("illuminance1"), 60, 40, TSL2561_ADDR_FLOAT, TSL2561_INTEGRATIONTIME_13MS, TSL2561_GAIN_1X); 
+  static st::PS_MAX44009_Illuminance sensor6(F("illuminance2"), 60, 50, MAX44009_A0_LOW); 
+  static st::PS_BH1750_Illuminance sensor7(F("illuminance3"), 60, 55, BH1750_ADDR_LOW); 
 
   
   //Executors
@@ -181,13 +188,14 @@ void setup()
   //*****************************************************************************
   //Add each sensor to the "Everything" Class
   //*****************************************************************************
-  st::Everything::addSensor(&sensor1);
-//  st::Everything::addSensor(&sensor2);
+  st::Everything::addSensor(&sensor1);  //if uncommented, must comment out sensor2 below as they both use same I2C address by default
+//  st::Everything::addSensor(&sensor2);  //if uncommented, must comment out sensor1 above as they both use same I2C address by default
   st::Everything::addSensor(&sensor3);
   st::Everything::addSensor(&sensor4); 
   st::Everything::addSensor(&sensor5); 
-
-          
+  st::Everything::addSensor(&sensor6); 
+  st::Everything::addSensor(&sensor7);
+             
   //*****************************************************************************
   //Add each executor to the "Everything" Class
   //*****************************************************************************
