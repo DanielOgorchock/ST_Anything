@@ -125,8 +125,7 @@ WARNING:  If you are using an Arduino UNO, you may need to comment out some of t
 - Using your Web Browser (Chrome works well) connect to your Hubitat Hub
 - Click on "Drivers Code" from the left hand navigation menu
 - Click on "+New Driver" button in top right corner
-- One at a time, Copy, Paste, and Save the source code for ALL of the "child-***.groovy" Drivers found in https://github.com/DanielOgorchock/ST_Anything/tree/master/devicetypes/ogiewon
-- One at a time, Copy, Paste, and Save the source code for ALL of the "hubduino-parent-***.groovy" Drivers found in https://github.com/DanielOgorchock/ST_Anything/tree/master/HubDuino/Drivers
+- One at a time, Copy, Paste, and Save the source code for ALL of the "child-*.groovy" and "hubduino-parent-*.groovy" Drivers found in https://github.com/DanielOgorchock/ST_Anything/tree/master/HubDuino/Drivers
 - You should now have all of the necessary Hubitat Drivers added to your Hubitat Elevation Hub
 
 Your "Drivers Code" page should now look similar to the following
