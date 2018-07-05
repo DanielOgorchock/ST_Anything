@@ -62,14 +62,6 @@ namespace st
 		m_In_C(In_C),
 		m_nAddress(address)
 	{
-		bool status = bmp.begin(address);
-		if (st::PollingSensor::debug)
-		{
-			if (!status) {
-				Serial.println("Could not find a valid BMP280 sensor, check wiring!");
-			}
-		}
-
 		//check for upper and lower limit and adjust accordingly
 		if ((filterConstant <= 0) || (filterConstant >= 100))
 		{
@@ -117,6 +109,22 @@ namespace st
 	//initialization routine - get first set of readings and send to ST cloud
 	void PS_AdafruitBMP280_TempPress::init()
 	{
+		char buf[5];
+		sprintf(buf, "%02X", m_nAddress);
+
+		bool status = bmp.begin(m_nAddress);
+		if (st::PollingSensor::debug)
+		{
+			if (!status) {
+				Serial.println();
+				Serial.print("Error: Could not find a valid BMP280 sensor at address 0x");
+				Serial.print(buf);
+				Serial.println(", check wiring and address setting in sketch!");
+				Serial.println();
+				delay(3000);
+			}
+		}
+
 		getData();
 	}
 	
