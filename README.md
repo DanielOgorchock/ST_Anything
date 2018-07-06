@@ -195,7 +195,7 @@ Your screen should look like the following image:
 
 
 
-## Items to be aware of
+## Items To Be Aware Of (regardless of whether using LAN or ThingShield)
 1) Please do not start changing any code before getting one of the examples up and running on both the Arduino/ESP8266/ESP32 and the Device Handlers.  It is always best to start with known working code before editing it.  This greatly reduces the amount of troubleshooting later.
 
 2) I am moving away from the old SmartApp Multiplexer + Virtual Devices with the v2.5 release of ST_Anything. I believe the ST Composite Device Handler architecture is far superior and much simpler for all users.
