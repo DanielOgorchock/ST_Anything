@@ -125,7 +125,7 @@ namespace st
 		String strSensorValue = String(m_nlux, DEC) + ':' + String(m_ncolorTemp, DEC) + ':' + String(m_nred, DEC) + ':' + String(m_ngreen, DEC) + ':' + String(m_nblue, DEC) + ':' + String(m_nclear, DEC);
 
 		//Send data to SmartThings/Hubitat
-		Everything::sendSmartString(getName() + " " + String(m_nlux));
+		Everything::sendSmartString(getName() + " " + strSensorValue);
 
 	}
 	
