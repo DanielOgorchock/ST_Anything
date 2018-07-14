@@ -60,14 +60,6 @@ namespace st
 		m_strHumidity(strHumid),
 		m_In_C(In_C)
 	{
-		bool status = am2320.begin();
-		if (st::PollingSensor::debug)
-		{
-			if (!status) {
-				Serial.println("Could not find a valid AM2320 sensor, check wiring!");
-			}
-		}
-
 		//check for upper and lower limit and adjust accordingly
 		if ((filterConstant <= 0) || (filterConstant >= 100))
 		{
@@ -115,6 +107,17 @@ namespace st
 	//initialization routine - get first set of readings and send to ST cloud
 	void PS_AdafruitAM2320_TempHumid::init()
 	{
+	    bool status = am2320.begin();
+		if (st::PollingSensor::debug)
+		{
+			if (!status) {
+				Serial.println();
+				Serial.println("Could not find a valid AM2320 sensor, check wiring!");
+				Serial.println();
+				delay(3000);
+			}
+		}
+		
 		getData();
 	}
 	
@@ -136,7 +139,7 @@ namespace st
 			//Temperature
 			if (m_fTemperatureSensorValue == -1.0)
 			{
-				Serial.println("First time through Termperature");
+				Serial.println("First time through Temperature");
 				//first time through, no filtering
 				if (m_In_C == false)
 				{

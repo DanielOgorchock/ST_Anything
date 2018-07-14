@@ -149,7 +149,7 @@ namespace st
 			//Temperature
 			if (m_fTemperatureSensorValue == -1.0)
 			{
-				Serial.println("First time through Termperature");
+				Serial.println("First time through Temperature");
 				//first time through, no filtering
 				if (m_In_C == false)
 				{
