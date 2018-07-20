@@ -145,7 +145,7 @@ void setup()
   Wire.begin(PIN_SDA, PIN_SCL); 
 
   //Polling Sensors (eaxmples of various I2C sensors supported in ST_Anything)
-  static st::PS_AdafruitBME280_TempHumidPress sensor1(F("BME280_1"), 60, 0, "temperature1", "humidity1", "pressure1", false, 100, 0x77);  //both BME280 and BMP280 use address 0x77 - only use one at a time
+  static st::PS_AdafruitBME280_TempHumidPress sensor1(F("BME280_1"), 60, 0, "temperature1", "humidity1", "pressure1", false, 100, 0x77);  //both BME280 and BMP280 use address 0x77(If no values are seen try 0x76 as some of the devices use this address) - only use one at a time
 //  static st::PS_AdafruitBMP280_TempPress sensor2(F("BMP280_1"), 60, 10, "temperature2", "pressure2", false, 100, 0x77);  //both BME280 and BMP280 use address 0x77 - only use one at a time
   static st::PS_AdafruitAM2320_TempHumid sensor3(F("AM2320_1"), 60, 20, "temperature3", "humidity3", false, 100);  
   static st::PS_AdafruitTCS34725_Illum_Color sensor4(F("illuminancergb1"), 60, 30, TCS34725_INTEGRATIONTIME_154MS, TCS34725_GAIN_4X);
