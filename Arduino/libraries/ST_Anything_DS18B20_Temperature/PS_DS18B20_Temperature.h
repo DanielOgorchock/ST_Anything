@@ -1,5 +1,5 @@
 //******************************************************************************************
-//  File: PS_18B20_Temperature.h
+//  File: PS_DS18B20_Temperature.h
 //  Author: Dan G Ogorchock
 //
 //  Summary:  PS_DS18B20_Temperature is a class which implements both the SmartThings "Temperature Measurement" capability.
@@ -7,10 +7,11 @@
 //			  temperature from a Dallas Semiconductor One Wire DS18B20 series sensor. 
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_DS18B20_Temperature sensor1("temperature1", 120, 0, PIN_TEMPERATURE, false);
+//			  For Example:  st::PS_DS18B20_Temperature sensor1(F("temperature1"), 120, 0, PIN_TEMPERATURE, false); (for a single sensor)
+//                          st::PS_DS18B20_Temperature sensor1(F("temperature"), 120, 0, PIN_TEMPERATURE, false, 10, 3); (for 3 sensors)
 //
 //			  st::PS_DS18B20_Temperature() constructor requires the following arguments
-//				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
+//				- String &name - REQUIRED - the name of the object - either "temperature1" for a single sensor, or "temperature" for multiple sensors
 //				- long interval - REQUIRED - the polling interval in seconds
 //				- long offset - REQUIRED - the polling interval offset in seconds - used to prevent all polling sensors from executing at the same time
 //				- byte pin - REQUIRED - the Arduino Pin to be used for the One-Wire DS18B20 sensor conenction
