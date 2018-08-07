@@ -33,6 +33,7 @@
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-06-24  Dan Ogorchock  Added Child Servo
  *    2018-07-01  Dan Ogorchock  Added Pressure Measurement
+ *    2018-08-06  Dan Ogorchock  Added formatting of MAC address
  *	
  */
  
@@ -204,7 +205,6 @@ def refresh() {
 	sendEthernet("refresh")
 }
 
-
 def installed() {
 	log.debug "Executing 'installed()'"
     if ( device.deviceNetworkId =~ /^[A-Z0-9]{12}$/)
@@ -236,12 +236,13 @@ def updated() {
 	}
 }
 
-
 def updateDeviceNetworkID() {
 	log.debug "Executing 'updateDeviceNetworkID'"
-    if(device.deviceNetworkId!=mac) {
-    	log.debug "setting deviceNetworkID = ${mac}"
-        device.setDeviceNetworkId("${mac}")
+    def formattedMac = mac.toUpperCase()
+    formattedMac = formattedMac.replaceAll(":", "")
+    if(device.deviceNetworkId!=formattedMac) {
+        log.debug "setting deviceNetworkID = ${formattedMac}"
+        device.setDeviceNetworkId("${formattedMac}")
 	}
     //Need deviceNetworkID updated BEFORE we can create Child Devices
 	//Have the Arduino send an updated value for every device attached.  This will auto-created child devices!
