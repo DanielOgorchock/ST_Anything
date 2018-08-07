@@ -33,6 +33,7 @@
  *    2018-06-05  Dan Ogorchock  Simplified Parent & Child Device Handlers
  *    2018-06-24  Dan Ogorchock  Added Child Servo
  *    2018-07-01  Dan Ogorchock  Added Pressure Measurement
+ *    2018-08-06  Dan Ogorchock  Added MAC Address formatting before setting deviceNetworkID
  *	
  */
  
@@ -244,6 +245,7 @@ def initialize() {
 	log.debug "Executing 'initialize()'"
     sendEvent(name: "numberOfButtons", value: numButtons)
 }
+
 def updated() {
 	if (!state.updatedLastRanAt || now() >= state.updatedLastRanAt + 5000) {
 		state.updatedLastRanAt = now()
@@ -258,12 +260,13 @@ def updated() {
 	}
 }
 
-
 def updateDeviceNetworkID() {
 	log.debug "Executing 'updateDeviceNetworkID'"
-    if(device.deviceNetworkId!=mac) {
-    	log.debug "setting deviceNetworkID = ${mac}"
-        device.setDeviceNetworkId("${mac}")
+    def formattedMac = mac.toUpperCase()
+    formattedMac = formattedMac.replaceAll(":", "")
+    if(device.deviceNetworkId!=formattedMac) {
+        log.debug "setting deviceNetworkID = ${formattedMac}"
+        device.setDeviceNetworkId("${formattedMac}")
 	}
     //Need deviceNetworkID updated BEFORE we can create Child Devices
 	//Have the Arduino send an updated value for every device attached.  This will auto-created child devices!
