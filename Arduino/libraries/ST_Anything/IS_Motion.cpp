@@ -6,7 +6,7 @@
 //			  It inherits from the st::InterruptSensor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::IS_Motion sensor5("motion1", PIN_MOTION, HIGH, false, 500);
+//			  For Example:  st::IS_Motion sensor5(F("motion1"), PIN_MOTION, HIGH, false, 500);
 //
 //			  st::IS_Motion() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
