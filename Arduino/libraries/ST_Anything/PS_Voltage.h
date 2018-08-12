@@ -10,7 +10,7 @@
 //			  is used to scale the analog input readings (e.g. 0 to 1024) to Engineering Units before sending to SmartThings. 
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_Voltage sensor1("voltage1", 120, 0, PIN_VOLTAGE, 0, 1023, 0.0, 5.0);
+//			  For Example:  st::PS_Voltage sensor1(F("voltage1"), 120, 0, PIN_VOLTAGE, 0, 1023, 0.0, 5.0);
 //
 //			  st::PS_Voltage() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
