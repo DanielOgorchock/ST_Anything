@@ -19,11 +19,12 @@
  *    2017-04-10  Dan Ogorchock  Original Creation
  *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2018-09-25  Allan (vseven) Added metadata for new SmartThings app
  *
  * 
  */
 metadata {
-	definition (name: "Child Contact Sensor", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Child Contact Sensor", namespace: "ogiewon", author: "Dan Ogorchock", mnmn: "SmartThings", vid: "generic-contact") {
 		capability "Contact Sensor"
 		capability "Sensor"
 
