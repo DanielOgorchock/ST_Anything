@@ -24,7 +24,7 @@
  * 
  */
 metadata {
-	definition (name: "Child Temperature Sensor", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Temperature Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", mnmn: "SmartThings", vid: "generic-humidity") {
 		capability "Temperature Measurement"
 		capability "Sensor"
 
