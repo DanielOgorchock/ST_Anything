@@ -6,7 +6,7 @@
 //			  It inherits from the st::InterruptSensor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::IS_Button sensor("button1", PIN_BUTTON1, 1000, LOW, true, 500);
+//			  For Example:  st::IS_Button sensor(F("button1"), PIN_BUTTON1, 1000, LOW, true, 500);
 //
 //			  st::IS_Button() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - should be "button1", "button2", "button3", etc...
