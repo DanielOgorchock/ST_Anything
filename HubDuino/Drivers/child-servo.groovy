@@ -53,7 +53,7 @@ metadata {
 }
 
 
-def setLevel(value) {
+def setLevel(value,duration=null) {
 	log.debug "setLevel >> value: $value"
 	def valueaux = value as Integer
 	def level = Math.max(Math.min(valueaux, 99), 0)
