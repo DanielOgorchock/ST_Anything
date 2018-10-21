@@ -163,7 +163,7 @@ def setColor(Map color) {
     }
 }
 
-def setLevel(value) {
+def setLevel(value,duration=null) {
     def level = Math.min(value as Integer, 100)
     // log.debug("Level value in percentage: $level")
     sendEvent(name: "level", value: level)
