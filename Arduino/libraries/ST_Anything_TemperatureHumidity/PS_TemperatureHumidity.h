@@ -8,7 +8,7 @@
 //			  temperature and humidity from a DHT series sensor.  This was tested with both the DHT11 and DHT22.  
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_TemperatureHumidity sensor2("temphumid1", 120, 7, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22, "temperature1", "humidity1", false);
+//			  For Example:  st::PS_TemperatureHumidity sensor2(F("temphumid1"), 120, 7, PIN_TEMPERATUREHUMIDITY, st::PS_TemperatureHumidity::DHT22, "temperature1", "humidity1", false);
 //
 //			  st::PS_TemperatureHumidity() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
