@@ -47,7 +47,7 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
         // Update device
-        sendEvent(name: "pressureMeasurement", value: value, unit:"hPa")
+        sendEvent(name: "pressure", value: value, unit:"hPa")
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
