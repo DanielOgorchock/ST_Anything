@@ -6,7 +6,7 @@
 //			  It inherits from the st::Executor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_Switch_Dim executor1("dimmerSwitch1", PIN_SWITCH, PIN_LEVEL, LOW, true);
+//			  For Example:  st::EX_Switch_Dim executor1(F("dimmerSwitch1"), PIN_SWITCH, PIN_LEVEL, LOW, true);
 //
 //			  st::EX_Switch_Dim() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -22,6 +22,7 @@
 //    2016-04-30  Dan Ogorchock  Original Creation
 //    2018-08-14  Dan Ogorchock  Modified to avoid compiler errors on ESP32 since it currently does not support "analogWrite()"
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
+//    2018-12-06  Dan Ogorchock  Fixed Comments
 //
 //
 //******************************************************************************************

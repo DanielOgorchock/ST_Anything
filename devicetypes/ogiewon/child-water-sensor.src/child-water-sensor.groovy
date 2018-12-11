@@ -23,7 +23,7 @@
  * 
  */
 metadata {
-	definition (name: "Child Water Sensor", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Child Water Sensor", namespace: "ogiewon", author: "Dan Ogorchock", ocfDeviceType: "x.com.st.d.sensor.moisture", mnmn: "SmartThings", vid: "generic-leak") {
 		capability "Water Sensor"
 		capability "Sensor"
 
