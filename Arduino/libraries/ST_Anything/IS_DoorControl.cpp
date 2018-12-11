@@ -10,6 +10,7 @@
 //			  It inherits from the st::InterruptSensor class and clones much from the st::Executor Class
 //
 //			  Create an instance of this class in your sketch's global variable section
+//			  For Example:  st::IS_DoorControl sensor3(F("doorControl1"), PIN_CONTACT_DOOR_1, LOW, true, PIN_RELAY_DOOR_1, LOW, true, 1000, 1000);
 //
 //			  st::IS_DoorControl() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
