@@ -10,6 +10,7 @@
 //  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
 //  2018-01-06  Dan Ogorchock  Added OTA update capability
 //  2018-02-03  Dan Ogorchock  Support for Hubitat
+//  2018-12-10  Dan Ogorchock  Add user selectable host name (repurposing the old shieldType variable)
 //*******************************************************************************
 
 #include "SmartThingsESP8266WiFi.h"
@@ -106,7 +107,15 @@ namespace st
 		Serial.print(F("RSSI = "));
 		Serial.println(WiFi.RSSI());
 
-		String("ESP8266_" + strMAC).toCharArray(st_devicename, sizeof(st_devicename));
+		if (_shieldType == "ESP8266Wifi") {
+			String("ESP8266_" + strMAC).toCharArray(st_devicename, sizeof(st_devicename));
+		}
+		else {
+			_shieldType.toCharArray(st_devicename, sizeof(st_devicename));
+		}
+		Serial.print(F("hostName = "));
+		Serial.println(st_devicename);
+
 		WiFi.hostname(st_devicename);
 
 		Serial.println(F(""));

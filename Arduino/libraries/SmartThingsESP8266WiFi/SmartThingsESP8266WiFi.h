@@ -8,6 +8,7 @@
 //	2017-02-05  Dan Ogorchock  Created
 //  2017-12-29  Dan Ogorchock  Added WiFi.RSSI() data collection
 //  2018-01-06  Dan Ogorchock  Added OTA update capability
+//  2018-12-10  Dan Ogorchock  Add user selectable host name (repurposing the old shieldType variable)
 //*******************************************************************************
 
 #ifndef __SMARTTHINGSESP8266WIFI_H__
