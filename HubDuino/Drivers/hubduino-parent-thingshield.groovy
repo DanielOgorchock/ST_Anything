@@ -1,6 +1,8 @@
 /**
  *   HubDuino_Parent_ThingShield.groovy
  *
+ * https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/hubduino-parent-thingshield.groovy
+ *
  *  Copyright 2017 Dan G Ogorchock 
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except

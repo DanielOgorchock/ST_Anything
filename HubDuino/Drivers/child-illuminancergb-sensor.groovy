@@ -1,6 +1,8 @@
 /**
  *  Child IlluminanceRGB Sensor
  *
+ *  https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-illuminancergb-sensor.groovy
+ *
  *  Copyright 2017 Daniel Ogorchock
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
