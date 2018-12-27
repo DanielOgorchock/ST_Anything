@@ -19,6 +19,7 @@
  *    2017-04-19  Dan Ogorchock  Original Creation
  *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *
  * 
  */
@@ -35,7 +36,11 @@ metadata {
 
 	}
 
-	tiles(scale: 2) {
+    preferences {
+        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
+	}
+
+    tiles(scale: 2) {
 		multiAttributeTile(name:"carbonMonoxide", type: "generic", width: 6, height: 4){
 			tileAttribute ("device.carbonMonoxide", key: "PRIMARY_CONTROL") {
 				attributeState("clear", label:"clear", icon:"st.alarm.carbon-monoxide.clear", backgroundColor:"#ffffff")
@@ -48,8 +53,13 @@ metadata {
 	}
 }
 
+def logsOff(){
+    log.warn "debug logging disabled..."
+    device.updateSetting("logEnable",[value:"false",type:"bool"])
+}
+
 def parse(String description) {
-    log.debug "parse(${description}) called"
+    if (logEnable) log.debug "parse(${description}) called"
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
@@ -67,4 +77,8 @@ def parse(String description) {
 }
 
 def installed() {
+}
+
+def updated() {
+        if (logEnable) runIn(1800,logsOff)
 }
