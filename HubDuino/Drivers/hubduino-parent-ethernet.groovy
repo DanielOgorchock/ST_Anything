@@ -1,7 +1,7 @@
 /**
  *  HubDuino_Parent_Ethernet.groovy
  *
- * https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/hubduino-parent-ethernet.groovy
+ *  https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/hubduino-parent-ethernet.groovy
  *
  *  Copyright 2017 Dan G Ogorchock 
  *
