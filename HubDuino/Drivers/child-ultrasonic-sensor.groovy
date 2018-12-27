@@ -17,6 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *   
  *
  * 
@@ -29,7 +30,13 @@ metadata {
         attribute "ultrasonic", "Number"
     }
 
-	tiles(scale: 2) {
+    preferences {
+        input name: "height", type: "number", title: "Height", description: "Enter height of tank in cm", required: true
+        input name: "diameter", type: "number", title: "Diameter", description: "Enter diameter of tank", required: true
+        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
+    }
+
+    tiles(scale: 2) {
 		multiAttributeTile(name: "ultrasonic", type: "generic", width: 6, height: 4, canChangeIcon: true) {
 			tileAttribute("device.ultrasonic", key: "PRIMARY_CONTROL") {
 				attributeState("ultrasonic", label: '${currentValue}%', unit:"%", defaultState: true, 
@@ -47,15 +54,15 @@ metadata {
     			state "default", label:'Last Updated ${currentValue}', backgroundColor:"#ffffff"
 		}
     }
-    
-    preferences {
-        input name: "height", type: "number", title: "Height", description: "Enter height of tank in cm", required: true
-        input name: "diameter", type: "number", title: "Diameter", description: "Enter diameter of tank", required: true
-    }
+}
+
+def logsOff(){
+    log.warn "debug logging disabled..."
+    device.updateSetting("logEnable",[value:"false",type:"bool"])
 }
 
 def parse(String description) {
-    log.debug "parse(${description}) called"
+    if (logEnable) log.debug "parse(${description}) called"
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
@@ -77,10 +84,13 @@ def parse(String description) {
         sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
-    	log.debug "Missing either name or value.  Cannot parse!"
+    	log.error "Missing either name or value.  Cannot parse!"
     }
 }
 
 def installed() {
+}
 
+def updated() {
+        if (logEnable) runIn(1800,logsOff)
 }

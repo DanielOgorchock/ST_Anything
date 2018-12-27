@@ -18,6 +18,7 @@
  *    ----        ---            ----
  *    2017-10-20  Allan (vseven) Original Creation (based on Dan Ogorchock's child illuminance switch)
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  * 
  */
 metadata {
@@ -30,6 +31,10 @@ metadata {
 
 	simulator {
 
+	}
+
+    preferences {
+        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
 	}
 
 	tiles(scale: 2) {
@@ -49,8 +54,13 @@ metadata {
 	}
 }
 
+def logsOff(){
+    log.warn "debug logging disabled..."
+    device.updateSetting("logEnable",[value:"false",type:"bool"])
+}
+
 def parse(String description) {
-    log.debug "parse(${description}) called"
+    if (logEnable) log.debug "parse(${description}) called"
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
@@ -63,9 +73,13 @@ def parse(String description) {
         sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
-    	log.debug "Missing either name or value.  Cannot parse!"
+    	log.error "Missing either name or value.  Cannot parse!"
     }
 }
 
 def installed() {
+}
+
+def updated() {
+        if (logEnable) runIn(1800,logsOff)
 }

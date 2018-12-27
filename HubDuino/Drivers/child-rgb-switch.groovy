@@ -19,6 +19,7 @@
  *	  2017-12-17  Allan (vseven) Modified setColor to use the newer color attributes of only hue and saturation which
  *                               it compatible with values passed in from things like Alexa or Goggle Home.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  * 
  */
 
@@ -48,6 +49,10 @@ metadata {
 
 	simulator {
 
+	}
+
+    preferences {
+        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
 	}
 
 	tiles (scale: 2){
@@ -122,15 +127,20 @@ metadata {
 	}
 }
 
+def logsOff(){
+    log.warn "debug logging disabled..."
+    device.updateSetting("logEnable",[value:"false",type:"bool"])
+}
+
 def on() {
     sendEvent(name: "switch", value: "on")
     def lastColor = device.latestValue("color")
-    //log.debug("On pressed.  Sending last known color value of $lastColor or if null command to white.")
+    //if (logEnable) log.debug("On pressed.  Sending last known color value of $lastColor or if null command to white.")
     sendData("on")
     if ( lastColor == Null ) {  // For initial run
     	white() 
     } else {
-        //log.debug "on event lastColor: $lastColor"
+        //if (logEnable) log.debug "on event lastColor: $lastColor"
     	adjustColor(lastColor)
     }
 }
@@ -138,12 +148,12 @@ def on() {
 def off() {
     toggleTiles("off")
     sendEvent(name: "switch", value: "off")
-    //log.debug("Off pressed.  Update parent device.")
+    //if (logEnable) log.debug("Off pressed.  Update parent device.")
     sendData("off")
 }
 
 def setColor(Map color) {
-    log.debug "raw color map passed in: ${color}"
+    if (logEnable) log.debug "raw color map passed in: ${color}"
     // Turn off the hard color tiles
     toggleTiles("off") 
     // If the color picker was selected we will have Red, Green, Blue, HEX, Hue, Saturation, and Alpha all present.
@@ -152,7 +162,7 @@ def setColor(Map color) {
         // came from the color picker.  Since the color selector takes into account lightness we have to reconvert
         // the color values and adjust the level slider to better represent where it should be at based on the color picked
         def colorHSL = rgbToHSL(color)
-        //log.debug "colorHSL: $colorHSL"
+        //if (logEnable) log.debug "colorHSL: $colorHSL"
         sendEvent(name: "level", value: (colorHSL.l * 100))
         adjustColor(color.hex)
     } else if (color.hue && color.saturation) {
@@ -165,7 +175,7 @@ def setColor(Map color) {
 
 def setLevel(value,duration=null) {
     def level = Math.min(value as Integer, 100)
-    // log.debug("Level value in percentage: $level")
+    //if (logEnable) log.debug("Level value in percentage: $level")
     sendEvent(name: "level", value: level)
 	
     // Turn on or off based on level selection
@@ -181,10 +191,10 @@ def setLevel(value,duration=null) {
 def adjustColor(colorInHEX) {
     sendEvent(name: "color", value: colorInHEX)
     def level = device.latestValue("level")
-    // log.debug("level value is $level")
+    //if (logEnable) log.debug("level value is $level")
     if(level == null){level = 50}
-    //log.debug "level from adjustColor routine: ${level}"
-    //log.debug "color from adjustColor routine: ${colorInHEX}"
+    //if (logEnable) log.debug "level from adjustColor routine: ${level}"
+    //if (logEnable) log.debug "color from adjustColor routine: ${colorInHEX}"
 
     def c = hexToRgb(colorInHEX)
     
@@ -193,7 +203,7 @@ def adjustColor(colorInHEX) {
     def b = hex(c.blue * (level/100))
 
     def adjustedColor = "#${r}${g}${b}"
-    log.debug("Adjusted color is $adjustedColor")
+    if (logEnable) log.debug("Adjusted color is $adjustedColor")
 	
     sendData("${adjustedColor}")
 }
@@ -204,7 +214,7 @@ def sendData(String value) {
 }
 
 def parse(String description) {
-    log.debug "parse(${description}) called"
+    if (logEnable) log.debug "parse(${description}) called"
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
@@ -218,7 +228,7 @@ def parse(String description) {
         sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
-    	log.debug "Missing either name or value.  Cannot parse!"
+    	log.error "Missing either name or value.  Cannot parse!"
     }
 }
 
@@ -230,11 +240,11 @@ def doColorButton(colorName) {
 }
 
 def getColorData(colorName) {
-    //log.debug "getColorData colorName: ${colorName}"
+    //if (logEnable) log.debug "getColorData colorName: ${colorName}"
     def colorRGB = colorNameToRgb(colorName)
-    //log.debug "getColorData colorRGB: $colorRGB"
+    //if (logEnable) log.debug "getColorData colorRGB: $colorRGB"
     def colorHEX = rgbToHex(colorRGB)
-    //log.debug "getColorData colorHEX: $colorHEX"
+    //if (logEnable) log.debug "getColorData colorHEX: $colorHEX"
     colorHEX
 }
 
@@ -247,7 +257,7 @@ private hex(value, width=2) {
 }
 
 def hexToRgb(colorHex) {
-    //log.debug("passed in colorHex: $colorHex")
+    //if (logEnable) log.debug("passed in colorHex: $colorHex")
     def rrInt = Integer.parseInt(colorHex.substring(1,3),16)
     def ggInt = Integer.parseInt(colorHex.substring(3,5),16)
     def bbInt = Integer.parseInt(colorHex.substring(5,7),16)
@@ -259,7 +269,7 @@ def hexToRgb(colorHex) {
 }
 
 def rgbToHex(rgb) {
-    //log.debug "rgbToHex rgb value: $rgb"
+    //if (logEnable) log.debug "rgbToHex rgb value: $rgb"
     def r = hex(rgb.red)
     def g = hex(rgb.green)
     def b = hex(rgb.blue)
@@ -384,10 +394,10 @@ def toggleTiles(color) {
 
     state.colorTiles.each({
     	if ( it == color ) {
-            //log.debug "Turning ${it} on"
+            //if (logEnable) log.debug "Turning ${it} on"
             cmds << sendEvent(name: it, value: "on${it}", displayed: True, descriptionText: "${device.displayName} ${color} is 'ON'", isStateChange: true)
         } else {
-            //log.debug "Turning ${it} off"
+            //if (logEnable) log.debug "Turning ${it} off"
             cmds << sendEvent(name: it, value: "off${it}", displayed: false)
       }
     })
@@ -412,4 +422,8 @@ def white() 	{ doColorButton("White") }
 
 
 def installed() {
+}
+
+def updated() {
+        if (logEnable) runIn(1800,logsOff)
 }

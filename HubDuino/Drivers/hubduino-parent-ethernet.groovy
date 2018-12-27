@@ -34,6 +34,7 @@
  *    2018-06-24  Dan Ogorchock  Added Child Servo
  *    2018-07-01  Dan Ogorchock  Added Pressure Measurement
  *    2018-08-06  Dan Ogorchock  Added formatting of MAC address
+ *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *	
  */
  
@@ -58,12 +59,18 @@ metadata {
 		input "port", "text", title: "Arduino Port", description: "port in form of 8090", required: true, displayDuringSetup: true
 		input "mac", "text", title: "Arduino MAC Addr", description: "MAC Address in form of 02A1B2C3D4E5", required: true, displayDuringSetup: true
 		input "numButtons", "number", title: "Number of Buttons", description: "Number of Buttons, 0 to n", required: true, displayDuringSetup: true
-	}
+        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
+    }
+}
+
+def logsOff(){
+    log.warn "debug logging disabled..."
+    device.updateSetting("logEnable",[value:"false",type:"bool"])
 }
 
 // parse events into attributes
 def parse(String description) {
-	//log.debug "Parsing '${description}'"
+	if (logEnable) log.debug "Parsing '${description}'"
 	def msg = parseLanMessage(description)
 	def headerString = msg.header
 
@@ -74,7 +81,7 @@ def parse(String description) {
 	def bodyString = msg.body
 
 	if (bodyString) {
-        log.debug "Parsing: $bodyString"
+        if (logEnable) log.debug "Parsing: $bodyString"
     	def parts = bodyString.split(" ")
     	def name  = parts.length>0?parts[0].trim():null
     	def value = parts.length>1?parts[1].trim():null
@@ -86,23 +93,23 @@ def parse(String description) {
         def results = []
         
 		if (name.startsWith("button")) {
-            //log.debug "In parse:  name = ${name}, value = ${value}, btnNum = " + namenum
+            if (logEnable) log.debug "In parse:  name = ${name}, value = ${value}, btnNum = " + namenum
         	results << createEvent(name: value, value: namenum, isStateChange: true)
-			log.debug results
+			if (logEnable) log.debug results
 			return results
         }
 
 		if (name.startsWith("rssi")) {
-			//log.debug "In parse: RSSI name = ${name}, value = ${value}"
+			if (logEnable) log.debug "In parse: RSSI name = ${name}, value = ${value}"
            	results = createEvent(name: name, value: value, displayed: false)
-            log.debug results
+            if (logEnable) log.debug results
 			return results
         }
 
 
         def isChild = containsDigit(name)
-   		//log.debug "Name = ${name}, isChild = ${isChild}, namebase = ${namebase}, namenum = ${namenum}"      
-        //log.debug "parse() childDevices.size() =  ${childDevices.size()}"
+   		//if (logEnable) log.debug "Name = ${name}, isChild = ${isChild}, namebase = ${namebase}, namenum = ${namenum}"      
+        //if (logEnable) log.debug "parse() childDevices.size() =  ${childDevices.size()}"
 
 		def childDevice = null
 
@@ -113,31 +120,31 @@ def parse(String description) {
             		//log.debug "Looking for child with deviceNetworkID = ${device.deviceNetworkId}-${name} against ${it.deviceNetworkId}"
                 	if (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") {
                 	childDevice = it
-                    log.debug "Found a match!!!"
+                    if (logEnable) log.debug "Found a match!!!"
                 	}
             	}
             	catch (e) {
-            	log.debug e
+            	log.error e
             	}
         	}
             
             //If a child should exist, but doesn't yet, automatically add it!            
         	if (isChild && childDevice == null) {
-        		log.debug "isChild = true, but no child found - Auto Add it!"
-            	log.debug "    Need a ${namebase} with id = ${namenum}"
+        		if (logEnable) log.debug "isChild = true, but no child found - Auto Add it!"
+            	if (logEnable) log.debug "    Need a ${namebase} with id = ${namenum}"
             
             	createChildDevice(namebase, namenum)
             	//find child again, since it should now exist!
             	childDevices.each {
 					try{
-            			//log.debug "Looking for child with deviceNetworkID = ${device.deviceNetworkId}-${name} against ${it.deviceNetworkId}"
+            			//if (logEnable) log.debug "Looking for child with deviceNetworkID = ${device.deviceNetworkId}-${name} against ${it.deviceNetworkId}"
                 		if (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") {
                 			childDevice = it
-                    		log.debug "Found a match!!!"
+                    		if (logEnable) log.debug "Found a match!!!"
                 		}
             		}
             		catch (e) {
-            			log.debug e
+            			log.error e
             		}
         		}
         	}
@@ -145,12 +152,12 @@ def parse(String description) {
             if (childDevice != null) {
                 //log.debug "parse() found child device ${childDevice.deviceNetworkId}"
                 childDevice.parse("${namebase} ${value}")
-				log.debug "${childDevice.deviceNetworkId} - name: ${namebase}, value: ${value}"
+				if (logEnable) log.debug "${childDevice.deviceNetworkId} - name: ${namebase}, value: ${value}"
             }
             else  //must not be a child, perform normal update
             {
                 results = createEvent(name: name, value: value)
-                log.debug results
+                if (logEnable) log.debug results
                 return results
             }
 		}
@@ -165,7 +172,7 @@ private getHostAddress() {
     def ip = settings.ip
     def port = settings.port
 
-	log.debug "Using ip: ${ip} and port: ${port} for device: ${device.id}"
+	if (logEnable) log.debug "Using ip: ${ip} and port: ${port} for device: ${device.id}"
     return ip + ":" + port
 }
 
@@ -180,7 +187,7 @@ def sendEthernet(message) {
         def value = parts.length>0?parts[1].trim():null
         message = name + "%20" + value
     }
-	log.debug "Executing 'sendEthernet' ${message}"
+	if (logEnable) log.debug "Executing 'sendEthernet' ${message}"
 	if (settings.ip != null && settings.port != null) {
     	new hubitat.device.HubAction(
     		method: "POST",
@@ -189,55 +196,57 @@ def sendEthernet(message) {
 		)
     }
     else {
-    	log.debug "Parent HubDuino Ethernet Device: Please verify IP address and Port are configured."    
+    	log.warn "Parent HubDuino Ethernet Device: Please verify IP address and Port are configured."    
     }
 }
 
 // handle commands
 def configure() {
-	log.debug "Executing 'configure()'"
+	if (logEnable) log.debug "Executing 'configure()'"
     updateDeviceNetworkID()
 	sendEvent(name: "numberOfButtons", value: numButtons)
 }
 
 def refresh() {
-	log.debug "Executing 'refresh()'"
+	if (logEnable) log.debug "Executing 'refresh()'"
 	sendEthernet("refresh")
 }
 
 def installed() {
-	log.debug "Executing 'installed()'"
+	log.info "Executing 'installed()'"
     if ( device.deviceNetworkId =~ /^[A-Z0-9]{12}$/)
     {
         if (numButtons) { sendEvent(name: "numberOfButtons", value: numButtons) }
     }
     else
     {
-        log.error "Parent HubDuino Ethernet Device has not been fully configured."
+        log.warn "Parent HubDuino Ethernet Device has not been fully configured."
     }
 }
 
 def initialize() {
-	log.debug "Executing 'initialize()'"
+	log.info "Executing 'initialize()'"
     sendEvent(name: "numberOfButtons", value: numButtons)
 }
 
 def updated() {
 	if (!state.updatedLastRanAt || now() >= state.updatedLastRanAt + 5000) {
 		state.updatedLastRanAt = now()
-		log.debug "Executing 'updated()'"
+		log.info "Executing 'updated()'"
     	updateDeviceNetworkID()
 		sendEvent(name: "numberOfButtons", value: numButtons)
-        log.debug "Hub IP Address = ${device.hub.getDataValue("localIP")}"
-        log.debug "Hub Port = ${device.hub.getDataValue("localSrvPortTCP")}"
+        log.info "Hub IP Address = ${device.hub.getDataValue("localIP")}"
+        log.info "Hub Port = ${device.hub.getDataValue("localSrvPortTCP")}"
 	}
 	else {
-		log.trace "updated(): Ran within last 5 seconds so aborting."
+		log.warn "updated(): Ran within last 5 seconds so aborting."
 	}
+    
+    if (logEnable) runIn(1800,logsOff)
 }
 
 def updateDeviceNetworkID() {
-	log.debug "Executing 'updateDeviceNetworkID'"
+	log.info "Executing 'updateDeviceNetworkID'"
     def formattedMac = mac.toUpperCase()
     formattedMac = formattedMac.replaceAll(":", "")
     if(device.deviceNetworkId!=formattedMac) {
@@ -252,7 +261,7 @@ def updateDeviceNetworkID() {
 private void createChildDevice(String deviceName, String deviceNumber) {
     if ( device.deviceNetworkId =~ /^[A-Z0-9]{12}$/) {
     
-		log.trace "createChildDevice:  Creating Child Device '${device.displayName} (${deviceName}${deviceNumber})'"
+		log.info "createChildDevice:  Creating Child Device '${device.displayName} (${deviceName}${deviceNumber})'"
         
 		try {
         	def deviceHandlerName = ""
@@ -327,7 +336,7 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 		deviceHandlerName = "Child Pressure Measurement" 
                 	break
 			default: 
-                		log.error "No Child Device Handler case for ${deviceName}"
+                	log.error "No Child Device Handler case for ${deviceName}"
       		}
             if (deviceHandlerName != "") {
          		addChildDevice(deviceHandlerName, "${device.deviceNetworkId}-${deviceName}${deviceNumber}",
@@ -349,7 +358,7 @@ private boolean containsDigit(String s) {
     boolean containsDigit = false;
 
     if (s != null && !s.isEmpty()) {
-//		log.debug "containsDigit .matches = ${s.matches(".*\\d+.*")}"
+		//if (logEnable) log.debug "containsDigit .matches = ${s.matches(".*\\d+.*")}"
 		containsDigit = s.matches(".*\\d+.*")
     }
     return containsDigit

@@ -20,6 +20,7 @@
  *	  2017-12-17  Allan (vseven) Modified setColor to use the newer color attributes of only hue and saturation which
  *                               it compatible with values passed in from things like Alexa or Goggle Home.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  */
 
 // for the UI
@@ -51,6 +52,10 @@ metadata {
 
 	simulator {
 		// TODO: define status and reply messages here
+	}
+
+    preferences {
+        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
 	}
 
 	tiles (scale: 2){
@@ -128,17 +133,22 @@ metadata {
 	}
 }
 
+def logsOff(){
+    log.warn "debug logging disabled..."
+    device.updateSetting("logEnable",[value:"false",type:"bool"])
+}
+
 def on() {
     sendEvent(name: "switch", value: "on")
     def lastColor = device.latestValue("color")
-    //log.debug("On pressed.  Sending last known color value of $lastColor or if null command to white.")
+    //if (logEnable) log.debug("On pressed.  Sending last known color value of $lastColor or if null command to white.")
     // Also since we are turning back on make sure we have at least one level turned up.
     def level = device.latestValue("level")
     def whiteLevel = device.latestValue("whiteLevel")
     if (level == 0 || level == null) {
-     //log.debug("Level is 0 or null.  Checking whitelevel")
+     //if (logEnable) log.debug("Level is 0 or null.  Checking whitelevel")
         if (whiteLevel == 0 || whiteLevel == null) {
-        	//log.debug("whiteLevel is 0 or null.  Setting to 20")
+        	//if (logEnable) log.debug("whiteLevel is 0 or null.  Setting to 20")
 			    sendEvent(name: "whiteLevel", value: 20)
         }
     }
@@ -153,12 +163,12 @@ def on() {
 def off() {
     toggleTiles("off")
     sendEvent(name: "switch", value: "off")
-    //log.debug("Off pressed.  Update parent device.")
+    //if (logEnable) log.debug("Off pressed.  Update parent device.")
    sendData("off")
 }
 
 def setColor(Map color) {
-    log.debug "raw color map passed in: ${color}"
+    if (logEnable) log.debug "raw color map passed in: ${color}"
     // Turn off the hard color tiles
     toggleTiles("off") 
     // If the color picker was selected we will have Red, Green, Blue, HEX, Hue, Saturation, and Alpha all present.
@@ -167,7 +177,7 @@ def setColor(Map color) {
         // came from the color picker.  Since the color selector takes into account lightness we have to reconvert
         // the color values and adjust the level slider to better represent where it should be at based on the color picked
         def colorHSL = rgbToHSL(color)
-        //log.debug "colorHSL: $colorHSL"
+        //if (logEnable) log.debug "colorHSL: $colorHSL"
         sendEvent(name: "level", value: (colorHSL.l * 100))
         adjustColor(color.hex)
     } else if (color.hue && color.saturation) {
@@ -180,7 +190,7 @@ def setColor(Map color) {
 
 def setLevel(value,duration=null) {
     def level = Math.min(value as Integer, 100)
-    // log.debug("Level value in percentage: $level")
+    //if (logEnable) log.debug("Level value in percentage: $level")
     sendEvent(name: "level", value: level)
 	
     // Turn on or off based on level selection
@@ -222,8 +232,8 @@ def adjustColor(colorInHEX) {
     def whiteLevel = device.latestValue("whiteLevel")
     // log.debug("level value is $level")
     if(level == null) {level = 50}
-    //log.debug "level from adjustColor routine: ${level}"
-    //log.debug "color from adjustColor routine: ${colorInHEX}"
+    //if (logEnable) log.debug "level from adjustColor routine: ${level}"
+    //if (logEnable) log.debug "color from adjustColor routine: ${colorInHEX}"
 
     def c = hexToRgb(colorInHEX)
     
@@ -234,7 +244,7 @@ def adjustColor(colorInHEX) {
     def w = hex(whiteLevel * 255 / 100)
 
     def adjustedColor = "#${r}${g}${b}${w}"
-    log.debug("Adjusted color is $adjustedColor")
+    if (logEnable) log.debug("Adjusted color is $adjustedColor")
     	
     // First check if we should be on or off based on the levels
     checkOnOff()
@@ -248,7 +258,7 @@ def sendData(String value) {
 }
 
 def parse(String description) {
-    log.debug "parse(${description}) called"
+    if (logEnable) log.debug "parse(${description}) called"
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
@@ -262,7 +272,7 @@ def parse(String description) {
         sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
-    	log.debug "Missing either name or value.  Cannot parse!"
+    	log.error "Missing either name or value.  Cannot parse!"
     }
 }
 
@@ -273,11 +283,11 @@ def doColorButton(colorName) {
 }
 
 def getColorData(colorName) {
-    //log.debug "getColorData colorName: ${colorName}"
+    //if (logEnable) log.debug "getColorData colorName: ${colorName}"
     def colorRGB = colorNameToRgb(colorName)
     //log.debug "getColorData colorRGB: $colorRGB"
     def colorHEX = rgbToHex(colorRGB)
-    //log.debug "getColorData colorHEX: $colorHEX"
+    //if (logEnable) log.debug "getColorData colorHEX: $colorHEX"
     colorHEX
 }
 
@@ -290,7 +300,7 @@ private hex(value, width=2) {
 }
 
 def hexToRgb(colorHex) {
-    //log.debug("passed in colorHex: $colorHex")
+    //if (logEnable) log.debug("passed in colorHex: $colorHex")
     def rrInt = Integer.parseInt(colorHex.substring(1,3),16)
     def ggInt = Integer.parseInt(colorHex.substring(3,5),16)
     def bbInt = Integer.parseInt(colorHex.substring(5,7),16)
@@ -302,7 +312,7 @@ def hexToRgb(colorHex) {
 }
 
 def rgbToHex(rgb) {
-    //log.debug "rgbToHex rgb value: $rgb"
+    //if (logEnable) log.debug "rgbToHex rgb value: $rgb"
     def r = hex(rgb.red)
     def g = hex(rgb.green)
     def b = hex(rgb.blue)
@@ -455,4 +465,8 @@ def white() 	{ doColorButton("White") }
 
 
 def installed() {
+}
+
+def updated() {
+        if (logEnable) runIn(1800,logsOff)
 }

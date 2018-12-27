@@ -21,6 +21,7 @@
  *	  2017-08-24  Allan (vseven) Added a lastUpdated attribute that will display on the multitile.
  *    2017-09-09  Allan (vseven) Added preference to offset the humidity.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *
  * 
  */
@@ -40,6 +41,7 @@ metadata {
 		section("Prefs") {
 //			input title: "Humidity Offset", description: "This feature allows you to correct any humidity variations by selecting an offset. Ex: If your sensor consistently reports a humidity that's 6% higher then a similiar calibrated sensor, you'd enter \"-6\".", displayDuringSetup: false, type: "paragraph", element: "paragraph"
 			input "humidityOffset", "number", title: "Humidity Offset in Percent", description: "Adjust humidity by this percentage", range: "*..*", displayDuringSetup: false
+            input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
 		}
 	}
 
@@ -67,14 +69,20 @@ metadata {
 	}
 }
 
+def logsOff(){
+    log.warn "debug logging disabled..."
+    device.updateSetting("logEnable",[value:"false",type:"bool"])
+}
+
 def parse(String description) {
-    log.debug "parse(${description}) called"
+    if (logEnable) log.debug "parse(${description}) called"
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
         // Offset the humidity based on preference
         def offsetValue = Math.round((Float.parseFloat(value))*100.0)/100.0d
+        offsetValue = offsetValue.round(1)
         if (humidityOffset) {
             offsetValue = offsetValue + humidityOffset
         }
@@ -86,9 +94,13 @@ def parse(String description) {
         sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
-    	log.debug "Missing either name or value.  Cannot parse!"
+    	log.error "Missing either name or value.  Cannot parse!"
     }
 }
 
 def installed() {
+}
+
+def updated() {
+        if (logEnable) runIn(1800,logsOff)
 }

@@ -21,6 +21,7 @@
  *    2017-11-04  Dan Ogorchock  Added preference for Temperature Unit Conversion: Fahrenheit to Celsius, Celsius to Fahrenheit, or none 
  *    2018-02-16  Dan Ogorchock  Fixed preferences to work with Hubitat.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  * 
  */
 metadata {
@@ -41,7 +42,8 @@ metadata {
 			input "tempOffset", "number", title: "Temperature Offset", description: "Adjust temperature by this many degrees", range: "*..*", displayDuringSetup: false
 			//input title: "Temperature Unit Conversion", description: "This feature allows you to select F to C, C to F, or no conversion", displayDuringSetup: false, type: "paragraph", element: "paragraph"
 			input "tempUnitConversion", "enum", title: "Temperature Unit Conversion - select F to C, C to F, or no conversion", description: "", defaultValue: "1", required: true, multiple: false, options:[["1":"none"], ["2":"Fahrenheit to Celsius"], ["3":"Celsius to Fahrenheit"]], displayDuringSetup: false
-		}
+            input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
+        }
 	}
     
 	tiles(scale: 2) {
@@ -74,28 +76,34 @@ metadata {
 	}
 }
 
+def logsOff(){
+    log.warn "debug logging disabled..."
+    device.updateSetting("logEnable",[value:"false",type:"bool"])
+}
+
 def parse(String description) {
-    log.debug "parse(${description}) called"
+    if (logEnable) log.debug "parse(${description}) called"
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
     	// Offset the temperature based on preference
         def offsetValue = Math.round((Float.parseFloat(value))*100.0)/100.0d
+        offsetValue = offsetValue.round(1)
         if (tempOffset) {
             offsetValue = offsetValue + tempOffset
         }
 
         if (tempUnitConversion == "2") {
-            //log.debug "tempUnitConversion = ${tempUnitConversion}"
+            //if (logEnable) log.debug "tempUnitConversion = ${tempUnitConversion}"
             double tempC = fahrenheitToCelsius(offsetValue.toFloat())  //convert from Fahrenheit to Celsius
-            offsetValue = tempC.round(2)
+            offsetValue = tempC.round(1)
         }
 
         if (tempUnitConversion == "3") {
-            //log.debug "tempUnitConversion = ${tempUnitConversion}"
-            double tempC = celsiusToFahrenheit(offsetValue.toFloat())  //convert from Celsius to Fahrenheit
-            offsetValue = tempC.round(2)
+            //if (logEnable) log.debug "tempUnitConversion = ${tempUnitConversion}"
+            double tempF = celsiusToFahrenheit(offsetValue.toFloat())  //convert from Celsius to Fahrenheit
+            offsetValue = tempF.round(1)
         }
 
         // Update device
@@ -106,9 +114,13 @@ def parse(String description) {
         sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
-    	log.debug "Missing either name or value.  Cannot parse!"
+    	log.error "Missing either name or value.  Cannot parse!"
     }
 }
 
 def installed() {
+}
+
+def updated() {
+        if (logEnable) runIn(1800,logsOff)
 }
