@@ -17,6 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2018-07-01  Dan Ogorchock  Original Creation
+ *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2018-11-10  Dan Ogorchock  Corrected Pressure Measurement attribute name
  *
  * 
@@ -28,7 +29,11 @@ metadata {
 
 		attribute "lastUpdated", "String"
 	}
-        
+
+    preferences {
+        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
+	}
+
 	tiles(scale: 2) {
 		multiAttributeTile(name: "pressureMeasurement", type: "generic", width: 6, height: 4, canChangeIcon: true) {
 			tileAttribute("device.pressureMeasurement", key: "PRIMARY_CONTROL") {
@@ -41,8 +46,13 @@ metadata {
 	}
 }
 
+def logsOff(){
+    log.warn "debug logging disabled..."
+    device.updateSetting("logEnable",[value:"false",type:"bool"])
+}
+
 def parse(String description) {
-    log.debug "parse(${description}) called"
+    if (logEnable) log.debug "parse(${description}) called"
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
@@ -55,9 +65,14 @@ def parse(String description) {
         sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
-    	log.debug "Missing either name or value.  Cannot parse!"
+    	log.error "Missing either name or value.  Cannot parse!"
     }
 }
 
 def installed() {
+    updated()
+}
+
+def updated() {
+    if (logEnable) runIn(1800,logsOff)
 }

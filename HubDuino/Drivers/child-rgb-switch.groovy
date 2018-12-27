@@ -422,8 +422,9 @@ def white() 	{ doColorButton("White") }
 
 
 def installed() {
+    updated()
 }
 
 def updated() {
-        if (logEnable) runIn(1800,logsOff)
+    if (logEnable) runIn(1800,logsOff)
 }
