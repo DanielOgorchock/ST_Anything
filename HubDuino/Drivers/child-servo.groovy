@@ -20,7 +20,7 @@
  *    ----        ---            ----
  *    2018-06-24  Dan Ogorchock  Original Creation
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
- *    2019-01-04  Dan Ogorchock  Added Switch Capability and preset values for ON and OFF
+ *    2019-01-04  Dan Ogorchock  Added Switch Capability and preset values for ON and OFF (thanks @ryan780)
  * 
  */
 metadata {
