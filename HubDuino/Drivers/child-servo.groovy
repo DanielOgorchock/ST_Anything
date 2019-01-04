@@ -77,11 +77,17 @@ def logsOff(){
 }
 
 def setLevel(value,duration=null) {
-	if (logEnable) log.debug "setLevel >> value: $value"
-	def valueaux = value as Integer
-	def level = Math.max(Math.min(valueaux, 99), 0)
+    if (logEnable) log.debug "setLevel >> value: $value"
+    def valueaux = value as Integer
+    def level = Math.max(Math.min(valueaux, 99), 0)
     sendData("${level}")
-	//sendEvent(name: "level", value: level, unit: "%")
+    //sendEvent(name: "level", value: level, unit: "%")
+    if (level == offvalue){
+        sendEvent(name: "switch", value: "off", isStateChange: true)
+    }
+    else {
+	    sendEvent(name: "switch", value: "on", isStateChange: true)
+    }
 }
 
 def sendData(String value) {
