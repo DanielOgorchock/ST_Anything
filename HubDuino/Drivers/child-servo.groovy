@@ -20,16 +20,18 @@
  *    ----        ---            ----
  *    2018-06-24  Dan Ogorchock  Original Creation
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
+ *    2019-01-04  Dan Ogorchock  Added Switch Capability and preset values for ON and OFF
  * 
  */
 metadata {
 	definition (name: "Child Servo", namespace: "ogiewon", author: "Dan Ogorchock") {
-		capability "Switch Level"
-		capability "Actuator"
-		capability "Sensor"
+            capability "Switch"
+            capability "Switch Level"
+            capability "Actuator"
+            capability "Sensor"
 
-		attribute "lastUpdated", "String"
-        attribute "angle", "number"
+            attribute "lastUpdated", "String"
+            attribute "angle", "number"
 	}
 
 	simulator {
@@ -37,6 +39,8 @@ metadata {
 	}
 
     preferences {
+        input ("onvalue", "number", title: "On Percentage", required: false, defaultValue: 50, description: "Percentage that should be used for On command.")
+        input ("offvalue", "number", title: "Off Percentage", required: false, defaultValue: 0, description: "Percentage that should be used for Off command.")
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
 	}
 
@@ -57,6 +61,14 @@ metadata {
 		main(["angle"])
 		details(["levelSliderControl", "level", "angle", "lastUpdated"])       
 	}
+}
+
+def on() {
+	setLevel(onvalue)
+}
+
+def off() {
+	setLevel(offvalue)
 }
 
 def logsOff(){
