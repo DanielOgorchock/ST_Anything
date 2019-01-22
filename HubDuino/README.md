@@ -1,7 +1,7 @@
 HubDuino v1.1.2
 ================
 
-**WARNING** - If using an ESP8266, make sure you are using v2.3 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anythign to crash after an hour or two.) 
+**WARNING** - If using an ESP8266, make sure you are using v2.4.2 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anythign to crash after an hour or two) along with Arduino IDE v1.8.8. 
 
 **Recent History:**
 2018-07-04 HubDuino v1.1.2 - Added support for I2C devices - AM2320(temp, humid), TSL2561(lux), MAX44009(lux), BH1750(lux), BME280(temp,humid,pressure), BMP280(temp, pressure), and improved TCS34725(color lux). Added ST_Anything_I2C_ESP8266WiFi.ino example sketch to demonstrate I2C sensors.
@@ -12,7 +12,7 @@ HubDuino v1.1.2
 
 ![screenshot](https://user-images.githubusercontent.com/5206084/41016005-e382479e-691a-11e8-871f-e62964c0e0c0.png)
 
-Note: The HubDuino v1.1.1 release is based on the ST_Anything v2.9.1 baseline and was built using the Arduino IDE v1.8.5.  Please make sure to upgrade your IDE.
+Note: The HubDuino v1.1.2 release is based on the ST_Anything v2.9.1 baseline and was built using the Arduino IDE v1.8.8.  Please make sure to upgrade your IDE.
 
 Turn your Arduino UNO/MEGA/MKR1000, NodeMCU ESP8266, or ESP32 into Anything you can imagine! HubDuino/ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
@@ -104,7 +104,7 @@ HubDuino/ST_Anything consists of four main parts:
   - Make sure you select the correct model of board you are compiling for. 
   - If building for a standalone ESP8266 board, make sure you have configured the Arduino IDE to include support for these boards.  Follow the guide at https://learn.sparkfun.com/tutorials/esp8266-thing-hookup-guide/installing-the-esp8266-arduino-addon
   
-**NOTE: The v2.4/v2.4.1 ESP8266 Board support package for the Arduino IDE has introduced a nasty memory leak. Please be sure to revert back to v2.3 to prevent your ESP8266 from crashing every few hours. This is an issue that the Arduino ESP8266 developers are aware of and I believe will be fixed when they release the next version. (here are the details https://community.hubitat.com/clicks/track?url=https%3A%2F%2Fgithub.com%2Fesp8266%2FArduino%2Fissues%2F4497&post_id=1971&topic_id=399)**  
+**NOTE: Arduino IDE v1.8.8 + v2.4.2 ESP8266 Board support package for the Arduino IDE appears to have corrected the previous memory leak. Please use this combination of software which has been successfully tested.**  
   
   - If building for a standalone ESP32 board, make sure you have configured the Arduino IDE to include support for these boards.  Follow the guide at https://github.com/espressif/arduino-esp32/blob/master/README.md
 - If using a LAN-to-Hub (WiFi or Cat5 Ethernet) based device
