@@ -1,5 +1,5 @@
 //******************************************************************************************
-//  File: ST_Anything_Multiples_ESP8266WiFi.ino
+//  File: ST_Anything_GarageDoors_ESP8266WiFi.ino
 //  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son)
 //
 //  Summary:  This Arduino Sketch, along with the ST_Anything library and the revised SmartThings 
