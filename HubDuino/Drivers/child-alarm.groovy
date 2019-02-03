@@ -22,6 +22,7 @@
  *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
+ *    2019-02-03  Dan Ogorchock  Fixed debug logging bug
  *
  * 
  */
@@ -80,6 +81,11 @@ metadata {
         main "alarm"
         details(["alarm", "siren", "strobe", "off", "test"])
 	}
+}
+
+def logsOff(){
+    log.warn "debug logging disabled..."
+    device.updateSetting("logEnable",[value:"false",type:"bool"])
 }
 
 def on() {
