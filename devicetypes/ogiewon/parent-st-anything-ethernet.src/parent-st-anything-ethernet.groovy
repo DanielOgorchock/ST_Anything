@@ -34,6 +34,7 @@
  *    2018-06-24  Dan Ogorchock  Added Child Servo
  *    2018-07-01  Dan Ogorchock  Added Pressure Measurement
  *    2018-08-06  Dan Ogorchock  Added MAC Address formatting before setting deviceNetworkID
+ *    2019-02-05  Dan Ogorchock  Added Child Energy Meter
  *	
  */
  
@@ -343,6 +344,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	break
          		case "power": 
                 		deviceHandlerName = "Child Power Meter" 
+                	break
+         		case "energy": 
+                		deviceHandlerName = "Child Energy Meter" 
                 	break
          		case "servo": 
                 		deviceHandlerName = "Child Servo" 
