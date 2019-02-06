@@ -31,6 +31,7 @@
  *    2018-06-24  Dan Ogorchock  Added Child Servo
  *    2018-07-01  Dan Ogorchock  Added Pressure Measurement
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
+ *    2019-02-05  Dan Ogorchock  Added Child Energy Meter
  *	
  */
  
@@ -290,6 +291,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	break
          		case "power": 
                 		deviceHandlerName = "Child Power Meter" 
+                	break
+         		case "energy": 
+                		deviceHandlerName = "Child Energy Meter" 
                 	break
          		case "servo": 
                 		deviceHandlerName = "Child Servo" 

@@ -37,6 +37,7 @@
  *    2018-07-01  Dan Ogorchock  Added Pressure Measurement
  *    2018-08-06  Dan Ogorchock  Added formatting of MAC address
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
+ *    2019-02-05  Dan Ogorchock  Added Child Energy Meter
  *	
  */
  
@@ -331,7 +332,10 @@ private void createChildDevice(String deviceName, String deviceNumber) {
          		case "power": 
                 		deviceHandlerName = "Child Power Meter" 
                 	break
-         		case "servo": 
+          		case "energy": 
+                		deviceHandlerName = "Child Energy Meter" 
+                	break
+        		case "servo": 
                 		deviceHandlerName = "Child Servo" 
                 	break
          		case "pressure": 
