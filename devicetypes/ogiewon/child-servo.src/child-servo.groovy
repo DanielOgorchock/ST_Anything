@@ -1,4 +1,4 @@
-﻿/**
+/**
  *  Child Servo
  *
  *  Copyright 2018 Daniel Ogorchock
@@ -39,30 +39,39 @@ metadata {
 	}
 
    	preferences {
-            input ("onvalue", "number", title: "On Percentage", required: false, defaultValue: 50, description: "Percentage that should be used for On command.")
+            input ("onvalue", "number", title: "On Percentage", required: false, defaultValue: 100, description: "Percentage that should be used for On command.")
             input ("offvalue", "number", title: "Off Percentage", required: false, defaultValue: 0, description: "Percentage that should be used for Off command.")
-            input ("rateValue", "number", title: "Default Rate (Duration)", required: false, defaultValue: 0, description: "Time in milliseconds to transition from 0% to 100% (0 = full speed)")
+            input ("rateValue", "number", title: "Default Rate (Duration)", required: false, defaultValue: 1000, description: "Time in milliseconds to transition from 0% to 100% (0 = full speed)")
         }
 
 	tiles(scale: 2) {
-		controlTile("levelSliderControl", "device.level", "slider", height: 2, width: 2, inactiveLabel: false) {
-			state "level", action:"switch level.setLevel"
+		multiAttributeTile(name:"switch", type: "lighting", width: 3, height: 4, canChangeIcon: true){
+			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
+				attributeState "off", label: '${name}', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff", nextState:"turningOn"
+				attributeState "on", label: '${name}', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#00A0DC", nextState:"turningOff"
+				attributeState "turningOn", label:'${name}', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#00A0DC", nextState:"turningOff"
+				attributeState "turningOff", label:'${name}', action:"switch.on", icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState:"turningOn"
+			}
+   			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
+				attributeState "level", action:"switch level.setLevel"
+			}
+ 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+            }
 		}
+        
  		valueTile("level", "device.level", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-			state "level", label:'${currentValue}%', unit:"%", backgroundColor:"#ffffff"
-		}
- 		valueTile("angle", "device.angle", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "level", label:'${currentValue} %', unit:"%", backgroundColor:"#ffffff"
+		}		
+        valueTile("angle", "device.angle", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "angle", label:'${currentValue}°', unit:"degrees", backgroundColor:"#ffffff"
 		}
 		valueTile("rate", "device.rate", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "rate", label:'${currentValue}', unit:"ms", backgroundColor:"#ffffff"
 		}
- 		valueTile("lastUpdated", "device.lastUpdated", inactiveLabel: false, decoration: "flat", width: 6, height: 2) {
-    		state "default", label:'Last Updated ${currentValue}', backgroundColor:"#ffffff"
-        }
        
-		main(["angle"])
-		details(["levelSliderControl", "level", "angle", "rate", "lastUpdated"])       
+		main(["switch"])
+		details(["switch", "level", "angle", "rate", "lastUpdated"])       
 	}
 }
 
@@ -97,11 +106,15 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {   
         // Update device
+        log.debug value
         def myValues = value.split(':')
+        log.debug myValues[0]
+        log.debug myValues[1]
+        log.debug myValues[2]
         sendEvent(name: "level",value: myValues[0].toInteger())
         sendEvent(name: "angle", value: myValues[1].toInteger())
         sendEvent(name: "rate", value: myValues[2].toInteger())
-        if (myValues[0].toInteger() <= offvalue.toInteger()){
+        if (myValues[0].toInteger() <= offvalue){
             sendEvent(name: "switch", value: "off")
         }
         else {
