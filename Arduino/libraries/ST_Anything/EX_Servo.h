@@ -6,7 +6,7 @@
 //			  It inherits from the st::Executor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_Servo executor1(F("servo1"), PIN_SERVO, INITIAL_ANGLE, false, 1000);
+//			  For Example:  st::EX_Servo executor1(F("servo1"), PIN_SERVO, 90, true, 1000, 0, 180, 2000);
 //
 //			  st::EX_Servo() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
