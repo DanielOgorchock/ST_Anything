@@ -1,9 +1,10 @@
-HubDuino v1.1.2
+HubDuino v1.1.3
 ================
 
 **WARNING** - If using an ESP8266, make sure you are using v2.4.2 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anything to crash after an hour or two) along with Arduino IDE v1.8.8. 
 
 **Recent History:**
+2019-02-10 HubDuino v1.1.3 - Significant overhaul of ES_Servo class and Child Driver - Thanks Jeff Albers!
 2018-07-04 HubDuino v1.1.2 - Added support for I2C devices - AM2320(temp, humid), TSL2561(lux), MAX44009(lux), BH1750(lux), BME280(temp,humid,pressure), BMP280(temp, pressure), and improved TCS34725(color lux). Added ST_Anything_I2C_ESP8266WiFi.ino example sketch to demonstrate I2C sensors.
 2018-06-24 HubDuino v1.1.1 - Added Servo Motor support
 2018-06-05 HubDuino v1.1 - Converted to use Hubitat Composite Device Driver Model
@@ -12,7 +13,7 @@ HubDuino v1.1.2
 
 ![screenshot](https://user-images.githubusercontent.com/5206084/41016005-e382479e-691a-11e8-871f-e62964c0e0c0.png)
 
-Note: The HubDuino v1.1.2 release is based on the ST_Anything v2.9.2 baseline and was built using the Arduino IDE v1.8.8.  Please make sure to upgrade your IDE.
+Note: The HubDuino v1.1.3 release is based on the ST_Anything v2.9.3 baseline and was built using the Arduino IDE v1.8.8.  Please make sure to upgrade your IDE.
 
 Turn your Arduino UNO/MEGA/MKR1000, NodeMCU ESP8266, or ESP32 into Anything you can imagine! HubDuino/ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
@@ -83,12 +84,12 @@ HubDuino/ST_Anything consists of four main parts:
 - The HubDuino Parent + Child Drivers that support sketches above.
   - hubduino-parent-ethernet.groovy (LAN-to-Hub, - automagically creates child devices based on your Arduino sketch,Arduino/W5100/W5500, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01, ESP32, MKR1000)
   - hubduino-parent-thingshield.groovy (Thingshield-to-Hub - automagically creates child devices based on your Arduino sketch)
-  - child-xxxxxx.groovy (get these from the ST_Anything SmartThings folder at https://github.com/DanielOgorchock/ST_Anything/tree/master/devicetypes/ogiewon)
-    - currently 18 child device handlers are available!
+  - child-xxxxxx.groovy (get these from the ST_Anything HubDuino folder at https://github.com/DanielOgorchock/ST_Anything/tree/master/HubDuino/Drivers)
+    - currently 24 child device handlers are available!
 
 ## Pre-Requisites for using LAN-to-HUB Ethernet connectivity (Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, ESP32)
-- Your Hubitat HUB must have a Static TCP/IP Address assigned via your router's DHCP Server. Since this procedure varies by router model, Please Google it!
-- ***The Hubitat hub listens on port 39501.  This is different than the ST hub which uses 39501 - MODIFY YOUR ARDUINO SKETCH ACCORDINGLY!***
+- Your Hubitat HUB must have a Reserved/Static TCP/IP Address assigned via your router's DHCP Server. Since this procedure varies by router model, Please Google it!
+- ***The Hubitat hub listens on port 39501.  This is different than the ST hub which uses 39500 - MODIFY YOUR ARDUINO SKETCH ACCORDINGLY!***
 - You'll need to identify a static TCP/IP address for your Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01, ESP32 as you'll need this later when setting up the sketch. Choose an unused IP address outside of the range your router's DHCP server uses, but in the same subnet.
 
 ## Arduino IDE Setup Instructions 
@@ -99,7 +100,7 @@ HubDuino/ST_Anything consists of four main parts:
 - Look inside the `Arduino/Sketches` folder of the repo.
 - Copy and paste all of the `ST_Anything_...` sketch folders into your local Arduino sketches directory. If you haven't created any sketches, you may not see the folder. In this case, feel free to create it.
 - Look inside the `Arduino/libraries` folder of the repo.
-- Copy and paste both the `ST_Anything...` and `SmartThings...` folders (as well as ALL of the other library folders) into your local Arduino libraries directory. 
+- Copy and paste both the `ST_Anything...` and `SmartThings...` folders (as well as ALL of the other library folders) into your local Arduino libraries directory. Many of the devices use third-party libraries which I have included in my repository for conveience/compatibility.
 - Open one of the ST_Anything_Multiples_xxxxx.ino sketches for the hardware you're using and see if it successfully compiles.
   - Make sure you select the correct model of board you are compiling for. 
   - If building for a standalone ESP8266 board, make sure you have configured the Arduino IDE to include support for these boards.  Follow the guide at https://learn.sparkfun.com/tutorials/esp8266-thing-hookup-guide/installing-the-esp8266-arduino-addon
@@ -109,7 +110,7 @@ HubDuino/ST_Anything consists of four main parts:
   - If building for a standalone ESP32 board, make sure you have configured the Arduino IDE to include support for these boards.  Follow the guide at https://github.com/espressif/arduino-esp32/blob/master/README.md
 - If using a LAN-to-Hub (WiFi or Cat5 Ethernet) based device
   -Find the lines of the Sketch where it says "<---You must edit this line!"
-    - You must ensure your Hubitat hub's LAN IP address does not change.  Use your router's static DHCP assignment feature to make sure your ST hub always gets the same IP Address!  Enter that address in the corresponding line in the sketch.
+    - You must ensure your Hubitat hub's LAN IP address does not change.  Use your router's reserved/static DHCP assignment feature to make sure your Hubitat Elevation hub always gets the same IP Address!  Enter that address in the corresponding line in the sketch.
     - ***The Hubitat hub listens on port 39501.  Make sure your Arduino sketch reflects this port number change!***
     - The Arduino must be assigned a static TCP/IP address, Gateway, DNS, Subnet Mask, MAC Address(W5100/W5500 only), SSID+Password(ESP8266,ESP01,ESP32,WiFi101,MKR1000)
     - *** NOTE: If using the W5100 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch! Please leave the first octet in the MAC Address '06' as certain MAC addresses are UNICAST while others are MULTICAST. Your MAC must be UNICAST and be a 'Locally Administered Address' Please see https://en.wikipedia.org/wiki/MAC_address#Address_details for more information ***
@@ -139,7 +140,7 @@ Your "Drivers Code" page should now look similar to the following
 - Enter in the following REQUIRED fields
     - Device Name: anything you want (tip: keep it short as this will be the prefix for all Child Devices that are created)
     - Device Label: anything you want (tip: keep it short)
-    - Device Network ID: any unique name (this will be overwritten with your device's MAC address automatically)
+    - Device Network ID: any unique name (this will be overwritten with your Arduino device's MAC address automatically)
     - Type: "HubDuino Parent Ethernet"
 
 Your screen should look like the following image just before you click Save:
@@ -178,9 +179,9 @@ Afterwards, go into the device page of the Parent and enter in the highlighted i
   - Assuming you're keeping things fairly standard, you should never need to modify the groovy code within the Parent / Child Drivers!  Pretty much all changes are kept within the Arduino Sketch .ino file!
   - Child Devices are automatically created by the HubDuino Parent Device - no manual creation of Virtual Devices
   - If you delete the HubDuino Parent Device, all of its children are also deleted.  PLEASE NOTE that you can simply delete any child device individually if necessary (no need to delete the Parent Device!)  If the Arduino sketch no longer sends updates for those child devices, they will not be re-created.
-  - You can add additional devices to the Arduino sketch at a later date.  Doing so will cause the Parent Device to automagically create the new child devices once data from the Arduino sketch makes its way to the Hubitat hub.
+  - You can add additional devices to the Arduino sketch at a later date.  Doing so will cause the Parent Device to automagically create the new child devices once data from the Arduino sketch makes its way to the Hubitat hub.  If you remove a device from your sketch, you will need to manually remove the child device from your Hubitat hub.
   - You can rename any of the Child Devices via the Hubitat web IDE as you see fit.  Just select a Child Device, and simply change its "Device Label" field and click save.  
-  - Do NOT change the Child Devices' Device Network ID - The Service Manager uses this field to link the Child device to the Parent device
+  - Do NOT change the Child Devices' Device Network ID - The HubDuino Parent Driver uses this field to link the Child device to the Parent device
 
 3) The names of the devices you create in the Arduino setup() routine MUST MATCH EXACTLY the names the HubDuino Parent Driver code expects.  The names are CaSe SenSiTiVe!  Do not get creative with naming in the Arduino sketch as the Child Devices will not be created.  Follow the naming convention as seen in the "ST_Anything_Multiples_xxxx.ino" sketches
   - Contact Sensors:  "contact1", "contact2", "contact3", ...
