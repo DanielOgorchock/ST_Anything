@@ -35,6 +35,7 @@
  *    2018-07-01  Dan Ogorchock  Added Pressure Measurement
  *    2018-08-06  Dan Ogorchock  Added MAC Address formatting before setting deviceNetworkID
  *    2019-02-05  Dan Ogorchock  Added Child Energy Meter
+ *    2019-02-09  Dan Ogorchock  Attempt to prevent duplicate devices from being created
  *	
  */
  
@@ -240,6 +241,7 @@ def installed() {
         state.alertMessage = "ST_Anything Parent Device has not yet been fully configured. Click the 'Gear' icon, enter data for all fields, and click 'Done'"
         runIn(2, "sendAlert")
     }
+    state.lastChildCreated = "none"
 }
 
 def initialize() {
@@ -271,6 +273,7 @@ def updateDeviceNetworkID() {
 	}
     //Need deviceNetworkID updated BEFORE we can create Child Devices
 	//Have the Arduino send an updated value for every device attached.  This will auto-created child devices!
+    state.lastChildCreated = "none"
 	refresh()
 }
 
@@ -357,10 +360,11 @@ private void createChildDevice(String deviceName, String deviceNumber) {
 			default: 
                 		log.error "No Child Device Handler case for ${deviceName}"
       		}
-            if (deviceHandlerName != "") {
-         		addChildDevice(deviceHandlerName, "${device.deviceNetworkId}-${deviceName}${deviceNumber}", null,
+            if ((deviceHandlerName != "") && (state.lastChildCreated != "${device.deviceNetworkId}-${deviceName}${deviceNumber}")) {
+                addChildDevice(deviceHandlerName, "${device.deviceNetworkId}-${deviceName}${deviceNumber}", null,
          			[completedSetup: true, label: "${device.displayName} (${deviceName}${deviceNumber})", 
                 	isComponent: false, componentName: "${deviceName}${deviceNumber}", componentLabel: "${deviceName} ${deviceNumber}"])
+                state.lastChildCreated = "${device.deviceNetworkId}-${deviceName}${deviceNumber}"
         	}   
     	} catch (e) {
         	log.error "Child device creation failed with error = ${e}"
