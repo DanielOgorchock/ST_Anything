@@ -24,6 +24,7 @@
  *    2018-02-16  Dan Ogorchock  Fixed preferences to work with Hubitat.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
+ *    2019-02-10  Dan Ogorchock  Added temperature units for display on the Hubitat Dashboard
  * 
  */
 metadata {
@@ -88,6 +89,7 @@ def parse(String description) {
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
+	def dispUnit = "°F"
     if (name && value) {
     	// Offset the temperature based on preference
         def offsetValue = Math.round((Float.parseFloat(value))*100.0)/100.0d
@@ -100,16 +102,18 @@ def parse(String description) {
             //if (logEnable) log.debug "tempUnitConversion = ${tempUnitConversion}"
             double tempC = fahrenheitToCelsius(offsetValue.toFloat())  //convert from Fahrenheit to Celsius
             offsetValue = tempC.round(1)
+			dispUnit = "°C"
         }
 
         if (tempUnitConversion == "3") {
             //if (logEnable) log.debug "tempUnitConversion = ${tempUnitConversion}"
             double tempF = celsiusToFahrenheit(offsetValue.toFloat())  //convert from Celsius to Fahrenheit
             offsetValue = tempF.round(1)
+			dispUnit = "°F"
         }
 
         // Update device
-        sendEvent(name: name, value: offsetValue)
+        sendEvent(name: name, value: offsetValue, unit: dispUnit)
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
