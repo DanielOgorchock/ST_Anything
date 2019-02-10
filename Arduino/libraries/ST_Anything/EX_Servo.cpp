@@ -16,6 +16,7 @@
 //              - int servoDetachTime - OPTIONAL - determines how long after the servo is moved that the servo is powered down if detachAfterMove is true (defaults to 1000ms)
 //				- int minLevelAngle - OPTIONAL - servo angle in degrees to map to level 0 (defaults to 0 degrees)
 //				- int maxLevelAngle - OPTIONAL - servo angle in degrees to map to level 100 (defaults to 180 degrees)
+//              - int servoRate - OPTIONAL - initial servo rate in ms/degree (defaults to 2000, used to ensure a gentle move during startup, afterwards comes from SmartThings/Hubitat with each move request)
 //
 //  Change History:
 //
@@ -69,7 +70,7 @@ namespace st
 
 	//public
 	//constructor
-	EX_Servo::EX_Servo(const __FlashStringHelper *name, byte pinPWM, int startingAngle, bool detachAfterMove, long servoDetachTime, int minLevelAngle, int maxLevelAngle) :
+	EX_Servo::EX_Servo(const __FlashStringHelper *name, byte pinPWM, int startingAngle, bool detachAfterMove, long servoDetachTime, int minLevelAngle, int maxLevelAngle, int servoRate) :
 		Executor(name),
 		m_Servo(),
 		m_nTargetAngle(startingAngle),
@@ -77,12 +78,12 @@ namespace st
 		m_nDetachTime(servoDetachTime),
 		m_nMinLevelAngle(minLevelAngle),
 		m_nMaxLevelAngle(maxLevelAngle),
-		m_nCurrentRate(1000),
+		m_nCurrentRate(servoRate),
 		m_bMoveActive(false),
 		m_bDetachTmrActive(false)
 	{
 		setPWMPin(pinPWM);
-		m_nOldAngle = m_nTargetAngle;
+		m_nOldAngle = (minLevelAngle + maxLevelAngle) / 2;
 	}
 
 	//destructor
