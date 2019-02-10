@@ -39,6 +39,8 @@ public:
   sint8 setopt(SOCKET socket, uint8 u8Level, uint8 option_name, const void *option_value, uint16 u16OptionLen);
   sint8 connect(SOCKET sock, struct sockaddr *pstrAddr, uint8 u8AddrLen);
   uint8 connected(SOCKET sock);
+  uint8 listening(SOCKET sock);
+  uint8 bound(SOCKET sock);
   int available(SOCKET sock);
   int peek(SOCKET sock);
   int read(SOCKET sock, uint8_t* buf, size_t size);
@@ -66,6 +68,7 @@ private:
       uint8_t* head;
       int length;
     } buffer;
+    struct sockaddr _lastSendtoAddr;
   } _info[MAX_SOCKET];
 };
 

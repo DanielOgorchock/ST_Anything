@@ -11,6 +11,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
+//    2019-02-09  Dan Ogorchock  Moved update() from Sensor to Device
 //
 //
 //******************************************************************************************
@@ -37,6 +38,7 @@ namespace st
 			
 			//initialization routine - This pure virtual function must be implemented by all derived classes
 			virtual void init()=0;
+			virtual void update() = 0;
 
 			//function used by all devices to process data from SmartThings Shield - all derived classes must implement this pure virtual function
 			virtual void beSmart(const String &str)=0; 

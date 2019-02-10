@@ -600,7 +600,11 @@ static sint8 hif_isr(void)
 		{
 #ifndef WIN32
 			M2M_ERR("(hif) False interrupt %lx",reg);
+#ifdef ARDUINO
+			// ignore false interrupts, since they cause infinite loops in hif_handle_isr
+#else
 			ret = M2M_ERR_FAIL;
+#endif
 			goto ERR1;
 #else
 #endif

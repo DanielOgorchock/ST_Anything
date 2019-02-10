@@ -11,6 +11,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
+//    2019-02-09  Dan Ogorchock  Moved update() from Sensor to Device
 //
 //
 //******************************************************************************************
@@ -39,7 +40,6 @@ namespace st
 			
 			//all derived classes must implement these pure virtual functions
 			virtual void init()=0;
-			virtual void update()=0;
 	
 	};
 

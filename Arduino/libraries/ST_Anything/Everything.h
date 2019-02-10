@@ -23,6 +23,7 @@
 //	  2015-03-14  Dan Ogorchock	 Added public setLED() function to control ThingShield LED
 //    2015-03-28  Dan Ogorchock  Added throttling capability to sendStrings to improve success rate of ST Cloud getting the data ("SENDSTRINGS_INTERVAL" is in CONSTANTS.H)
 //    2017-02-07  Dan Ogorchock  Added support for new SmartThings v2.0 library (ThingShield, W5100, ESP8266)
+//    2019-02-09  Dan Ogorchock  Add update() call to Executors in support of devices like EX_Servo that need a non-blocking mechanism
 //
 //******************************************************************************************
 
@@ -53,7 +54,7 @@ namespace st
 			//static SmartThingsNetworkState_t stNetworkState;
 		
 			//static void updateNetworkState();	//keeps track of the current ST Shield to Hub network status
-			static void updateSensors();		//simply calls update on all the sensors
+			static void updateDevices();		//simply calls update on all the sensors
 			static void sendStrings();			//sends all updates from the devices in Return_String
 			static unsigned long sendstringsLastMillis;	//keep track of how long since last time we sent data to ST Cloud, to enable throttling
 

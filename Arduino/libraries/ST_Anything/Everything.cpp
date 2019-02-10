@@ -23,6 +23,7 @@
 //    2017-02-07  Dan Ogorchock  Added support for new SmartThings v2.0 library (ThingShield, W5100, ESP8266)
 //    2017-02-19  Dan Ogorchock  Fixed bug in throttling capability
 //    2017-04-26  Dan Ogorchock  Allow each communication method to specify unique ST transmission throttling delay
+//    2019-02-09  Dan Ogorchock  Add update() call to Executors in support of devices like EX_Servo that need a non-blocking mechanism
 //
 //******************************************************************************************
 
@@ -38,11 +39,17 @@ namespace st
 {
 	
 //private
-	void Everything::updateSensors()
+	void Everything::updateDevices()
 	{
 		for(unsigned int index=0; index<m_nSensorCount; ++index)
 		{
 			m_Sensors[index]->update();
+			sendStrings();
+		}
+
+		for (unsigned int i = 0; i<m_nExecutorCount; ++i)
+		{
+			m_Executors[i]->update();
 			sendStrings();
 		}
 	}
@@ -176,7 +183,7 @@ namespace st
 	
 	void Everything::run()
 	{
-		updateSensors();			//call each st::Sensor object to refresh data
+		updateDevices();			//call each st::Sensor object to refresh data
 
 		#ifndef DISABLE_SMARTTHINGS
 			SmartThing->run();		//call the ST Shield Library to receive any data from the ST Hub

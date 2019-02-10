@@ -623,11 +623,7 @@ Version
 Date
 		5 June 2012
 *********************************************************************/
-#ifdef ARDUINO
-sint8 bindSocket(SOCKET sock, struct sockaddr *pstrAddr, uint8 u8AddrLen)
-#else
 sint8 bind(SOCKET sock, struct sockaddr *pstrAddr, uint8 u8AddrLen)
-#endif
 {
 	sint8	s8Ret = SOCK_ERR_INVALID_ARG;
 	if((pstrAddr != NULL) && (sock >= 0) && (gastrSockets[sock].bIsUsed == 1) && (u8AddrLen != 0))
@@ -672,11 +668,7 @@ Version
 Date
 		5 June 2012
 *********************************************************************/
-#ifdef ARDUINO
-sint8 listenSocket(SOCKET sock, uint8 backlog)
-#else
 sint8 listen(SOCKET sock, uint8 backlog)
-#endif
 {
 	sint8	s8Ret = SOCK_ERR_INVALID_ARG;
 	
@@ -748,11 +740,7 @@ Version
 Date
 		5 June 2012
 *********************************************************************/
-#ifdef ARDUINO
-sint8 connectSocket(SOCKET sock, struct sockaddr *pstrAddr, uint8 u8AddrLen)
-#else
 sint8 connect(SOCKET sock, struct sockaddr *pstrAddr, uint8 u8AddrLen)
-#endif
 {
 	sint8	s8Ret = SOCK_ERR_INVALID_ARG;
 	if((sock >= 0) && (pstrAddr != NULL) && (gastrSockets[sock].bIsUsed == 1) && (u8AddrLen != 0))
@@ -856,11 +844,7 @@ Version
 Date
 		4 June 2012
 *********************************************************************/
-#ifdef ARDUINO
-sint16 sendtoSocket(SOCKET sock, void *pvSendBuffer, uint16 u16SendLength, uint16 flags, struct sockaddr *pstrDestAddr, uint8 u8AddrLen)
-#else
 sint16 sendto(SOCKET sock, void *pvSendBuffer, uint16 u16SendLength, uint16 flags, struct sockaddr *pstrDestAddr, uint8 u8AddrLen)
-#endif
 {
 #ifdef ARDUINO
 	// Silence "unused" warning
@@ -979,11 +963,7 @@ Version
 Date
 		4 June 2012
 *********************************************************************/
-#ifdef ARDUINO
-sint8 closeSocket(SOCKET sock)
-#else
 sint8 close(SOCKET sock)
-#endif
 {
 	sint8	s8Ret = SOCK_ERR_INVALID_ARG;
     M2M_INFO("Sock to delete <%d>\n", sock);

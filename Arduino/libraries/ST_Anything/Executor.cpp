@@ -11,6 +11,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
+//    2019-02-09  Dan Ogorchock  Added update() function
 //
 //
 //******************************************************************************************
@@ -47,6 +48,11 @@ st
 		
 	}
 	
+	void Executor::update()
+	{
+
+	}
+
 	//debug flag to determine if debug print statements are executed (set value in your sketch)
 	bool Executor::debug=false; 
 	

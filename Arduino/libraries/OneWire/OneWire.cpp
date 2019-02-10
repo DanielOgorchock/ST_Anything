@@ -139,10 +139,12 @@ sample code bearing this copyright.
 //--------------------------------------------------------------------------
 */
 
+#include <Arduino.h>
 #include "OneWire.h"
+#include "util/OneWire_direct_gpio.h"
 
 
-OneWire::OneWire(uint8_t pin)
+void OneWire::begin(uint8_t pin)
 {
 	pinMode(pin, INPUT);
 	bitmask = PIN_TO_BITMASK(pin);
@@ -161,8 +163,8 @@ OneWire::OneWire(uint8_t pin)
 //
 uint8_t OneWire::reset(void)
 {
-	IO_REG_TYPE mask = bitmask;
-	volatile IO_REG_TYPE *reg IO_REG_ASM = baseReg;
+	IO_REG_TYPE mask IO_REG_MASK_ATTR = bitmask;
+	volatile IO_REG_TYPE *reg IO_REG_BASE_ATTR = baseReg;
 	uint8_t r;
 	uint8_t retries = 125;
 
@@ -195,8 +197,8 @@ uint8_t OneWire::reset(void)
 //
 void OneWire::write_bit(uint8_t v)
 {
-	IO_REG_TYPE mask=bitmask;
-	volatile IO_REG_TYPE *reg IO_REG_ASM = baseReg;
+	IO_REG_TYPE mask IO_REG_MASK_ATTR = bitmask;
+	volatile IO_REG_TYPE *reg IO_REG_BASE_ATTR = baseReg;
 
 	if (v & 1) {
 		noInterrupts();
@@ -223,8 +225,8 @@ void OneWire::write_bit(uint8_t v)
 //
 uint8_t OneWire::read_bit(void)
 {
-	IO_REG_TYPE mask=bitmask;
-	volatile IO_REG_TYPE *reg IO_REG_ASM = baseReg;
+	IO_REG_TYPE mask IO_REG_MASK_ATTR = bitmask;
+	volatile IO_REG_TYPE *reg IO_REG_BASE_ATTR = baseReg;
 	uint8_t r;
 
 	noInterrupts();
@@ -326,7 +328,7 @@ void OneWire::reset_search()
 {
   // reset the search state
   LastDiscrepancy = 0;
-  LastDeviceFlag = FALSE;
+  LastDeviceFlag = false;
   LastFamilyDiscrepancy = 0;
   for(int i = 7; ; i--) {
     ROM_NO[i] = 0;
@@ -345,7 +347,7 @@ void OneWire::target_search(uint8_t family_code)
       ROM_NO[i] = 0;
    LastDiscrepancy = 64;
    LastFamilyDiscrepancy = 0;
-   LastDeviceFlag = FALSE;
+   LastDeviceFlag = false;
 }
 
 //
@@ -364,10 +366,11 @@ void OneWire::target_search(uint8_t family_code)
 // Return TRUE  : device found, ROM number in ROM_NO buffer
 //        FALSE : device not found, end of search
 //
-uint8_t OneWire::search(uint8_t *newAddr, bool search_mode /* = true */)
+bool OneWire::search(uint8_t *newAddr, bool search_mode /* = true */)
 {
    uint8_t id_bit_number;
-   uint8_t last_zero, rom_byte_number, search_result;
+   uint8_t last_zero, rom_byte_number;
+   bool    search_result;
    uint8_t id_bit, cmp_id_bit;
 
    unsigned char rom_byte_mask, search_direction;
@@ -377,19 +380,17 @@ uint8_t OneWire::search(uint8_t *newAddr, bool search_mode /* = true */)
    last_zero = 0;
    rom_byte_number = 0;
    rom_byte_mask = 1;
-   search_result = 0;
+   search_result = false;
 
    // if the last call was not the last one
-   if (!LastDeviceFlag)
-   {
+   if (!LastDeviceFlag) {
       // 1-Wire reset
-      if (!reset())
-      {
+      if (!reset()) {
          // reset the search
          LastDiscrepancy = 0;
-         LastDeviceFlag = FALSE;
+         LastDeviceFlag = false;
          LastFamilyDiscrepancy = 0;
-         return FALSE;
+         return false;
       }
 
       // issue the search command
@@ -407,26 +408,23 @@ uint8_t OneWire::search(uint8_t *newAddr, bool search_mode /* = true */)
          cmp_id_bit = read_bit();
 
          // check for no devices on 1-wire
-         if ((id_bit == 1) && (cmp_id_bit == 1))
+         if ((id_bit == 1) && (cmp_id_bit == 1)) {
             break;
-         else
-         {
+         } else {
             // all devices coupled have 0 or 1
-            if (id_bit != cmp_id_bit)
+            if (id_bit != cmp_id_bit) {
                search_direction = id_bit;  // bit write value for search
-            else
-            {
+            } else {
                // if this discrepancy if before the Last Discrepancy
                // on a previous next then pick the same as last time
-               if (id_bit_number < LastDiscrepancy)
+               if (id_bit_number < LastDiscrepancy) {
                   search_direction = ((ROM_NO[rom_byte_number] & rom_byte_mask) > 0);
-               else
+               } else {
                   // if equal to last pick 1, if not then pick 0
                   search_direction = (id_bit_number == LastDiscrepancy);
-
+               }
                // if 0 was picked then record its position in LastZero
-               if (search_direction == 0)
-               {
+               if (search_direction == 0) {
                   last_zero = id_bit_number;
 
                   // check for Last discrepancy in family
@@ -451,8 +449,7 @@ uint8_t OneWire::search(uint8_t *newAddr, bool search_mode /* = true */)
             rom_byte_mask <<= 1;
 
             // if the mask is 0 then go to new SerialNum byte rom_byte_number and reset mask
-            if (rom_byte_mask == 0)
-            {
+            if (rom_byte_mask == 0) {
                 rom_byte_number++;
                 rom_byte_mask = 1;
             }
@@ -461,26 +458,24 @@ uint8_t OneWire::search(uint8_t *newAddr, bool search_mode /* = true */)
       while(rom_byte_number < 8);  // loop until through all ROM bytes 0-7
 
       // if the search was successful then
-      if (!(id_bit_number < 65))
-      {
+      if (!(id_bit_number < 65)) {
          // search successful so set LastDiscrepancy,LastDeviceFlag,search_result
          LastDiscrepancy = last_zero;
 
          // check for last device
-         if (LastDiscrepancy == 0)
-            LastDeviceFlag = TRUE;
-
-         search_result = TRUE;
+         if (LastDiscrepancy == 0) {
+            LastDeviceFlag = true;
+         }
+         search_result = true;
       }
    }
 
    // if no device found then reset counters so next 'search' will be like a first
-   if (!search_result || !ROM_NO[0])
-   {
+   if (!search_result || !ROM_NO[0]) {
       LastDiscrepancy = 0;
-      LastDeviceFlag = FALSE;
+      LastDeviceFlag = false;
       LastFamilyDiscrepancy = 0;
-      search_result = FALSE;
+      search_result = false;
    } else {
       for (int i = 0; i < 8; i++) newAddr[i] = ROM_NO[i];
    }
@@ -495,46 +490,34 @@ uint8_t OneWire::search(uint8_t *newAddr, bool search_mode /* = true */)
 //
 
 #if ONEWIRE_CRC8_TABLE
-// This table comes from Dallas sample code where it is freely reusable,
-// though Copyright (C) 2000 Dallas Semiconductor Corporation
-static const uint8_t PROGMEM dscrc_table[] = {
-      0, 94,188,226, 97, 63,221,131,194,156,126, 32,163,253, 31, 65,
-    157,195, 33,127,252,162, 64, 30, 95,  1,227,189, 62, 96,130,220,
-     35,125,159,193, 66, 28,254,160,225,191, 93,  3,128,222, 60, 98,
-    190,224,  2, 92,223,129, 99, 61,124, 34,192,158, 29, 67,161,255,
-     70, 24,250,164, 39,121,155,197,132,218, 56,102,229,187, 89,  7,
-    219,133,103, 57,186,228,  6, 88, 25, 71,165,251,120, 38,196,154,
-    101, 59,217,135,  4, 90,184,230,167,249, 27, 69,198,152,122, 36,
-    248,166, 68, 26,153,199, 37,123, 58,100,134,216, 91,  5,231,185,
-    140,210, 48,110,237,179, 81, 15, 78, 16,242,172, 47,113,147,205,
-     17, 79,173,243,112, 46,204,146,211,141,111, 49,178,236, 14, 80,
-    175,241, 19, 77,206,144,114, 44,109, 51,209,143, 12, 82,176,238,
-     50,108,142,208, 83, 13,239,177,240,174, 76, 18,145,207, 45,115,
-    202,148,118, 40,171,245, 23, 73,  8, 86,180,234,105, 55,213,139,
-     87,  9,235,181, 54,104,138,212,149,203, 41,119,244,170, 72, 22,
-    233,183, 85, 11,136,214, 52,106, 43,117,151,201, 74, 20,246,168,
-    116, 42,200,150, 21, 75,169,247,182,232, 10, 84,215,137,107, 53};
+// Dow-CRC using polynomial X^8 + X^5 + X^4 + X^0
+// Tiny 2x16 entry CRC table created by Arjen Lentz
+// See http://lentz.com.au/blog/calculating-crc-with-a-tiny-32-entry-lookup-table
+static const uint8_t PROGMEM dscrc2x16_table[] = {
+	0x00, 0x5E, 0xBC, 0xE2, 0x61, 0x3F, 0xDD, 0x83,
+	0xC2, 0x9C, 0x7E, 0x20, 0xA3, 0xFD, 0x1F, 0x41,
+	0x00, 0x9D, 0x23, 0xBE, 0x46, 0xDB, 0x65, 0xF8,
+	0x8C, 0x11, 0xAF, 0x32, 0xCA, 0x57, 0xE9, 0x74
+};
 
-//
 // Compute a Dallas Semiconductor 8 bit CRC. These show up in the ROM
-// and the registers.  (note: this might better be done without to
-// table, it would probably be smaller and certainly fast enough
-// compared to all those delayMicrosecond() calls.  But I got
-// confused, so I use this table from the examples.)
-//
+// and the registers.  (Use tiny 2x16 entry CRC table)
 uint8_t OneWire::crc8(const uint8_t *addr, uint8_t len)
 {
 	uint8_t crc = 0;
 
 	while (len--) {
-		crc = pgm_read_byte(dscrc_table + (crc ^ *addr++));
+		crc = *addr++ ^ crc;  // just re-using crc as intermediate
+		crc = pgm_read_byte(dscrc2x16_table + (crc & 0x0f)) ^
+		pgm_read_byte(dscrc2x16_table + 16 + ((crc >> 4) & 0x0f));
 	}
+
 	return crc;
 }
 #else
 //
 // Compute a Dallas Semiconductor 8 bit CRC directly.
-// this is much slower, but much smaller, than the lookup table.
+// this is much slower, but a little smaller, than the lookup table.
 //
 uint8_t OneWire::crc8(const uint8_t *addr, uint8_t len)
 {

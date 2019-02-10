@@ -46,6 +46,11 @@ uint8_t WiFiUDP::begin(uint16_t port)
 	addr.sin_port = _htons(port);
 	addr.sin_addr.s_addr = 0;
 
+	if (_socket != -1 && WiFiSocket.bound(_socket)) {
+		WiFiSocket.close(_socket);
+		_socket = -1;
+	}
+
 	// Open UDP server socket.
 	if ((_socket = WiFiSocket.create(AF_INET, SOCK_DGRAM, 0)) < 0) {
 		return 0;
@@ -132,7 +137,7 @@ int WiFiUDP::endPacket()
 
 	int result = WiFiSocket.sendto(_socket, (void *)_sndBuffer, _sndSize, 0, (struct sockaddr *)&addr, sizeof(addr));
 
-	return (result <= 0) ? 0 : 1;
+	return (result < 0) ? 0 : 1;
 }
 
 size_t WiFiUDP::write(uint8_t byte)

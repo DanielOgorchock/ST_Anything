@@ -22,7 +22,8 @@
 #include "WiFiClient.h"
 #include "WiFiServer.h"
 
-WiFiServer::WiFiServer(uint16_t port)
+WiFiServer::WiFiServer(uint16_t port) :
+	_socket(-1)
 {
 	_port = port;
 }
@@ -45,6 +46,11 @@ uint8_t WiFiServer::begin(uint8_t opt)
 	addr.sin_family = AF_INET;
 	addr.sin_port = _htons(_port);
 	addr.sin_addr.s_addr = 0;
+
+	if (_socket != -1 && WiFiSocket.listening(_socket)) {
+		WiFiSocket.close(_socket);
+		_socket = -1;
+	}
 
 	// Open TCP server socket.
 	if ((_socket = WiFiSocket.create(AF_INET, SOCK_STREAM, opt)) < 0) {
@@ -72,6 +78,10 @@ WiFiClient WiFiServer::available(uint8_t* status)
 {
 	if (status != NULL) {
 		*status = 0;
+	}
+
+	if (_socket != -1 && !WiFiSocket.listening(_socket)) {
+		_socket = -1;
 	}
 
 	if (_socket != -1) {
