@@ -106,11 +106,7 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {   
         // Update device
-        log.debug value
         def myValues = value.split(':')
-        log.debug myValues[0]
-        log.debug myValues[1]
-        log.debug myValues[2]
         sendEvent(name: "level",value: myValues[0].toInteger())
         sendEvent(name: "angle", value: myValues[1].toInteger())
         sendEvent(name: "rate", value: myValues[2].toInteger())
