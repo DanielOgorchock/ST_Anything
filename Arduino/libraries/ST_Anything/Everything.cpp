@@ -24,6 +24,7 @@
 //    2017-02-19  Dan Ogorchock  Fixed bug in throttling capability
 //    2017-04-26  Dan Ogorchock  Allow each communication method to specify unique ST transmission throttling delay
 //    2019-02-09  Dan Ogorchock  Add update() call to Executors in support of devices like EX_Servo that need a non-blocking mechanism
+//    2019-02-24  Dan Ogorchock  Added new special callOnMsgRcvd2 callback capability. Allows recvd string to be manipulated in the sketch before being processed by Everything.
 //
 //******************************************************************************************
 
@@ -326,7 +327,12 @@ namespace st
 			Serial.print(F("Everything: Received: "));
 			Serial.println(message);
 		}
-		
+
+		if (Everything::callOnMsgRcvd2 != 0)
+		{
+			Everything::callOnMsgRcvd2(message);
+		}
+
 		if (message == "refresh")
 		{
 			Everything::refreshDevices();
@@ -361,7 +367,8 @@ namespace st
 	byte Everything::bTimersPending=0;	//initialize variable
 	void (*Everything::callOnMsgSend)(const String &msg)=0; //initialize this callback function to null
 	void (*Everything::callOnMsgRcvd)(const String &msg)=0; //initialize this callback function to null
-	
+	void(*Everything::callOnMsgRcvd2)(String &msg) = 0; //initialize this callback function to null
+
 	//SmartThings static members
 	//#ifndef DISABLE_SMARTTHINGS
 	//	// Please refer to Constants.h for settings that affect whether a board uses SoftwareSerial or Hardware Serial calls
