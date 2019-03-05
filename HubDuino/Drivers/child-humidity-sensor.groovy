@@ -24,6 +24,7 @@
  *    2017-09-09  Allan (vseven) Added preference to offset the humidity.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
+ *    2019-03-05  Dan Ogorchock  Improved Rounding
  *
  * 
  */
@@ -83,13 +84,13 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
         // Offset the humidity based on preference
-        def offsetValue = Math.round((Float.parseFloat(value))*100.0)/100.0d
-        offsetValue = offsetValue.round(1)
+        def tmpValue = Float.parseFloat(value)
         if (humidityOffset) {
-            offsetValue = offsetValue + humidityOffset
+            tmpValue = tmpValue + humidityOffset
         }
+	tmpValue = tmpValue.round(1)
         // Update device
-        sendEvent(name: name, value: offsetValue)
+        sendEvent(name: name, value: tmpValue)
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
