@@ -6,7 +6,7 @@
 //			  It inherits from the st::Executor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_Servo executor1(F("servo1"), PIN_SERVO, 90, true, 1000, 0, 180, 2000);
+//			  For Example:  st::EX_Servo executor1(F("servo1"), PIN_SERVO, 90, true, 1000, 0, 180, 2000, 544, 2400);
 //
 //			  st::EX_Servo() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -17,6 +17,8 @@
 //				- int minLevelAngle - OPTIONAL - servo angle in degrees to map to level 0 (defaults to 0 degrees)
 //				- int maxLevelAngle - OPTIONAL - servo angle in degrees to map to level 100 (defaults to 180 degrees)
 //              - int servoRate - OPTIONAL - initial servo rate in ms/degree (defaults to 2000, used to ensure a gentle move during startup, afterwards comes from SmartThings/Hubitat with each move request)
+//              - int minPulseWidth - OPTIONAL - minimum pulse width in milliseconds, defaults to 544 (see Arduino servo attach() function)
+//              - int maxPulseWidth - OPTIONAL - maximum pulse width in milliseconds, defaults to 2400 (see Arduino servo attach() function)
 //
 //  Change History:
 //
@@ -27,6 +29,7 @@
 //    2018-08-19  Dan Ogorchock  Added feature to optionally allow servo to be powered down after a move
 //	  2019-02-02  Jeff Albers	 Added Parameters to map servo endpoints, actively control rate of servo motion via duration input to device driver, intializes to level instead of angle
 //    2019-02-09  Dan Ogorchock  Adding Asynchronous Motion to eliminate blocking calls and to allow simultaneous motion across multiple servos
+//    2019-03-04  Dan Ogorchock  Added optional min and max pulse width parameters to allow servo specific adjustments
 //
 //
 //******************************************************************************************
@@ -58,13 +61,15 @@ namespace st
 			bool m_bDetachTmrActive; //True if servo is waiting to power off
 			long m_nTimeStep;        //Number of milliseconds per servo motor degree (i.e. rate of change for the servo)
 			long m_nPrevMillis;      //Previous millis() value
+			int m_nMinPulseWidth;    //Minimum Servo Pulse Width
+			int m_nMaxPulseWidth;    //Maximum Servo Pulse Width
 
 
 			void writeAngleToPin();	//function to update the Arduino PWM Output Pin
 
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			EX_Servo(const __FlashStringHelper *name, byte pinPWM, int startingAngle = 90, bool detachAfterMove = false, long servoDetachTime = 1000, int minLevelAngle = 0, int maxLevelAngle = 180, int servoRate = 2000);
+			EX_Servo(const __FlashStringHelper *name, byte pinPWM, int startingAngle = 90, bool detachAfterMove = false, long servoDetachTime = 1000, int minLevelAngle = 0, int maxLevelAngle = 180, int servoRate = 2000, int minPulseWidth = 544, int maxPulseWidth = 2400);
 			
 			//destructor
 			virtual ~EX_Servo();
