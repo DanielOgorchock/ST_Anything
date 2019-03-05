@@ -84,7 +84,7 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
         // Offset the humidity based on preference
-        def tmpValue = Float.parseFloat(value)
+        float tmpValue = Float.parseFloat(value)
         if (humidityOffset) {
             tmpValue = tmpValue + humidityOffset
         }
