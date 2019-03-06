@@ -53,14 +53,24 @@ namespace st
 			m_Servo.attach(m_nPinPWM, m_nMinPulseWidth, m_nMaxPulseWidth);
 		}
 
-		if (m_nTargetAngle < m_nMinLevelAngle) {
-			m_nTargetAngle = m_nMinLevelAngle;
+		if ((m_nTargetAngle < m_nMinLevelAngle) and (m_nTargetAngle < m_nMaxLevelAngle)) {
+			if (m_nMinLevelAngle < m_nMaxLevelAngle) {
+				m_nTargetAngle = m_nMinLevelAngle;
+			}
+			else {
+				m_nTargetAngle = m_nMaxLevelAngle;
+			}
 		}
-		if (m_nTargetAngle > m_nMaxLevelAngle) {
-			m_nTargetAngle = m_nMaxLevelAngle;
+		if 	((m_nTargetAngle > m_nMaxLevelAngle) and (m_nTargetAngle > m_nMinLevelAngle)) {
+			if (m_nMaxLevelAngle > m_nMinLevelAngle) {
+				m_nTargetAngle = m_nMaxLevelAngle;
+			}
+			else {
+				m_nTargetAngle = m_nMinLevelAngle;
+			}
 		}
 
-		m_nTimeStep = (m_nCurrentRate / (m_nMaxLevelAngle - m_nMinLevelAngle));  //Constant servo step rate assumes duration is the time desired for maximum level change of 100
+		m_nTimeStep =  abs(m_nCurrentRate / (m_nMaxLevelAngle - m_nMinLevelAngle));  //Constant servo step rate assumes duration is the time desired for maximum level change of 100
 		m_nCurrentAngle = m_nOldAngle;             //preserver original angular position
 		m_bMoveActive = true;                      //start the move (the update() function will take care of the actual motion)
 
