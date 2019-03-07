@@ -25,6 +25,7 @@
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-02-10  Dan Ogorchock  Added temperature units for display on the Hubitat Dashboard
+ *    2019-03-06  Dan Ogorchock  Improved rounding
  * 
  */
 metadata {
@@ -92,28 +93,27 @@ def parse(String description) {
 	def dispUnit = "°F"
     if (name && value) {
     	// Offset the temperature based on preference
-        def offsetValue = Math.round((Float.parseFloat(value))*100.0)/100.0d
-        offsetValue = offsetValue.round(1)
-        if (tempOffset) {
-            offsetValue = offsetValue + tempOffset
+        float tmpValue = Float.parseFloat(value)
+        
+        if (tmpValue) {
+            tmpValue = tmpValue + tempOffset
         }
 
         if (tempUnitConversion == "2") {
             //if (logEnable) log.debug "tempUnitConversion = ${tempUnitConversion}"
-            double tempC = fahrenheitToCelsius(offsetValue.toFloat())  //convert from Fahrenheit to Celsius
-            offsetValue = tempC.round(1)
-			dispUnit = "°C"
+            tmpValue = fahrenheitToCelsius(tmpValue)  //convert from Fahrenheit to Celsius
+            dispUnit = "°C"
         }
 
         if (tempUnitConversion == "3") {
             //if (logEnable) log.debug "tempUnitConversion = ${tempUnitConversion}"
-            double tempF = celsiusToFahrenheit(offsetValue.toFloat())  //convert from Celsius to Fahrenheit
-            offsetValue = tempF.round(1)
-			dispUnit = "°F"
+            tmpValue = celsiusToFahrenheit(tmpValue)  //convert from Celsius to Fahrenheit
+            dispUnit = "°F"
         }
 
         // Update device
-        sendEvent(name: name, value: offsetValue, unit: dispUnit)
+        tmpValue = tmpValue.round(1)
+        sendEvent(name: name, value: tmpValue, unit: dispUnit)
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
