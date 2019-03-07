@@ -89,7 +89,7 @@ def parse(String description) {
             tmpValue = tmpValue + humidityOffset
         }
         // Update device
-	tmpValue = tmpValue.round(1)
+        tmpValue = tmpValue.round(1)
         sendEvent(name: name, value: tmpValue)
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
