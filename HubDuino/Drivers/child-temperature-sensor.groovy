@@ -95,7 +95,7 @@ def parse(String description) {
     	// Offset the temperature based on preference
         float tmpValue = Float.parseFloat(value)
         
-        if (tmpValue) {
+        if (tempOffset) {
             tmpValue = tmpValue + tempOffset
         }
 
