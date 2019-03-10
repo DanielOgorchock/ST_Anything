@@ -21,6 +21,7 @@
  *    2018-07-01  Dan Ogorchock  Original Creation
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2018-11-10  Dan Ogorchock  Corrected Pressure Measurement attribute name
+ *    2019-03-10  Dan Ogorchock  Added user preference for unit conversion
  *
  * 
  */
@@ -33,6 +34,7 @@ metadata {
 	}
 
     preferences {
+        input "tempUnitConversion", "enum", title: "Pressure Unit Conversion - select hPa to mmHg, hPa to inHg, or no conversion", description: "", defaultValue: "1", required: true, multiple: false, options:[["1":"none"], ["2":"hPa to mm Hg"], ["3":"hPa to in Hg"]], displayDuringSetup: false
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
 	}
 
@@ -58,9 +60,24 @@ def parse(String description) {
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
+    def dispUnit = "hPa"
     if (name && value) {
+        float tmpValue = Float.parseFloat(value)
+        if (tempUnitConversion == "2") {
+            //if (logEnable) log.debug "tempUnitConversion = ${tempUnitConversion}"
+            tmpValue = tmpValue * 0.75006  //convert from hPa to mm Hg
+            dispUnit = "mmHg"
+        }
+
+        if (tempUnitConversion == "3") {
+            //if (logEnable) log.debug "tempUnitConversion = ${tempUnitConversion}"
+            tmpValue = tmpValue * 0.02953  //convert from hPa to in Hg
+            dispUnit = "inHg"
+        }
+
         // Update device
-        sendEvent(name: "pressure", value: value, unit:"hPa")
+        tmpValue = tmpValue.round(2)
+        sendEvent(name: "pressure", value: tmpValue, unit: dispUnit)
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
