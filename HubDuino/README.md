@@ -4,10 +4,10 @@ HubDuino v1.1.3
 **WARNING** - If using an ESP8266, make sure you are using v2.4.2 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anything to crash after an hour or two) along with Arduino IDE v1.8.8. 
 
 **Recent History:**
-2019-02-10 HubDuino v1.1.3 - Significant overhaul of ES_Servo class and Child Driver - Thanks Jeff Albers!
-2018-07-04 HubDuino v1.1.2 - Added support for I2C devices - AM2320(temp, humid), TSL2561(lux), MAX44009(lux), BH1750(lux), BME280(temp,humid,pressure), BMP280(temp, pressure), and improved TCS34725(color lux). Added ST_Anything_I2C_ESP8266WiFi.ino example sketch to demonstrate I2C sensors.
-2018-06-24 HubDuino v1.1.1 - Added Servo Motor support
-2018-06-05 HubDuino v1.1 - Converted to use Hubitat Composite Device Driver Model
+- 2019-02-10 HubDuino v1.1.3 - Significant overhaul of ES_Servo class and Child Driver - Thanks Jeff Albers!
+- 2018-07-04 HubDuino v1.1.2 - Added support for I2C devices - AM2320(temp, humid), TSL2561(lux), MAX44009(lux), BH1750(lux), BME280(temp,humid,pressure), BMP280(temp, pressure), and improved TCS34725(color lux). Added ST_Anything_I2C_ESP8266WiFi.ino example sketch to demonstrate I2C sensors.
+- 2018-06-24 HubDuino v1.1.1 - Added Servo Motor support
+- 2018-06-05 HubDuino v1.1 - Converted to use Hubitat Composite Device Driver Model
 
 ## Architecture Flow Chart
 
