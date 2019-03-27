@@ -1,4 +1,4 @@
-ST_Anything v2.9.3
+ST_Anything v2.9.4
 ================
 
 **WARNING** - You must use the SmartThings Classic App with ST_Anything. Without Hub Connected Device documentation from Samsung/SmartThings, I have no way to know how to support the new SmartThings (Connect) App.
@@ -6,9 +6,8 @@ ST_Anything v2.9.3
 **WARNING** - If using an ESP8266, make sure you are using v2.4.2 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anythign to crash after an hour or two) along with Arduino IDE 1.8.8.
 
 **Recent History:**
+- v2.9.4 - Added support for the SHT31 (temp, humid) I2C sensor
 - v2.9.3 - Significant enhancements to the EX_Servo class and Child Device Handler - Thanks Jeff Albers!  ALso, an attempt to prevent duplicate child devices from being created.
-- v2.9.2 - Added support for I2C devices - AM2320(temp, humid), TSL2561(lux), MAX44009(lux), BH1750(lux), BME280(temp,humid,pressure), BMP280(temp, pressure), and improved TCS34725(color lux).  Added ST_Anything_I2C_ESP8266WiFi.ino example sketch to demonstrate I2C sensors.
-
 
 ## Architecture Flow Chart
 
@@ -16,7 +15,7 @@ ST_Anything v2.9.3
 
 Note: ST_Anything v2.9 was built using the Arduino IDE v1.8.8.  Please make sure to upgrade your IDE.
 
-Turn your Arduino UNO/MEGA/MKR1000, NodeMCU ESP8266, or ESP32 into a Anything you can imagine! ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
+Turn your Arduino UNO/MEGA/MKR1000, NodeMCU ESP8266, or ESP32 into Anything you can imagine! ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
 - Arduino with W5100 Ethernet shield
 - Arduino with W5500 Ethernet shield
@@ -62,6 +61,8 @@ This package currently implements the following SmartThings Device Capabilities:
 - Illuminance Measurement (using a Color TCS34725 I2C sensor)
 - Temperature Measurement (using a AM2320 I2C sensor)
 - Relative Humidity  Measurement (using a AM2320 I2C sensor)
+- Temperature Measurement (using a SHT31 I2C sensor)
+- Relative Humidity  Measurement (using a SHT31 I2C sensor)
 - Temperature Measurement (using a BME280 I2C sensor)
 - Relative Humidity  Measurement (using a BME280 I2C sensor)
 - Pressure Measurement (using a BME280 I2C sensor)
@@ -268,6 +269,7 @@ Look at the documentation in the 'ST_Anything_Multiples_xxxx.ino' files for expl
 - v2.8  2017-08-16 Added support for ESP32 microcontroller - I used the following HiLetgo ESP Board from Amazon (https://www.amazon.com/gp/product/B0718T232Z/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
 - v2.9  2018-01-06 **Added Arduino OTA support for ESP8266;** added RSSI updates to the Parent Device for ESP8266, ESP32, WiFi101, and WiFiEsp; various new example sketches; support for analog RGB/RGBW LED strips; C to F and F to C temperature conversions in the Child Temperature DH; improved ESP32 WiFi stability; "Last Updated" date and time on all Child Devices; added support for the Adafruit TCS34725 Color Illuminance sensor; added noise filtering and linearization algorithm to PS_Voltage class; plus numerous small tweaks (view Github History for details)
 - v2.9.1 - Added Servo Motor support, tweaked all device handlers for simplification and supportability, numerous small enhancements and bug fixes over the past few months (view Github History for details)
+- v2.9.2 - Added support for I2C devices - AM2320(temp, humid), TSL2561(lux), MAX44009(lux), BH1750(lux), BME280(temp,humid,pressure), BMP280(temp, pressure), and improved TCS34725(color lux).  Added ST_Anything_I2C_ESP8266WiFi.ino example sketch to demonstrate I2C sensors.
 
 
 Note: The ST_Anything v1.6 release was created on 2017-02-11 to make sure everyone can still get back to the original ThingShield-only code if necessary.  
