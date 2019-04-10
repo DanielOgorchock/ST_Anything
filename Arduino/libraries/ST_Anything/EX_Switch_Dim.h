@@ -23,6 +23,7 @@
 //    2018-08-14  Dan Ogorchock  Modified to avoid compiler errors on ESP32 since it currently does not support "analogWrite()"
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2018-12-06  Dan Ogorchock  Fixed Comments
+//    2019-04-10  Dan Ogorchock  Corrected analogWrite() call for ESP8266 platform
 //
 //
 //******************************************************************************************
