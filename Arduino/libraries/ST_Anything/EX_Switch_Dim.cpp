@@ -24,6 +24,7 @@
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2018-08-30  Dan Ogorchock  Adding reporting of 'level'
 //    2018-12-06  Dan Ogorchock  Fixed Comments
+//    2019-04-10  Dan Ogorchock  Corrected analogWrite() call for ESP8266 platform
 //
 //
 //******************************************************************************************
@@ -46,6 +47,8 @@ namespace st
 		if (st::Executor::debug) {
 			Serial.println(F("EX_Switch_Dim:: analogWrite not currently supported on ESP32!"));
 		}
+#elif defined(ARDUINO_ARCH_ESP8266)
+		analogWrite(m_nPinPWM, map(m_nCurrentLevel, 0, 100, 0, 1023));
 #else
 		analogWrite(m_nPinPWM, map(m_nCurrentLevel, 0, 100, 0, 255));
 #endif
