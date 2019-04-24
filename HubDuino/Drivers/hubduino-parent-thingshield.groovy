@@ -1,5 +1,5 @@
 /**
- *   HubDuino_Parent_ThingShield.groovy
+ *  HubDuino_Parent_ThingShield.groovy
  *
  *  https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/hubduino-parent-thingshield.groovy
  *
@@ -32,11 +32,12 @@
  *    2018-07-01  Dan Ogorchock  Added Pressure Measurement
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-02-05  Dan Ogorchock  Added Child Energy Meter
+ *    2019-04-23  Dan Ogorchock  Fixed debug logging, added importURL, and added Fingerprint
  *	
  */
  
 metadata {
-	definition (name: "HubDuino Parent Thingshield", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "HubDuino Parent Thingshield", namespace: "ogiewon", author: "Dan Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/hubduino-parent-thingshield.groovy") {
         capability "Configuration"
         capability "Refresh"
         capability "Pushable Button"
@@ -44,6 +45,8 @@ metadata {
         //capability "DoubleTapableButton"
         
         command "sendData", ["string"]
+		
+		fingerprint profileId: "0104", deviceId: "0138", inClusters: "0000"
 	}
 
     simulator {
@@ -63,14 +66,14 @@ def logsOff(){
 
 // parse events into attributes
 def parse(String description) {
-    if (logEnable) log.debug "Parsing: ${msg}"
-    def msg = parseThingShield(description)
+    if (logEnable) log.debug "description= ${description}"
+	def msg = parseThingShield(description)
 	def parts = []
     def name = ""
     def value = ""
 
 	try {
-    	if (logEnable) log.debug "Parsing: ${msg}"
+    	if (logEnable) log.debug "msg=  ${msg}"
     	parts = msg.split(" ")
     	name  = parts.length>0?parts[0].trim():null
     	value = parts.length>1?parts[1].trim():null
