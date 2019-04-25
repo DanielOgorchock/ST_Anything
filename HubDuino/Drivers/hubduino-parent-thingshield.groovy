@@ -33,6 +33,7 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-02-05  Dan Ogorchock  Added Child Energy Meter
  *    2019-04-23  Dan Ogorchock  Fixed debug logging, added importURL, and added Fingerprint
+ *    2019-04-24  Dan Ogorchock  Improved parseThingShield() routine to support Hubitat firmware changes
  *	
  */
  
@@ -160,20 +161,31 @@ def parse(String description) {
 	}
 }
 
-def fromHexString(String hex) {
-    StringBuilder str = new StringBuilder();
-    for (int i = 0; i < hex.length(); i+=2) {
-        str.append((char) Integer.parseInt(hex.substring(i, i + 2), 16));
-    }
-    return str.toString();
-}
-
 def parseThingShield(String description) {
-    def resultMap = zigbee.parseDescriptionAsMap(description)
-    if (resultMap.attrId) {
-    	return fromHexString(resultMap.attrId.substring(0,2)) + fromHexString(resultMap.encoding) + fromHexString(resultMap.value)
-    } 
-    else {
+    if(description?.startsWith('catchall')) {
+        def data = zigbee.parseDescriptionAsMap(description).data
+        StringBuilder str = new StringBuilder()
+        // start at 1, ignore first item, its always 0A
+        for (int i = 1; i < data.size(); i++) {
+            str.append((char) Integer.parseInt(data[i], 16))
+        }
+        return str.toString()
+    } else if (description?.startsWith('read attr - ')) {
+        // parse read attr message manually
+        def descArr = description.substring("read attr - ".length()).split(',')
+        def retMap = [:]
+        descArr.each { listItem ->
+            def keyValue = listItem.split(':')
+            retMap.put(keyValue[0].trim(), keyValue[1].trim())
+        }
+        String data = retMap['raw'].substring(14)
+
+        StringBuilder str = new StringBuilder()
+        for (int i = 0; i < data.length(); i+=2) {
+            str.append((char) Integer.parseInt(data.substring(i, i + 2), 16))
+        }
+        return str.toString()
+    } else {
         return description
     }
 }
