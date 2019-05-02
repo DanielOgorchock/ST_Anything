@@ -7,6 +7,8 @@
 //	History
 //	2017-02-20  Dan Ogorchock  Created
 //  2018-01-06  Dan Ogorchock  Added WiFi.RSSI() data collection
+//  2019-05-01  Dan Ogorchock  Changed max transmit rate from every 100ms to every 
+//                             500ms to prevent duplicate child devices
 //*******************************************************************************
 
 #ifndef __SMARTTHINGSWIFIESP_H__ 
@@ -50,7 +52,7 @@ namespace st
 		///   @param[in] shieldType (optional) - Set the Reported SheildType to the Server 
 		///   @param[in] enableDebug (optional) - Enable internal Library debug
 		//*******************************************************************************
-		SmartThingsWiFiEsp(Stream *espSerial, String ssid, String password, IPAddress localIP, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "WiFiESP", bool enableDebug = true, int transmitInterval = 100);
+		SmartThingsWiFiEsp(Stream *espSerial, String ssid, String password, IPAddress localIP, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "WiFiESP", bool enableDebug = true, int transmitInterval = 500);
 
 		//*******************************************************************************
 		/// @brief  SmartThings Arduino + ESP-01 WiFi Constructor - DHCP
@@ -64,7 +66,7 @@ namespace st
 		///   @param[in] shieldType (optional) - Set the Reported SheildType to the Server 
 		///   @param[in] enableDebug (optional) - Enable internal Library debug
 		//*******************************************************************************
-		SmartThingsWiFiEsp(Stream *espSerial, String ssid, String password, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "WiFiESP", bool enableDebug = false, int transmitInterval = 100);
+		SmartThingsWiFiEsp(Stream *espSerial, String ssid, String password, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "WiFiESP", bool enableDebug = false, int transmitInterval = 500);
 
 		//*******************************************************************************
 		/// Destructor 

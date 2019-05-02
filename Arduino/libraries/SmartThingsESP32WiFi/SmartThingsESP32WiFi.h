@@ -9,6 +9,8 @@
 //  2017-09-05  Dan Ogorchock  Added automatic WiFi reconnect logic as ESP32 
 //                             doesn't do this automatically currently
 //  2018-01-01  Dan Ogorchock  Added WiFi.RSSI() data collection
+//  2019-05-01  Dan Ogorchock  Changed max transmit rate from every 100ms to every 
+//                             500ms to prevent duplicate child devices
 //*******************************************************************************
 
 #ifndef __SMARTTHINGSESP32WIFI_H__
@@ -57,7 +59,7 @@ namespace st
 		///   @param[in] shieldType (optional) - Set the Reported SheildType to the Server
 		///   @param[in] enableDebug (optional) - Enable internal Library debug
 		//*******************************************************************************
-		SmartThingsESP32WiFi(String ssid, String password, IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "ESP32Wifi", bool enableDebug = false, int transmitInterval = 100);
+		SmartThingsESP32WiFi(String ssid, String password, IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "ESP32Wifi", bool enableDebug = false, int transmitInterval = 500);
 
 		//*******************************************************************************
 		/// @brief  SmartThings ESP32 WiFi Constructor - DHCP
@@ -70,7 +72,7 @@ namespace st
 		///   @param[in] shieldType (optional) - Set the Reported SheildType to the Server
 		///   @param[in] enableDebug (optional) - Enable internal Library debug
 		//*******************************************************************************
-		SmartThingsESP32WiFi(String ssid, String password, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "ESP32Wifi", bool enableDebug = false, int transmitInterval = 100);
+		SmartThingsESP32WiFi(String ssid, String password, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "ESP32Wifi", bool enableDebug = false, int transmitInterval = 500);
 
 		//*******************************************************************************
 		/// @brief  SmartThings ESP32 WiFi Constructor - Pre-existing connection
@@ -81,7 +83,7 @@ namespace st
 		///   @param[in] shieldType (optional) - Set the Reported SheildType to the Server
 		///   @param[in] enableDebug (optional) - Enable internal Library debug
 		//*******************************************************************************
-		SmartThingsESP32WiFi(uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "ESP32Wifi", bool enableDebug = false, int transmitInterval = 100);
+		SmartThingsESP32WiFi(uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "ESP32Wifi", bool enableDebug = false, int transmitInterval = 500);
 
 		//*******************************************************************************
 		/// Destructor

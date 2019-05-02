@@ -7,6 +7,8 @@
 //	History
 //	2017-02-04  Dan Ogorchock  Created
 //  2017-05-02  Dan Ogorchock  Minor tweak to coexist peacefully with newer W5500 shield
+//  2019-05-01  Dan Ogorchock  Changed max transmit rate from every 100ms to every 
+//                             500ms to prevent duplicate child devices
 //*******************************************************************************
 
 #ifndef __SMARTTHINGSETHERNETW5100_H__ 
@@ -47,7 +49,7 @@ namespace st
 		///   @param[in] shieldType (optional) - Set the Reported SheildType to the Server 
 		///   @param[in] enableDebug (optional) - Enable internal Library debug
 		//*******************************************************************************
-		SmartThingsEthernetW5100(byte mac[], IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "EthernetShield", bool enableDebug = false, int transmitInterval = 100);
+		SmartThingsEthernetW5100(byte mac[], IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "EthernetShield", bool enableDebug = false, int transmitInterval = 500);
 
 		//*******************************************************************************
 		/// @brief  SmartThings Ethernet Constructor - DHCP
@@ -59,7 +61,7 @@ namespace st
 		///   @param[in] shieldType (optional) - Set the Reported SheildType to the Server 
 		///   @param[in] enableDebug (optional) - Enable internal Library debug
 		//*******************************************************************************
-		SmartThingsEthernetW5100(byte mac[], uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "EthernetShield", bool enableDebug = false, int transmitInterval = 100);
+		SmartThingsEthernetW5100(byte mac[], uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType = "EthernetShield", bool enableDebug = false, int transmitInterval = 500);
 
 		//*******************************************************************************
 		/// Destructor 
