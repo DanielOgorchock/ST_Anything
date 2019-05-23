@@ -25,7 +25,7 @@
  * 
  */
 metadata {
-	definition (name: "Child Humidity Sensor", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Humidity Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", mnmn:"SmartThings", vid:"generic-humidity-3") {
 		capability "Relative Humidity Measurement"
 		capability "Sensor"
         
