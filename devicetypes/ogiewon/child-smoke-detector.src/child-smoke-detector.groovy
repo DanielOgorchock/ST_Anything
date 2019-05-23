@@ -23,7 +23,7 @@
  * 
  */
 metadata {
-	definition (name: "Child Smoke Detector", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Child Smoke Detector", namespace: "ogiewon", author: "Dan Ogorchock", ocfDeviceType: "x.com.st.d.sensor.smoke", vid: "generic-smoke") {
 		capability "Smoke Detector"
 		capability "Sensor"
 
