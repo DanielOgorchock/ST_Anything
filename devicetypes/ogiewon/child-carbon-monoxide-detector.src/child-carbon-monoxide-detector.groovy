@@ -23,7 +23,7 @@
  * 
  */
 metadata {
-	definition (name: "Child Carbon Monoxide Detector", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Child Carbon Monoxide Detector", namespace: "ogiewon", author: "Dan Ogorchock", ocfDeviceType: "x.com.st.d.sensor.smoke", vid: "generic-carbon-monoxide-3") {
 		capability "Carbon Monoxide Detector"
 		capability "Smoke Detector"
 		capability "Sensor"
