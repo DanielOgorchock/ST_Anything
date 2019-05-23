@@ -23,7 +23,7 @@
  * 
  */
 metadata {
-	definition (name: "Child Switch", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Child Switch", namespace: "ogiewon", author: "Dan Ogorchock", mnmn: "SmartThings", vid: "generic-switch") {
 		capability "Switch"
 		capability "Relay Switch"
 		capability "Actuator"
