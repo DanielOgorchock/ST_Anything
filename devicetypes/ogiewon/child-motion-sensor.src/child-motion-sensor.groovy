@@ -23,7 +23,7 @@
  * 
  */
  metadata {
-	definition (name: "Child Motion Sensor", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Child Motion Sensor", namespace: "ogiewon", author: "Dan Ogorchock", mnmn: "SmartThings", vid: "generic-motion-2) {
 		capability "Motion Sensor"
 		capability "Sensor"
 
