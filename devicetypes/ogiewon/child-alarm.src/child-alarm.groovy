@@ -23,7 +23,7 @@
  * 
  */
 metadata {
-	definition (name: "Child Alarm", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Child Alarm", namespace: "ogiewon", author: "Dan Ogorchock", ocfDeviceType: "x.com.st.d.siren") {
 		capability "Actuator"
 		capability "Alarm"
 		capability "Switch"
