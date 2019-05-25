@@ -24,7 +24,7 @@
 
 // for the UI
 metadata {
-	definition (name: "Child RGBW Switch", namespace: "ogiewon", author: "Allan (vseven) - based on code by Dan Ogorchock", ocfDeviceType: "oic.d.light", mnmn: "SmartThings", vid: "generic-rgbw-color-bulb) {
+	definition (name: "Child RGBW Switch", namespace: "ogiewon", author: "Allan (vseven) - based on code by Dan Ogorchock", ocfDeviceType: "oic.d.light", mnmn: "SmartThings", vid: "generic-rgbw-color-bulb") {
 	capability "Switch"		
 	capability "Switch Level"
 	capability "Actuator"
