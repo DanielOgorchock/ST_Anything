@@ -11,6 +11,7 @@
 //  2018-01-06  Dan Ogorchock  Added OTA update capability
 //  2018-02-03  Dan Ogorchock  Support for Hubitat
 //  2018-12-10  Dan Ogorchock  Add user selectable host name (repurposing the old shieldType variable)
+//  2019-06-03  Dan Ogorchock  Changed to wait on st_client.available() instead of st_client.connected()
 //*******************************************************************************
 
 #include "SmartThingsESP8266WiFi.h"
@@ -368,12 +369,12 @@ namespace st
 
 		//if (_isDebugEnabled) { Serial.println(F("WiFi.send(): Reading for reply data "));}
 		// read any data returned from the POST
-		while (st_client.connected()) {
-			//while (st_client.available()) {
-			char c = st_client.read(); //gets byte from ethernet buffer
-									   //if (_isDebugEnabled) { Serial.print(c); } //prints byte to serial monitor
-									   //}
-		}
+		//while (st_client.connected()) {
+		    while (st_client.available()) {
+			    char c = st_client.read(); //gets byte from ethernet buffer
+				//if (_isDebugEnabled) { Serial.print(c); } //prints byte to serial monitor
+			}
+		//}
 
 		delay(1);
 		st_client.stop();
