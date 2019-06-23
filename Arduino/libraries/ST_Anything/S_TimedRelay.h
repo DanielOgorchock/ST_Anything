@@ -8,7 +8,7 @@
 //			  It inherits from the st::Sensor class and clones much from the st::Executor Class
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::S_TimedRelay sensor1("relaySwitch1", PIN_RELAY, LOW, true, 1000, 0, 1);
+//			  For Example:  st::S_TimedRelay sensor1(F("relaySwitch1"), PIN_RELAY, LOW, true, 1000, 0, 1);
 //
 //			  st::S_TimedRelay() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
