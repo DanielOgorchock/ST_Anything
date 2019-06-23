@@ -1,0 +1,35 @@
+WiFiNINA ?.?.? - ????.??.??
+
+WiFiNINA 1.4.0 - 2019.03.27
+
+* Improved connection time, by increasing poll time of checking connection status to 100ms on begin
+* Added WiFiClass::setTimeout(...) API to set timeout of begin
+* Fixed issue of WiFiServer:available() only reporting the first byte in the WiFiChatServer example
+
+WiFiNINA 1.3.0 - 2018.11.13
+
+* Added Tools/CheckFirmwareVersion example to check NINA firmware version
+* Changed examples where required, the server's URL arduino.cc:80 to example.org:80, because http://arduino.cc will be no longer available
+* Changed WiFi.end() to not put the reset pin mode in input mode
+* Use 1000000 baud for the firmware updater, and added support for the Uno WiFi Rev2
+
+WiFiNINA 1.2.0 - 2018.10.05
+
+* Changed WiFi.begin(...) not to fail, if not connected in 5 seconds
+* Removed retrying to get the host by name if it fails
+* Renamed WiFiNINAFirmwareUpdater example to SerialNINAPassthrough
+* Added new Firmware Updater Tool sketch (which talks to ESP32 boot ROM)
+* Changed firmware version comparison check to < instead of !=
+
+WiFiNINA 1.1.1 - 2018.09.11
+
+* Improved byte by byte read performance of sockets by adding a socket buffer
+
+WiFiNINA 1.1.0 - 2018.08.13
+
+* Added support for MKR Vidor 4000
+* Added handling of unknown encryption type in the ScanNetworks example
+
+WiFiNINA 1.0.0 - 2018.07.11
+
+* Initial release

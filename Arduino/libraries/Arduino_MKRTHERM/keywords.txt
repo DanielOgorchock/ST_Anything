@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map For Arduino_MKRTHERM
+####################################### 
+# Class
+#######################################
+
+Arduino_MKRTHERM	KEYWORD1
+MKRTHERM	KEYWORD1
+THERM	KEYWORD1
+
+#######################################
+# Methods and Functions 
+#######################################	
+
+begin	KEYWORD2
+end	KEYWORD2
+
+readTemperature KEYWORD2
+readReferenceTemperature	KEYWORD2
+
+#######################################
+# Constants
+#######################################
