@@ -88,11 +88,8 @@ namespace st
 		if (m_iCurrentCount < m_iNumCycles)
 		{
 			//Turn off digital output if timer has expired
-			//if ((m_bCurrentState == HIGH) && (millis() - m_lTimeChanged >= m_lOnTime))
 			if ((m_bCurrentState == HIGH) && (millis() - m_lTimeChanged >= m_lOnTime))
 			{	
-       		//Serial.print(F("S_TimedRelay::finalState = "));
-       		//Serial.println(m_ifinalState);
 				if (m_ifinalState == 1) { // final state will be on
 					//add one to the current count since we finished an on/off cycle, and turn on output if needed
 					m_iCurrentCount++;
@@ -111,8 +108,6 @@ namespace st
 			}
 			else if ((m_bCurrentState == LOW) && (millis() - m_lTimeChanged >= m_lOffTime))
 			{	
-       			//Serial.print(F("S_TimedRelay::finalState = "));
-       			//Serial.println(m_ifinalState);
 				if (m_ifinalState == 0) {  // final state will be off
 					//add one to the current count since we finished an on/off cycle, and turn on output if needed
 					m_iCurrentCount++;
