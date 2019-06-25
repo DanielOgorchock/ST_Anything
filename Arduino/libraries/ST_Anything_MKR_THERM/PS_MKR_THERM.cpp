@@ -26,6 +26,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2019-06-23  Dan Ogorchock  Original Creation
+//    2019-06-24  Dan Ogorchock  Improved false reading handling
 //
 //
 //******************************************************************************************
@@ -91,19 +92,33 @@ namespace st
 	//function to get data from sensor and queue results for transfer to ST Cloud 
 	void PS_MKR_THERM::getData()
 	{
-		m_dblTemperatureSensorValue = THERM.readTemperature();
+		double tempTemperature;
+		double totalTemperature = 0.0;
+		int numGoodValues = 0;
 
-		if (isnan(m_dblTemperatureSensorValue))
-		{
-			if (st::PollingSensor::debug) {
-				Serial.println(F("PS_MKR_THERM:: Error Reading Thermocouple."));
-
+		for (int i = 1; i <= 3; i++) {
+			tempTemperature = THERM.readTemperature();
+			if (isnan(tempTemperature))
+			{
+				if (st::PollingSensor::debug) {
+					Serial.println(F("PS_MKR_THERM:: Error Reading Thermocouple."));
+				}
 			}
-			m_dblTemperatureSensorValue = -99.0;
+			else
+			{
+				totalTemperature = totalTemperature + tempTemperature;
+				numGoodValues++;
+			}
 		}
-		
-		Everything::sendSmartString(getName() + " " + String(int(m_dblTemperatureSensorValue)));
 
+		if (numGoodValues > 0) {
+			m_dblTemperatureSensorValue = totalTemperature/numGoodValues;
+			Everything::sendSmartString(getName() + " " + String(int(m_dblTemperatureSensorValue)));
+		}
+		else
+		{
+			Serial.println(F("PS_MKR_THERM:: Error Reading Thermocouple multiple times.  No good value measured this cycle."));
+		}
 	}
 	
 }
