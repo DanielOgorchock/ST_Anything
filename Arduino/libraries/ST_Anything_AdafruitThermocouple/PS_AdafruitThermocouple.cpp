@@ -30,6 +30,7 @@
 //    ----        ---            ----
 //    2015-03-24  Dan Ogorchock  Original Creation
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
+//    2019-06-24  Dan Ogorchock  Improved false reading handling
 //
 //
 //******************************************************************************************
@@ -93,17 +94,33 @@ namespace st
 	//function to get data from sensor and queue results for transfer to ST Cloud 
 	void PS_AdafruitThermocouple::getData()
 	{
+		double tempTemperature;
+		double totalTemperature = 0.0;
+		int numGoodValues = 0;
 
-		m_dblTemperatureSensorValue = m_Adafruit_MAX31855.readFarenheit();
-		if (isnan(m_dblTemperatureSensorValue))
-		{
-			if (st::PollingSensor::debug) {
-				Serial.println(F("PS_AdafruitThermocouple:: Error Reading Thermocouple"));
+		for (int i = 1; i <= 3; i++) {
+			tempTemperature = m_Adafruit_MAX31855.readFarenheit();
+			if (isnan(tempTemperature))
+			{
+				if (st::PollingSensor::debug) {
+					Serial.println(F("PS_AdafruitThermocouple:: Error Reading Thermocouple."));
+				}
 			}
-			m_dblTemperatureSensorValue = -99.0;
+			else
+			{
+				totalTemperature = totalTemperature + tempTemperature;
+				numGoodValues++;
+			}
 		}
-		
-		Everything::sendSmartString(getName() + " " + String(int(m_dblTemperatureSensorValue)));
+
+		if (numGoodValues > 0) {
+			m_dblTemperatureSensorValue = totalTemperature / numGoodValues;
+			Everything::sendSmartString(getName() + " " + String(int(m_dblTemperatureSensorValue)));
+		}
+		else
+		{
+			Serial.println(F("PS_AdafruitThermocouple:: Error Reading Thermocouple multiple times.  No good value measured this cycle."));
+		}
 
 	}
 	
