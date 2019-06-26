@@ -12,6 +12,7 @@
 //  2018-02-03  Dan Ogorchock  Support for Hubitat
 //  2018-12-10  Dan Ogorchock  Add user selectable host name (repurposing the old shieldType variable)
 //  2019-06-03  Dan Ogorchock  Changed to wait on st_client.available() instead of st_client.connected()
+//  2019-06-25  Dan Ogorchock  Fix default hostname to not use underscore character
 //*******************************************************************************
 
 #include "SmartThingsESP8266WiFi.h"
@@ -109,7 +110,7 @@ namespace st
 		Serial.println(WiFi.RSSI());
 
 		if (_shieldType == "ESP8266Wifi") {
-			String("ESP8266_" + strMAC).toCharArray(st_devicename, sizeof(st_devicename));
+			String("ESP8266-" + strMAC).toCharArray(st_devicename, sizeof(st_devicename));
 		}
 		else {
 			_shieldType.toCharArray(st_devicename, sizeof(st_devicename));
