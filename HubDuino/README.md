@@ -4,7 +4,7 @@ HubDuino v1.1.5
 **WARNING** - If using an ESP8266, make sure you are using v2.5.2 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anything to crash after an hour or two) along with Arduino IDE v1.8.9. 
 
 **Recent History:**
-- 2019-06-28 HubDuino v1.1.5 - Added support for MKR1010, Arduino 1.8.9, ESP8266 v2.5.2, undated numerous libraries, etc...
+- 2019-06-28 HubDuino v1.1.5 - Added support for MKR1010, Arduino 1.8.9, ESP8266 v2.5.2, updated numerous libraries, etc...
 - 2019-03-24 HubDuino v1.1.4 - Added support for I2C device - SHT31(temp, humid)
 - 2019-02-10 HubDuino v1.1.3 - Significant overhaul of ES_Servo class and Child Driver - Thanks Jeff Albers!
 
