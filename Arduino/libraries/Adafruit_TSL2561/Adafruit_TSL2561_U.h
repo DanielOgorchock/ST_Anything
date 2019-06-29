@@ -153,7 +153,7 @@ tsl2561IntegrationTime_t;
 typedef enum
 {
   TSL2561_GAIN_1X                   = 0x00,    // No gain
-  TSL2561_GAIN_16X                  = 0x10     // 16x gain
+  TSL2561_GAIN_16X                  = 0x10,    // 16x gain
 }
 tsl2561Gain_t;
 

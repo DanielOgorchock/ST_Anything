@@ -37,7 +37,7 @@ void setup() {
     Serial.begin(9600);
     Serial.println(F("BME280 test"));
 
-    if (! bme.begin(&Wire1)) {
+    if (! bme.begin(&Wire)) {
         Serial.println("Could not find a valid BME280 sensor, check wiring!");
         while (1);
     }
@@ -101,6 +101,7 @@ void setup() {
     // = 40ms (25Hz)
     // with standby time that should really be 24.16913... Hz
     delayTime = 41;
+    */
     
     /*
     // gaming

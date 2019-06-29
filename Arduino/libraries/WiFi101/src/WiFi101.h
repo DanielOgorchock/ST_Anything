@@ -21,7 +21,7 @@
 #define WIFI_H
 
 #define WIFI_FIRMWARE_LATEST_MODEL_A "19.4.4"
-#define WIFI_FIRMWARE_LATEST_MODEL_B "19.5.4"
+#define WIFI_FIRMWARE_LATEST_MODEL_B "19.6.1"
 
 // for backwards compatibility
 #define WIFI_FIRMWARE_REQUIRED WIFI_FIRMWARE_LATEST_MODEL_B
@@ -165,6 +165,7 @@ public:
 	void handleEvent(uint8_t u8MsgType, void *pvMsg);
 	void handleResolve(uint8_t * hostName, uint32_t hostIp);
 	void handlePingResponse(uint32 u32IPAddr, uint32 u32RTT, uint8 u8ErrorCode);
+	void setTimeout(unsigned long timeout);
 
 private:
 	int _init;
@@ -182,6 +183,7 @@ private:
 	uint8_t _scan_auth;
 	uint8_t _scan_channel;
 	char _ssid[M2M_MAX_SSID_LEN];
+	unsigned long _timeout;
 
 	uint8_t startConnect(const char *ssid, uint8_t u8SecType, const void *pvAuthInfo);
 	uint8_t startAP(const char *ssid, uint8_t u8SecType, const void *pvAuthInfo, uint8_t channel);

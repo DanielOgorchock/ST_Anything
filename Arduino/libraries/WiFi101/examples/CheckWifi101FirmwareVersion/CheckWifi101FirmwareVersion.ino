@@ -51,7 +51,7 @@ void setup() {
 
   // Check if the latest version is installed
   Serial.println();
-  if (fv == latestFv) {
+  if (fv >= latestFv) {
     Serial.println("Check result: PASSED");
   } else {
     Serial.println("Check result: NOT PASSED");

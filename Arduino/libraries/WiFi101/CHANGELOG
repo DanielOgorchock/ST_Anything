@@ -1,5 +1,11 @@
 WiFi101 ?.?.? - ????.??.??
 
+WiFi101 0.16.0 - 2018.04.04
+
+* Added WiFi.setTimeout(timeout) API to set timeout of WiFi.begin(...)
+* Changed check firmware version comparision from == to >=
+* Updated latest firmware version for model B to 19.6.1
+
 WiFi101 0.15.3 - 2018.11.21
 
 * Fixed unreachable destination issue in UDP packet transmission

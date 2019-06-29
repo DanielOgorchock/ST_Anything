@@ -260,11 +260,12 @@ void WiFiClass::handlePingResponse(uint32 u32IPAddr, uint32 u32RTT, uint8 u8Erro
 	}
 }
 
-WiFiClass::WiFiClass()
+WiFiClass::WiFiClass() :
+  _init(0),
+  _mode(WL_RESET_MODE),
+  _status(WL_NO_SHIELD),
+  _timeout(60000)
 {
-	_mode = WL_RESET_MODE;
-	_status = WL_NO_SHIELD;
-	_init = 0;
 }
 
 void WiFiClass::setPins(int8_t cs, int8_t irq, int8_t rst, int8_t en)
@@ -377,11 +378,12 @@ uint8_t WiFiClass::begin()
 	_mode = WL_STA_MODE;
 
 	// Wait for connection or timeout:
-	unsigned long start = millis();
-	while (!(_status & WL_CONNECTED) &&
-			!(_status & WL_DISCONNECTED) &&
-			millis() - start < 60000) {
+	for (unsigned long start = millis(); millis() - start < _timeout;)
+	{
 		m2m_wifi_handle_events(NULL);
+		if ((_status & WL_CONNECTED) || (_status & WL_DISCONNECTED)) {
+			break;
+		}
 	}
 
 	memset(_ssid, 0, M2M_MAX_SSID_LEN);
@@ -438,11 +440,12 @@ uint8_t WiFiClass::startConnect(const char *ssid, uint8_t u8SecType, const void 
 	_mode = WL_STA_MODE;
 
 	// Wait for connection or timeout:
-	unsigned long start = millis();
-	while (!(_status & WL_CONNECTED) &&
-			!(_status & WL_DISCONNECTED) &&
-			millis() - start < 60000) {
+	for (unsigned long start = millis(); millis() - start < _timeout;)
+	{
 		m2m_wifi_handle_events(NULL);
+		if ((_status & WL_CONNECTED) || (_status & WL_DISCONNECTED)) {
+			break;
+		}
 	}
 	if (!(_status & WL_CONNECTED)) {
 		_mode = WL_RESET_MODE;
@@ -1164,6 +1167,11 @@ uint32_t WiFiClass::getTime()
 
 	return t;
 #endif
+}
+
+void WiFiClass::setTimeout(unsigned long timeout)
+{
+	_timeout = timeout;
 }
 
 WiFiClass WiFi;

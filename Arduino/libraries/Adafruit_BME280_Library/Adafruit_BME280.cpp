@@ -1,35 +1,65 @@
-/***************************************************************************
-  This is a library for the BME280 humidity, temperature & pressure sensor
+/*!
+ * @file Adafruit_BME280.cpp
+ *
+ * @mainpage Adafruit BME280 humidity, temperature & pressure sensor
+ *
+ * @section intro_sec Introduction
+ *
+ *  Driver for the BME280 humidity, temperature & pressure sensor
+ * 
+ * These sensors use I2C or SPI to communicate, 2 or 4 pins are required
+ * to interface.
+ *
+ * Designed specifically to work with the Adafruit BME280 Breakout
+ * ----> http://www.adafruit.com/products/2650
+ *    
+ *  Adafruit invests time and resources providing this open source code, 
+ *  please support Adafruit and open-source hardware by purchasing 
+ *  products from Adafruit!
+ *
+ * @section author Author
+ *
+ * Written by Kevin "KTOWN" Townsend for Adafruit Industries.
+ *
+ * @section license License
+ *
+ * BSD license, all text here must be included in any redistribution.
+ *
+ */
 
-  Designed specifically to work with the Adafruit BME280 Breakout
-  ----> http://www.adafruit.com/products/2650
-
-  These sensors use I2C or SPI to communicate, 2 or 4 pins are required
-  to interface.
-
-  Adafruit invests time and resources providing this open source code,
-  please support Adafruit andopen-source hardware by purchasing products
-  from Adafruit!
-
-  Written by Limor Fried & Kevin Townsend for Adafruit Industries.
-  BSD license, all text above must be included in any redistribution
- ***************************************************************************/
 #include "Arduino.h"
 #include <Wire.h>
 #include <SPI.h>
 #include "Adafruit_BME280.h"
 
-/***************************************************************************
- PRIVATE FUNCTIONS
- ***************************************************************************/
+/**************************************************************************/
+/*! 
+    @brief  class constructor
+*/
+/**************************************************************************/
 Adafruit_BME280::Adafruit_BME280()
     : _cs(-1), _mosi(-1), _miso(-1), _sck(-1)
 { }
 
+/**************************************************************************/
+/*! 
+    @brief  class constructor if using hardware SPI
+    @param cspin the chip select pin to use
+*/
+/**************************************************************************/
 Adafruit_BME280::Adafruit_BME280(int8_t cspin)
     : _cs(cspin), _mosi(-1), _miso(-1), _sck(-1)
 { }
 
+/**************************************************************************/
+/*! 
+    @brief  class constructor if using software SPI
+    @param cspin the chip select pin to use
+    @param mosipin the MOSI pin to use
+    @param misopin the MISO pin to use
+    @param sckpin the SCK pin to use
+*/
+/**************************************************************************/
 Adafruit_BME280::Adafruit_BME280(int8_t cspin, int8_t mosipin, int8_t misopin, int8_t sckpin)
     : _cs(cspin), _mosi(mosipin), _miso(misopin), _sck(sckpin)
 { }
@@ -38,6 +68,8 @@ Adafruit_BME280::Adafruit_BME280(int8_t cspin, int8_t mosipin, int8_t misopin, i
 /**************************************************************************/
 /*!
     @brief  Initialise sensor with given parameters / settings
+    @param theWire the I2C object to use
+    @returns true on success, false otherwise
 */
 /**************************************************************************/
 bool Adafruit_BME280::begin(TwoWire *theWire)
@@ -47,6 +79,13 @@ bool Adafruit_BME280::begin(TwoWire *theWire)
 	return init();
 }
 
+/**************************************************************************/
+/*!
+    @brief  Initialise sensor with given parameters / settings
+    @param addr the I2C address the device can be found on
+    @returns true on success, false otherwise
+*/
+/**************************************************************************/
 bool Adafruit_BME280::begin(uint8_t addr)
 {
 	_i2caddr = addr;
@@ -54,6 +93,14 @@ bool Adafruit_BME280::begin(uint8_t addr)
 	return init();
 }
 
+/**************************************************************************/
+/*!
+    @brief  Initialise sensor with given parameters / settings
+    @param addr the I2C address the device can be found on
+    @param theWire the I2C object to use
+    @returns true on success, false otherwise
+*/
+/**************************************************************************/
 bool Adafruit_BME280::begin(uint8_t addr, TwoWire *theWire)
 {
     _i2caddr = addr;
@@ -61,6 +108,12 @@ bool Adafruit_BME280::begin(uint8_t addr, TwoWire *theWire)
 	return init();
 }
 
+/**************************************************************************/
+/*!
+    @brief  Initialise sensor with given parameters / settings
+    @returns true on success, false otherwise
+*/
+/**************************************************************************/
 bool Adafruit_BME280::begin(void)
 {
     _i2caddr = BME280_ADDRESS;
@@ -68,6 +121,12 @@ bool Adafruit_BME280::begin(void)
 	return init();
 }
 
+/**************************************************************************/
+/*!
+    @brief  Initialise sensor with given parameters / settings
+    @returns true on success, false otherwise
+*/
+/**************************************************************************/
 bool Adafruit_BME280::init()
 {
     // init I2C or SPI sensor interface
@@ -118,10 +177,14 @@ bool Adafruit_BME280::init()
     
     This is simply a overload to the normal begin()-function, so SPI users
     don't get confused about the library requiring an address.
+    @param mode the power mode to use for the sensor
+    @param tempSampling the temp samping rate to use
+    @param pressSampling the pressure sampling rate to use
+    @param humSampling the humidity sampling rate to use
+    @param filter the filter mode to use
+    @param duration the standby duration to use
 */
 /**************************************************************************/
-
-
 void Adafruit_BME280::setSampling(sensor_mode       mode,
 		 sensor_sampling   tempSampling,
 		 sensor_sampling   pressSampling,
@@ -149,6 +212,8 @@ void Adafruit_BME280::setSampling(sensor_mode       mode,
 /**************************************************************************/
 /*!
     @brief  Encapsulate hardware and software SPI transfer into one function
+    @param x the data byte to transfer
+    @returns the data byte read from the device
 */
 /**************************************************************************/
 uint8_t Adafruit_BME280::spixfer(uint8_t x) {
@@ -173,6 +238,8 @@ uint8_t Adafruit_BME280::spixfer(uint8_t x) {
 /**************************************************************************/
 /*!
     @brief  Writes an 8 bit value over I2C or SPI
+    @param reg the register address to write to
+    @param value the value to write to the register
 */
 /**************************************************************************/
 void Adafruit_BME280::write8(byte reg, byte value) {
@@ -197,6 +264,8 @@ void Adafruit_BME280::write8(byte reg, byte value) {
 /**************************************************************************/
 /*!
     @brief  Reads an 8 bit value over I2C or SPI
+    @param reg the register address to read from
+    @returns the data byte read from the device
 */
 /**************************************************************************/
 uint8_t Adafruit_BME280::read8(byte reg) {
@@ -225,6 +294,8 @@ uint8_t Adafruit_BME280::read8(byte reg) {
 /**************************************************************************/
 /*!
     @brief  Reads a 16 bit value over I2C or SPI
+    @param reg the register address to read from
+    @returns the 16 bit data value read from the device
 */
 /**************************************************************************/
 uint16_t Adafruit_BME280::read16(byte reg)
@@ -254,7 +325,9 @@ uint16_t Adafruit_BME280::read16(byte reg)
 
 /**************************************************************************/
 /*!
-    
+    @brief  Reads a signed 16 bit little endian value over I2C or SPI
+    @param reg the register address to read from
+    @returns the 16 bit data value read from the device
 */
 /**************************************************************************/
 uint16_t Adafruit_BME280::read16_LE(byte reg) {
@@ -266,6 +339,8 @@ uint16_t Adafruit_BME280::read16_LE(byte reg) {
 /**************************************************************************/
 /*!
     @brief  Reads a signed 16 bit value over I2C or SPI
+    @param reg the register address to read from
+    @returns the 16 bit data value read from the device
 */
 /**************************************************************************/
 int16_t Adafruit_BME280::readS16(byte reg)
@@ -276,7 +351,9 @@ int16_t Adafruit_BME280::readS16(byte reg)
 
 /**************************************************************************/
 /*!
-   
+    @brief  Reads a signed little endian 16 bit value over I2C or SPI
+    @param reg the register address to read from
+    @returns the 16 bit data value read from the device
 */
 /**************************************************************************/
 int16_t Adafruit_BME280::readS16_LE(byte reg)
@@ -288,6 +365,8 @@ int16_t Adafruit_BME280::readS16_LE(byte reg)
 /**************************************************************************/
 /*!
     @brief  Reads a 24 bit value over I2C
+    @param reg the register address to read from
+    @returns the 24 bit data value read from the device
 */
 /**************************************************************************/
 uint32_t Adafruit_BME280::read24(byte reg)
@@ -380,6 +459,7 @@ void Adafruit_BME280::readCoefficients(void)
 /**************************************************************************/
 /*!
     @brief return true if chip is busy reading cal data
+    @returns true if reading calibration, false otherwise
 */
 /**************************************************************************/
 bool Adafruit_BME280::isReadingCalibration(void)
@@ -393,6 +473,7 @@ bool Adafruit_BME280::isReadingCalibration(void)
 /**************************************************************************/
 /*!
     @brief  Returns the temperature from the sensor
+    @returns the temperature read from the device
 */
 /**************************************************************************/
 float Adafruit_BME280::readTemperature(void)
@@ -420,7 +501,8 @@ float Adafruit_BME280::readTemperature(void)
 
 /**************************************************************************/
 /*!
-    @brief  Returns the temperature from the sensor
+    @brief  Returns the pressure from the sensor
+    @returns the pressure value (in Pascal) read from the device
 */
 /**************************************************************************/
 float Adafruit_BME280::readPressure(void) {
@@ -457,6 +539,7 @@ float Adafruit_BME280::readPressure(void) {
 /**************************************************************************/
 /*!
     @brief  Returns the humidity from the sensor
+    @returns the humidity value read from the device
 */
 /**************************************************************************/
 float Adafruit_BME280::readHumidity(void) {
@@ -492,7 +575,7 @@ float Adafruit_BME280::readHumidity(void) {
     pressure (in hPa), and sea-level pressure (in hPa).
 
     @param  seaLevel      Sea-level pressure in hPa
-    @param  atmospheric   Atmospheric pressure in hPa
+    @returns the altitude value read from the device
 */
 /**************************************************************************/
 float Adafruit_BME280::readAltitude(float seaLevel)
@@ -515,6 +598,7 @@ float Adafruit_BME280::readAltitude(float seaLevel)
     (in meters), and atmospheric pressure (in hPa).  
     @param  altitude      Altitude in meters
     @param  atmospheric   Atmospheric pressure in hPa
+    @returns the pressure at sea level (in hPa) from the specified altitude
 */
 /**************************************************************************/
 float Adafruit_BME280::seaLevelForAltitude(float altitude, float atmospheric)

@@ -54,6 +54,7 @@ WiFiMDNSResponder	KEYWORD2
 lowPowerMode	KEYWORD2
 maxLowPowerMode	KEYWORD2
 noLowPowerMode	KEYWORD2
+setTimeout	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

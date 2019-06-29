@@ -35,7 +35,18 @@ The following drivers are based on the Adafruit Unified Sensor Driver:
   - [Adafruit\_BMP183\_Unified\_Library](https://github.com/adafruit/Adafruit_BMP183_Unified_Library)
 
 **Humidity & Temperature**
-  - [Adafruit\_DHT\_Unified](https://github.com/adafruit/Adafruit_DHT_Unified)
+  - [DHT-sensor-library](https://github.com/adafruit/DHT-sensor-library)
+
+**Humidity, Temperature, & Barometric Pressure**
+  - [Adafruit_BME280_Library](https://github.com/adafruit/Adafruit_BME280_Library/)
+
+**Orientation**
+ - [Adafruit_BNO055](https://github.com/adafruit/Adafruit_BNO055)
+
+**All in one device**
+- [Adafruit_LSM9DS0](https://github.com/adafruit/Adafruit_LSM9DS0_Library) (accelerometer, gyroscope, magnetometer)
+- [Adafruit_LSM9DS1](https://github.com/adafruit/Adafruit_LSM9DS1/) (accelerometer, gyroscope, magnetometer)
+
 
 ## How Does it Work? ##
 

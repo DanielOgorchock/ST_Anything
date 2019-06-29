@@ -1,19 +1,22 @@
-/***************************************************************************
-  This is a library for the BME280 humidity, temperature & pressure sensor
+/*!
+ * @file Adafruit_BME280.h
+ *
+ * Designed specifically to work with the Adafruit BME280 Breakout
+ * ----> http://www.adafruit.com/products/2650
+ * 
+ * These sensors use I2C or SPI to communicate, 2 or 4 pins are required
+ * to interface.
+ * 
+ * Adafruit invests time and resources providing this open source code, 
+ * please support Adafruit and open-source hardware by purchasing 
+ * products from Adafruit!
+ *
+ * Written by Kevin "KTOWN" Townsend for Adafruit Industries.
+ *
+ * BSD license, all text here must be included in any redistribution.
+ *
+ */
 
-  Designed specifically to work with the Adafruit BME280 Breakout
-  ----> http://www.adafruit.com/products/2650
-
-  These sensors use I2C or SPI to communicate, 2 or 4 pins are required
-  to interface.
-
-  Adafruit invests time and resources providing this open source code,
-  please support Adafruit andopen-source hardware by purchasing products
-  from Adafruit!
-
-  Written by Limor Fried & Kevin Townsend for Adafruit Industries.
-  BSD license, all text above must be included in any redistribution
- ***************************************************************************/
 #ifndef __BME280_H__
 #define __BME280_H__
 
@@ -26,15 +29,19 @@
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
 
-/*=========================================================================
-    I2C ADDRESS/BITS
-    -----------------------------------------------------------------------*/
+/**************************************************************************/
+/*! 
+    @brief  default I2C address
+*/
+/**************************************************************************/
     #define BME280_ADDRESS                (0x77)
 /*=========================================================================*/
 
-/*=========================================================================
-    REGISTERS
-    -----------------------------------------------------------------------*/
+/**************************************************************************/
+/*! 
+    @brief Register addresses
+*/
+/**************************************************************************/
     enum
     {
         BME280_REGISTER_DIG_T1              = 0x88,
@@ -73,33 +80,33 @@
         BME280_REGISTER_HUMIDDATA          = 0xFD
     };
 
-/*=========================================================================*/
-
-/*=========================================================================
-    CALIBRATION DATA
-    -----------------------------------------------------------------------*/
+/**************************************************************************/
+/*! 
+    @brief  calibration data
+*/
+/**************************************************************************/
     typedef struct
     {
-        uint16_t dig_T1;
-        int16_t  dig_T2;
-        int16_t  dig_T3;
+        uint16_t dig_T1; ///< temperature compensation value
+        int16_t  dig_T2; ///< temperature compensation value
+        int16_t  dig_T3; ///< temperature compensation value
 
-        uint16_t dig_P1;
-        int16_t  dig_P2;
-        int16_t  dig_P3;
-        int16_t  dig_P4;
-        int16_t  dig_P5;
-        int16_t  dig_P6;
-        int16_t  dig_P7;
-        int16_t  dig_P8;
-        int16_t  dig_P9;
+        uint16_t dig_P1; ///< pressure compensation value
+        int16_t  dig_P2; ///< pressure compensation value
+        int16_t  dig_P3; ///< pressure compensation value
+        int16_t  dig_P4; ///< pressure compensation value
+        int16_t  dig_P5; ///< pressure compensation value
+        int16_t  dig_P6; ///< pressure compensation value
+        int16_t  dig_P7; ///< pressure compensation value
+        int16_t  dig_P8; ///< pressure compensation value
+        int16_t  dig_P9; ///< pressure compensation value
 
-        uint8_t  dig_H1;
-        int16_t  dig_H2;
-        uint8_t  dig_H3;
-        int16_t  dig_H4;
-        int16_t  dig_H5;
-        int8_t   dig_H6;
+        uint8_t  dig_H1; ///< humidity compensation value
+        int16_t  dig_H2; ///< humidity compensation value
+        uint8_t  dig_H3; ///< humidity compensation value
+        int16_t  dig_H4; ///< humidity compensation value
+        int16_t  dig_H5; ///< humidity compensation value
+        int8_t   dig_H6; ///< humidity compensation value
     } bme280_calib_data;
 /*=========================================================================*/
 
@@ -124,8 +131,18 @@ class Adafruit_BME280_Unified : public Adafruit_Sensor
 
 */
 
+/**************************************************************************/
+/*! 
+    @brief  Class that stores state and functions for interacting with BME280 IC
+*/
+/**************************************************************************/
 class Adafruit_BME280 {
     public:
+    /**************************************************************************/
+    /*! 
+        @brief  sampling rates
+    */
+    /**************************************************************************/
         enum sensor_sampling {
             SAMPLING_NONE = 0b000,
             SAMPLING_X1   = 0b001,
@@ -135,12 +152,22 @@ class Adafruit_BME280 {
             SAMPLING_X16  = 0b101
         };
 
+        /**************************************************************************/
+        /*! 
+            @brief  power modes
+        */
+        /**************************************************************************/
         enum sensor_mode {
             MODE_SLEEP  = 0b00,
             MODE_FORCED = 0b01,
             MODE_NORMAL = 0b11
         };
 
+        /**************************************************************************/
+        /*! 
+            @brief  filter values
+        */
+        /**************************************************************************/
         enum sensor_filter {
             FILTER_OFF = 0b000,
             FILTER_X2  = 0b001,
@@ -149,7 +176,11 @@ class Adafruit_BME280 {
             FILTER_X16 = 0b100
         };
 
-        // standby durations in ms 
+        /**************************************************************************/
+        /*! 
+            @brief  standby duration in ms
+        */
+        /**************************************************************************/
         enum standby_duration {
             STANDBY_MS_0_5  = 0b000,
             STANDBY_MS_10   = 0b110,
@@ -237,7 +268,7 @@ class Adafruit_BME280 {
             unsigned int spi3w_en : 1;
 
             unsigned int get() {
-                return (t_sb << 5) | (filter << 3) | spi3w_en;
+                return (t_sb << 5) | (filter << 2) | spi3w_en;
             }
         };
         config _configReg;
@@ -270,7 +301,7 @@ class Adafruit_BME280 {
             unsigned int mode : 2;
 
             unsigned int get() {
-                return (osrs_t << 5) | (osrs_p << 3) | mode;
+                return (osrs_t << 5) | (osrs_p << 2) | mode;
             }
         };
         ctrl_meas _measReg;
