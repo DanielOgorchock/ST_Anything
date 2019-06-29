@@ -8,7 +8,7 @@
 //			  It inherits from the st::Sensor class and clones much from the st::Executor Class
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::S_TimedRelay sensor1("relaySwitch1", PIN_RELAY, LOW, true, 1000, 0, 1);
+//			  For Example:  st::S_TimedRelay sensor1(F("relaySwitch1"), PIN_RELAY, LOW, true, 1000, 0, 1, 0);
 //
 //			  st::S_TimedRelay() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -18,7 +18,7 @@
 //				- long onTime - REQUIRED - the number of milliseconds to keep the output on, DEFGAULTS to 1000 milliseconds
 //				- long offTime - OPTIONAL - the number of milliseconds to keep the output off, DEFAULTS to 0
 //				- int numCycles - OPTIONAL - the number of times to repeat the on/off cycle, DEFAULTS to 1
-//              - int finalState - OPTIONAL - leave in X state after finishing sequence 0 = off, 1 = on , Defaults to 0
+//              - byte finalState - OPTIONAL - leave in X state after finishing sequence 0 = off, 1 = on , Defaults to 0
 //
 //  Change History:
 //
@@ -46,7 +46,7 @@ namespace st
 
 //public
 	//constructor
-	S_TimedRelay::S_TimedRelay(const __FlashStringHelper *name, byte pinOutput, bool startingState, bool invertLogic, unsigned long onTime, unsigned long offTime, unsigned int numCycles, unsigned int finalState) :
+	S_TimedRelay::S_TimedRelay(const __FlashStringHelper *name, byte pinOutput, bool startingState, bool invertLogic, unsigned long onTime, unsigned long offTime, unsigned int numCycles, byte finalState) :
 		Sensor(name),
 		m_bCurrentState(startingState),
 		m_bInvertLogic(invertLogic),
@@ -54,15 +54,12 @@ namespace st
 		m_lOffTime(offTime),
 		m_iNumCycles(numCycles),
 		m_iCurrentCount(numCycles),
-		m_ifinalState(finalState),
+		m_nfinalState(finalState),
 		m_lTimeChanged(0),
 		m_bTimerPending(false)
 		{
 			setOutputPin(pinOutput);
-			m_ifinalState = 1;
-			if (finalState == 0) {
-				m_ifinalState = 0;
-			} 
+
 			if (numCycles < 1)
 			{
 				m_iNumCycles = 1;
@@ -90,7 +87,7 @@ namespace st
 			//Turn off digital output if timer has expired
 			if ((m_bCurrentState == HIGH) && (millis() - m_lTimeChanged >= m_lOnTime))
 			{	
-				if (m_ifinalState == 1) { // final state will be on
+				if (m_nfinalState == 1) { // final state will be on
 					//add one to the current count since we finished an on/off cycle, and turn on output if needed
 					m_iCurrentCount++;
 					if (m_iCurrentCount < m_iNumCycles)
@@ -108,7 +105,7 @@ namespace st
 			}
 			else if ((m_bCurrentState == LOW) && (millis() - m_lTimeChanged >= m_lOffTime))
 			{	
-				if (m_ifinalState == 0) {  // final state will be off
+				if (m_nfinalState == 0) {  // final state will be off
 					//add one to the current count since we finished an on/off cycle, and turn on output if needed
 					m_iCurrentCount++;
 					if (m_iCurrentCount < m_iNumCycles)
