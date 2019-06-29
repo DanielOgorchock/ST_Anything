@@ -8,7 +8,7 @@
 //			  It inherits from the st::Sensor class and clones much from the st::Executor Class
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::S_TimedRelay sensor1(F("relaySwitch1"), PIN_RELAY, LOW, true, 1000, 0, 1);
+//			  For Example:  st::S_TimedRelay sensor1("relaySwitch1", PIN_RELAY, LOW, true, 1000, 0, 1);
 //
 //			  st::S_TimedRelay() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -17,7 +17,8 @@
 //				- bool invertLogic - REQUIRED - determines whether the Arduino Digital Ouput should use inverted logic
 //				- long onTime - REQUIRED - the number of milliseconds to keep the output on, DEFGAULTS to 1000 milliseconds
 //				- long offTime - OPTIONAL - the number of milliseconds to keep the output off, DEFAULTS to 0
-//				- intnumCycles - OPTIONAL - the number of times to repeat the on/off cycle, DEFAULTS to 1
+//				- int numCycles - OPTIONAL - the number of times to repeat the on/off cycle, DEFAULTS to 1
+// 				- int finalState - OPTIONAL - leave in X state after finishing sequence 0 = off, 1 = on , Defaults to 0
 //
 //  Change History:
 //
@@ -25,6 +26,7 @@
 //    ----        ---            ----
 //    2015-12-29  Dan Ogorchock  Original Creation
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
+//    2019-06-23  Brian Wilson   Added finalState option
 //
 //
 //******************************************************************************************
@@ -48,6 +50,7 @@ namespace st
 			unsigned long m_lOffTime;		//number of milliseconds to keep digital output LOW before automatically turning on
 			unsigned int m_iNumCycles;		//number of on/off cycles of the digital output 
 			unsigned int m_iCurrentCount;	//current number of on/off cycles of the digital output
+			unsigned int m_ifinalState; 
 			unsigned long m_lTimeChanged;	//time when the digital output was last changed
 			bool m_bTimerPending;		//true if waiting on relay timer to expire
 
@@ -55,7 +58,7 @@ namespace st
 			
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			S_TimedRelay(const __FlashStringHelper *name, byte pinOutput, bool startingState = LOW, bool invertLogic = false, unsigned long onTime = 1000, unsigned long offTime = 0, unsigned int numCycles = 1);
+			S_TimedRelay(const __FlashStringHelper *name, byte pinOutput, bool startingState = LOW, bool invertLogic = false, unsigned long onTime = 1000, unsigned long offTime = 0, unsigned int numCycles = 1, unsigned int finalState = 0);
 			
 			//destructor
 			virtual ~S_TimedRelay();
