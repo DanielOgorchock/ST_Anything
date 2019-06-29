@@ -1,9 +1,10 @@
-HubDuino v1.1.4
+HubDuino v1.1.5
 ================
 
-**WARNING** - If using an ESP8266, make sure you are using v2.4.2 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anything to crash after an hour or two) along with Arduino IDE v1.8.8. 
+**WARNING** - If using an ESP8266, make sure you are using v2.5.2 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anything to crash after an hour or two) along with Arduino IDE v1.8.9. 
 
 **Recent History:**
+- 2019-06-28 HubDuino v1.1.5 - Added support for MKR1010, Arduino 1.8.9, ESP8266 v2.5.2, undated numerous libraries, etc...
 - 2019-03-24 HubDuino v1.1.4 - Added support for I2C device - SHT31(temp, humid)
 - 2019-02-10 HubDuino v1.1.3 - Significant overhaul of ES_Servo class and Child Driver - Thanks Jeff Albers!
 
@@ -11,14 +12,15 @@ HubDuino v1.1.4
 
 ![screenshot](https://user-images.githubusercontent.com/5206084/41016005-e382479e-691a-11e8-871f-e62964c0e0c0.png)
 
-Note: The HubDuino v1.1.3 release is based on the ST_Anything v2.9.3 baseline and was built using the Arduino IDE v1.8.8.  Please make sure to upgrade your IDE.
+Note: The HubDuino v1.1.5 release is based on the ST_Anything v2.9.5 baseline and was built using the Arduino IDE v1.8.9.  Please make sure to upgrade your Arduino IDE.
 
-Turn your Arduino UNO/MEGA/MKR1000, NodeMCU ESP8266, or ESP32 into Anything you can imagine! HubDuino/ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
+Turn your Arduino UNO/MEGA/MKR1000/MKR1010, NodeMCU ESP8266, or ESP32 into Anything you can imagine! HubDuino/ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
 - Arduino with W5100 Ethernet shield
 - Arduino with W5500 Ethernet shield
 - Arduino with WiFi101 Shield (or Adafruit ATWINC1500 module)
 - Arduino MKR1000 (has integrated WiFi101)
+- Arduino MKR1010 (has integrated WiFiNINA)
 - Arduino with ESP-01 for WiFi
 - Standalone NodeMCU v1.0 ESP8266-12e
 - Standalone ESP-01 (or really any ESP8266 based board)
@@ -37,6 +39,7 @@ This package currently implements the following Hubitat Device Capabilities:
 - Temperature Measurement (DHT22 - requires Rob Tillaart's DHT 0.1.13 Library, included in this repo)
 - Temperature Measurement (using Dallas Semiconductor DS18B20's, requires OneWire and DallasTemperature libraries included in this repo)
 - Temperature Measurement (via the Adafruit MAX31855 Thermocouple library, included in this repo)
+- Temperature Measurement (via the Arduino MKR THERM Thermocouple library, included in this repo)
 - Temperature Measurement (using AM2320 sensor) (also does humidity)
 - Water Sensor (using an analog input a a simple moisture sesnsor such as http://amzn.com/B00HTSL7QC or http://a.co/eZNTyIH)
 - Door Control / Garage Door Control (i.e. Garage Door Contact Sensor + Relay Output) - See 'ST_Anything_Doors' example
@@ -73,6 +76,7 @@ HubDuino/ST_Anything consists of four main parts:
   - ST_Anything_Multiples_MEGAWiFiEsp.ino - Arduino MEGA + ESP-01 WiFi module with "AT Firmware"
   - ST_Anything_Multiples_WiFi101.ino - Arduino MEGA + WiFi101 Shield (or Adafruit ATWINC1500 module)
   - ST_Anything_Multiples_MKR1000.ino - Arduino MKR1000 (has onboard WiFi101 chip)
+  - ST_Anything_Multiples_MKR1010.ino - Arduino MKR1000 (has onboard WiFiNINA chip)
   - ST_Anything_Multiples_ESP8266WiFi.ino - NodeMCU v1.0 ESP8266-12e development board (no Arduino!)
   - ST_Anything_Multiples_ESP01WiFi.ino - ESP-01 (ESP8266-01) module (no Arduino!)
   - ST_Anything_Multiples_ThingShield.ino - Arduino UNO/MEGA + ST ThingShield
@@ -87,10 +91,10 @@ HubDuino/ST_Anything consists of four main parts:
   - child-xxxxxx.groovy (get these from the ST_Anything HubDuino folder at https://github.com/DanielOgorchock/ST_Anything/tree/master/HubDuino/Drivers)
     - currently 24 child device handlers are available!
 
-## Pre-Requisites for using LAN-to-HUB Ethernet connectivity (Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, ESP32)
+## Pre-Requisites for using LAN-to-HUB Ethernet connectivity (Arduino/W5100, Arduino/W5500, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, ESP32, MKR1000, MKR1010)
 - Your Hubitat HUB must have a Reserved/Static TCP/IP Address assigned via your router's DHCP Server. Since this procedure varies by router model, Please Google it!
 - ***The Hubitat hub listens on port 39501.  This is different than the ST hub which uses 39500 - MODIFY YOUR ARDUINO SKETCH ACCORDINGLY!***
-- You'll need to identify a static TCP/IP address for your Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01, ESP32 as you'll need this later when setting up the sketch. Choose an unused IP address outside of the range your router's DHCP server uses, but in the same subnet.
+- You'll need to identify a static TCP/IP address for your Arduino/W5100, Arduino/W5500, Arduino/ESP-01, NodeMCU ESP8266, or ESP-01, ESP32 as you'll need this later when setting up the sketch. Choose an unused IP address outside of the range your router's DHCP server uses, but in the same subnet.
 
 ## Arduino IDE Setup Instructions 
 - Download the ST_Anything repository, focusing on the ST_Anything/Arduino/ folders
@@ -105,14 +109,14 @@ HubDuino/ST_Anything consists of four main parts:
   - Make sure you select the correct model of board you are compiling for. 
   - If building for a standalone ESP8266 board, make sure you have configured the Arduino IDE to include support for these boards.  Follow the guide at https://learn.sparkfun.com/tutorials/esp8266-thing-hookup-guide/installing-the-esp8266-arduino-addon
   
-**NOTE: Arduino IDE v1.8.8 + v2.4.2 ESP8266 Board support package for the Arduino IDE appears to have corrected the previous memory leak. Please use this combination of software which has been successfully tested.**  
+**NOTE: Arduino IDE v1.8.9 + v2.5.2 ESP8266 Board support package for the Arduino IDE appears to have corrected the earlier memory leak. Please use this combination of software which has been successfully tested.**  
   
   - If building for a standalone ESP32 board, make sure you have configured the Arduino IDE to include support for these boards.  Follow the guide at https://github.com/espressif/arduino-esp32/blob/master/README.md
 - If using a LAN-to-Hub (WiFi or Cat5 Ethernet) based device
   -Find the lines of the Sketch where it says "<---You must edit this line!"
     - You must ensure your Hubitat hub's LAN IP address does not change.  Use your router's reserved/static DHCP assignment feature to make sure your Hubitat Elevation hub always gets the same IP Address!  Enter that address in the corresponding line in the sketch.
     - ***The Hubitat hub listens on port 39501.  Make sure your Arduino sketch reflects this port number change!***
-    - The Arduino must be assigned a static TCP/IP address, Gateway, DNS, Subnet Mask, MAC Address(W5100/W5500 only), SSID+Password(ESP8266,ESP01,ESP32,WiFi101,MKR1000)
+    - The Arduino must be assigned a static TCP/IP address, Gateway, DNS, Subnet Mask, MAC Address(W5100/W5500 only), SSID+Password(ESP8266,ESP01,ESP32,WiFi101,MKR1000,MKR1010)
     - *** NOTE: If using the W5100 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch! Please leave the first octet in the MAC Address '06' as certain MAC addresses are UNICAST while others are MULTICAST. Your MAC must be UNICAST and be a 'Locally Administered Address' Please see https://en.wikipedia.org/wiki/MAC_address#Address_details for more information ***
     - *** NOTE: If using the W5500 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch! Use the one packaged with the W5500 shield.
     - Note: If using an ESP-01 for WiFi-connecticity (i.e. as a WiFi dongle/shield) with an Arduino, the example assumes you're using an Arduino MEGA 2560. Attach the ESP-01 to Hardware Serial "Serial1" and make sure your ESP01 has current 'AT Firmware' installed.
