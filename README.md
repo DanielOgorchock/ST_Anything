@@ -6,7 +6,7 @@ ST_Anything v2.9.5
 **WARNING** - If using an ESP8266, make sure you are using v2.5.2 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anythign to crash after an hour or two) along with Arduino IDE 1.8.9.
 
 **Recent History:**
-- v2.9.5 - Added support for MKR1010, Arduino 1.8.9, ESP8266 v2.5.2, undated numerous libraries, etc...
+- v2.9.5 - Added support for MKR1010, Arduino 1.8.9, ESP8266 v2.5.2, updated numerous libraries, etc...
 - v2.9.4 - Added support for the SHT31 (temp, humid) I2C sensor
 - v2.9.3 - Significant enhancements to the EX_Servo class and Child Device Handler - Thanks Jeff Albers!  ALso, an attempt to prevent duplicate child devices from being created.
 
