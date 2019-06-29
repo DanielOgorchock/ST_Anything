@@ -83,6 +83,7 @@ ST_Anything consists of four main parts:
   - ST_Anything_Multiples_MEGAWiFiEsp.ino - Arduino MEGA + ESP-01 WiFi module with "AT Firmware"
   - ST_Anything_Multiples_WiFi101.ino - Arduino MEGA + WiFi101 Shield (or Adafruit ATWINC1500 module)
   - ST_Anything_Multiples_MKR1000.ino - Arduino MKR1000 (has onboard WiFi101 chip)
+  - ST_Anything_Multiples_MKR1010.ino - Arduino MKR1000 (has onboard WiFiNINA chip)
   - ST_Anything_Multiples_ESP8266WiFi.ino - NodeMCU v1.0 ESP8266-12e development board (no Arduino!)
   - ST_Anything_Multiples_ESP01WiFi.ino - ESP-01 (ESP8266-01) module (no Arduino!)
   - ST_Anything_Multiples_ThingShield.ino - Arduino UNO/MEGA + ST ThingShield
@@ -97,9 +98,9 @@ ST_Anything consists of four main parts:
   - child-xxxxxx.groovy 
     - currently 24 child device handlers are available!
 
-## Pre-Requisites for using LAN-to-HUB Ethernet connectivity (Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, ESP32)
+## Pre-Requisites for using LAN-to-HUB Ethernet connectivity (Arduino/W5100, Arduino/W5500, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, ESP32, MKR1000, MKR1010)
 - Your SmartThings HUB must have a Reserved/Static TCP/IP Address assigned via your router's DHCP Server. Since this procedure varies by router model, Please Google it!
-- You'll need to identify a static TCP/IP address for your Arduino/W5100, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, ESP32, MKR1000, or MKR1010 as you'll need this later when setting up the sketch. Choose an unused IP address outside of the range your router's DHCP server uses, but in the same subnet.
+- You'll need to identify a static TCP/IP address for your Arduino/W5100, Arduino/W5500, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, ESP32, MKR1000, or MKR1010 as you'll need this later when setting up the sketch. Choose an unused IP address outside of the range your router's DHCP server uses, but in the same subnet.
 
 ## Arduino IDE Setup Instructions 
 - Download the ST_Anything repository, focusing on the ST_Anything/Arduino/ folders
