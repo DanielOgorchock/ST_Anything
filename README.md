@@ -46,6 +46,7 @@ This package currently implements the following SmartThings Device Capabilities:
 - Temperature Measurement (DHT22 - requires Rob Tillaart's DHT 0.1.13 Library, included in this repo)
 - Temperature Measurement (using Dallas Semiconductor DS18B20's, requires OneWire and DallasTemperature libraries included in this repo)
 - Temperature Measurement (via the Adafruit MAX31855 Thermocouple library, included in this repo)
+- Temperature Measurement (via the Arduino MKR THERM Thermocouple library, included in this repo)
 - Temperature Measurement (using AM2320 sensor) (also does humidity)
 - Water Sensor (using an analog input a a simple moisture sesnsor such as http://amzn.com/B00HTSL7QC or http://a.co/eZNTyIH)
 - Door Control / Garage Door Control (i.e. Garage Door Contact Sensor + Relay Output) - See 'ST_Anything_Doors' example
