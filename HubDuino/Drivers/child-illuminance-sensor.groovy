@@ -23,11 +23,12 @@
  *    2017-08-24  Allan (vseven) Added a lastUpdated attribute that will display on the multitile.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
+ *    2019-07-01  Dan Ogorchock  Added importUrl
  *
  * 
  */
 metadata {
-	definition (name: "Child Illuminance Sensor", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Illuminance Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-illuminance-sensor.groovy") {
 		capability "Illuminance Measurement"
 		capability "Sensor"
         
