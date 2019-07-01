@@ -26,6 +26,7 @@
 //    2018-08-14  Dan Ogorchock  Modified to avoid compiler errors on ESP32 since it currently does not support "analogWrite()"
 //    2017-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2017-10-08  Allan (vseven) Modified original code from EX_RGB_Dim to be used for RGB lighting
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 #include "EX_RGB_Dim.h"
@@ -70,8 +71,8 @@ namespace st
 		// Write to outputs.  Use ledc for ESP32, analogWrite for everything else.
 
 		if (st::Executor::debug) {
-			Serial.print(F("subString R:G:B = "));
-			Serial.println(String(subStringR) + ":" + String(subStringG) + ":" + String(subStringB));
+			st::debugPrint(F("subString R:G:B = "));
+			st::debugPrintln(String(subStringR) + ":" + String(subStringG) + ":" + String(subStringB));
 		}
 
 		// Any adjustments to the colors can be done here before sending the commands.  For example if red is always too bright reduce it:
@@ -123,8 +124,8 @@ namespace st
 	{
 		String s=str.substring(str.indexOf(' ')+1);
 		if (st::Executor::debug) {
-			Serial.print(F("EX_RGB_Dim::beSmart s = "));
-			Serial.println(s);
+			st::debugPrint(F("EX_RGB_Dim::beSmart s = "));
+			st::debugPrintln(s);
 		}
 		if(s==F("on"))
 		{

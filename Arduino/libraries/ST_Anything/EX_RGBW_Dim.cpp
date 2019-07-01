@@ -31,6 +31,7 @@
 //    2017-10-08  Allan (vseven) Modified original code from EX_RGBW_Dim to be used for RGB lighting
 //    2017-10-12  Allan (vseven) Modified EX_RGBW_Dim for support of a White LED channel
 //    2018-04-02  Dan Ogorchock  Fixed Typo
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 #include "EX_RGBW_Dim.h"
@@ -76,8 +77,8 @@ namespace st
 	// Write to outputs.  Use ledc for ESP32, analogWrite for everything else.
 
 	if (st::Executor::debug) {
-		Serial.print(F("subString R:G:B:W = "));
-		Serial.println(String(subStringR) + ":" + String(subStringG) + ":" + String(subStringB) + ":" + String(subStringW));
+		st::debugPrint(F("subString R:G:B:W = "));
+		st::debugPrintln(String(subStringR) + ":" + String(subStringG) + ":" + String(subStringB) + ":" + String(subStringW));
 	}
 
 	// Any adjustments to the colors can be done here before sending the commands.  For example if red is always too bright reduce it:
@@ -136,8 +137,8 @@ namespace st
 	{
 		String s=str.substring(str.indexOf(' ')+1);
 		if (st::Executor::debug) {
-			Serial.print(F("EX_RGBW_Dim::beSmart s = "));
-			Serial.println(s);
+			st::debugPrint(F("EX_RGBW_Dim::beSmart s = "));
+			st::debugPrintln(s);
 		}
 		if(s==F("on"))
 		{

@@ -37,6 +37,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2019-03-24  Dan Ogorchock  Original Creation
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 
@@ -92,16 +93,16 @@ namespace st
 		if (s.toInt() != 0) {
 			st::PollingSensor::setInterval(s.toInt() * 1000);
 			if (st::PollingSensor::debug) {
-				Serial.print(F("PS_AdafruitSHT31_TempHumid::beSmart set polling interval to "));
-				Serial.println(s.toInt());
+				st::debugPrint(F("PS_AdafruitSHT31_TempHumid::beSmart set polling interval to "));
+				st::debugPrintln(String(s.toInt()));
 			}
 		}
 		else {
 			if (st::PollingSensor::debug) 
 			{
-				Serial.print(F("PS_AdafruitSHT31_TempHumid::beSmart cannot convert "));
-				Serial.print(s);
-				Serial.println(F(" to an Integer."));
+				st::debugPrint(F("PS_AdafruitSHT31_TempHumid::beSmart cannot convert "));
+				st::debugPrint(s);
+				st::debugPrintln(F(" to an Integer."));
 			}
 		}
 	}
@@ -113,9 +114,9 @@ namespace st
 		if (st::PollingSensor::debug)
 		{
 			if (!status) {
-				Serial.println();
-				Serial.println("Could not find a valid SHT31 sensor, check wiring!");
-				Serial.println();
+				st::debugPrintln(F(""));
+				st::debugPrintln("Could not find a valid SHT31 sensor, check wiring!");
+				st::debugPrintln(F(""));
 				delay(3000);
 			}
 		}
@@ -130,7 +131,7 @@ namespace st
 			//Humidity
 			if (m_fHumiditySensorValue == -1.0)
 			{
-				Serial.println("First time through Humidity");
+				st::debugPrintln("First time through Humidity");
 				m_fHumiditySensorValue = SHT31.readHumidity();  //first time through, no filtering
 			}
 			else
@@ -141,7 +142,7 @@ namespace st
 			//Temperature
 			if (m_fTemperatureSensorValue == -1.0)
 			{
-				Serial.println("First time through Temperature");
+				st::debugPrintln("First time through Temperature");
 				//first time through, no filtering
 				if (m_In_C == false)
 				{

@@ -29,6 +29,7 @@
 //                               used with new Parent/Child Device Handlers (i.e. Composite DH)
 //    2017-05-25  Dan Ogorchock  Revised example sketch, taking into account limitations of NodeMCU GPIO pins
 //    2018-02-09  Dan Ogorchock  Added support for Hubitat Elevation Hub
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -118,8 +119,8 @@ const unsigned int hubPort = 39501;   // hubitat hub port
 //******************************************************************************************
 void callback(const String &msg)
 {
-//  Serial.print(F("ST_Anything Callback: Sniffed data = "));
-//  Serial.println(msg);
+//  st::debugPrint(F("ST_Anything Callback: Sniffed data = "));
+//  st::debugPrintln(msg);
   
   //TODO:  Add local logic here to take action when a device's value/state is changed
   

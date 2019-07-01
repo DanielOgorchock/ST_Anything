@@ -27,6 +27,7 @@
 //    2015-12-29  Dan Ogorchock  Original Creation
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2019-06-23  Brian Wilson   Added finalState option
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -65,7 +66,7 @@ namespace st
 				m_iNumCycles = 1;
 				m_iCurrentCount = 1;
 				
-				Serial.println(F("S_TimedRelay:: INVALID Number of Cycles Requested!  Must be at least 1.  Setting to 1."));
+				st::debugPrintln(F("S_TimedRelay:: INVALID Number of Cycles Requested!  Must be at least 1.  Setting to 1."));
 			}
 		}
 	
@@ -138,8 +139,8 @@ namespace st
 	{
 		String s = str.substring(str.indexOf(' ') + 1);
 		if (st::Device::debug) {
-			Serial.print(F("S_TimedRelay::beSmart s = "));
-			Serial.println(s);
+			st::debugPrint(F("S_TimedRelay::beSmart s = "));
+			st::debugPrintln(s);
 		}
 		if ((s == F("on")) && (m_bCurrentState == LOW))
 		{

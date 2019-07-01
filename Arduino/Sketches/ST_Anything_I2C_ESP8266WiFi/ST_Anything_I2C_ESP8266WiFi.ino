@@ -26,6 +26,7 @@
 //    2018-07-02  Dan Ogorchock  Revised to demonstrate I2C sensors
 //    2018-07-04  Dan Ogorchock  Added MAX44009 and BH1750 Lux Sensors
 //    2019-03-24  Dan Ogorchock  Added STH31 Sensor
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -114,8 +115,8 @@ const unsigned int hubPort = 39500;   // smartthings hub port
 //******************************************************************************************
 void callback(const String &msg)
 {
-//  Serial.print(F("ST_Anything Callback: Sniffed data = "));
-//  Serial.println(msg);
+//  st::debugPrint(F("ST_Anything Callback: Sniffed data = "));
+//  st::debugPrintln(msg);
   
   //TODO:  Add local logic here to take action when a device's value/state is changed
   

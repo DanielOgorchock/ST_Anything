@@ -25,6 +25,7 @@
 //    2018-08-30  Dan Ogorchock  Adding reporting of 'level'
 //    2018-12-06  Dan Ogorchock  Fixed Comments
 //    2019-04-10  Dan Ogorchock  Corrected analogWrite() call for ESP8266 platform
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -45,7 +46,7 @@ namespace st
 	{
 #if defined(ARDUINO_ARCH_ESP32)
 		if (st::Executor::debug) {
-			Serial.println(F("EX_Switch_Dim:: analogWrite not currently supported on ESP32!"));
+			st::debugPrintln(F("EX_Switch_Dim:: analogWrite not currently supported on ESP32!"));
 		}
 #elif defined(ARDUINO_ARCH_ESP8266)
 		analogWrite(m_nPinPWM, map(m_nCurrentLevel, 0, 100, 0, 1023));
@@ -82,8 +83,8 @@ namespace st
 	{
 		String s = str.substring(str.indexOf(' ') + 1);
 		if (st::Executor::debug) {
-			Serial.print(F("EX_Switch_Dim::beSmart s = "));
-			Serial.println(s);
+			st::debugPrint(F("EX_Switch_Dim::beSmart s = "));
+			st::debugPrintln(s);
 		}
 		if (s == F("on"))
 		{

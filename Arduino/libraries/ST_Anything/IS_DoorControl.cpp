@@ -30,6 +30,7 @@
 //    2015-01-07  Dan Ogorchock  Original Creation
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2018-11-07  Dan Ogorchock	 Added optional "numReqCounts" constructor argument/capability
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -93,7 +94,7 @@ namespace st
 		String s = str.substring(str.indexOf(' ') + 1);
 		if (st::InterruptSensor::debug) {
 			Serial.print(F("IS_ContactRelay::beSmart s = "));
-			Serial.println(s);
+			st::debugPrintln(s);
 		}
 		if (s == F("on"))
 		{

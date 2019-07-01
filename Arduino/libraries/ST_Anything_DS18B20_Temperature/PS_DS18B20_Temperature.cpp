@@ -36,6 +36,7 @@
 //    2017-08-18  Dan Ogorchock  Modified to send floating point values to SmartThings
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2019-03-11  Dan Ogorchock  Added new optional parameter for starting sensor number for data transfer
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -81,16 +82,16 @@ namespace st
 		if (s.toInt() != 0) {
 			st::PollingSensor::setInterval(s.toInt() * 1000);
 			if (st::PollingSensor::debug) {
-				Serial.print(F("PS_DS18B20_Temperature::beSmart set polling interval to "));
-				Serial.println(s.toInt());
+				st::debugPrint(F("PS_DS18B20_Temperature::beSmart set polling interval to "));
+				st::debugPrintln(String(s.toInt()));
 			}
 		}
 		else {
 			if (st::PollingSensor::debug)
 			{
-				Serial.print(F("PS_DS18B20_Temperature::beSmart cannot convert "));
-				Serial.print(s);
-				Serial.println(F(" to an Integer."));
+				st::debugPrint(F("PS_DS18B20_Temperature::beSmart cannot convert "));
+				st::debugPrint(s);
+				st::debugPrintln(F(" to an Integer."));
 			}
 		}
 	}
@@ -109,13 +110,13 @@ namespace st
 	void PS_DS18B20_Temperature::getData()
 	{
 		if (st::PollingSensor::debug) {
-			Serial.print(F("PS_DS18B20_Temperature::Requesting temperatures..."));
+			st::debugPrint(F("PS_DS18B20_Temperature::Requesting temperatures..."));
 		}
 		
 		m_DS18B20.requestTemperatures(); // Send the command to get temperatures
 
 		if (st::PollingSensor::debug) {
-			Serial.println(F("DONE"));
+			st::debugPrintln(F("DONE"));
 		}
 
 		byte maxSensorNum = m_sensorStartingNum + m_numSensors - 1;
@@ -131,18 +132,18 @@ namespace st
 			}
 
 			if (st::PollingSensor::debug) {
-				Serial.print(F("PS_DS18B20_Temperature:: Temperature for the device # "));
-				Serial.print(index);
-				Serial.print(F(" is: "));
-				Serial.println(m_dblTemperatureSensorValue);
+				st::debugPrint(F("PS_DS18B20_Temperature:: Temperature for the device # "));
+				st::debugPrint(String(index));
+				st::debugPrint(F(" is: "));
+				st::debugPrintln(String(m_dblTemperatureSensorValue));
 			}
 
 
 			if (isnan(m_dblTemperatureSensorValue))
 			{
 				if (st::PollingSensor::debug) {
-					Serial.print(F("PS_DS18B20_Temperature:: Error Reading Sensor # "));
-					Serial.println(index);
+					st::debugPrint(F("PS_DS18B20_Temperature:: Error Reading Sensor # "));
+					st::debugPrintln(String(index));
 				}
 				m_dblTemperatureSensorValue = -99.0;
 			}

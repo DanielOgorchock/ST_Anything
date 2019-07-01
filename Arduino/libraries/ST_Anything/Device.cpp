@@ -12,6 +12,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2018-08-15  Dan Ogorchock  Workaround for strcpy_P() ESP32 crash bug
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 
@@ -30,8 +31,8 @@ namespace st
 	{
 		if(debug)
 		{
-			Serial.print(F("Device: New Device ID: "));
-			Serial.println(getName());
+			st::debugPrint(F("Device: New Device ID: "));
+			st::debugPrintln(getName());
 		}
 	}
 	
@@ -40,8 +41,8 @@ namespace st
 	{
 		if(debug)
 		{
-			Serial.print(F("Device: Destroyed Device ID: "));
-			Serial.println(getName());
+			st::debugPrint(F("Device: Destroyed Device ID: "));
+			st::debugPrintln(getName());
 		}
 	}
 

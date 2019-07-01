@@ -43,6 +43,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2018-07-02  Dan & Daniel   Original Creation
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -81,27 +82,27 @@ namespace st
 		if (s.toInt() != 0) {
 			st::PollingSensor::setInterval(s.toInt() * 1000);
 			if (st::PollingSensor::debug) {
-				Serial.print(F("PS_AdafruitTSL2561_Illuminance::beSmart set polling interval to "));
-				Serial.println(s.toInt());
+				st::debugPrint(F("PS_AdafruitTSL2561_Illuminance::beSmart set polling interval to "));
+				st::debugPrintln(String(s.toInt()));
 			}
 		}
 		else {
 			if (st::PollingSensor::debug)
 			{
-				Serial.print(F("PS_AdafruitTSL2561_Illuminance::beSmart cannot convert "));
-				Serial.print(s);
-				Serial.println(F(" to an Integer."));
+				st::debugPrint(F("PS_AdafruitTSL2561_Illuminance::beSmart cannot convert "));
+				st::debugPrint(s);
+				st::debugPrintln(F(" to an Integer."));
 			}
 		}
 	}
 
 	void PS_AdafruitTSL2561_Illuminance::init() {
-		Serial.println("Initializing the TSL2561 sensor...");
+		st::debugPrintln("Initializing the TSL2561 sensor...");
 		if (tsl.begin()) {
-			Serial.println("Found TSL2561 sensor.");
+			st::debugPrintln("Found TSL2561 sensor.");
 		}
 		else {
-			Serial.println("No TSL2561 found... check your wiring and address");
+			st::debugPrintln("No TSL2561 found... check your wiring and address");
 		}
 		getData();
 	}
@@ -112,7 +113,7 @@ namespace st
 		/* Get a new sensor event */
 		sensors_event_t event;
 		tsl.getEvent(&event);
-		//Serial.println(event.light);
+		//st::debugPrintln(event.light);
 
 		/* Display the results (light is measured in lux) */
 		if ((event.light >= 0) && (event.light <= 65535))
@@ -125,7 +126,7 @@ namespace st
 		{
 			/* If event.light = 0 lux the sensor is probably saturated
 			and no reliable data could be generated! */
-			Serial.println("TSL2561 Sensor overload");
+			st::debugPrintln("TSL2561 Sensor overload");
 		}
 
 	}

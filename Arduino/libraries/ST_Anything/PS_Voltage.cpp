@@ -72,6 +72,7 @@
 //    2017-08-31  Dan Ogorchock  Added filtering optional argument to help reduce noisy signals
 //    2017-09-01  Dan Ogorchock  Added 3rd order polynomial nonlinear correction compensation
 //    2018-06-24  Dan Ogorchock  Improved documentation / comments (above)
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -167,16 +168,16 @@ namespace st
 		if (s.toInt() != 0) {
 			st::PollingSensor::setInterval(s.toInt() * 1000);
 			if (st::PollingSensor::debug) {
-				Serial.print(F("PS_Voltage::beSmart set polling interval to "));
-				Serial.println(s.toInt());
+				st::debugPrint(F("PS_Voltage::beSmart set polling interval to "));
+				st::debugPrintln(String(s.toInt()));
 			}
 		}
 		else {
 			if (st::PollingSensor::debug)
 			{
-				Serial.print(F("PS_Voltage::beSmart cannot convert "));
-				Serial.print(s);
-				Serial.println(F(" to an Integer."));
+				st::debugPrint(F("PS_Voltage::beSmart cannot convert "));
+				st::debugPrint(s);
+				st::debugPrintln(F(" to an Integer."));
 			}
 		}
 	}
@@ -195,14 +196,14 @@ namespace st
 
 			if (m_bUseCompensation) {
 
-				//Serial.print(F("PS_Voltage::tempAnalogInput = "));
-				//Serial.print(tempAnalogInput);
+				//st::debugPrint(F("PS_Voltage::tempAnalogInput = "));
+				//st::debugPrint(String(tempAnalogInput));
 
 				tempAnalogInput = (m_dCoeff1 * pow(tempAnalogInput, 3)) + (m_dCoeff2 * pow(tempAnalogInput, 2)) + (m_dCoeff3 * tempAnalogInput) + m_dCoeff4;
 
-				//Serial.print(F(", PS_Voltage::tempAnalogInput (Compensated) = "));
-				//Serial.print(tempAnalogInput);
-				//Serial.println();
+				//st::debugPrint(F(", PS_Voltage::tempAnalogInput (Compensated) = "));
+				//st::debugPrint(String(tempAnalogInput));
+				//st::debugPrintln(F(""));
 
 			}
 
@@ -210,9 +211,9 @@ namespace st
 
 			//if (st::PollingSensor::debug)
 			//{
-			//	Serial.print(F("PS_Voltage::tempValue = "));
-			//	Serial.print(tempValue);
-			//	Serial.println();
+			//	st::debugPrint(F("PS_Voltage::tempValue = "));
+			//	st::debugPrint(String(tempValue));
+			//	st::debugPrintln(F(""));
 			//}
 		}
 		

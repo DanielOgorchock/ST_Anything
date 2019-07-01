@@ -37,6 +37,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2018-07-01  Dan & Daniel   Original Creation
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 
@@ -92,16 +93,16 @@ namespace st
 		if (s.toInt() != 0) {
 			st::PollingSensor::setInterval(s.toInt() * 1000);
 			if (st::PollingSensor::debug) {
-				Serial.print(F("PS_AdafruitBMP280_TempPress::beSmart set polling interval to "));
-				Serial.println(s.toInt());
+				st::debugPrint(F("PS_AdafruitBMP280_TempPress::beSmart set polling interval to "));
+				st::debugPrintln(String(s.toInt()));
 			}
 		}
 		else {
 			if (st::PollingSensor::debug) 
 			{
-				Serial.print(F("PS_AdafruitBMP280_TempPress::beSmart cannot convert "));
-				Serial.print(s);
-				Serial.println(F(" to an Integer."));
+				st::debugPrint(F("PS_AdafruitBMP280_TempPress::beSmart cannot convert "));
+				st::debugPrint(s);
+				st::debugPrintln(F(" to an Integer."));
 			}
 		}
 	}
@@ -116,11 +117,11 @@ namespace st
 		if (st::PollingSensor::debug)
 		{
 			if (!status) {
-				Serial.println();
-				Serial.print("Error: Could not find a valid BMP280 sensor at address 0x");
-				Serial.print(buf);
-				Serial.println(", check wiring and address setting in sketch!");
-				Serial.println();
+				st::debugPrintln(F(""));
+				st::debugPrint("Error: Could not find a valid BMP280 sensor at address 0x");
+				st::debugPrint(buf);
+				st::debugPrintln(", check wiring and address setting in sketch!");
+				st::debugPrintln(F(""));
 				delay(3000);
 			}
 		}
@@ -135,7 +136,7 @@ namespace st
 			//Temperature
 			if (m_fTemperatureSensorValue == -1.0)
 			{
-				Serial.println("First time through Temperature");
+				st::debugPrintln("First time through Temperature");
 				//first time through, no filtering
 				if (m_In_C == false)
 				{
@@ -162,7 +163,7 @@ namespace st
 			//Pressure
 			if (m_fPressureSensorValue == -1.0)
 			{
-				Serial.println("First time through Pressure");
+				st::debugPrintln("First time through Pressure");
 				m_fPressureSensorValue = (bmp.readPressure() / 100.0F);  //first time through, no filtering
 			}
 			else

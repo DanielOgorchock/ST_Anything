@@ -9,6 +9,7 @@
 //  2018-01-06  Dan Ogorchock  Added WiFi.RSSI() data collection
 //  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
 //  2018-02-03  Dan Ogorchock  Support for Hubitat
+//  2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //*******************************************************************************
 
 #include "SmartThingsWiFiEsp.h"
@@ -55,23 +56,23 @@ namespace st
 	{
 		int status = WL_IDLE_STATUS;     // the Wifi radio's status
 
-		Serial.println(F(""));
-		Serial.println(F("Initializing WiFiEsp network.  Please be patient..."));
+		st::debugPrintln(F(""));
+		st::debugPrintln(F("Initializing WiFiEsp network.  Please be patient..."));
 
 		// Initialize the WiFiEsp library
 		WiFi.init(st_espSerial);
 
 		// check for the presence of the shield
 		if (WiFi.status() == WL_NO_SHIELD) {
-			Serial.println("ESP WiFi shield not present");
+			st::debugPrintln("ESP WiFi shield not present");
 			// don't continue
 			while (true);
 		}
 
 		// attempt to connect to WiFi network
 		while (status != WL_CONNECTED) {
-			Serial.print("Attempting to connect to WPA SSID: ");
-			Serial.println(st_ssid);
+			st::debugPrint("Attempting to connect to WPA SSID: ");
+			st::debugPrintln(st_ssid);
 			// Connect to WPA/WPA2 network
 			status = WiFi.begin(st_ssid, st_password);
 			delay(1000);
@@ -88,31 +89,31 @@ namespace st
 		uint8_t mac[6];
 		char buf[20];
 
-		Serial.println(F(""));
-		Serial.println(F("Enter the following three lines of data into ST App on your phone!"));
-		Serial.print(F("localIP = "));
-		Serial.println(WiFi.localIP());
-		Serial.print(F("serverPort = "));
-		Serial.println(st_serverPort);
+		st::debugPrintln(F(""));
+		st::debugPrintln(F("Enter the following three lines of data into ST App on your phone!"));
+		st::debugPrint(F("localIP = "));
+		st::debugPrintln(String(WiFi.localIP()));
+		st::debugPrint(F("serverPort = "));
+		st::debugPrintln(String(st_serverPort));
 		WiFi.macAddress(mac);
-		Serial.print(F("MAC Address = "));
+		st::debugPrint(F("MAC Address = "));
 		sprintf(buf, "%02X%02X%02X%02X%02X%02X", mac[5], mac[4], mac[3], mac[2], mac[1], mac[0]);
-		Serial.println(buf);
-		Serial.println(F(""));
+		st::debugPrintln(buf);
+		st::debugPrintln(F(""));
 
-		Serial.print(F("SSID = "));
-		Serial.println(st_ssid);
-		Serial.print(F("PASSWORD = "));
-		Serial.println(st_password);
-		Serial.print(F("hubIP = "));
-		Serial.println(st_hubIP);
-		Serial.print(F("hubPort = "));
-		Serial.println(st_hubPort);
-		Serial.print(F("RSSI = "));
-		Serial.println(WiFi.RSSI());
-		Serial.println(F(""));
-		Serial.println(F("SmartThingsWiFiEsp: Intialized"));
-		Serial.println(F(""));
+		st::debugPrint(F("SSID = "));
+		st::debugPrintln(st_ssid);
+		st::debugPrint(F("PASSWORD = "));
+		st::debugPrintln(st_password);
+		st::debugPrint(F("hubIP = "));
+		st::debugPrintln(String(st_hubIP));
+		st::debugPrint(F("hubPort = "));
+		st::debugPrintln(String(st_hubPort));
+		st::debugPrint(F("RSSI = "));
+		st::debugPrintln(String(WiFi.RSSI()));
+		st::debugPrintln(F(""));
+		st::debugPrintln(F("SmartThingsWiFiEsp: Intialized"));
+		st::debugPrintln(F(""));
 
 		RSSIsendInterval = 5000;
 		previousMillis = millis() - RSSIsendInterval;
@@ -129,9 +130,9 @@ namespace st
 
 		//if (WiFi.status() != WL_CONNECTED)
 		//{
-		//	Serial.println(F("**********************************************************"));
-		//	Serial.println(F("**** WiFi Module Disconnected.  Attempting restart! ******"));
-		//	Serial.println(F("**********************************************************"));
+		//	st::debugPrintln(F("**********************************************************"));
+		//	st::debugPrintln(F("**** WiFi Module Disconnected.  Attempting restart! ******"));
+		//	st::debugPrintln(F("**********************************************************"));
 		//	WiFi.reset();
 		//	init();
 		//}
@@ -152,7 +153,7 @@ namespace st
 
 				if (_isDebugEnabled)
 				{
-					Serial.println(strRSSI);
+					st::debugPrintln(strRSSI);
 				}
 			}
 		//}
@@ -172,9 +173,9 @@ namespace st
 					{
 						if (_isDebugEnabled)
 						{
-							Serial.println(F(""));
-							Serial.println(F("SmartThings.run() - Exceeded 200 character limit"));
-							Serial.println(F(""));
+							st::debugPrintln(F(""));
+							st::debugPrintln(F("SmartThings.run() - Exceeded 200 character limit"));
+							st::debugPrintln(F(""));
 						}
 					}
 					// if you've gotten to the end of the line (received a newline
@@ -194,7 +195,7 @@ namespace st
 							client.println();
 							if (_isDebugEnabled)
 							{
-								Serial.println(F("No Valid Data Received"));
+								st::debugPrintln(F("No Valid Data Received"));
 							}
 						}
 						break;
@@ -218,8 +219,8 @@ namespace st
 			if (tempString.length() > 0) {
 				if (_isDebugEnabled)
 				{
-					Serial.print(F("Handling request from ST. tempString = "));
-					Serial.println(tempString);
+					st::debugPrint(F("Handling request from ST. tempString = "));
+					st::debugPrintln(tempString);
 				}
 				//Pass the message to user's SmartThings callout function
 				tempString.replace("%20", " ");  //Clean up for Hubitat
@@ -240,9 +241,9 @@ namespace st
 
 		//if (WiFi.status() != WL_CONNECTED)
 		//{
-		//	Serial.println(F("**********************************************************"));
-		//	Serial.println(F("**** WiFi Module Disconnected.  Attempting restart! ******"));
-		//	Serial.println(F("**********************************************************"));
+		//	st::debugPrintln(F("**********************************************************"));
+		//	st::debugPrintln(F("**** WiFi Module Disconnected.  Attempting restart! ******"));
+		//	st::debugPrintln(F("**********************************************************"));
 		//	WiFi.reset();
 		//	init();
 		//}
@@ -268,18 +269,18 @@ namespace st
 			//connection failed;
 			if (_isDebugEnabled)
 			{
-				Serial.println(F("***********************************************************"));
-				Serial.println(F("***** SmartThings.send() - Ethernet Connection Failed *****"));
-				Serial.println(F("***********************************************************"));
-				Serial.print(F("hubIP = "));
-				Serial.print(st_hubIP);
-				Serial.print(F(" "));
-				Serial.print(F("hubPort = "));
-				Serial.println(st_hubPort);
+				st::debugPrintln(F("***********************************************************"));
+				st::debugPrintln(F("***** SmartThings.send() - Ethernet Connection Failed *****"));
+				st::debugPrintln(F("***********************************************************"));
+				st::debugPrint(F("hubIP = "));
+				st::debugPrint(String(st_hubIP));
+				st::debugPrint(F(" "));
+				st::debugPrint(F("hubPort = "));
+				st::debugPrintln(String(st_hubPort));
 
-				Serial.println(F("***********************************************************"));
-				Serial.println(F("**** WiFi Disconnected.  ESP8266 should auto-reconnect ****"));
-				Serial.println(F("***********************************************************"));
+				st::debugPrintln(F("***********************************************************"));
+				st::debugPrintln(F("**** WiFi Disconnected.  ESP8266 should auto-reconnect ****"));
+				st::debugPrintln(F("***********************************************************"));
 			}
 
 			//WiFi.reset();//End current broken WiFi Connection
@@ -287,9 +288,9 @@ namespace st
 
 			if (_isDebugEnabled)
 			{
-				Serial.println(F("***********************************************************"));
-				Serial.println(F("******        Attempting to resend missed data      *******"));
-				Serial.println(F("***********************************************************"));
+				st::debugPrintln(F("***********************************************************"));
+				st::debugPrintln(F("******        Attempting to resend missed data      *******"));
+				st::debugPrintln(F("***********************************************************"));
 			}
 
 
@@ -311,12 +312,12 @@ namespace st
 
 		}
 
-		//if (_isDebugEnabled) { Serial.println(F("WiFi.send(): Reading for reply data "));}
+		//if (_isDebugEnabled) { st::debugPrintln(F("WiFi.send(): Reading for reply data "));}
 		// read any data returned from the POST
 		while (st_client.connected()) {
 			//while (st_client.available()) {
 			char c = st_client.read(); //gets byte from ethernet buffer
-									   //if (_isDebugEnabled) { Serial.print(c); } //prints byte to serial monitor
+									   //if (_isDebugEnabled) { st::debugPrint(String(c)); } //prints byte to serial monitor
 									   //}
 		}
 

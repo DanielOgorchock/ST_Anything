@@ -6,11 +6,13 @@
 //
 //	History
 //	2017-02-04  Dan Ogorchock  Created
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //*******************************************************************************
 #ifndef __SMARTTHINGS_H__ 
 #define __SMARTTHINGS_H__
 
 #include <Arduino.h>
+#include "ST_Debug.h"
 
 //*******************************************************************************
 // Callout Function Definition for Messages Received from SmartThings 

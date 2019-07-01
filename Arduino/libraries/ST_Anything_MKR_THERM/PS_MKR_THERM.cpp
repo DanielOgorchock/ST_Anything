@@ -27,6 +27,7 @@
 //    ----        ---            ----
 //    2019-06-23  Dan Ogorchock  Original Creation
 //    2019-06-24  Dan Ogorchock  Improved false reading handling
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -66,16 +67,16 @@ namespace st
 		if (s.toInt() != 0) {
 			st::PollingSensor::setInterval(s.toInt() * 1000);
 			if (st::PollingSensor::debug) {
-				Serial.print(F("PS_MKR_THERM::beSmart set polling interval to "));
-				Serial.println(s.toInt());
+				st::debugPrint(F("PS_MKR_THERM::beSmart set polling interval to "));
+				st::debugPrintln(s.toInt());
 			}
 		}
 		else {
 			if (st::PollingSensor::debug) 
 			{
-				Serial.print(F("PS_MKR_THERM::beSmart cannot convert "));
-				Serial.print(s);
-				Serial.println(F(" to an Integer."));
+				st::debugPrint(F("PS_MKR_THERM::beSmart cannot convert "));
+				st::debugPrint(s);
+				st::debugPrintln(F(" to an Integer."));
 			}
 		}
 	}
@@ -84,7 +85,7 @@ namespace st
 	void PS_MKR_THERM::init()
 	{	
 		if (!THERM.begin()) {
-			Serial.println("Failed to initialize MKR THERM shield!");
+			st::debugPrintln("Failed to initialize MKR THERM shield!");
 		}
 		getData();
 	}
@@ -101,7 +102,7 @@ namespace st
 			if (isnan(tempTemperature))
 			{
 				if (st::PollingSensor::debug) {
-					Serial.println(F("PS_MKR_THERM:: Error Reading Thermocouple."));
+					st::debugPrintln(F("PS_MKR_THERM:: Error Reading Thermocouple."));
 				}
 			}
 			else
@@ -117,7 +118,7 @@ namespace st
 		}
 		else
 		{
-			Serial.println(F("PS_MKR_THERM:: Error Reading Thermocouple multiple times.  No good value measured this cycle."));
+			st::debugPrintln(F("PS_MKR_THERM:: Error Reading Thermocouple multiple times.  No good value measured this cycle."));
 		}
 	}
 	

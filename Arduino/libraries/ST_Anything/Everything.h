@@ -25,6 +25,7 @@
 //    2017-02-07  Dan Ogorchock  Added support for new SmartThings v2.0 library (ThingShield, W5100, ESP8266)
 //    2019-02-09  Dan Ogorchock  Add update() call to Executors in support of devices like EX_Servo that need a non-blocking mechanism
 //    2019-02-24  Dan Ogorchock  Added new special callOnMsgRcvd2 callback capability. Allows recvd string to be manipulated in the sketch before being processed by Everything.
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 
@@ -37,6 +38,7 @@
 #include "Executor.h"
 
 #include "SmartThings.h"
+#include "ST_Debug.h"
 
 namespace st
 {
@@ -99,6 +101,12 @@ namespace st
 
 			friend SmartThingsCallout_t receiveSmartString; //callback function to act on data received from SmartThings Shield - called from SmartThings Shield Library
 			
+			friend 	debugPrint_t debugPrint;
+			friend 	debugPrintln_t debugPrintln;
+
+			static void (*m_pnPrintFn)(String); //If this function pointer is assigned, the function it points to will be called upon every time a string is sent to the cloud.		
+			static void (*m_pnPrintLnFn)(String); //If this function pointer is assigned, the function it points to will be called upon every time a string is received from the cloud.
+
 			//SmartThings Object
 			//#ifndef DISABLE_SMARTTHINGS
 			//  static void setLED(uint8_t red, uint8_t green, uint8_t blue) {SmartThing.shieldSetLED(red, green, blue);}

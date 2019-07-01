@@ -24,6 +24,7 @@
 //    2017-02-21  Dan Ogorchock  New example specifically for running everythin on a ESP-01 (no Arduino required!)
 //    2017-04-24  Dan Ogorchock  Updated for use with new v2.5 Parent/Child Device handlers
 //    2018-02-09  Dan Ogorchock  Added support for Hubitat Elevation Hub
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -83,8 +84,8 @@ const unsigned int hubPort = 39500;   // smartthings hub port
 //******************************************************************************************
 void callback(const String &msg)
 {
-  //Serial.print(F("ST_Anything Callback: Sniffed data = "));
-  //Serial.println(msg);
+  //st::debugPrint(F("ST_Anything Callback: Sniffed data = "));
+  //st::debugPrintln(msg);
   
   //TODO:  Add local logic here to take action when a device's value/state is changed
   

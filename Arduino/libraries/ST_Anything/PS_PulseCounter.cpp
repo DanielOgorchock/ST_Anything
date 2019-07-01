@@ -33,6 +33,7 @@
 //    ----        ---            ----
 //    2015-03-31  Dan Ogorchock  Original Creation
 //    2018-03-03  Dan Ogorchock  Improved code to make generic for all boards, not just Arduino MEGA 
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -85,16 +86,16 @@ namespace st
 		if (s.toInt() != 0) {
 			st::PollingSensor::setInterval(s.toInt() * 1000);
 			if (st::PollingSensor::debug) {
-				Serial.print(F("PS_PulseCounter::beSmart set polling interval to "));
-				Serial.println(s.toInt());
+				st::debugPrint(F("PS_PulseCounter::beSmart set polling interval to "));
+				st::debugPrintln(String(s.toInt()));
 			}
 		}
 		else {
 			if (st::PollingSensor::debug)
 			{
-				Serial.print(F("PS_PulseCounter::beSmart cannot convert "));
-				Serial.print(s);
-				Serial.println(F(" to an Integer."));
+				st::debugPrint(F("PS_PulseCounter::beSmart cannot convert "));
+				st::debugPrint(s);
+				st::debugPrintln(F(" to an Integer."));
 			}
 		}
 	}
@@ -116,7 +117,7 @@ namespace st
 		{
 			m_nSensorValue = 0;
 			if (st::PollingSensor::debug) {
-				Serial.println(F("PS_PulseCounter::Something went wrong. Need to debug."));
+				st::debugPrintln(F("PS_PulseCounter::Something went wrong. Need to debug."));
 			}
 		}
 

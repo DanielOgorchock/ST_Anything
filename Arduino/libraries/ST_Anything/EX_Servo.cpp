@@ -30,6 +30,7 @@
 //	  2019-02-02  Jeff Albers	 Added Parameters to map servo endpoints, actively control rate of servo motion via duration input to device driver, intializes to level instead of angle
 //    2019-02-09  Dan Ogorchock  Adding Asynchronous Motion to eliminate blocking calls and to allow simultaneous motion across multiple servos
 //    2019-03-04  Dan Ogorchock  Added optional min and max pulse width parameters to allow servo specific adjustments
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -75,8 +76,8 @@ namespace st
 		m_bMoveActive = true;                      //start the move (the update() function will take care of the actual motion)
 
 		if (st::Executor::debug) {
-			Serial.print(F("EX_Servo:: Servo motor angle set to "));
-			Serial.println(m_nTargetAngle);
+			st::debugPrint(F("EX_Servo:: Servo motor angle set to "));
+			st::debugPrintln(String(m_nTargetAngle));
 		}
 
 	}
@@ -130,7 +131,7 @@ namespace st
 				else {
 					m_bMoveActive = false;
 					if (st::Executor::debug) {
-						Serial.println(F("EX_Servo::update() move complete"));
+						st::debugPrintln(F("EX_Servo::update() move complete"));
 					}
 					if (m_bDetachAfterMove) { 
 						m_bDetachTmrActive = true;
@@ -145,7 +146,7 @@ namespace st
 				m_bDetachTmrActive = false;
 				m_Servo.detach();
 				if (st::Executor::debug) {
-					Serial.println(F("EX_Servo::update() detach complete"));
+					st::debugPrintln(F("EX_Servo::update() detach complete"));
 				}
 			}
 		}
@@ -160,10 +161,10 @@ namespace st
 		rate.trim();
 		
 		if (st::Executor::debug) {
-			Serial.print(F("EX_Servo::beSmart level = "));
-			Serial.println(level);
-			Serial.print(F("EX_Servo::beSmart rate = "));
-			Serial.println(rate);
+			st::debugPrint(F("EX_Servo::beSmart level = "));
+			st::debugPrintln(String(level));
+			st::debugPrint(F("EX_Servo::beSmart rate = "));
+			st::debugPrintln(String(rate));
 		}
 				
 		m_nCurrentLevel = int(level.toInt());
@@ -172,12 +173,12 @@ namespace st
 		m_nTargetAngle = map(m_nCurrentLevel, 0, 100, m_nMinLevelAngle, m_nMaxLevelAngle);
 
 		if (st::Executor::debug) {
-			Serial.print(F("EX_Servo::beSmart OldAngle = "));
-			Serial.println(m_nOldAngle);
-			Serial.print(F("EX_Servo::beSmart TargetAngle = "));
-			Serial.println(m_nTargetAngle);
-			Serial.print(F("EX_Servo::beSmart CurrentRate = "));
-			Serial.println(m_nCurrentRate);
+			st::debugPrint(F("EX_Servo::beSmart OldAngle = "));
+			st::debugPrintln(String(m_nOldAngle));
+			st::debugPrint(F("EX_Servo::beSmart TargetAngle = "));
+			st::debugPrintln(String(m_nTargetAngle));
+			st::debugPrint(F("EX_Servo::beSmart CurrentRate = "));
+			st::debugPrintln(String(m_nCurrentRate));
 		}
 		writeAngleToPin();
 		

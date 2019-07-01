@@ -83,8 +83,8 @@ void setup()
   if (isDebugEnabled)
   { // setup debug serial port
     Serial.begin(9600);         // setup serial with a baud rate of 9600
-    Serial.println("");
-    Serial.println("setup..");  // print out 'setup..' on start
+    st::debugPrintln("");
+    st::debugPrintln("setup..");  // print out 'setup..' on start
   }
   
   // setup hardware pins 
@@ -113,9 +113,9 @@ void messageCallout(String message)
   // if debug is enabled print out the received message
   if (isDebugEnabled)
   {
-    Serial.print("Received message: '");
-    Serial.print(message);
-    Serial.println("' ");
+    st::debugPrint("Received message: '");
+    st::debugPrint(message);
+    st::debugPrintln("' ");
   }
 
   // if message contents equals to 'on' then call on() function

@@ -27,6 +27,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2017-02-12  Dan Ogorchock  Revised to use the new SMartThings v2.0 library
 //    2019-05-10  Dan Ogorchock  New example for Alarm Panel
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -120,8 +121,8 @@ const unsigned int hubPort = 39500;   // smartthings hub port
 void callback(const String &msg)
 {
   //Uncomment if it weould be desirable to using this function
-  //Serial.print(F("ST_Anything_Miltiples Callback: Sniffed data = "));
-  //Serial.println(msg);
+  //st::debugPrint(F("ST_Anything_Miltiples Callback: Sniffed data = "));
+  //st::debugPrintln(msg);
   
   //TODO:  Add local logic here to take action when a device's value/state is changed
   

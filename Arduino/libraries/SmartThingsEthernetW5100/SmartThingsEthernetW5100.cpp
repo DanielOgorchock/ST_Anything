@@ -8,6 +8,7 @@
 //	2017-02-04  Dan Ogorchock  Created
 //  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
 //  2018-02-03  Dan Ogorchock  Support for Hubitat
+//  2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //*******************************************************************************
 
 #include "SmartThingsEthernetW5100.h"
@@ -74,25 +75,25 @@ namespace st
 
 		//if (_isDebugEnabled)
 		//{
-		Serial.println(F(""));
-		Serial.println(F("Enter the following three lines of data into ST App on your phone!"));
-		Serial.print(F("localIP = "));
-		Serial.println(Ethernet.localIP());
-		Serial.print(F("serverPort = "));
-		Serial.println(st_serverPort);
-		Serial.print(F("MAC Address = "));
+		st::debugPrintln(F(""));
+		st::debugPrintln(F("Enter the following three lines of data into ST App on your phone!"));
+		st::debugPrint(F("localIP = "));
+		st::debugPrintln(String(Ethernet.localIP()));
+		st::debugPrint(F("serverPort = "));
+		st::debugPrintln(String(st_serverPort));
+		st::debugPrint(F("MAC Address = "));
 		sprintf(buf, "%02X%02X%02X%02X%02X%02X", st_mac[0], st_mac[1], st_mac[2], st_mac[3], st_mac[4], st_mac[5]);
-		Serial.println(buf);
-		Serial.println(F(""));
+		st::debugPrintln(buf);
+		st::debugPrintln(F(""));
 
-		Serial.print(F("hubIP = "));
-		Serial.println(st_hubIP);
-		Serial.print(F("hubPort = "));
-		Serial.println(st_hubPort);
+		st::debugPrint(F("hubIP = "));
+		st::debugPrintln(String(st_hubIP));
+		st::debugPrint(F("hubPort = "));
+		st::debugPrintln(String(st_hubPort));
 
-		Serial.println(F(""));
-		Serial.println(F("SmartThingsEthernet: Intialized"));
-		Serial.println(F(""));
+		st::debugPrintln(F(""));
+		st::debugPrintln(F("SmartThingsEthernet: Intialized"));
+		st::debugPrintln(F(""));
 		//}
 	}
 
@@ -121,9 +122,9 @@ namespace st
 					{
 						if (_isDebugEnabled)
 						{
-							Serial.println(F(""));
-							Serial.println(F("SmartThings.run() - Exceeded 200 character limit"));
-							Serial.println(F(""));
+							st::debugPrintln(F(""));
+							st::debugPrintln(F("SmartThings.run() - Exceeded 200 character limit"));
+							st::debugPrintln(F(""));
 						}
 					}
 					// if you've gotten to the end of the line (received a newline
@@ -143,7 +144,7 @@ namespace st
 							client.println();
 							if (_isDebugEnabled)
 							{
-								Serial.println(F("No Valid Data Received"));
+								st::debugPrintln(F("No Valid Data Received"));
 							}
 						}
 						break;
@@ -167,8 +168,8 @@ namespace st
 			if (tempString.length() > 0) {
 				if (_isDebugEnabled)
 				{
-					Serial.print(F("Handling request from ST. tempString = "));
-					Serial.println(tempString);
+					st::debugPrint(F("Handling request from ST. tempString = "));
+					st::debugPrintln(tempString);
 				}
 				//Pass the message to user's SmartThings callout function
 				tempString.replace("%20", " ");  //Clean up for Hubitat
@@ -206,18 +207,18 @@ namespace st
 			//connection failed;
 			if (_isDebugEnabled)
 			{
-				Serial.println(F("***********************************************************"));
-				Serial.println(F("***** SmartThings.send() - Ethernet Connection Failed *****"));
-				Serial.println(F("***********************************************************"));
-				Serial.print(F("hubIP = "));
-				Serial.print(st_hubIP);
+				st::debugPrintln(F("***********************************************************"));
+				st::debugPrintln(F("***** SmartThings.send() - Ethernet Connection Failed *****"));
+				st::debugPrintln(F("***********************************************************"));
+				st::debugPrint(F("hubIP = "));
+				st::debugPrint(String(st_hubIP));
 				Serial.print(F(" "));
-				Serial.print(F("hubPort = "));
-				Serial.println(st_hubPort);
+				st::debugPrint(F("hubPort = "));
+				st::debugPrintln(String(st_hubPort));
 
-				Serial.println(F("***********************************************************"));
-				Serial.println(F("******        Attempting to restart network         *******"));
-				Serial.println(F("***********************************************************"));
+				st::debugPrintln(F("***********************************************************"));
+				st::debugPrintln(F("******        Attempting to restart network         *******"));
+				st::debugPrintln(F("***********************************************************"));
 			}
 
 
@@ -225,9 +226,9 @@ namespace st
 
 			if (_isDebugEnabled)
 			{
-				Serial.println(F("***********************************************************"));
-				Serial.println(F("******        Attempting to resend missed data      *******"));
-				Serial.println(F("***********************************************************"));
+				st::debugPrintln(F("***********************************************************"));
+				st::debugPrintln(F("******        Attempting to resend missed data      *******"));
+				st::debugPrintln(F("***********************************************************"));
 			}
 
 
@@ -249,12 +250,12 @@ namespace st
 
 		}
 
-		//if (_isDebugEnabled) { Serial.println(F("Ethernet.send(): Reading for reply data "));}
+		//if (_isDebugEnabled) { st::debugPrintln(F("Ethernet.send(): Reading for reply data "));}
 		// read any data returned from the POST
 		while (st_client.connected()) {
 			//while (st_client.available()) {
 			char c = st_client.read(); //gets byte from ethernet buffer
-									   //if (_isDebugEnabled) { Serial.print(c); } //prints byte to serial monitor
+									   //if (_isDebugEnabled) { st::debugPrint(String(c)); } //prints byte to serial monitor
 									   //}
 		}
 
