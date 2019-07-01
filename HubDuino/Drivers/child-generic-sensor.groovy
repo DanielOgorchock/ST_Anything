@@ -21,10 +21,11 @@
  *    2017-10-20  Allan (vseven) Original Creation (based on Dan Ogorchock's child illuminance switch)
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
+ *    2019-07-01  Dan Ogorchock  Added importUrl
  * 
  */
 metadata {
-	definition (name: "Child Generic Sensor", namespace: "ogiewon", author: "Allan (vseven) - based on code by Daniel Ogorchock") {
+	definition (name: "Child Generic Sensor", namespace: "ogiewon", author: "Allan (vseven) - based on code by Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-generic-sensor.groovy") {
 		capability "Sensor"
 
 		attribute "lastUpdated", "String"
