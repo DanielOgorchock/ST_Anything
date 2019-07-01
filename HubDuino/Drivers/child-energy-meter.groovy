@@ -19,10 +19,11 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2019-02-05  Dan Ogorchock  Original Creation
+ *    2019-07-01  Dan Ogorchock  Added importUrl
  * 
  */
 metadata {
-	definition (name: "Child Energy Meter", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Energy Meter", namespace: "ogiewon", author: "Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-energy-meter.groovy") {
 		capability "Energy Meter"
 		capability "Sensor"
 
