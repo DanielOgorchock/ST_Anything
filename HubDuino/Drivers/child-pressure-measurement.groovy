@@ -22,11 +22,12 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2018-11-10  Dan Ogorchock  Corrected Pressure Measurement attribute name
  *    2019-03-10  Dan Ogorchock  Added user preference for unit conversion
+ *    2019-07-01  Dan Ogorchock  Added importUrl
  *
  * 
  */
 metadata {
-	definition (name: "Child Pressure Measurement", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Pressure Measurement", namespace: "ogiewon", author: "Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-pressure-measurement.groovy") {
 		capability "PressureMeasurement"
 		capability "Sensor"
 
