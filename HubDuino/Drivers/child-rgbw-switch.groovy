@@ -23,11 +23,13 @@
  *                               it compatible with values passed in from things like Alexa or Goggle Home.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
+ *    2019-07-01  Dan Ogorchock  Added importUrl
+ *
  */
 
 // for the UI
 metadata {
-	definition (name: "Child RGBW Switch", namespace: "ogiewon", author: "Allan (vseven) - based on code by Dan Ogorchock") {
+	definition (name: "Child RGBW Switch", namespace: "ogiewon", author: "Allan (vseven) - based on code by Dan Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-rgbw-switch.groovy") {
 	capability "Switch"		
 	capability "Switch Level"
 	capability "Actuator"
