@@ -43,6 +43,7 @@
 //    2015-03-29  Dan Ogorchock	 Optimized use of the DHT library (made it static) to reduce SRAM memory usage at runtime.
 //    2017-06-27  Dan Ogorchock  Added optional Celsius reading argument
 //    2017-08-17  Dan Ogorchock  Added optional filter constant argument and to transmit floating point values to SmartThings
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 
@@ -100,16 +101,16 @@ namespace st
 		if (s.toInt() != 0) {
 			st::PollingSensor::setInterval(s.toInt() * 1000);
 			if (st::PollingSensor::debug) {
-				Serial.print(F("PS_TemperatureHumidity::beSmart set polling interval to "));
-				Serial.println(s.toInt());
+				st::debugPrint(F("PS_TemperatureHumidity::beSmart set polling interval to "));
+				st::debugPrintln(String(s.toInt()));
 			}
 		}
 		else {
 			if (st::PollingSensor::debug) 
 			{
-				Serial.print(F("PS_TemperatureHumidity::beSmart cannot convert "));
-				Serial.print(s);
-				Serial.println(F(" to an Integer."));
+				st::debugPrint(F("PS_TemperatureHumidity::beSmart cannot convert "));
+				st::debugPrint(s);
+				st::debugPrintln(F(" to an Integer."));
 			}
 		}
 	}
@@ -128,27 +129,27 @@ namespace st
 		int8_t chk = 0;
 		switch (m_bDHTSensorType) {
 			case DHT11:
-				//Serial.println(F("PS_TemperatureHumidity: DTH11 Read"));
+				//st::debugPrintln(F("PS_TemperatureHumidity: DTH11 Read"));
 				chk = DHT.read11(m_nDigitalInputPin);
 				break;
 			case DHT21:
-				//Serial.println(F("PS_TemperatureHumidity: DTH21 Read"));
+				//st::debugPrintln(F("PS_TemperatureHumidity: DTH21 Read"));
 				chk = DHT.read21(m_nDigitalInputPin);
 				break;
 			case DHT22:
-				//Serial.println(F("PS_TemperatureHumidity: DTH22 Read"));
+				//st::debugPrintln(F("PS_TemperatureHumidity: DTH22 Read"));
 				chk = DHT.read22(m_nDigitalInputPin);
 				break;
 			case DHT33:
-				//Serial.println(F("PS_TemperatureHumidity: DTH33 Read"));
+				//st::debugPrintln(F("PS_TemperatureHumidity: DTH33 Read"));
 				chk = DHT.read33(m_nDigitalInputPin);
 				break;
 			case DHT44:
-				//Serial.println(F("PS_TemperatureHumidity: DTH44 Read"));
+				//st::debugPrintln(F("PS_TemperatureHumidity: DTH44 Read"));
 				chk = DHT.read44(m_nDigitalInputPin);
 				break;
 			default:
-				Serial.println(F("PS_TemperatureHumidity: Invalid DHT Sensor Type"));
+				st::debugPrintln(F("PS_TemperatureHumidity: Invalid DHT Sensor Type"));
 			}
 
 
@@ -159,7 +160,7 @@ namespace st
 			//Humidity
 			if (m_fHumiditySensorValue == -1.0)
 			{
-				Serial.println("First time through Humidity");
+				st::debugPrintln("First time through Humidity");
 				m_fHumiditySensorValue = DHT.humidity;  //first time through, no filtering
 			}
 			else
@@ -170,7 +171,7 @@ namespace st
 			//Temperature
 			if (m_fTemperatureSensorValue == -1.0)
 			{
-				Serial.println("First time through Temperature");
+				st::debugPrintln("First time through Temperature");
 				//first time through, no filtering
 				if (m_In_C == false)
 				{
@@ -198,42 +199,42 @@ namespace st
 			break;
 		case DHTLIB_ERROR_CHECKSUM:
 			if (st::PollingSensor::debug) {
-				Serial.println(F("PS_TemperatureHumidity: DHT Checksum error"));
+				st::debugPrintln(F("PS_TemperatureHumidity: DHT Checksum error"));
 			}
 			break;
 		case DHTLIB_ERROR_TIMEOUT:
 			if (st::PollingSensor::debug) {
-				Serial.println(F("PS_TemperatureHumidity: DHT Time out error"));
+				st::debugPrintln(F("PS_TemperatureHumidity: DHT Time out error"));
 			}
 			break;
 		//case DHTLIB_ERROR_CONNECT:
 		//	if (st::PollingSensor::debug) {
-		//		Serial.println(F("PS_TemperatureHumidity: DHT Connect error"));
+		//		st::debugPrintln(F("PS_TemperatureHumidity: DHT Connect error"));
 		//	}
 		//	break;
 		//case DHTLIB_ERROR_ACK_L:
 		//	if (st::PollingSensor::debug) {
-		//		Serial.println(F("PS_TemperatureHumidity: DHT Ack Low error"));
+		//		st::debugPrintln(F("PS_TemperatureHumidity: DHT Ack Low error"));
 		//	}
 		//	break;
 		//case DHTLIB_ERROR_ACK_H:
 		//	if (st::PollingSensor::debug) {
-		//		Serial.println(F("PS_TemperatureHumidity: DHT Ack High error"));
+		//		st::debugPrintln(F("PS_TemperatureHumidity: DHT Ack High error"));
 		//	}
 		//	break;
 		default:
 			if (st::PollingSensor::debug) {
-				Serial.println(F("PS_TemperatureHumidity: DHT Unknown error"));
+				st::debugPrintln(F("PS_TemperatureHumidity: DHT Unknown error"));
 			}
 			break;
 
 
 		}
 		// DISPLAY DATA
-		//Serial.print(m_nHumiditySensorValue, 1);
-		//Serial.print(F(",\t\t"));
-		//Serial.print(m_nTemperatureSensorValue, 1);
-		//Serial.println();
+		//st::debugPrint(String(m_nHumiditySensorValue, 1));
+		//st::debugPrint(F(",\t\t"));
+		//st::debugPrint(String(m_nTemperatureSensorValue, 1));
+		//st::debugPrintLn();
 
 		Everything::sendSmartString(m_strTemperature + " " + String(m_fTemperatureSensorValue));
 		Everything::sendSmartString(m_strHumidity + " " + String(m_fHumiditySensorValue));

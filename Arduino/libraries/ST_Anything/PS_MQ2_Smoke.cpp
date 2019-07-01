@@ -27,6 +27,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2017-07-04  Dan Ogorchock  Original Creation
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -66,16 +67,16 @@ namespace st
 		if (s.toInt() != 0) {
 			st::PollingSensor::setInterval(s.toInt() * 1000);
 			if (st::PollingSensor::debug) {
-				Serial.print(F("PS_MQ2_Smoke::beSmart set polling interval to "));
-				Serial.println(s.toInt());
+				st::debugPrint(F("PS_MQ2_Smoke::beSmart set polling interval to "));
+				st::debugPrintln(String(s.toInt()));
 			}
 		}
 		else {
 			if (st::PollingSensor::debug)
 			{
-				Serial.print(F("PS_MQ2_Smoke::beSmart cannot convert "));
-				Serial.print(s);
-				Serial.println(F(" to an Integer."));
+				st::debugPrint(F("PS_MQ2_Smoke::beSmart cannot convert "));
+				st::debugPrint(s);
+				st::debugPrintln(F(" to an Integer."));
 			}
 		}
 	}
@@ -89,10 +90,10 @@ namespace st
 
 		if (st::PollingSensor::debug)
 		{
-			Serial.print(F("PS_MQ2_Smoke::Analog Pin value is "));
-			Serial.print(m_nSensorValue);
-			Serial.print(F(" vs limit of "));
-			Serial.println(m_nSensorLimit);
+			st::debugPrint(F("PS_MQ2_Smoke::Analog Pin value is "));
+			st::debugPrint(String(m_nSensorValue));
+			st::debugPrint(F(" vs limit of "));
+			st::debugPrintln(String(m_nSensorLimit));
 		}
 	}
 	

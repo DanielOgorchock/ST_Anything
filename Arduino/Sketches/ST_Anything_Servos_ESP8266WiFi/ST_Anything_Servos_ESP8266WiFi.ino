@@ -16,6 +16,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2018-06-24  Dan Ogorchock  Original Creation
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -83,8 +84,8 @@ const unsigned int hubPort = 39500;   // smartthings hub port
 //******************************************************************************************
 void callback(const String &msg)
 {
-//  Serial.print(F("ST_Anything Callback: Sniffed data = "));
-//  Serial.println(msg);
+//  st::printDebug(F("ST_Anything Callback: Sniffed data = "));
+//  st::printDebugln(msg);
   
   //TODO:  Add local logic here to take action when a device's value/state is changed
   

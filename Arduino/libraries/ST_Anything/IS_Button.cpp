@@ -21,6 +21,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2017-03-25  Dan            Original Creation
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -65,15 +66,15 @@ namespace st
 		//Capture time of button down event so we can figure it whether to send "pushed" or "held" on button release
 		m_lTimeBtnPressed = millis();
 
-		//Serial.println("IS_Button: in runInterrupt()");
+		//st::debugPrintln("IS_Button: in runInterrupt()");
 	}
 	
 	void IS_Button::runInterruptEnded()
 	{
-		//Serial.println("IS_Button: in runInterruptEnded()");
-		//Serial.println(millis());
-		//Serial.println(m_lTimeBtnPressed);
-		//Serial.println(m_lreqNumMillisHeld);
+		//st::debugPrintln("IS_Button: in runInterruptEnded()");
+		//st::debugPrintln(String(millis()));
+		//st::debugPrintln(String(m_lTimeBtnPressed));
+		//st::debugPrintln(String(m_lreqNumMillisHeld));
 
 		if (!m_bFirstRun)  //Prevent sending data to SmartThings during initial startup
 		{

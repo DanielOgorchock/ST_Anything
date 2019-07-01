@@ -18,6 +18,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2019-06-23  Dan Ogorchock  New example sketch for use with the Arduino MKR1010
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -76,8 +77,8 @@ const unsigned int hubPort = 39501;   // Hubitat hub port
 void callback(const String &msg)
 {
   //Uncomment if it weould be desirable to using this function
-  //Serial.print(F("ST_Anything_Miltiples Callback: Sniffed data = "));
-  //Serial.println(msg);
+  //st::printDebug(F("ST_Anything_Miltiples Callback: Sniffed data = "));
+  //st::printDebugln(msg);
   
   //TODO:  Add local logic here to take action when a device's value/state is changed
   

@@ -30,6 +30,7 @@
 /// 	-2016-06-04  Dan Ogorchock  Added improved support for Arduino Leonardo
 ///		-2017-02-04  Dan Ogorchock  Modified to be a subclass of new SmartThings base class
 ///		-2017-02-08  Dan Ogorchock  Cleaned up.  Now uses HardwareSerial* objects directly.
+///     -2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //*******************************************************************************
 #include "SmartThingsThingShield.h"
 
@@ -40,12 +41,12 @@ namespace st
 	{
 		if (_isDebugEnabled)
 		{
-			Serial.print(prefix);
+			st::debugPrint(prefix);
 			for (uint_fast8_t i = 0; i < nBuf; i++)
 			{
-				Serial.print(char(pBuf[i]));
+				st::debugPrint(String(char(pBuf[i])));
 			}
-			Serial.println();
+			st::debugPrintln(F(""));
 		}
 	}
 
@@ -108,17 +109,17 @@ namespace st
 
 		if (_isDebugEnabled)
 		{
-			Serial.print(F("payload start: "));
-			Serial.print(payloadStart);
-			Serial.print(F(" end: "));
-			Serial.print(payloadEnd);
-			Serial.print(F(" : "));
+			st::debugPrint(F("payload start: "));
+			st::debugPrint(String(payloadStart));
+			st::debugPrint(F(" end: "));
+			st::debugPrint(String(payloadEnd));
+			st::debugPrint(F(" : "));
 			for (i = payloadStart + 1; i < payloadEnd; i++)
 			{
-				Serial.print(pBuf[i]);
-				Serial.print(' ');
+				st::debugPrint(String(pBuf[i]));
+				st::debugPrint(" ");
 			}
-			Serial.println();
+			st::debugPrintln(F(""));
 		}
 
 		if ((payloadStart != 0) && (payloadEnd != 0) && (payloadEnd - payloadStart > 4) && (pBuf[payloadStart + 1] == '0') && (pBuf[payloadStart + 2] == 'A'))
@@ -270,7 +271,7 @@ namespace st
 
 		if (_isDebugEnabled)
 		{
-			Serial.print(F("  |<~ custom netinfo\n"));
+			st::debugPrint(F("  |<~ custom netinfo\n"));
 		}
 	}
 
@@ -330,11 +331,11 @@ namespace st
 		{
 			if (_networkState != STATE_JOINED)
 			{
-				Serial.println(F("SmartThingsThingShield: Intialization timed out waiting for shield to connect."));
+				st::debugPrintln(F("SmartThingsThingShield: Intialization timed out waiting for shield to connect."));
 			}
 			else
 			{
-				Serial.println(F("SmartThingsThingShield: Intialization Successful. Shield connected."));
+				st::debugPrintln(F("SmartThingsThingShield: Intialization Successful. Shield connected."));
 			}
 		}
 	}
@@ -375,7 +376,7 @@ namespace st
 
 		if (_isDebugEnabled)
 		{
-			Serial.print(F("<-| raw 0x0 { 00 00 0A 0A "));
+			st::debugPrint(F("<-| raw 0x0 { 00 00 0A 0A "));
 		}
 
 		for (int i = 0; i < message.length(); i++)
@@ -385,8 +386,8 @@ namespace st
 
 			if (_isDebugEnabled)
 			{
-				Serial.print(message[i], HEX);
-				Serial.print(' ');
+				st::debugPrint(String(message[i], HEX));
+				st::debugPrint(" ");
 			}
 		}
 
@@ -394,7 +395,7 @@ namespace st
 
 		if (_isDebugEnabled)
 		{
-			Serial.print(F("}\nsend 0x0 1 1\n"));
+			st::debugPrint(F("}\nsend 0x0 1 1\n"));
 		}
 	}
 
@@ -415,13 +416,13 @@ namespace st
 
 		if (_isDebugEnabled)
 		{
-			Serial.print(F("  |<~ custom rgb "));
-			Serial.write(red + '0');
-			Serial.print(' ');
-			Serial.write(green + '0');
-			Serial.print(' ');
-			Serial.write(blue + '0');
-			Serial.print(F(" \n"));
+			st::debugPrint(F("  |<~ custom rgb "));
+			st::debugPrint(String(red + '0'));
+			st::debugPrint(" ");
+			st::debugPrint(String(green + '0'));
+			st::debugPrint(" ");
+			st::debugPrint(String(blue + '0'));
+			st::debugPrint(F(" \n"));
 		}
 	}
 
@@ -466,7 +467,7 @@ namespace st
 
 		if (_isDebugEnabled)
 		{
-			Serial.print(F("  |<~ custom find\n"));
+			st::debugPrint(F("  |<~ custom find\n"));
 
 		}
 	}
@@ -479,7 +480,7 @@ namespace st
 
 		if (_isDebugEnabled)
 		{
-			Serial.print(F("  |<~ custom leave\n"));
+			st::debugPrint(F("  |<~ custom leave\n"));
 		}
 	}
 
@@ -492,42 +493,42 @@ namespace st
 
 		if (_isDebugEnabled)
 		{
-			Serial.println(F("Called updateNetworkState()"));
+			st::debugPrintln(F("Called updateNetworkState()"));
 		}
 		
 		if (tempState != _networkState)
 		{
 			if (_isDebugEnabled)
 			{
-				Serial.print(F("Called updateNetworkState() tmpState ="));
-				Serial.println(tempState);
+				st::debugPrint(F("Called updateNetworkState() tmpState ="));
+				st::debugPrintln(String(tempState));
 			}
 
 			switch (_networkState)
 			{
 			case STATE_NO_NETWORK:
-				if (_isDebugEnabled) Serial.println(F("Everything: NO_NETWORK"));
+				if (_isDebugEnabled) st::debugPrintln(F("Everything: NO_NETWORK"));
 				shieldSetLED(2, 0, 0); // red
 				break;
 			case STATE_JOINING:
-				if (_isDebugEnabled) Serial.println(F("Everything: JOINING"));
+				if (_isDebugEnabled) st::debugPrintln(F("Everything: JOINING"));
 				shieldSetLED(2, 0, 0); // red
 				break;
 			case STATE_JOINED:
-				if (_isDebugEnabled) Serial.println(F("Everything: JOINED"));
+				if (_isDebugEnabled) st::debugPrintln(F("Everything: JOINED"));
 				shieldSetLED(0, 0, 0); // off
 				break;
 			case STATE_JOINED_NOPARENT:
-				if (_isDebugEnabled) Serial.println(F("Everything: JOINED_NOPARENT"));
+				if (_isDebugEnabled) st::debugPrintln(F("Everything: JOINED_NOPARENT"));
 				shieldSetLED(2, 0, 2); // purple
 				break;
 			case STATE_LEAVING:
-				if (_isDebugEnabled) Serial.println(F("Everything: LEAVING"));
+				if (_isDebugEnabled) st::debugPrintln(F("Everything: LEAVING"));
 				shieldSetLED(2, 0, 0); // red
 				break;
 			default:
 			case STATE_UNKNOWN:
-				if (_isDebugEnabled) Serial.println(F("Everything: UNKNOWN"));
+				if (_isDebugEnabled) st::debugPrintln(F("Everything: UNKNOWN"));
 				shieldSetLED(0, 2, 0); // green
 				break;
 			}

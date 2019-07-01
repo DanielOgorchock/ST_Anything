@@ -40,6 +40,7 @@
 //    2016-06-04  Dan Ogorchock  Added improved support for Arduino Leonardo
 //    2017-02-07  Dan Ogorchock  Added support for new SmartThings v2.0 library (ThingShield, W5100, ESP8266)
 //    2017-08-14  Dan Ogorchock  Added support for ESP32
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 
@@ -52,6 +53,7 @@
 //#define ENABLE_SERIAL			//If uncommented, will allow you to type in commands via the Arduino Serial Console Window (useful for debugging)
 //#define DISABLE_SMARTTHINGS	//If uncommented, will disable all ST Shield Library calls (e.g. you want to use this library without SmartThings for a different application)
 //#define DISABLE_REFRESH		//If uncommented, will disable periodic refresh of the sensors and executors states to the ST Cloud - improves performance, but may reduce data integrity
+#define ENABLE_WEBSOCKET_SUPPORT  //If uncommented, will enable websocket logging for supported modules
 
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(ARDUINO_AVR_UNO)
 #define BOARD_UNO
@@ -67,6 +69,12 @@
 #define BOARD_ESP32
 #else	
 #define BOARD_UNO	//assume user is using an UNO for the unknown case
+#endif
+
+#ifdef ENABLE_WEBSOCKET_SUPPORT
+	#if	defined(BOARD_UNO) || defined(BOARD_MEGA) || defined(BOARD_ESP8266) || defined(BOARD_ESP32) || defined(BOARD_MKR1000)
+		#define COMPLIE_WEBSOCKET_LIB
+	#endif
 #endif
 
 namespace st

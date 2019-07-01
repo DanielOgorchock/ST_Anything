@@ -25,6 +25,7 @@
 //    2017-11-27  Kai Lenk       Modified to 3 relaySwitch
 //    2017-11-29  Dan Ogorchock  Revisions to make sure works for Kai Lenk
 //    2018-02-09  Dan Ogorchock  Added support for Hubitat Elevation Hub
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -106,8 +107,8 @@ const unsigned int hubPort = 39500;   // smartthings hub port
 //******************************************************************************************
 void callback(const String &msg)
 {
-//  Serial.print(F("ST_Anything Callback: Sniffed data = "));
-//  Serial.println(msg);
+//  st::printDebug(F("ST_Anything Callback: Sniffed data = "));
+//  st::printDebugln(msg);
   
   //TODO:  Add local logic here to take action when a device's value/state is changed
   

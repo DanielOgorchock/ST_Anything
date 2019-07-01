@@ -19,6 +19,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2019-03-26  Dan Ogorchock  Original Creation
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -75,8 +76,8 @@ const unsigned int hubPort = 39501;   // hubitat hub port
 //******************************************************************************************
 void callback(const String &msg)
 {
-//  Serial.print(F("ST_Anything Callback: Sniffed data = "));
-//  Serial.println(msg);
+//  st::debugPrint(F("ST_Anything Callback: Sniffed data = "));
+//  st::debugPrintln(msg);
   
   //TODO:  Add local logic here to take action when a device's value/state is changed
   

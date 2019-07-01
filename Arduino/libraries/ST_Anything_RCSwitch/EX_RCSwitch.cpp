@@ -27,6 +27,7 @@
 //    2015-01-26  Dan Ogorchock  Original Creation
 //    2015-05-20  Dan Ogorchock  Improved to work with Etekcity ZAP 3F 433Mhz RF Outlets
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 
@@ -86,8 +87,8 @@ namespace st
 	{
 		String s=str.substring(str.indexOf(' ')+1);
 		if (st::Executor::debug) {
-			Serial.print(F("EX_RCSwitch::beSmart s = "));
-			Serial.println(s);
+			st::debugPrint(F("EX_RCSwitch::beSmart s = "));
+			st::debugPrintln(s);
 		}
 		if(s==F("on"))
 		{

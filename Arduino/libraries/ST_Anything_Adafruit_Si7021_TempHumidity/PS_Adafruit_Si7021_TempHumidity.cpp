@@ -42,6 +42,7 @@
 //    2017-06-27  Dan Ogorchock  Added optional Celsius reading argument
 //    2017-08-17  Dan Ogorchock  Added optional filter constant argument and to transmit floating point values to SmartThings
 //    2018-03-24  Josh Hill      Modified library to use Si7021 over I2C
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 
@@ -98,16 +99,16 @@ namespace st
 		if (s.toInt() != 0) {
 			st::PollingSensor::setInterval(s.toInt() * 1000);
 			if (st::PollingSensor::debug) {
-				Serial.print(F("PS_Adafruit_Si7021_TempHumidity::beSmart set polling interval to "));
-				Serial.println(s.toInt());
+				st::debugPrint(F("PS_Adafruit_Si7021_TempHumidity::beSmart set polling interval to "));
+				st::debugPrintln(String(s.toInt()));
 			}
 		}
 		else {
 			if (st::PollingSensor::debug) 
 			{
-				Serial.print(F("PS_Adafruit_Si7021_TempHumidity::beSmart cannot convert "));
-				Serial.print(s);
-				Serial.println(F(" to an Integer."));
+				st::debugPrint(F("PS_Adafruit_Si7021_TempHumidity::beSmart cannot convert "));
+				st::debugPrint(s);
+				st::debugPrintln(F(" to an Integer."));
 			}
 		}
 	}
@@ -120,7 +121,7 @@ namespace st
 		bool status;
 		status = Si7021Sensor.begin();
 		if (!status) {
-			Serial.println("Could not find a valid Si7021 sensor, check wiring!");
+			st::debugPrintln("Could not find a valid Si7021 sensor, check wiring!");
 			while (1);
 		}
 
@@ -134,7 +135,7 @@ namespace st
 		//Humidity
 		if (m_fHumiditySensorValue == -1.0)
 		{
-			Serial.println("First time through Humidity)");
+			st::debugPrintln("First time through Humidity)");
 			m_fHumiditySensorValue = Si7021Sensor.readHumidity();  //first time through, no filtering
 		}
 		else
@@ -145,7 +146,7 @@ namespace st
 		//Temperature
 		if (m_fTemperatureSensorValue == -1.0)
 		{
-			Serial.println("First time through Termperature)");
+			st::debugPrintln("First time through Termperature)");
 			//first time through, no filtering
 			if (m_In_C == false)
 			{
@@ -171,10 +172,10 @@ namespace st
 
 
 		// DISPLAY DATA
-		//Serial.print(m_nHumiditySensorValue, 1);
-		//Serial.print(F(",\t\t"));
-		//Serial.print(m_nTemperatureSensorValue, 1);
-		//Serial.println();
+		//st::debugPrint(String(m_nHumiditySensorValue, 1));
+		//st::debugPrint(F(",\t\t"));
+		//st::debugPrint(String(m_nTemperatureSensorValue, 1));
+		//st::debugPrintln(F(""));
 
 		Everything::sendSmartString(m_strTemperature + " " + String(m_fTemperatureSensorValue));
 		Everything::sendSmartString(m_strHumidity + " " + String(m_fHumiditySensorValue));

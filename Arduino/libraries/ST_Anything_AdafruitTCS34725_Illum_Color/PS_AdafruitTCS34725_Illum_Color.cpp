@@ -44,6 +44,7 @@
 //    2017-09-07  Allan (vseven) Modified original PS_Illuminance library for use with the Adafruit TCS34725 sensor
 //    2017-12-29  Allan (vseven) Fixed bug with improper init() definition per Dans guidance
 //    2018-07-01  Dan Ogorchock  Cleaned up the design, added ability to adjust configuration, and fixed the comments section
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -80,27 +81,27 @@ namespace st
 		if (s.toInt() != 0) {
 			st::PollingSensor::setInterval(s.toInt() * 1000);
 			if (st::PollingSensor::debug) {
-				Serial.print(F("PS_AdafruitTCS34725_Illum_Color::beSmart set polling interval to "));
-				Serial.println(s.toInt());
+				st::debugPrint(F("PS_AdafruitTCS34725_Illum_Color::beSmart set polling interval to "));
+				st::debugPrintln(String(s.toInt()));
 			}
 		}
 		else {
 			if (st::PollingSensor::debug)
 			{
-				Serial.print(F("PS_AdafruitTCS34725_Illum_Color::beSmart cannot convert "));
-				Serial.print(s);
-				Serial.println(F(" to an Integer."));
+				st::debugPrint(F("PS_AdafruitTCS34725_Illum_Color::beSmart cannot convert "));
+				st::debugPrint(s);
+				st::debugPrintln(F(" to an Integer."));
 			}
 		}
 	}
 
 	void PS_AdafruitTCS34725_Illum_Color::init() {
-		Serial.println("Initializing the TCS34725 sensor...");
+		st::debugPrintln("Initializing the TCS34725 sensor...");
 		if (tcs.begin()) {
-			Serial.println("Found sensor.   tcs.begin = true");
+			st::debugPrintln("Found sensor.   tcs.begin = true");
 		}
 		else {
-			Serial.println("No TCS34725 found... check your connections");
+			st::debugPrintln("No TCS34725 found... check your connections");
 		}
 
 		delay(1000); //give sensor time to get its first data sample ready to be read
@@ -114,13 +115,13 @@ namespace st
 		m_ncolorTemp = tcs.calculateColorTemperature(m_nred, m_ngreen, m_nblue);
 		m_nlux = tcs.calculateLux(m_nred, m_ngreen, m_nblue);
 
-		//Serial.print("Color Temp: "); Serial.print(m_ncolorTemp, DEC); Serial.print(" K - ");
-		//Serial.print("Lux: "); Serial.print(m_nlux, DEC); Serial.print(" - ");
-		//Serial.print("R: "); Serial.print(m_nred, DEC); Serial.print(" ");
-		//Serial.print("G: "); Serial.print(m_ngreen, DEC); Serial.print(" ");
-		//Serial.print("B: "); Serial.print(m_nblue, DEC); Serial.print(" ");
-		//Serial.print("C: "); Serial.print(m_nclear, DEC); Serial.print(" ");
-		//Serial.println(" ");
+		//st::debugPrint("Color Temp: "); st::debugPrint(String(m_ncolorTemp, DEC)); st::debugPrint(" K - ");
+		//st::debugPrint("Lux: "); st::debugPrint(String(m_nlux, DEC)); st::debugPrint(" - ");
+		//st::debugPrint(3"R: "); st::debugPrint(String(m_nred, DEC)); st::debugPrint(" ");
+		//st::debugPrint("G: "); st::debugPrint(String(m_ngreen, DEC)); st::debugPrint(" ");
+		//st::debugPrint("B: "); st::debugPrint(String(m_nblue, DEC)); st::debugPrint(" ");
+		//st::debugPrint("C: "); st::debugPrint(String(m_nclear, DEC)); st::debugPrint(" ");
+		//st::debugPrintln(F(" "));
 
 		String strSensorValue = String(m_nlux, DEC) + ':' + String(m_ncolorTemp, DEC) + ':' + String(m_nred, DEC) + ':' + String(m_ngreen, DEC) + ':' + String(m_nblue, DEC) + ':' + String(m_nclear, DEC);
 

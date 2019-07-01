@@ -25,6 +25,7 @@
 //    2017-04-26  Dan Ogorchock  Allow each communication method to specify unique ST transmission throttling delay
 //    2019-02-09  Dan Ogorchock  Add update() call to Executors in support of devices like EX_Servo that need a non-blocking mechanism
 //    2019-02-24  Dan Ogorchock  Added new special callOnMsgRcvd2 callback capability. Allows recvd string to be manipulated in the sketch before being processed by Everything.
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 
@@ -81,10 +82,10 @@ namespace st
 			index=Return_String.indexOf("|");
 			if(debug)
 			{
-				Serial.print(F("Everything: Sending: "));
-				Serial.println(Return_String.substring(0, index));
-				//Serial.print(F("Everything: getTransmitInterval() = "));
-				//Serial.println(SmartThing->getTransmitInterval());
+				st::debugPrint(F("Everything: Sending: "));
+				st::debugPrintln(Return_String.substring(0, index));
+				//st::debugPrint(F("Everything: getTransmitInterval() = "));
+				//st::debugPrintln(String(SmartThing->getTransmitInterval()));
 			}
 			#ifndef DISABLE_SMARTTHINGS
 //			if (millis() - sendstringsLastMillis < Constants::SENDSTRINGS_INTERVAL)
@@ -97,7 +98,7 @@ namespace st
 				sendstringsLastMillis = millis();
 			#endif
 			#if defined(ENABLE_SERIAL) && defined(DISABLE_SMARTTHINGS)
-				Serial.println(Return_String.substring(0, index));
+				st::debugPrintln(Return_String.substring(0, index));
 			#endif
 			
 			if(callOnMsgSend!=0)
@@ -133,9 +134,9 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.println(F("Everything: init started"));
-			Serial.print(F("Everything: Free RAM = "));
-			Serial.println(freeRam());
+			st::debugPrintln(F("Everything: init started"));
+			st::debugPrint(F("Everything: Free RAM = "));
+			st::debugPrintln(String(freeRam()));
 		}
 		
 		#ifndef DISABLE_SMARTTHINGS
@@ -145,9 +146,9 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.println(F("Everything: init ended"));
-			Serial.print(F("Everything: Free RAM = "));
-			Serial.println(freeRam());
+			st::debugPrintln(F("Everything: init ended"));
+			st::debugPrint(F("Everything: Free RAM = "));
+			st::debugPrintln(String(freeRam()));
 		}
 	}
 	
@@ -155,9 +156,9 @@ namespace st
 	{
 		if(debug)
 		{
-			Serial.println(F("Everything: initDevices started"));
-			Serial.print(F("Everything: Free RAM = "));
-			Serial.println(freeRam());
+			st::debugPrintln(F("Everything: initDevices started"));
+			st::debugPrint(F("Everything: Free RAM = "));
+			st::debugPrintln(String(freeRam()));
 		}
 		
 		for(unsigned int index=0; index<m_nSensorCount; ++index)
@@ -174,9 +175,9 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.println(F("Everything: initDevices ended"));
-			Serial.print(F("Everything: Free RAM = "));
-			Serial.println(freeRam());
+			st::debugPrintln(F("Everything: initDevices ended"));
+			st::debugPrint(F("Everything: Free RAM = "));
+			st::debugPrintln(String(freeRam()));
 		}
 		
 		refLastMillis = millis(); //avoid immediately refreshing after initialization
@@ -207,8 +208,8 @@ namespace st
 		if((debug) && (millis()%60000==0) && (millis()!=lastmillis))
 		{
 			lastmillis = millis();
-			Serial.print(F("Everything: Free Ram = "));  
-			Serial.println(freeRam());
+			st::debugPrint(F("Everything: Free Ram = "));  
+			st::debugPrintln(String(freeRam()));
 		}
 	}
 	
@@ -227,9 +228,9 @@ namespace st
 		{
 			if (debug)
 			{
-				Serial.print(F("Everything: ERROR: \""));
-				Serial.print(str);
-				Serial.println(F("\" would overflow the Return_String 'buffer'"));
+				st::debugPrint(F("Everything: ERROR: \""));
+				st::debugPrint(str);
+				st::debugPrintln(F("\" would overflow the Return_String 'buffer'"));
 			}
 			return false;
 		}
@@ -268,9 +269,9 @@ namespace st
 		{
 			if(debug)
 			{
-				Serial.print(F("Did not add sensor named "));
-				Serial.print(sensor->getName());
-				Serial.println(F("(You've exceeded maximum number of sensors; edit Constants.h)"));
+				st::debugPrint(F("Did not add sensor named "));
+				st::debugPrint(sensor->getName());
+				st::debugPrintln(F("(You've exceeded maximum number of sensors; edit Constants.h)"));
 			}
 			return false;
 		}
@@ -282,10 +283,10 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.print(F("Everything: adding sensor named "));
-			Serial.println(sensor->getName());
-			Serial.print(F("Everything: Free RAM = "));
-			Serial.println(freeRam());
+			st::debugPrint(F("Everything: adding sensor named "));
+			st::debugPrintln(sensor->getName());
+			st::debugPrint(F("Everything: Free RAM = "));
+			st::debugPrintln(String(freeRam()));
 		}
 		return true;
 	}
@@ -296,9 +297,9 @@ namespace st
 		{
 			if(debug)
 			{
-				Serial.print(F("Did not add executor named "));
-				Serial.print(executor->getName());
-				Serial.println(F("(You've exceeded maximum number of executors; edit Constants.h)"));
+				st::debugPrint(F("Did not add executor named "));
+				st::debugPrint(executor->getName());
+				st::debugPrintln(F("(You've exceeded maximum number of executors; edit Constants.h)"));
 			}
 			return false;
 		}
@@ -310,12 +311,28 @@ namespace st
 		
 		if(debug)
 		{
-			Serial.print(F("Everything: adding executor named "));
-			Serial.println(executor->getName());
-			Serial.print(F("Everything: Free RAM = "));
-			Serial.println(freeRam());
+			st::debugPrint(F("Everything: adding executor named "));
+			st::debugPrintln(executor->getName());
+			st::debugPrint(F("Everything: Free RAM = "));
+			st::debugPrintln(String(freeRam()));
 		}
 		return true;
+	}
+
+	void debugPrint(String message)
+	{ 
+	
+		if (Everything::m_pnPrintFn != 0)
+			Everything::m_pnPrintFn(message);
+		else
+			Serial.print(message);
+	}
+	void debugPrintln(String message)
+	{ 
+		if (Everything::m_pnPrintLnFn != 0)
+			Everything::m_pnPrintLnFn(message);
+		else
+			Serial.println(message);
 	}
 	
 	//friends!
@@ -324,8 +341,8 @@ namespace st
 		message.trim();
 		if(Everything::debug && message.length()>1)
 		{
-			Serial.print(F("Everything: Received: "));
-			Serial.println(message);
+			st::debugPrint(F("Everything: Received: "));
+			st::debugPrintln(message);
 		}
 
 		if (Everything::callOnMsgRcvd2 != 0)
@@ -369,6 +386,8 @@ namespace st
 	void (*Everything::callOnMsgRcvd)(const String &msg)=0; //initialize this callback function to null
 	void(*Everything::callOnMsgRcvd2)(String &msg) = 0; //initialize this callback function to null
 
+	void (*Everything::m_pnPrintFn)(String msg)=0; //initialize this callback function to null
+	void (*Everything::m_pnPrintLnFn)(String msg)=0; //initialize this callback function to null
 	//SmartThings static members
 	//#ifndef DISABLE_SMARTTHINGS
 	//	// Please refer to Constants.h for settings that affect whether a board uses SoftwareSerial or Hardware Serial calls

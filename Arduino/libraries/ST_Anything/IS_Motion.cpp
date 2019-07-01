@@ -23,6 +23,7 @@
 //	  2016-09-03  Dan Ogorchock  Added optional "numReqCounts" constructor argument/capability
 //    2017-01-25  Dan Ogorchock  Corrected issue with INPUT_PULLUP per request of Jiri Culik
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -52,7 +53,7 @@ namespace st
 	void IS_Motion::init()
 	{
 		if (debug){
-			Serial.println(F("IS_Motion: 30 second Motion Sensor Calibration Started..."));
+			st::debugPrintln(F("IS_Motion: 30 second Motion Sensor Calibration Started..."));
 		}
 		//calibrate the PIR Motion Sensor
 		digitalWrite(getInterruptPin(), LOW); 
@@ -93,7 +94,7 @@ namespace st
 				
 				if (debug)
 				{
-					Serial.println(F("IS_Motion: Motion Sensor Calibration Finished"));
+					st::debugPrintln(F("IS_Motion: Motion Sensor Calibration Finished"));
 				}
 			}
 	}

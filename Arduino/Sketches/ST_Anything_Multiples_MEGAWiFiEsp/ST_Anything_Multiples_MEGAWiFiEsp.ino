@@ -39,6 +39,7 @@
 //    2017-04-16  Dan Ogorchock  New sketch to demonstrate multiple SmartThings Capabilties of each type
 //    2017-04-22  Dan Ogorchock  Added Voltage, Carbon Monoxide, and Alarm with Strobe
 //    2018-02-09  Dan Ogorchock  Added support for Hubitat Elevation Hub
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -140,8 +141,8 @@ const unsigned int hubPort = 39500;   // smartthings hub port
 void callback(const String &msg)
 {
   //Uncomment if it weould be desirable to using this function
-  //Serial.print(F("ST_Anything_Miltiples Callback: Sniffed data = "));
-  //Serial.println(msg);
+  //st::debugPrint(F("ST_Anything_Miltiples Callback: Sniffed data = "));
+  //st::debugPrintln(msg);
   
   //TODO:  Add local logic here to take action when a device's value/state is changed
   

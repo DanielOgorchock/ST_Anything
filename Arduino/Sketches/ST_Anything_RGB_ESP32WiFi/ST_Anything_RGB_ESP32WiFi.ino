@@ -20,6 +20,7 @@
 //    2017-10-06  Allan (vseven) Modified for RGB example
 //    2017-10-13  Allan (vseven) Modified for RGBW example
 //    2018-02-09  Dan Ogorchock  Added support for Hubitat Elevation Hub
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //   Special thanks to Joshua Spain for his contributions in porting ST_Anything to the ESP32!
 //
@@ -119,8 +120,8 @@ const unsigned int hubPort = 39500;   // smartthings hub port
 //******************************************************************************************
 void callback(const String &msg)
 {
-//  Serial.print(F("ST_Anything Callback: Sniffed data = "));
-//  Serial.println(msg);
+//  st::printDebug(F("ST_Anything Callback: Sniffed data = "));
+//  st::printDebugln(msg);
   
   //TODO:  Add local logic here to take action when a device's value/state is changed
   

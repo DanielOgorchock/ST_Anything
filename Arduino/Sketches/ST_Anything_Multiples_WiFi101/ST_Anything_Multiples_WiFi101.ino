@@ -34,6 +34,7 @@
 //    ----        ---            ----
 //    2017-05-06  Dan Ogorchock  New example sketch for use with the WiFi 101 shield or Adafruit ATWINC1500
 //    2018-02-09  Dan Ogorchock  Added support for Hubitat Elevation Hub
+//    2019-07-01  Dan.t		 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -151,8 +152,8 @@ const unsigned int hubPort = 39500;   // smartthings hub port
 void callback(const String &msg)
 {
   //Uncomment if it weould be desirable to using this function
-  //Serial.print(F("ST_Anything_Miltiples Callback: Sniffed data = "));
-  //Serial.println(msg);
+  //st::printDebug(F("ST_Anything_Miltiples Callback: Sniffed data = "));
+  //st::printDebugln(msg);
   
   //TODO:  Add local logic here to take action when a device's value/state is changed
   

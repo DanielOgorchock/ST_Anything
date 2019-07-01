@@ -17,6 +17,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -36,7 +37,7 @@ namespace st
 		{
 			if (debug)
 			{
-				Serial.println(F("PollingSensor: millis() Overflow handled"));
+				st::debugPrintln(F("PollingSensor: millis() Overflow handled"));
 			}
 			
 			m_nPreviousTime = 0;

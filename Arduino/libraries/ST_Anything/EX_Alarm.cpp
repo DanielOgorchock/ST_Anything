@@ -26,6 +26,7 @@
 //	  2017-04-20  Dan Ogorchock	 Add optional Strobe functionality
 //    2017-04-26  Dan Ogorchock  Improved Logic if Strobe pin not defined 
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
+//    2019-07-01  Dan.t		 	 Added support for websocket Logging, st::debugPrint and st::debugPrintln
 //
 //
 //******************************************************************************************
@@ -100,8 +101,8 @@ namespace st
 	void EX_Alarm::refresh()
 	{
 		//if (debug) {
-		//	Serial.print(F("EX_Alarm:: UseStrobe = "));
-		//	Serial.println(m_bUseStrobe);
+		//	st::debugPrint(F("EX_Alarm:: UseStrobe = "));
+		//	st::debugPrintln(String(m_bUseStrobe));
 		//}
 
 		if (m_nCurrentAlarmState == both) {
@@ -125,8 +126,8 @@ namespace st
 		String s = str.substring(str.indexOf(' ') + 1);
 
 		if (debug) {
-			Serial.print(F("EX_Alarm::beSmart s = "));
-			Serial.println(s);
+			st::debugPrint(F("EX_Alarm::beSmart s = "));
+			st::debugPrintln(s);
 		}
 
 		//if (m_bUseStrobe) {
@@ -137,7 +138,7 @@ namespace st
 				else {
 					m_nCurrentAlarmState = siren;
 					if (debug) {
-						Serial.println(F("EX_Alarm::beSmart - Strobe Pin not defined. Defaulting to Siren!"));
+						st::debugPrintln(F("EX_Alarm::beSmart - Strobe Pin not defined. Defaulting to Siren!"));
 					}
 
 				}
@@ -152,7 +153,7 @@ namespace st
 				else {
 					m_nCurrentAlarmState = siren;
 					if (debug) {
-						Serial.println(F("EX_Alarm::beSmart - Strobe Pin not defined. Defaulting to Siren!"));
+						st::debugPrintln(F("EX_Alarm::beSmart - Strobe Pin not defined. Defaulting to Siren!"));
 					}
 
 				}
