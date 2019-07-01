@@ -26,10 +26,11 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-02-10  Dan Ogorchock  Added temperature units for display on the Hubitat Dashboard
  *    2019-03-06  Dan Ogorchock  Improved rounding
+ *    2019-07-01  Dan Ogorchock  Added importUrl
  * 
  */
 metadata {
-	definition (name: "Child Temperature Sensor", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Temperature Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-temperature-sensor.groovy") {
 		capability "Temperature Measurement"
 		capability "Sensor"
 
