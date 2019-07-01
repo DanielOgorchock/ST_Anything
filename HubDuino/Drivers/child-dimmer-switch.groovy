@@ -23,11 +23,12 @@
  *    2018-05-19  Dan Ogorchock  Added support to receive the dimmer level from the microcontroller
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
+ *    2019-07-01  Dan Ogorchock  Added importUrl
  *
  * 
  */
 metadata {
-	definition (name: "Child Dimmer Switch", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Child Dimmer Switch", namespace: "ogiewon", author: "Dan Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-dimmer-switch.groovy") {
 		capability "Switch Level"
         capability "Switch"
 		capability "Relay Switch"
