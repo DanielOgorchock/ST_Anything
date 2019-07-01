@@ -22,10 +22,11 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-01-30  Jeff Albers	 Set upper level value as 100 instead of 99
  *    2019-02-09  Dan Ogorchock  Updated to support enhanced EX_Servo class - special thanks to Jeff Albers!
+ *    2019-07-01  Dan Ogorchock  Added importUrl
  * 
  */
 metadata {
-	definition (name: "Child Servo", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Child Servo", namespace: "ogiewon", author: "Dan Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-servo.groovy") {
             capability "Switch"
             capability "Switch Level"
             capability "Actuator"
