@@ -20,12 +20,13 @@
  *    ----        ---            ----
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
+ *    2019-07-01  Dan Ogorchock  Added importUrl
  *   
  *
  * 
  */
 metadata {
-	definition (name: "Child Ultrasonic Sensor", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Ultrasonic Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-ultrasonic-sensor.groovy") {
 		capability "Sensor"
         
 		attribute "lastUpdated", "String"
