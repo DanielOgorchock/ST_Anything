@@ -21,10 +21,11 @@
  *    2018-02-24  Dan Ogorchock  Original Creation
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
+ *    2019-07-01  Dan Ogorchock  Added importUrl
  * 
  */
 metadata {
-	definition (name: "Child Presence Sensor", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Presence Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-presence-sensor.groovy") {
 		capability "Sensor"
 		capability "Presence Sensor"
 
