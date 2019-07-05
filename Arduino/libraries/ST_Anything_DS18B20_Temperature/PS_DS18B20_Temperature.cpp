@@ -36,6 +36,7 @@
 //    2017-08-18  Dan Ogorchock  Modified to send floating point values to SmartThings
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2019-03-11  Dan Ogorchock  Added new optional parameter for starting sensor number for data transfer
+//    2019-07-05  Dan Ogorchock  Fix bug in multiple sensor support logic
 //
 //
 //******************************************************************************************
@@ -123,11 +124,11 @@ namespace st
 		{
 			if (m_In_C)
 			{
-				m_dblTemperatureSensorValue = m_DS18B20.getTempCByIndex(index-1);
+				m_dblTemperatureSensorValue = m_DS18B20.getTempCByIndex(index-m_sensorStartingNum);
 			}
 			else
 			{
-				m_dblTemperatureSensorValue = m_DS18B20.getTempFByIndex(index-1);
+				m_dblTemperatureSensorValue = m_DS18B20.getTempFByIndex(index-m_sensorStartingNum);
 			}
 
 			if (st::PollingSensor::debug) {
