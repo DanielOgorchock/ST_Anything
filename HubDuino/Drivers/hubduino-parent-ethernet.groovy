@@ -39,6 +39,8 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-02-05  Dan Ogorchock  Added Child Energy Meter
  *    2019-04-23  Dan Ogorchock  Added importURL, tweaked log.debug statements
+ *    2019-06-24  Dan Ogorchock  Added Delete All Child Devices Command (helpful during testing)
+ *    2019-07-08  Dan Ogorchock  Added support for Sound Pressure Level device
  *	
  */
  
@@ -52,6 +54,7 @@ metadata {
         capability "Signal Strength"   
         
         command "sendData", ["string"]
+        //command "deleteAllChildDevices"
 	}
 
     simulator {
@@ -342,6 +345,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
          		case "pressure": 
                 		deviceHandlerName = "Child Pressure Measurement" 
                 	break
+         		case "soundPressureLevel": 
+                		deviceHandlerName = "Child Sound Pressure Level" 
+                	break        
 			default: 
                 	log.error "No Child Device Handler case for ${deviceName}"
       		}
@@ -369,4 +375,10 @@ private boolean containsDigit(String s) {
 		containsDigit = s.matches(".*\\d+.*")
     }
     return containsDigit
+}
+
+def deleteAllChildDevices() {
+    getChildDevices().each {
+          deleteChildDevice(it.deviceNetworkId)
+       }
 }

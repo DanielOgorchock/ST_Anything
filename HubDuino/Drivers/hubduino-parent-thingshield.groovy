@@ -34,6 +34,8 @@
  *    2019-02-05  Dan Ogorchock  Added Child Energy Meter
  *    2019-04-23  Dan Ogorchock  Fixed debug logging, added importURL, and added Fingerprint
  *    2019-04-24  Dan Ogorchock  Improved parseThingShield() routine to support Hubitat firmware changes
+ *    2019-06-24  Dan Ogorchock  Added Delete All Child Devices Command (helpful during testing)
+ *    2019-07-08  Dan Ogorchock  Added support for Sound Pressure Level device
  *	
  */
  
@@ -46,6 +48,7 @@ metadata {
         //capability "DoubleTapableButton"
         
         command "sendData", ["string"]
+        //command "deleteAllChildDevices"
 		
 		fingerprint profileId: "0104", deviceId: "0138", inClusters: "0000"
 	}
@@ -316,6 +319,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
          		case "pressure": 
                 		deviceHandlerName = "Child Pressure Measurement" 
                 	break
+         		case "soundPressureLevel": 
+                		deviceHandlerName = "Child Sound Pressure Level" 
+                	break        
 			default: 
                 		log.error "No Child Device Handler case for ${deviceName}"
       		}
@@ -339,4 +345,10 @@ private boolean containsDigit(String s) {
 		containsDigit = s.matches(".*\\d+.*")
     }
     return containsDigit
+}
+
+def deleteAllChildDevices() {
+    getChildDevices().each {
+          deleteChildDevice(it.deviceNetworkId)
+       }
 }
