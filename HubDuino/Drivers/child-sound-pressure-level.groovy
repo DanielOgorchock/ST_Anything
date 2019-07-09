@@ -54,7 +54,7 @@ def parse(String description) {
         sendEvent(name: name, value: value, unit: "dBA")
         float tmpValue = Float.parseFloat(value)
         if (maxSPL) {
-            if (tmpValue >= Float.parseFloat(maxSPL)) {
+            if (tmpValue >= Float.valueOf(maxSPL)) {
                 sendEvent(name: "contact", value: "closed")
             } else {
                 sendEvent(name: "contact", value: "open")
