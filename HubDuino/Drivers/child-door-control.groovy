@@ -23,6 +23,7 @@
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-07-01  Dan Ogorchock  Added importUrl
+ *    2019-07-28  Dan Ogorchock  Minor tweak to support option for a switch output instead of just a momentary output - requires updated Arduino Door Control Code!!!
  *
  *
  */
@@ -72,11 +73,11 @@ def logsOff(){
 
 // handle commands
 def open() {
-	push()
+	sendData("on")
 }
 
 def close() {
-	push()
+	sendData("off")
 }
 
 def push() {

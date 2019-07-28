@@ -10,7 +10,7 @@
 //			  It inherits from the st::InterruptSensor class and clones much from the st::Executor Class
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::IS_DoorControl sensor3(F("doorControl1"), PIN_CONTACT_DOOR_1, LOW, true, PIN_RELAY_DOOR_1, LOW, true, 1000, 1000);
+//			  For Example:  st::IS_DoorControl sensor3(F("doorControl1"), PIN_CONTACT_DOOR_1, LOW, true, PIN_RELAY_DOOR_1, LOW, true, 1000, 1000, true);
 //
 //			  st::IS_DoorControl() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -22,6 +22,7 @@
 //				- bool invertLogic - REQUIRED - determines whether the Arduino Digital Output should use inverted logic
 //				- long delayTime - REQUIRED - the number of milliseconds to keep the output on
 //				- long numReqCounts - OPTIONAL - number of counts before changing state of input (prevent false alarms)
+//              - bool useMomentary - OPTIONAL - use momentary output (true) or standard switch (false) (defaults to true)
 //
 //  Change History:
 //
@@ -30,6 +31,7 @@
 //    2015-01-07  Dan Ogorchock  Original Creation
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2018-11-07  Dan Ogorchock	 Added optional "numReqCounts" constructor argument/capability
+//    2019-07-24  Dan Ogorchock  Added parameter to use output as a simple switch instead of momentary output
 //
 //
 //******************************************************************************************
@@ -49,6 +51,7 @@ namespace st
 			//following are for the digital output
 			bool m_bCurrentState;	//HIGH or LOW
 			bool m_bInvertLogic;	//determines whether the Arduino Digital Output should use inverted logic
+			bool m_bUseMomentary;	//determines whether the output should be momentary or simple switch
 			byte m_nOutputPin;		//Arduino Pin used as a Digital Output for the switch - often connected to a relay or an LED
 			unsigned long m_lDelayTime;		//number of milliseconds to keep digital output active before automatically turning off
 			unsigned long m_lTimeTurnedOn;	//time when the digital output was turned on
@@ -58,8 +61,8 @@ namespace st
 
 			
 		public:
-			//constructor - called in your sketch's global variable declaration section
-			IS_DoorControl(const __FlashStringHelper *name, byte pinInput, bool iState, bool pullup, byte pinOutput, bool startingState, bool invertLogic, unsigned long delayTime, long numReqCounts = 0);
+			//constructor - momentary output - called in your sketch's global variable declaration section
+			IS_DoorControl(const __FlashStringHelper *name, byte pinInput, bool iState, bool pullup, byte pinOutput, bool startingState, bool invertLogic, unsigned long delayTime, long numReqCounts = 0, bool useMomentary = true);
 			
 			//destructor
 			virtual ~IS_DoorControl();

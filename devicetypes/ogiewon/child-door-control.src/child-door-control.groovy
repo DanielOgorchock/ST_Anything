@@ -19,6 +19,7 @@
  *    2015-04-14  Dan Ogorchock  Original Creation
  *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2019-07-28  Dan Ogorchock  Minor tweak to support option for a switch output instead of just a momentary output - requires updated Arduino Door Control Code!!!
  *
  *
  */
@@ -63,11 +64,11 @@ metadata {
 
 // handle commands
 def open() {
-	push()
+	sendData("on")
 }
 
 def close() {
-	push()
+	sendData("off")
 }
 
 def push() {

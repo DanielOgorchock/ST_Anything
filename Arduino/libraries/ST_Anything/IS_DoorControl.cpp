@@ -10,7 +10,7 @@
 //			  It inherits from the st::InterruptSensor class and clones much from the st::Executor Class
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::IS_DoorControl sensor3(F("doorControl1"), PIN_CONTACT_DOOR_1, LOW, true, PIN_RELAY_DOOR_1, LOW, true, 1000, 1000);
+//			  For Example:  st::IS_DoorControl sensor3(F("doorControl1"), PIN_CONTACT_DOOR_1, LOW, true, PIN_RELAY_DOOR_1, LOW, true, 1000, 1000, true);
 //
 //			  st::IS_DoorControl() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -22,6 +22,7 @@
 //				- bool invertLogic - REQUIRED - determines whether the Arduino Digital Output should use inverted logic
 //				- long delayTime - REQUIRED - the number of milliseconds to keep the output on
 //				- long numReqCounts - OPTIONAL - number of counts before changing state of input (prevent false alarms)
+//              - bool useMomentary - OPTIONAL - use momentary output (true) or standard switch (false) (defaults to true)
 //
 //  Change History:
 //
@@ -30,6 +31,7 @@
 //    2015-01-07  Dan Ogorchock  Original Creation
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2018-11-07  Dan Ogorchock	 Added optional "numReqCounts" constructor argument/capability
+//    2019-07-24  Dan Ogorchock  Added parameter to use output as a simple switch instead of momentary output
 //
 //
 //******************************************************************************************
@@ -49,11 +51,12 @@ namespace st
 
 //public
 	//constructor
-	IS_DoorControl::IS_DoorControl(const __FlashStringHelper *name, byte pinInput, bool iState, bool pullup, byte pinOutput, bool startingState, bool invertLogic, unsigned long delayTime, long numReqCounts) :
+	IS_DoorControl::IS_DoorControl(const __FlashStringHelper *name, byte pinInput, bool iState, bool pullup, byte pinOutput, bool startingState, bool invertLogic, unsigned long delayTime, long numReqCounts, bool useMomentary) :
 		InterruptSensor(name, pinInput, iState, pullup, numReqCounts),  //use parent class' constructor
 		m_bCurrentState(startingState),
 		m_bInvertLogic(invertLogic),
 		m_lDelayTime(delayTime),
+		m_bUseMomentary(useMomentary),
 		m_lTimeTurnedOn(0),
 		m_bTimerPending(false)
 		{
@@ -74,16 +77,17 @@ namespace st
 	//update function 
 	void IS_DoorControl::update()
 	{
-		//Turn off digital output if timer has expired
-		if ((m_bCurrentState == HIGH) && (millis() - m_lTimeTurnedOn >= m_lDelayTime))
-		{	
-			m_bCurrentState = LOW;
-			writeStateToPin();
-			//Decrement number of active timers
-			if (st::Everything::bTimersPending > 0) st::Everything::bTimersPending--;
-			m_bTimerPending = false;
+		if (m_bTimerPending) {
+			//Turn off digital output if timer has expired
+			if ((m_bCurrentState == HIGH) && (millis() - m_lTimeTurnedOn >= m_lDelayTime))
+			{
+				m_bCurrentState = LOW;
+				writeStateToPin();
+				//Decrement number of active timers
+				if (st::Everything::bTimersPending > 0) st::Everything::bTimersPending--;
+				m_bTimerPending = false;
+			}
 		}
-
 		//check to see if input pin has changed state
 		InterruptSensor::update();
 	}
@@ -95,21 +99,26 @@ namespace st
 			Serial.print(F("IS_ContactRelay::beSmart s = "));
 			Serial.println(s);
 		}
-		if (s == F("on"))
+
+		if ( (s == F("on")) || (m_bUseMomentary && (s == F("off"))))
 		{
 			m_bCurrentState = HIGH;
 
-			//Save time turned on
-			m_lTimeTurnedOn = millis();
+			if (m_bUseMomentary) {
+				//Save time turned on
+				m_lTimeTurnedOn = millis();
 
-			//Increment number of active timers
-			if (!m_bTimerPending)
-			{
-				st::Everything::bTimersPending++;
-				m_bTimerPending = true;
+				//Increment number of active timers
+				if (!m_bTimerPending)
+				{
+					st::Everything::bTimersPending++;
+					m_bTimerPending = true;
+				}
 			}
-			//Queue the door status update the ST Cloud 
-			Everything::sendSmartStringNow(getName() + (getStatus() ? F(" opening") : F(" closing")));
+			if (m_bUseMomentary) {
+				//Queue the door status update the ST Cloud 
+				Everything::sendSmartStringNow(getName() + (getStatus() ? F(" opening") : F(" closing")));
+			}
 		}
 		else if (s == F("off"))
 		{
