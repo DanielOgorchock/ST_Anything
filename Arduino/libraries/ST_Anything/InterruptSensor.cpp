@@ -28,7 +28,18 @@ namespace st
 	//Checks to see if the pin has changed state.  If so calls appropriate function.
 	void InterruptSensor::checkIfTriggered()
 	{
-			if (digitalRead(m_nInterruptPin) == m_bInterruptState && !m_bStatus) //new interrupt
+            bool inputState;
+#if defined(ARDUINO_ARCH_ESP8266)
+            if (m_nInterruptPin == A0) 
+			{
+                inputState = (analogRead(A0) > 512);
+			}
+            else
+                inputState = digitalRead(m_nInterruptPin);
+#else
+            inputState = digitalRead(m_nInterruptPin);
+#endif
+			if (inputState == m_bInterruptState && !m_bStatus) //new interrupt
 			{
 				m_nCurrentDownCount = m_nRequiredCounts;
 				m_nCurrentUpCount++;
@@ -39,7 +50,7 @@ namespace st
 					runInterrupt();
 				}
 			}
-			else if ((digitalRead(m_nInterruptPin) != m_bInterruptState && m_bStatus) || m_bInitRequired) //interrupt has ended OR Init called us
+			else if ((inputState != m_bInterruptState && m_bStatus) || m_bInitRequired) //interrupt has ended OR Init called us
 			{
 				m_nCurrentUpCount = 0;
 				m_nCurrentDownCount--;
@@ -107,6 +118,14 @@ namespace st
 	void InterruptSensor::setInterruptPin(byte pin)
 	{
 		m_nInterruptPin=pin;
+
+#if defined(ARDUINO_ARCH_ESP8266)
+        if (pin == A0)
+        {
+            pinMode(m_nInterruptPin, INPUT);
+            return;
+        }
+#endif
 		if(!m_bPullup)
 		{
 			pinMode(m_nInterruptPin, INPUT);
