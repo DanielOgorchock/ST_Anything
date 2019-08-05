@@ -31,7 +31,6 @@ metadata {
 		capability "Actuator"
 		capability "Sensor"
 		capability "Momentary"
-		capability "Switch"
 
 		attribute "lastUpdated", "String"
 	}
