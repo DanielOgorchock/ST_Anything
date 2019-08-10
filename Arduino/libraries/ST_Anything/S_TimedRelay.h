@@ -27,6 +27,7 @@
 //    2015-12-29  Dan Ogorchock  Original Creation
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2019-06-23  Brian Wilson   Added finalState option
+//    2019-08-10  Dan Ogorchock  Added public getStatus() 
 //
 //
 //******************************************************************************************
@@ -78,6 +79,7 @@ namespace st
 			//gets
 			virtual byte getPin() const { return m_nOutputPin; }
 			virtual bool getTimerActive() const { return m_bTimerPending; }
+			virtual bool getStatus() const { return m_bCurrentState; }
 
 			//sets
 			virtual void setOutputPin(byte pin);
