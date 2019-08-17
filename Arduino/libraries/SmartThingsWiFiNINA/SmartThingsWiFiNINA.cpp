@@ -1,5 +1,6 @@
 //*******************************************************************************
-//	SmartThings Arduino WiFiNINA Library - Use an Arduino MKR 1010 or similar  
+//	SmartThings Arduino WiFiNINA Library - Use an Arduino MKR 1010, NANO33IoT 
+//                                         or similar boards 
 //                                        
 //
 //	License
@@ -7,8 +8,10 @@
 //
 //	History
 //	2019-06-23  Dan Ogorchock  Created
+//  2019-08-17  Dan Ogorchock  NANO33IoT 
 //
 //*******************************************************************************
+
 
 #include "SmartThingsWiFiNINA.h"
 
