@@ -1,4 +1,4 @@
-ST_Anything v2.9.5
+ST_Anything v2.9.6
 ================
 
 **WARNING** - You must use the SmartThings Classic App with ST_Anything. Without Hub Connected Device documentation from Samsung/SmartThings, I have no way to know how to support the new SmartThings (Connect) App.
@@ -6,7 +6,8 @@ ST_Anything v2.9.5
 **WARNING** - If using an ESP8266, make sure you are using v2.5.2 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anythign to crash after an hour or two) along with Arduino IDE 1.8.9.
 
 **Recent History:**
-- v2.9.5 - Added support for MKR1010, Arduino 1.8.9, ESP8266 v2.5.2, updated numerous libraries, etc...
+- v2.9.6 - Added support for Arduino NANO33IoT
+- v2.9.5 - Added support for Arduino MKR1010, Arduino 1.8.9, ESP8266 v2.5.2, updated numerous libraries, etc...
 - v2.9.4 - Added support for the SHT31 (temp, humid) I2C sensor
 - v2.9.3 - Significant enhancements to the EX_Servo class and Child Device Handler - Thanks Jeff Albers!  ALso, an attempt to prevent duplicate child devices from being created.
 
@@ -16,13 +17,14 @@ ST_Anything v2.9.5
 
 Note: ST_Anything v2.9.5 was built using the Arduino IDE v1.8.9.  Please make sure to upgrade your IDE.
 
-Turn your Arduino UNO/MEGA/MKR1000, NodeMCU ESP8266, or ESP32 into Anything you can imagine! ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
+Turn your Arduino UNO/MEGA/MKR1000/MKR1010/NANO33IoT, ESP8266, or ESP32 into Anything you can imagine! ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
 - Arduino with W5100 Ethernet shield
 - Arduino with W5500 Ethernet shield
 - Arduino with WiFi101 Shield (or Adafruit ATWINC1500 module)
 - Arduino MKR1000 (has integrated WiFi101)
 - Arduino MKR1010 (has integrated WiFiNINA)
+- Arduino NANO33IoT (has integrated WiFiNINA)
 - Arduino with ESP-01 for WiFi
 - Standalone NodeMCU v1.0 ESP8266-12e
 - Standalone ESP-01 (or really any ESP8266 based board)
@@ -72,7 +74,7 @@ This package currently implements the following SmartThings Device Capabilities:
 - Temperature Measurement (using a BMP280 I2C sensor)
 - Pressure Measurement (using a BMP280 I2C sensor)
 
-Note: Attempting to use all of these at once on an Arduino UNO R3 is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.  The ESP8266, ESP32, and MKR1000, MKR1010 platforms also have a lot more memory available.
+Note: Attempting to use all of these at once on an Arduino UNO R3 is likely to result in running out of SRAM on the UNO (the UNO only has 2 kilobytes of RAM.)  Using an Arduino MEGA 2560 with 8 kilobytes of SRAM is recommended if you want to run everything at once.  The ESP8266, ESP32, and MKR1000, MKR1010, NANO33IoT platforms also have a lot more memory available.
 
 
 ## Overview
@@ -83,7 +85,8 @@ ST_Anything consists of four main parts:
   - ST_Anything_Multiples_MEGAWiFiEsp.ino - Arduino MEGA + ESP-01 WiFi module with "AT Firmware"
   - ST_Anything_Multiples_WiFi101.ino - Arduino MEGA + WiFi101 Shield (or Adafruit ATWINC1500 module)
   - ST_Anything_Multiples_MKR1000.ino - Arduino MKR1000 (has onboard WiFi101 chip)
-  - ST_Anything_Multiples_MKR1010.ino - Arduino MKR1000 (has onboard WiFiNINA chip)
+  - ST_Anything_Multiples_MKR1010.ino - Arduino MKR1010 (has onboard WiFiNINA chip)
+  - ST_Anything_Multiples_NANO33IoT.ino - Arduino NANO 33 IoT (has onboard WiFiNINA chip)
   - ST_Anything_Multiples_ESP8266WiFi.ino - NodeMCU v1.0 ESP8266-12e development board (no Arduino!)
   - ST_Anything_Multiples_ESP01WiFi.ino - ESP-01 (ESP8266-01) module (no Arduino!)
   - ST_Anything_Multiples_ThingShield.ino - Arduino UNO/MEGA + ST ThingShield
@@ -93,14 +96,14 @@ ST_Anything consists of four main parts:
 - The ST_Anything Arduino libraries + required 3rd party libraries
 - The SmartThings libraries - A modified, more efficient version, now with added support for LAN-to-Hub based communications too! 
 - The SmartThings Parent and Child Device Handlers that support sketches above.
-  - parent-st-anything-ethernet.groovy (LAN-to-Hub, Arduino/W5100/W5500, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01, ESP32, MKR1000)
+  - parent-st-anything-ethernet.groovy (LAN-to-Hub, Arduino/W5100/W5500, Arduino/ESP-01, NodeMCU ESP8266-12e, ESP-01, ESP32, MKR1000, MKR1010, NANO33IoT)
   - parent-st-anything-thingshield.groovy (Thingshield-to-Hub)
   - child-xxxxxx.groovy 
     - currently 24 child device handlers are available!
 
-## Pre-Requisites for using LAN-to-HUB Ethernet connectivity (Arduino/W5100, Arduino/W5500, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, ESP32, MKR1000, MKR1010)
+## Pre-Requisites for using LAN-to-HUB Ethernet connectivity (Arduino/W5100, Arduino/W5500, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, ESP32, MKR1000, MKR1010, NANO33IoT)
 - Your SmartThings HUB must have a Reserved/Static TCP/IP Address assigned via your router's DHCP Server. Since this procedure varies by router model, Please Google it!
-- You'll need to identify a static TCP/IP address for your Arduino/W5100, Arduino/W5500, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, ESP32, MKR1000, or MKR1010 as you'll need this later when setting up the sketch. Choose an unused IP address outside of the range your router's DHCP server uses, but in the same subnet.
+- You'll need to identify a static TCP/IP address for your Arduino/W5100, Arduino/W5500, Arduino/ESP-01, NodeMCU ESP8266, ESP-01, ESP32, MKR1000, MKR1010, or NANO33IoT as you'll need this later when setting up the sketch. Choose an unused IP address outside of the range your router's DHCP server uses, but in the same subnet.
 
 ## Arduino IDE Setup Instructions 
 - Download the ST_Anything repository, focusing on the ST_Anything/Arduino/ folders
@@ -121,7 +124,7 @@ ST_Anything consists of four main parts:
 - If using a LAN-to-Hub (WiFi or Cat5 Ethernet) based device
   -Find the lines of the Sketch where it says "<---You must edit this line!"
     - You must ensure your ST hub's LAN IP address does not change.  Use your router's static DHCP assignment feature to make sure your ST hub always gets the same IP Address!  Enter that address in the corresponding line in the sketch.
-    - The Arduino must be assigned a static TCP/IP address, Gateway, DNS, Subnet Mask, MAC Address(W5100/W5500 only), SSID+Password(ESP8266,ESP01,ESP32,WiFi101,MKR1000,MKR1010)
+    - The Arduino must be assigned a static TCP/IP address, Gateway, DNS, Subnet Mask, MAC Address(W5100/W5500 only), SSID+Password(ESP8266,ESP01,ESP32,WiFi101,MKR1000,MKR1010, NANO33IoT)
     - *** NOTE: If using the W5100 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch! Please leave the first octet in the MAC Address '06' as certain MAC addresses are UNICAST while others are MULTICAST. Your MAC must be UNICAST and be a 'Locally Administered Address' Please see https://en.wikipedia.org/wiki/MAC_address#Address_details for more information ***
     - *** NOTE: If using the W5500 Shield, YOU MUST ASSIGN IT A UNIQUE MAC ADDRESS in the sketch! Use the one packaged with the W5500 shield.
     - Note: If using an ESP-01 for WiFi-connecticity (i.e. as a WiFi dongle/shield) with an Arduino, the example assumes you're using an Arduino MEGA 2560. Attach the ESP-01 to Hardware Serial "Serial1" and make sure your ESP01 has current 'AT Firmware' installed.
@@ -129,7 +132,7 @@ ST_Anything consists of four main parts:
   - With the Serial Monitor window open, load your sketch and watch the output
   - The MAC Address will be printed out in the serial monitor window. Write this down as you will need it to configure the Device using your ST App on your phone. (Note: MAC Address must later be entered with no delimeters (i.e. NO COLONS!) in the form of "06AB23CD45EF" (without quotes!))
 
-WARNING:  If you are using an Arduino UNO, you may need to comment out some of the devices in the sketch (both in the global variable declaration section as well as the setup() function) due to the UNO's limited 2 kilobytes of SRAM.  Failing to do so will most likely result in unpredictable behavior. The Arduino MEGA 2560 has 8k of SRAM and has four Hardware Serial ports (UARTs).  If you plan on using many devices, get an Arduino MEGA 2560, a MKR1000, a NodeMCU v1.0 ESP8266-12e, or a ESP32 board.
+WARNING:  If you are using an Arduino UNO, you may need to comment out some of the devices in the sketch (both in the global variable declaration section as well as the setup() function) due to the UNO's limited 2 kilobytes of SRAM.  Failing to do so will most likely result in unpredictable behavior. The Arduino MEGA 2560 has 8k of SRAM and has four Hardware Serial ports (UARTs).  If you plan on using many devices, get an Arduino MEGA 2560, a MKR1000, a MKR1010, a NANO33IoT, a NodeMCU v1.0 ESP8266-12e, or a ESP32 board.
 
 ## SmartThings IDE Setup Instructions
 - Create an account and/or log into the SmartThings Developers Web IDE.
