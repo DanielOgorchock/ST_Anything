@@ -1,9 +1,10 @@
-HubDuino v1.1.6
+HubDuino v1.1.7
 ================
 
 **WARNING** - If using an ESP8266, make sure you are using v2.5.2 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anything to crash after an hour or two) along with Arduino IDE v1.8.9. 
 
 **Recent History:**
+- 2019-09-14 HubDuino v1.1.7 - Significant changes to the Parent Drivers.  MAC Address is no longer required - only the IP address/port of the micro-controller is needed.  Added Presence Capability to the Parent Device - This indicates whether or not the device has had an update from the microcontroller within a user selectable timeout period via a new setting.  NumberOfButtons setting is removed as it now auto-populates.  This release also requires an update to the ST_Anything library's IS_Button.cpp file.
 - 2019-08-17 HubDuino v1.1.6 - Added support for Arduino NANO33IoT
 - 2019-06-28 HubDuino v1.1.5 - Added support for MKR1010, Arduino 1.8.9, ESP8266 v2.5.2, updated numerous libraries, etc...
 - 2019-03-24 HubDuino v1.1.4 - Added support for I2C device - SHT31(temp, humid)
@@ -13,7 +14,7 @@ HubDuino v1.1.6
 
 ![screenshot](https://user-images.githubusercontent.com/5206084/41016005-e382479e-691a-11e8-871f-e62964c0e0c0.png)
 
-Note: The HubDuino v1.1.6 release is based on the ST_Anything v2.9.6 baseline and was built using the Arduino IDE v1.8.9.  Please make sure to upgrade your Arduino IDE.
+Note: The HubDuino v1.1.7 release is based on the ST_Anything v2.9.7 baseline and was built using the Arduino IDE v1.8.9.  Please make sure to upgrade your Arduino IDE.
 
 Turn your Arduino UNO/MEGA/MKR1000/MKR1010/NANO33IoT, ESP8266, or ESP32 into Anything you can imagine! HubDuino/ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
@@ -147,15 +148,15 @@ Your "Drivers Code" page should now look similar to the following
 - Enter in the following REQUIRED fields
     - Device Name: anything you want (tip: keep it short as this will be the prefix for all Child Devices that are created)
     - Device Label: anything you want (tip: keep it short)
-    - Device Network ID: any unique name (this will be overwritten with your Arduino device's MAC address automatically)
+    - Device Network ID: now automatically assigned by Hubitat during this step.  Later will be overwritten with the Arduino IP address in hexadecimal.
     - Type: "HubDuino Parent Ethernet"
 
-Your screen should look like the following image just before you click Save:
-![screenshot](https://user-images.githubusercontent.com/5206084/41034615-21f17256-6958-11e8-84cf-1f22eb7969eb.png)
+Your screen should look like the following image just before you click Save Device:
+![screenshot](https://user-images.githubusercontent.com/5206084/64909952-f4863d00-d6df-11e9-9efd-8fa541624ab3.png)
 
 Afterwards, go into the device page of the Parent and enter in the highlighted information for your ST_Anything device
 
-![screenshot](https://user-images.githubusercontent.com/5206084/41034778-aeb2160a-6958-11e8-818e-0ca25a2c9f98.png)
+![screenshot](https://user-images.githubusercontent.com/5206084/64909953-f7812d80-d6df-11e9-884e-9aa202acfa9f.png)
 
 - Click the SAVE button at the bottom of the screen.  This will cause a REFRESH command to be sent to your ST_Anything microcontroller, which in turn will send a status update for every device you configured in your sketch's setup() routine.  These updates from ST_Anything will cause child devices to be created if they do not yet exist.
 	
@@ -173,7 +174,6 @@ Afterwards, go into the device page of the Parent and enter in the highlighted i
 - Click on Devices from navigation menu
 - Select your "Arduino ThingShield" device from the list
 - Change the Type to "HubDuino Parent ThingShield"
-- Configure the correct number of "Button Devices" to match what you defined in the Arduino Sketch.  Set to 0 if none.
 - Click the SAVE button at the bottom of the screen.  This will cause a REFRESH command to be sent to your ST_Anything microcontroller, which in turn will send a status update for every device you configured in your sketch's setup() routine.  These updates from ST_Anything will cause child devices to be created if they do not yet exist.
 
 
