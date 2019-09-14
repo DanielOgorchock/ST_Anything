@@ -158,7 +158,7 @@ Afterwards, go into the device page of the Parent and enter in the highlighted i
 
 ![screenshot](https://user-images.githubusercontent.com/5206084/64909953-f7812d80-d6df-11e9-884e-9aa202acfa9f.png)
 
-- Click the SAVE button at the bottom of the screen.  This will cause a REFRESH command to be sent to your ST_Anything microcontroller, which in turn will send a status update for every device you configured in your sketch's setup() routine.  These updates from ST_Anything will cause child devices to be created if they do not yet exist.
+- Click the SAVE PREFERENCES button at the bottom of the screen.  This will cause a REFRESH command to be sent to your ST_Anything microcontroller, which in turn will send a status update for every device you configured in your sketch's setup() routine.  These updates from ST_Anything will cause child devices to be created if they do not yet exist.
 	
 ## Verify your Child Devices are automagically created	
 - Click on "Devices" from the left hand navigation menu
