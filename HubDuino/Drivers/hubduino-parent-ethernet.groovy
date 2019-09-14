@@ -38,20 +38,22 @@
  *    2018-08-06  Dan Ogorchock  Added formatting of MAC address
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-02-05  Dan Ogorchock  Added Child Energy Meter
- *    2019-04-23  Dan Ogorchock  Added importURL, tweaked log.debug statements
+ *    2019-04-23  Dan Ogorchock  Fixed debug logging, added importURL
  *    2019-06-24  Dan Ogorchock  Added Delete All Child Devices Command (helpful during testing)
  *    2019-07-08  Dan Ogorchock  Added support for Sound Pressure Level device
+ *    2019-09-01  Dan Ogorchock  Added Presence Capability to know if the HubDuino device is online or offline
+ *    2019-09-04  Dan Ogorchock  Automatically detect maximum number of buttons and set numberOfButtons attribute accordingly
+ *    2019-09-04  Dan Ogorchock  Eliminate the need for user to supply MAC address of the Arduino. Configure the Parent DNI to use Arduino IP Address instead. 
  *	
  */
  
 metadata {
 	definition (name: "HubDuino Parent Ethernet", namespace: "ogiewon", author: "Dan Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/hubduino-parent-ethernet.groovy") {
-        capability "Configuration"
         capability "Refresh"
         capability "Pushable Button"
         capability "Holdable Button"
-        //capability "DoubleTapableButton"
-        capability "Signal Strength"   
+        capability "Signal Strength"
+        capability "Presence Sensor"  //used to determine is the HubDuino microcontroller is still reporting data or not
         
         command "sendData", ["string"]
         //command "deleteAllChildDevices"
@@ -63,9 +65,8 @@ metadata {
     // Preferences
 	preferences {
 		input "ip", "text", title: "Arduino IP Address", description: "IP Address in form 192.168.1.226", required: true, displayDuringSetup: true
-		input "port", "text", title: "Arduino Port", description: "port in form of 8090", required: true, displayDuringSetup: true
-		input "mac", "text", title: "Arduino MAC Addr", description: "MAC Address in form of 02A1B2C3D4E5", required: true, displayDuringSetup: true
-		input "numButtons", "number", title: "Number of Buttons", description: "Number of Buttons, 0 to n", required: true, displayDuringSetup: true
+		input "port", "text", title: "Arduino Port", description: "port in form of 8090", defaultValue: "8090",required: true, displayDuringSetup: true
+        input "timeOut", "number", title: "Timeout in Seconds", description: "Max time w/o HubDuino update before setting device to 'not present'", defaultValue: "900", required: true, displayDuringSetup:true
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
     }
 }
@@ -78,16 +79,17 @@ def logsOff(){
 // parse events into attributes
 def parse(String description) {
 	if (logEnable) log.debug "description= '${description}'"
-	def msg = parseLanMessage(description)
+    def msg = parseLanMessage(description)
 	def headerString = msg.header
-
-	if (!headerString) {
-		//log.debug "headerstring was null for some reason :("
+    def mac = msg.mac  //needed for backwards compatability
+    
+    if (!headerString) {
+        //log.debug "headerstring was null for some reason :("
     }
 
-	def bodyString = msg.body
+    def bodyString = msg.body
 
-	if (bodyString) {
+    if (bodyString) {
         if (logEnable) log.debug "msg= $bodyString"
     	def parts = bodyString.split(" ")
     	def name  = parts.length>0?parts[0].trim():null
@@ -99,11 +101,34 @@ def parse(String description) {
 		
         def results = []
         
+        if (device.currentValue("presence") != "present") {
+            sendEvent(name: "presence", value: "present", isStateChange: true, descriptionText: "New update received from HubDuino device")
+        }
+        
+        if (timeOut != null) {
+            runIn(timeOut, timeOutHubDuino)
+        } else {
+            if (logEnable) log.info "Using 900 second default timeout.  Please set the timeout setting appropriately and then click save."
+            runIn(900, timeOutHubDuino)
+            //log.debug "updating timeOut value to default of 900"
+            //device.updateSetting("timeOut", [value: "900", type: "number"])
+        }
+        
 		if (name.startsWith("button")) {
             if (logEnable) log.debug "In parse:  name = ${name}, value = ${value}, btnNum = " + namenum
-        	results << createEvent(name: value, value: namenum, isStateChange: true)
-			if (logEnable) log.debug results
-			return results
+            if (state.numButtons < namenum.toInteger()) {
+                state.numButtons = namenum.toInteger()
+                sendEvent(name: "numberOfButtons", value: state.numButtons)
+            }
+            if ((value == "pushed") || (value == "held") || (value == "released")) {
+        	    results << createEvent(name: value, value: namenum, isStateChange: true)
+			    if (logEnable) log.debug results
+			    return results
+            } 
+            else 
+            {
+                return
+            }
         }
 
 		if (name.startsWith("rssi")) {
@@ -124,14 +149,13 @@ def parse(String description) {
 
             childDevices.each {
 				try{
-            		//log.debug "Looking for child with deviceNetworkID = ${device.deviceNetworkId}-${name} against ${it.deviceNetworkId}"
-                	if (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") {
-                	childDevice = it
-                    if (logEnable) log.debug "Found a match!!!"
+                	if ((it.deviceNetworkId == "${device.id}-${name}") || (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") || (it.deviceNetworkId == "${mac}-${name}")) {
+                	    childDevice = it
+                        if (logEnable) log.debug "Found a match!!!"
                 	}
             	}
             	catch (e) {
-            	log.error e
+                    log.error e
             	}
         	}
             
@@ -144,8 +168,7 @@ def parse(String description) {
             	//find child again, since it should now exist!
             	childDevices.each {
 					try{
-            			//if (logEnable) log.debug "Looking for child with deviceNetworkID = ${device.deviceNetworkId}-${name} against ${it.deviceNetworkId}"
-                		if (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") {
+                		if ((it.deviceNetworkId == "${device.id}-${name}") || (it.deviceNetworkId == "${device.deviceNetworkId}-${name}") || (it.deviceNetworkId == "${mac}-${name}")) {
                 			childDevice = it
                     		if (logEnable) log.debug "Found a match!!!"
                 		}
@@ -157,7 +180,6 @@ def parse(String description) {
         	}
             
             if (childDevice != null) {
-                //log.debug "parse() found child device ${childDevice.deviceNetworkId}"
                 childDevice.parse("${namebase} ${value}")
 				if (logEnable) log.debug "${childDevice.deviceNetworkId} - name: ${namebase}, value: ${value}"
             }
@@ -207,13 +229,6 @@ def sendEthernet(message) {
     }
 }
 
-// handle commands
-def configure() {
-	if (logEnable) log.debug "Executing 'configure()'"
-    updateDeviceNetworkID()
-	sendEvent(name: "numberOfButtons", value: numButtons)
-}
-
 def refresh() {
 	if (logEnable) log.debug "Executing 'refresh()'"
 	sendEthernet("refresh")
@@ -221,52 +236,46 @@ def refresh() {
 
 def installed() {
 	log.info "Executing 'installed()'"
-    if ( device.deviceNetworkId =~ /^[A-Z0-9]{12}$/)
-    {
-        if (numButtons) { sendEvent(name: "numberOfButtons", value: numButtons) }
-    }
-    else
-    {
-        log.warn "Parent HubDuino Ethernet Device has not been fully configured."
-    }
+    state.numButtons = 0
+    sendEvent(name: "numberOfButtons", value: state.numButtons)
+}
+
+def uninstalled() {
+    log.info "Executing 'uninstalled()'"
+    deleteAllChildDevices()
 }
 
 def initialize() {
 	log.info "Executing 'initialize()'"
-    sendEvent(name: "numberOfButtons", value: numButtons)
 }
 
 def updated() {
-	if (!state.updatedLastRanAt || now() >= state.updatedLastRanAt + 5000) {
-		state.updatedLastRanAt = now()
-		log.info "Executing 'updated()'"
-    	updateDeviceNetworkID()
-		sendEvent(name: "numberOfButtons", value: numButtons)
-        log.info "Hub IP Address = ${device.hub.getDataValue("localIP")}"
-        log.info "Hub Port = ${device.hub.getDataValue("localSrvPortTCP")}"
-	}
-	else {
-		log.warn "updated(): Ran within last 5 seconds so aborting."
-	}
+    log.info "Executing 'updated()'"
+    log.info "Hub IP Address = ${device.hub.getDataValue("localIP")}, Hub Port = ${device.hub.getDataValue("localSrvPortTCP")}"
+    log.info "Arduino IP Address = ${ip}, Hub Port = ${port}"
     
-    if (logEnable) runIn(1800,logsOff)
+    def iphex = convertIPtoHex(ip)
+    log.info "Setting DNI = ${iphex}"
+    device.setDeviceNetworkId("${iphex}")
+    
+    if (logEnable) {
+        log.info "Enabling Debug Logging for 30 minutes" 
+        runIn(1800,logsOff)
+    } else {
+        unschedule(logsoff)
+    }
+    
+    //Schedule inactivity timeout
+    log.info "Device inactivity timer started for ${timeOutHubDuino} seconds"
+    runIn(timeOut, timeOutHubDuino)
+    
+	//Have the Arduino send an updated value for every device attached.  This will auto-created child devices!
+    log.info "Sending REFRESH command to Arduino, which wilol create any missing child devices."
+    refresh()
 }
 
-def updateDeviceNetworkID() {
-	log.info "Executing 'updateDeviceNetworkID'"
-    def formattedMac = mac.toUpperCase()
-    formattedMac = formattedMac.replaceAll(":", "")
-    if(device.deviceNetworkId!=formattedMac) {
-        log.debug "setting deviceNetworkID = ${formattedMac}"
-        device.setDeviceNetworkId("${formattedMac}")
-	}
-    //Need deviceNetworkID updated BEFORE we can create Child Devices
-	//Have the Arduino send an updated value for every device attached.  This will auto-created child devices!
-	refresh()
-}
 
 private void createChildDevice(String deviceName, String deviceNumber) {
-    if ( device.deviceNetworkId =~ /^[A-Z0-9]{12}$/) {
     
 		log.info "createChildDevice:  Creating Child Device '${device.displayName} (${deviceName}${deviceNumber})'"
         
@@ -352,7 +361,7 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	log.error "No Child Device Handler case for ${deviceName}"
       		}
             if (deviceHandlerName != "") {
-         		addChildDevice(deviceHandlerName, "${device.deviceNetworkId}-${deviceName}${deviceNumber}",
+         		addChildDevice(deviceHandlerName, "${device.id}-${deviceName}${deviceNumber}",
          			[label: "${device.displayName} (${deviceName}${deviceNumber})", 
                 	 isComponent: false, 
                      name: "${deviceName}${deviceNumber}"])
@@ -361,10 +370,6 @@ private void createChildDevice(String deviceName, String deviceNumber) {
         	log.error "Child device creation failed with error = ${e}"
         	log.error "Child device creation failed. Please make sure that the '${deviceHandlerName}' is installed and published."
     	}
-	} else 
-    {
-        log.error "Parent Device has not yet been fully configured. Enter data for all user fields, and click 'Save'"
-    }
 }
 
 private boolean containsDigit(String s) {
@@ -378,7 +383,24 @@ private boolean containsDigit(String s) {
 }
 
 def deleteAllChildDevices() {
+    log.info "Uninstalling all Child Devices"
     getChildDevices().each {
           deleteChildDevice(it.deviceNetworkId)
        }
+}
+
+def timeOutHubDuino() {
+    //If the timeout expires before being reset, mark this Parent Device as 'not present' to allow action to be taken
+    sendEvent(name: "presence", value: "not present", isStateChange: true, descriptionText: "No update received from HubDuino device in past ${timeOut} seconds")
+}
+
+private String convertIPtoHex(ipAddress) { 
+    String hex = ipAddress.tokenize( '.' ).collect {  String.format( '%02x', it.toInteger() ) }.join()
+    return hex.toUpperCase()
+
+}
+
+private String convertPortToHex(port) {
+	String hexport = port.toString().format( '%04x', port.toInteger() )
+    return hexport.toUpperCase()
 }
