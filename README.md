@@ -1,4 +1,4 @@
-ST_Anything v2.9.6
+ST_Anything v2.9.7
 ================
 
 **WARNING** - You must use the SmartThings Classic App with ST_Anything. Without Hub Connected Device documentation from Samsung/SmartThings, I have no way to know how to support the new SmartThings (Connect) App.
@@ -6,6 +6,7 @@ ST_Anything v2.9.6
 **WARNING** - If using an ESP8266, make sure you are using v2.5.2 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anythign to crash after an hour or two) along with Arduino IDE 1.8.9.
 
 **Recent History:**
+- v2.9.7 - Minor Parent DTH change due to change in the IS_Button.cpp device
 - v2.9.6 - Added support for Arduino NANO33IoT
 - v2.9.5 - Added support for Arduino MKR1010, Arduino 1.8.9, ESP8266 v2.5.2, updated numerous libraries, etc...
 - v2.9.4 - Added support for the SHT31 (temp, humid) I2C sensor
@@ -15,7 +16,7 @@ ST_Anything v2.9.6
 
 ![screenshot](https://cloud.githubusercontent.com/assets/5206084/25318949/d00b08b4-2865-11e7-82f6-9a355bb9082b.PNG)
 
-Note: ST_Anything v2.9.5 was built using the Arduino IDE v1.8.9.  Please make sure to upgrade your IDE.
+Note: ST_Anything v2.9.7 was built using the Arduino IDE v1.8.9.  Please make sure to upgrade your IDE.
 
 Turn your Arduino UNO/MEGA/MKR1000/MKR1010/NANO33IoT, ESP8266, or ESP32 into Anything you can imagine! ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
