@@ -19,6 +19,7 @@
 //              - double ICAL - REQUIRED - EmonLib Calibration Constant
 //				- unsigned int numSamples - OPTIONAL - defaults to 1480, number of analog readings to use for calculating the Irms Current
 //              - float voltage - OPTIONAL - defaults to 120, AC voltage of the mains line being monitored
+//				- byte filterConstant - OPTIONAL - Value from 5% to 100% to determine how much filtering/averaging is performed 100 = none (default), 5 = maximum
 //
 //			  TODO:  Determine a method to persist the ST Cloud's Polling Interval data
 //
@@ -27,6 +28,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2019-02-17  Dan Ogorchock  Original Creation
+//    2019-09-19  Dan Ogorchock  Added filtering optional argument to help reduce noisy signals
 //
 //
 //******************************************************************************************
@@ -48,10 +50,11 @@ namespace st
 			float m_fVoltage;
 			double m_fIrms; 
 			double m_fApparentPower;
+			float m_fFilterConstant;        //Filter constant % as floating point from 0.00 to 1.00
 
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			PS_Power(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, double ICAL, unsigned int NumSamples=1480, float voltage=120.0);
+			PS_Power(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, double ICAL, unsigned int NumSamples=1480, float voltage=120.0, byte filterConstant = 100);
 			
 			//destructor
 			virtual ~PS_Power();

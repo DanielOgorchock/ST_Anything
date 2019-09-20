@@ -19,6 +19,7 @@
 //              - double ICAL - REQUIRED - EmonLib Calibration Constant
 //				- unsigned int numSamples - OPTIONAL - defaults to 1480, number of analog readings to use for calculating the Irms Current
 //              - float voltage - OPTIONAL - defaults to 120, AC voltage of the mains line being monitored
+//				- byte filterConstant - OPTIONAL - Value from 5% to 100% to determine how much filtering/averaging is performed 100 = none (default), 5 = maximum
 //
 //			  TODO:  Determine a method to persist the ST Cloud's Polling Interval data
 //
@@ -27,6 +28,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2019-02-17  Dan Ogorchock  Original Creation
+//    2019-09-19  Dan Ogorchock  Added filtering optional argument to help reduce noisy signals
 //
 //
 //******************************************************************************************
@@ -42,7 +44,7 @@ namespace st
 
 //public
 	//constructor - called in your sketch's global variable declaration section
-	PS_Power::PS_Power(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, double ICAL, unsigned int NumSamples, float voltage) :
+	PS_Power::PS_Power(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, double ICAL, unsigned int NumSamples, float voltage, byte filterConstant) :
 		PollingSensor(name, interval, offset),
 		emon1(),
 		m_nAnalogInputPin(analogInputPin),
@@ -53,6 +55,20 @@ namespace st
 		m_fVoltage(voltage)
 	{
 		setPin(analogInputPin);
+
+		//check for upper and lower limit and adjust accordingly
+		if ((filterConstant <= 0) || (filterConstant >= 100))
+		{
+			m_fFilterConstant = 1.0;
+		}
+		else if (filterConstant <= 5)
+		{
+			m_fFilterConstant = 0.05;
+		}
+		else
+		{
+			m_fFilterConstant = float(filterConstant) / 100;
+		}
 
 		emon1.current(m_nAnalogInputPin, m_fICAL);             // Current: input pin, calibration.
 	}
@@ -72,6 +88,8 @@ namespace st
 		m_fIrms = emon1.calcIrms(m_nNumSamples);
 		m_fIrms = emon1.calcIrms(m_nNumSamples);
 		m_fIrms = emon1.calcIrms(m_nNumSamples);
+
+		m_fApparentPower = m_fIrms * m_fVoltage; //Calcuate Apparent Power
 
 		//Send initial data to ST/Hubitat
 		getData();
@@ -102,9 +120,13 @@ namespace st
 	//function to get data from sensor and queue results for transfer to ST/Hubitat 
 	void PS_Power::getData()
 	{
+		double tempValue = 0;
+
 		m_fIrms = emon1.calcIrms(m_nNumSamples);  // Calculate Irms only
 
-		m_fApparentPower = m_fIrms * m_fVoltage; //Calcuate Apparent Power
+		tempValue = m_fIrms * m_fVoltage; //Calcuate Apparent Power
+
+		m_fApparentPower = (m_fFilterConstant * tempValue) + (1 - m_fFilterConstant) * m_fApparentPower;
 
 		Everything::sendSmartString(getName() + " " + String(m_fApparentPower));
 	}
