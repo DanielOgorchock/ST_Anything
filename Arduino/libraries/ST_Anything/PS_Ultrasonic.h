@@ -1,5 +1,5 @@
 //******************************************************************************************
-//  File: PS_Ultrasonic.cpp
+//  File: PS_Ultrasonic.h
 //  Authors: 
 //
 //  Summary:  PS_Ultrasonic is a class which implements a custom Level device capability.
