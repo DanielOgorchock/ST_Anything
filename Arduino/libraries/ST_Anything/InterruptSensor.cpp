@@ -12,6 +12,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //	  2015-03-17  Dan			 Added optional "numReqCounts" constructor argument/capability
+//    2019-09-22  Dan Ogorchock  ESP8266 support for using A0 pin as a digital input
 //
 //
 //******************************************************************************************
@@ -32,10 +33,18 @@ namespace st
 #if defined(ARDUINO_ARCH_ESP8266)
             if (m_nInterruptPin == A0) 
 			{
-                inputState = (analogRead(A0) > 512);
+				if (m_nLoopCounter == 1000) {				//reading an analog input every pass through loop() is too slow
+					inputState = analogRead(A0) > 512 ? HIGH : LOW;
+					m_nLoopCounter = 0;
+				}
+				else {
+					m_nLoopCounter++;
+					return;
+				}
 			}
-            else
-                inputState = digitalRead(m_nInterruptPin);
+			else {
+				inputState = digitalRead(m_nInterruptPin);
+			}
 #else
             inputState = digitalRead(m_nInterruptPin);
 #endif
@@ -73,7 +82,8 @@ namespace st
 		m_bInitRequired(true),
 		m_nRequiredCounts(numReqCounts),
 		m_nCurrentUpCount(0),
-		m_nCurrentDownCount(numReqCounts)
+		m_nCurrentDownCount(numReqCounts),
+		m_nLoopCounter(0)
 		{
 			setInterruptPin(pin);
 		}

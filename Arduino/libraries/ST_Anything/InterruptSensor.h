@@ -12,6 +12,7 @@
 //    ----        ---            ----
 //    2015-01-03  Dan & Daniel   Original Creation
 //	  2015-03-17  Dan			 Added optional "numReqCounts" constructor argument/capability
+//    2019-09-22  Dan Ogorchock  ESP8266 support for using A0 pin as a digital input
 //
 //
 //******************************************************************************************
@@ -34,6 +35,7 @@ namespace st
 			long m_nRequiredCounts;	//Number of required counts (checks of the pin) before believing the pin is high/low
 			long m_nCurrentUpCount;
 			long m_nCurrentDownCount;
+			long m_nLoopCounter;
 
 			void checkIfTriggered(); 
 			
