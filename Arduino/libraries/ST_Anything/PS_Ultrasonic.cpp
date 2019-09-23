@@ -7,7 +7,7 @@
 //
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_Ultrasonic sensor1("ultrasonic1", 60, 0, PIN_ULTRASONIC_T, PIN_ULTRASONIC_E);
+//			  For Example:  st::PS_Ultrasonic sensor1(F("ultrasonic1"), 60, 0, PIN_ULTRASONIC_T, PIN_ULTRASONIC_E);
 //
 //			  st::PS_Ultrasonic() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
