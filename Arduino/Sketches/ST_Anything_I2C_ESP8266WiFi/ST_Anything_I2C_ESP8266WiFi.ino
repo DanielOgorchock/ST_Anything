@@ -17,6 +17,7 @@
 //              - 1 x TSL2561 Illuminance sensor
 //              - 1 x MAX44009 Illuminance sensor
 //              - 1 x BH1750 Illuminance sensor
+//              - 1 x VEML7700 Illuminance sensor
 //    
 //  Change History:
 //
@@ -65,6 +66,7 @@
 #include <PS_AdafruitTSL2561_Illuminance.h>   //Implements a Polling Sensor (PS) to measure Illuminance using TSL2561 via I2C
 #include <PS_MAX44009_Illuminance.h>          //Implements a Polling Sensor (PS) to measure Illuminance using MAX44009 via I2C
 #include <PS_BH1750_Illuminance.h>            //Implements a Polling Sensor (PS) to measure Illuminance using BH1750 via I2C
+#include <PS_AdafruitVEML7700_Illuminance.h>  //Implements a Polling Sensor (PS) to measure Illuminance using VEML7700 via I2C
 
 //*************************************************************************************************
 //NodeMCU v1.0 ESP8266-12e Pin Definitions (makes it much easier as these match the board markings)
@@ -150,13 +152,14 @@ void setup()
 
   //Polling Sensors (eaxmples of various I2C sensors supported in ST_Anything)
 //  static st::PS_AdafruitBME280_TempHumidPress sensor1(F("BME280_1"), 60, 0, "temperature1", "humidity1", "pressure1", false, 100, 0x76);  //both BME280 and BMP280 use address 0x77 - only use one at a time
-//  static st::PS_AdafruitBMP280_TempPress sensor2(F("BMP280_1"), 60, 10, "temperature2", "pressure2", false, 100, 0x77);  //both BME280 and BMP280 use address 0x77 - only use one at a time
-//  static st::PS_AdafruitAM2320_TempHumid sensor3(F("AM2320_1"), 60, 20, "temperature3", "humidity3", false, 100);  
-  static st::PS_AdafruitSHT31_TempHumid sensor4(F("SHT31_1"), 60, 25, "temperature4", "humidity4", false, 100, 0x44);  
-//  static st::PS_AdafruitTCS34725_Illum_Color sensor5(F("illuminancergb1"), 60, 30, TCS34725_INTEGRATIONTIME_154MS, TCS34725_GAIN_4X);
-//  static st::PS_AdafruitTSL2561_Illuminance sensor6(F("illuminance1"), 60, 40, TSL2561_ADDR_FLOAT, TSL2561_INTEGRATIONTIME_13MS, TSL2561_GAIN_1X); 
-//  static st::PS_MAX44009_Illuminance sensor7(F("illuminance2"), 60, 50, MAX44009_A0_LOW); 
-//  static st::PS_BH1750_Illuminance sensor8(F("illuminance3"), 60, 55, BH1750_ADDR_LOW); 
+//  static st::PS_AdafruitBMP280_TempPress sensor2(F("BMP280_1"), 60, 5, "temperature2", "pressure2", false, 100, 0x77);  //both BME280 and BMP280 use address 0x77 - only use one at a time
+//  static st::PS_AdafruitAM2320_TempHumid sensor3(F("AM2320_1"), 60, 10, "temperature3", "humidity3", false, 100);  
+// static st::PS_AdafruitSHT31_TempHumid sensor4(F("SHT31_1"), 60, 15, "temperature4", "humidity4", false, 100, 0x44);  
+//  static st::PS_AdafruitTCS34725_Illum_Color sensor5(F("illuminancergb1"), 60, 20, TCS34725_INTEGRATIONTIME_154MS, TCS34725_GAIN_4X);
+//  static st::PS_AdafruitTSL2561_Illuminance sensor6(F("illuminance1"), 60, 25, TSL2561_ADDR_FLOAT, TSL2561_INTEGRATIONTIME_13MS, TSL2561_GAIN_1X); 
+//  static st::PS_MAX44009_Illuminance sensor7(F("illuminance2"), 60, 30, MAX44009_A0_LOW); 
+//  static st::PS_BH1750_Illuminance sensor8(F("illuminance3"), 60, 35, BH1750_ADDR_LOW); 
+  static st::PS_AdafruitVEML7700_Illuminance sensor9(F("illuminance4"), 60, 40, VEML7700_IT_50MS, VEML7700_GAIN_1_8); 
 
   
   //Executors
@@ -196,12 +199,13 @@ void setup()
 //  st::Everything::addSensor(&sensor1);  //if uncommented, must comment out sensor2 below as they both use same I2C address by default
 //  st::Everything::addSensor(&sensor2);  //if uncommented, must comment out sensor1 above as they both use same I2C address by default
 //  st::Everything::addSensor(&sensor3);
-  st::Everything::addSensor(&sensor4); 
+//  st::Everything::addSensor(&sensor4); 
 //  st::Everything::addSensor(&sensor5); 
 //  st::Everything::addSensor(&sensor6); 
 //  st::Everything::addSensor(&sensor7);
 //  st::Everything::addSensor(&sensor8);
-             
+  st::Everything::addSensor(&sensor9);
+
   //*****************************************************************************
   //Add each executor to the "Everything" Class
   //*****************************************************************************
