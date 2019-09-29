@@ -64,6 +64,7 @@ This package currently implements the following SmartThings Device Capabilities:
 - Illuminance Measurement (using a TSL2561 I2C sensor)
 - Illuminance Measurement (using a MAX44009 I2C sensor)
 - Illuminance Measurement (using a BH1750 I2C sensor)
+- Illuminance Measurement (using a VEML7700 I2C sensor)
 - Illuminance Measurement (using a Color TCS34725 I2C sensor)
 - Temperature Measurement (using a AM2320 I2C sensor)
 - Relative Humidity  Measurement (using a AM2320 I2C sensor)
