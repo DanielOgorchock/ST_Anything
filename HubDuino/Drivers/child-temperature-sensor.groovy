@@ -27,6 +27,7 @@
  *    2019-02-10  Dan Ogorchock  Added temperature units for display on the Hubitat Dashboard
  *    2019-03-06  Dan Ogorchock  Improved rounding
  *    2019-07-01  Dan Ogorchock  Added importUrl
+ *    2019-10-30  Dan Ogorchock  Fixed type conversion error found by @kuzenkohome
  * 
  */
 metadata {
@@ -94,11 +95,7 @@ def parse(String description) {
 	def dispUnit = "°F"
     if (name && value) {
     	// Offset the temperature based on preference
-        float tmpValue = Float.parseFloat(value)
-        
-        if (tempOffset) {
-            tmpValue = tmpValue + tempOffset
-        }
+        float tmpValue = Float.parseFloat(value)    
 
         if (tempUnitConversion == "2") {
             //if (logEnable) log.debug "tempUnitConversion = ${tempUnitConversion}"
@@ -110,6 +107,10 @@ def parse(String description) {
             //if (logEnable) log.debug "tempUnitConversion = ${tempUnitConversion}"
             tmpValue = celsiusToFahrenheit(tmpValue)  //convert from Celsius to Fahrenheit
             dispUnit = "°F"
+        }
+        
+        if (tempOffset) {
+            tmpValue = tmpValue + tempOffset.toFloat()
         }
 
         // Update device
