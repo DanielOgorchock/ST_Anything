@@ -19,6 +19,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2019-10-30  Dan Ogorchock  Original Creation
+ *    2019-10-31  Dan Ogorchock  Cleaned up
  *
  * 
  */
@@ -31,27 +32,10 @@ metadata {
 //		attribute "lastUpdated", "String"
 	}
 
-	simulator {
-
-	}
-
     preferences {
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
 	}
 
-	tiles(scale: 2) {
-		multiAttributeTile(name:"switch", type: "lighting", width: 3, height: 4, canChangeIcon: true){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-				attributeState "off", label: '${name}', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff", nextState:"turningOn"
-				attributeState "on", label: '${name}', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#00A0DC", nextState:"turningOff"
-				attributeState "turningOn", label:'${name}', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#00A0DC", nextState:"turningOff"
-				attributeState "turningOff", label:'${name}', action:"switch.on", icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-		}
-	}
 }
 
 def open() {
