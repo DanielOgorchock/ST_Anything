@@ -43,7 +43,8 @@
  *    2019-07-08  Dan Ogorchock  Added support for Sound Pressure Level device
  *    2019-09-01  Dan Ogorchock  Added Presence Capability to know if the HubDuino device is online or offline
  *    2019-09-04  Dan Ogorchock  Automatically detect maximum number of buttons and set numberOfButtons attribute accordingly
- *    2019-09-04  Dan Ogorchock  Eliminate the need for user to supply MAC address of the Arduino. Configure the Parent DNI to use Arduino IP Address instead. 
+ *    2019-09-04  Dan Ogorchock  Eliminate the need for user to supply MAC address of the Arduino. Configure the Parent DNI to use Arduino IP Address instead.
+ *    2019-10-30  Dan Ogorchock  Added Child Valve
  *	
  */
  
@@ -356,6 +357,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	break
          		case "soundPressureLevel": 
                 		deviceHandlerName = "Child Sound Pressure Level" 
+                	break        
+         		case "valve": 
+                		deviceHandlerName = "Child Valve" 
                 	break        
 			default: 
                 	log.error "No Child Device Handler case for ${deviceName}"
