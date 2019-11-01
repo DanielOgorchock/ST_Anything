@@ -26,6 +26,7 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-03-05  Dan Ogorchock  Improved Rounding
  *    2019-07-01  Dan Ogorchock  Added importUrl
+ *    2019-10-30  Dan Ogorchock  Fixed type conversion error found by @kuzenkohome
  *
  * 
  */
@@ -87,7 +88,7 @@ def parse(String description) {
         // Offset the humidity based on preference
         float tmpValue = Float.parseFloat(value)
         if (humidityOffset) {
-            tmpValue = tmpValue + humidityOffset
+            tmpValue = tmpValue + humidityOffset.toFloat()
         }
         // Update device
         tmpValue = tmpValue.round(1)
