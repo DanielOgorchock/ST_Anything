@@ -271,7 +271,7 @@ def updated() {
     runIn(timeOut, timeOutHubDuino)
     
 	//Have the Arduino send an updated value for every device attached.  This will auto-created child devices!
-    log.info "Sending REFRESH command to Arduino, which wilol create any missing child devices."
+    log.info "Sending REFRESH command to Arduino, which will create any missing child devices."
     refresh()
 }
 
