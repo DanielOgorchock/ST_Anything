@@ -8,7 +8,7 @@
 //			  temperature, humidity, and pressure from a BME280 series sensor using the Adafruit_BME280 library.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::PS_AdafruitBME280_TempHumidPress sensor2("bme280_1", 60, 0, "temperature1", "humidity1", "pressure1", false, 100, 0x77);
+//			  For Example:  st::PS_AdafruitBME280_TempHumidPress sensor2(F("bme280_1"), 60, 0, "temperature1", "humidity1", "pressure1", false, 100, 0x77);
 //
 //			  st::PS_AdafruitBME280_TempHumidPress() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must be unique, but is not used for data transfer for this device
@@ -17,7 +17,7 @@
 //				- String strTemp - REQUIRED - name of temperature sensor to send to ST Cloud (e.g."temperature1")
 //				- String strHumid - REQUIRED - name of humidity sensor to send to ST Cloud (e.g. "humidity1")
 //				- String strPressure - REQUIRED - name of pressure sensor to send to ST Cloud (e.g. "pressure1")
-//				- bool In_C - OPTIONAL - true = Report Celsius, false = Report Farenheit (Farentheit is the default)
+//				- bool In_C - OPTIONAL - true = Report Celsius, false = Report Fahrenheit (Fahrenheit is the default)
 //				- byte filterConstant - OPTIONAL - Value from 5% to 100% to determine how much filtering/averaging is performed 100 = none (default), 5 = maximum
 //              - int address - OPTIONAL - I2C address of the sensor (defaults to 0x77 for the BME280)
 //
