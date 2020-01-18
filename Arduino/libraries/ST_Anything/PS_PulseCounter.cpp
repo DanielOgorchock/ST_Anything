@@ -32,7 +32,8 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2015-03-31  Dan Ogorchock  Original Creation
-//    2018-03-03  Dan Ogorchock  Improved code to make generic for all boards, not just Arduino MEGA 
+//    2018-03-03  Dan Ogorchock  Improved code to make generic for all boards, not just Arduino MEGA
+//    2020-01-17  Dan Ogorchock  Improved support for ESP8266 using Arduino IDE Board Manager 2.5.1 and newer
 //
 //
 //******************************************************************************************
@@ -51,8 +52,12 @@ namespace st
 	volatile unsigned long m_nCounts; //current count of interrupts (pulses)
 
 	//These are the four Interrupt Service Routines (ISR) which must be unique for each interrupt
-	void isrPulse() {
-		m_nCounts++;
+#if defined(ARDUINO_ARCH_ESP8266)
+	void ICACHE_RAM_ATTR isrPulse() {
+#else 
+void isrPulse() {
+#endif
+	m_nCounts++;
 	}
 
 //public
