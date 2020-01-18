@@ -22,6 +22,7 @@
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-07-01  Dan Ogorchock  Added importUrl
+ *    2019-12-17  Dan Ogorchock  Suppress debug logging based on user setting
  * 
  */
 metadata {
@@ -75,7 +76,7 @@ def parse(String description) {
         if (value.isNumber()) {
             sendEvent(name: "level", value: value)
             if (presenceTriggerValue) {
-                log.debug "Presence received a numeric value. Perform comparison of value: ${Float.valueOf(value.trim())} versus presenceTriggerValue: ${presenceTriggerValue}"
+                if (logEnable) log.debug "Presence received a numeric value. Perform comparison of value: ${Float.valueOf(value.trim())} versus presenceTriggerValue: ${presenceTriggerValue}"
                 if (Float.valueOf(value.trim()) >= presenceTriggerValue) {
                     value = invertTriggerLogic?"not present":"present"
                 } 
@@ -88,7 +89,7 @@ def parse(String description) {
             }
         }
         else {
-            log.debug "Presence received a string.  value = ${value}"
+            if (logEnable) log.debug "Presence received a string.  value = ${value}"
             if (value != "present") { value = "not present" }
         }
         // Update device
