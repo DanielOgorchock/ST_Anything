@@ -10,6 +10,7 @@ SmartThingsESP8266WiFi	KEYWORD1
 SmartThingsESP32WiFi	KEYWORD1
 SmartThingsWiFiEsp	KEYWORD1
 SmartThingsWiFi101	KEYWORD1
+SmartThingsWiFiNINA     KEYWORD1
 SmartThingsCallout_t	KEYWORD1 
 SmartThingsNetworkState_t	KEYWORD1
 
