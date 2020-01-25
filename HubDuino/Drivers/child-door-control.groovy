@@ -24,6 +24,7 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-07-01  Dan Ogorchock  Added importUrl
  *    2019-07-28  Dan Ogorchock  Minor tweak to support option for a switch output instead of just a momentary output - requires updated Arduino Door Control Code!!!
+ *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  *
  *
  */
@@ -39,31 +40,9 @@ metadata {
 		attribute "lastUpdated", "String"
 	}
 
-	simulator {
-
+    preferences {
+        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
 	}
-
-	tiles(scale: 2) {
-		multiAttributeTile(name:"door", type: "generic"){
-			tileAttribute ("device.door", key: "PRIMARY_CONTROL") {
-               		attributeState "open", label: 'Open', action: "doorControl.close", icon: "st.doors.garage.garage-open", backgroundColor: "#e86d13", nextState: "open"
-                	attributeState "closed", label: 'Closed', action: "doorControl.open", icon: "st.doors.garage.garage-closed", backgroundColor: "#00a0dc", nextState: "closed"
-                	attributeState "opening", label: 'Opening', action: "doorControl.close", icon: "st.doors.garage.garage-opening", backgroundColor: "#e86d13", nextState: "closing"
-                	attributeState "closing", label: 'Closing', action: "doorControl.open", icon: "st.doors.garage.garage-closing", backgroundColor: "#00a0dc", nextState: "opening"
-            	}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-        }		
-        
-		standardTile("contact", "device.contact", width: 2, height: 2) {
-			state("open", label:'${name}', icon:"st.contact.contact.open", backgroundColor:"#e86d13")
-			state("closed", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#00a0dc")
-		}
-        
- 		main (["door", "contact"])
-		details (["door", "contact"])
-    }
 }
 
 def logsOff(){
@@ -97,14 +76,10 @@ def parse(String description) {
     if (name && value) {
         // Update device
         sendEvent(name: "door", value: value)
-        // Also update the "Contact Sensor" device as this is useful for SmartApps that do not support the "Door Control" capability
+        // Also update the "Contact Sensor" device as this is useful for Apps that do not support the "Door Control" capability
         if((value == "open") || (value == "closed")) {
             sendEvent(name: "contact", value: value)
         }
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"

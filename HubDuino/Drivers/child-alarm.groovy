@@ -24,6 +24,7 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-02-03  Dan Ogorchock  Fixed debug logging bug
  *    2019-07-01  Dan Ogorchock  Added importUrl
+ *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  *
  * 
  */
@@ -33,54 +34,11 @@ metadata {
 		capability "Alarm"
 		capability "Switch"
 
-		attribute "lastUpdated", "String"
-
 		command "test"
-	}
-
-	simulator {
-
 	}
 
     preferences {
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
-	}
-
-	tiles(scale: 2) {
-        multiAttributeTile(name:"alarm", type: "generic", width: 6, height: 4){
-            tileAttribute ("device.alarm", key: "PRIMARY_CONTROL") {
-                attributeState "off", label:'off', action:'alarm.both', icon:"st.alarm.alarm.alarm", backgroundColor:"#ffffff"
-                attributeState "both", label:'alarm!', action:'alarm.off', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
-                attributeState "strobe", label:'strobe!', action:'alarm.off', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
-                attributeState "siren", label:'siren!', action:'alarm.off', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
-    		}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-	}
-        standardTile("siren", "device.alarm", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-//            state "default", label:'', action:"alarm.siren", icon:"st.secondary.siren"
-			state "off", label:'', action:"alarm.siren", icon:"st.secondary.siren", backgroundColor:"#ffffff"
-			state "strobe", label:'', action:"alarm.siren", icon:"st.secondary.siren", backgroundColor:"#ffffff"
-			state "siren", label:'', action:'alarm.off', icon:"st.secondary.siren", backgroundColor:"#e86d13"
-			state "both", label:'', action:'alarm.siren', icon:"st.secondary.siren", backgroundColor:"#e86d13"
-        }
-        standardTile("strobe", "device.alarm", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-//            state "default", label:'', action:"alarm.strobe", icon:"st.secondary.strobe"
-			state "off", label:'', action:"alarm.strobe", icon:"st.secondary.strobe", backgroundColor:"#ffffff"
-			state "siren", label:'', action:"alarm.strobe", icon:"st.secondary.strobe", backgroundColor:"#ffffff"
-			state "strobe", label:'', action:'alarm.off', icon:"st.secondary.strobe", backgroundColor:"#e86d13"
-			state "both", label:'', action:'alarm.strobe', icon:"st.secondary.strobe", backgroundColor:"#e86d13"
-		}
-        standardTile("off", "device.alarm", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:'', action:"alarm.off", icon:"st.secondary.off"
-        }
-        standardTile("test", "device.alarm", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:'', action:"test", icon:"st.secondary.test"
-        }
-
-        main "alarm"
-        details(["alarm", "siren", "strobe", "off", "test"])
 	}
 }
 
@@ -127,10 +85,6 @@ def parse(String description) {
     if (name && value) {
         // Update device
         sendEvent(name: name, value: value)
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"

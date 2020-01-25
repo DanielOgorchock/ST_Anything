@@ -60,9 +60,6 @@ metadata {
         //command "deleteAllChildDevices"
 	}
 
-    simulator {
-    }
-
     // Preferences
 	preferences {
 		input "ip", "text", title: "Arduino IP Address", description: "IP Address in form 192.168.1.226", required: true, displayDuringSetup: true

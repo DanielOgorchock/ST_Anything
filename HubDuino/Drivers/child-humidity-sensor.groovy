@@ -27,6 +27,7 @@
  *    2019-03-05  Dan Ogorchock  Improved Rounding
  *    2019-07-01  Dan Ogorchock  Added importUrl
  *    2019-10-30  Dan Ogorchock  Fixed type conversion error found by @kuzenkohome
+ *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  *
  * 
  */
@@ -34,43 +35,13 @@ metadata {
     definition (name: "Child Humidity Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-humidity-sensor.groovy") {
         capability "Relative Humidity Measurement"
         capability "Sensor"
-	
-        attribute "lastUpdated", "String"
-    }
-
-    simulator {
-
     }
     
     preferences {
         section("Prefs") {
-//          input title: "Humidity Offset", description: "This feature allows you to correct any humidity variations by selecting an offset. Ex: If your sensor consistently reports a humidity that's 6% higher then a similiar calibrated sensor, you'd enter \"-6\".", displayDuringSetup: false, type: "paragraph", element: "paragraph"
             input "humidityOffset", "number", title: "Humidity Offset in Percent", description: "Adjust humidity by this percentage", range: "*..*", displayDuringSetup: false
             input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
         }
-    }
-
-    tiles(scale: 2) {
-        multiAttributeTile(name: "humidity", type: "generic", width: 6, height: 4, canChangeIcon: true) {
-            tileAttribute("device.humidity", key: "PRIMARY_CONTROL") {
-                attributeState("humidity", label:'${currentValue}%', unit:"%", defaultState: true,
-                    backgroundColors:[
-                        [value: 0, color: "#635C0C"],
-                        [value: 16, color: "#EBEB21"],
-                        [value: 22, color: "#C7DE6A"],
-                        [value: 42, color: "#9AD290"],
-                        [value: 64, color: "#44B621"],
-                        [value: 80, color: "#3D79D9"],
-                        [value: 96, color: "#0A50C2"]
-                    ])
-                }
-                
-            tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-                attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-             }
-        }
-        main(["humidity"])
-        details(["humidity", "lastUpdated"])
     }
 }
 
@@ -93,10 +64,6 @@ def parse(String description) {
         // Update device
         tmpValue = tmpValue.round(1)
         sendEvent(name: name, value: tmpValue)
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"

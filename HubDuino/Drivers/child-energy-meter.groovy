@@ -20,33 +20,17 @@
  *    ----        ---            ----
  *    2019-02-05  Dan Ogorchock  Original Creation
  *    2019-07-01  Dan Ogorchock  Added importUrl
+ *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  * 
  */
 metadata {
 	definition (name: "Child Energy Meter", namespace: "ogiewon", author: "Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-energy-meter.groovy") {
 		capability "Energy Meter"
 		capability "Sensor"
-
-		attribute "lastUpdated", "String"
-	}
-
-	simulator {
-
 	}
     
 	preferences {
             input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
-	}
-    
-	tiles(scale: 2) {
-		multiAttributeTile(name: "energy", type: "generic", width: 6, height: 4, canChangeIcon: true) {
-			tileAttribute("device.energy", key: "PRIMARY_CONTROL") {
-				attributeState("default", label: '${currentValue}', unit:"kWh", defaultState: true)
-			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-		}
 	}
 }
 
@@ -63,10 +47,6 @@ def parse(String description) {
     if (name && value) {
         // Update device
         sendEvent(name: name, value: value)
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.warn "Missing either name or value.  Cannot parse!"

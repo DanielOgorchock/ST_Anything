@@ -22,33 +22,17 @@
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-07-01  Dan Ogorchock  Added importUrl
+ *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  * 
  */
 metadata {
 	definition (name: "Child Power Meter", namespace: "ogiewon", author: "Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-power-meter.groovy") {
 		capability "Power Meter"
 		capability "Sensor"
-
-		attribute "lastUpdated", "String"
 	}
-
-	simulator {
-
-	}
-    
+   
     preferences {
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
-	}
-
-	tiles(scale: 2) {
-		multiAttributeTile(name: "power", type: "generic", width: 6, height: 4, canChangeIcon: true) {
-			tileAttribute("device.power", key: "PRIMARY_CONTROL") {
-				attributeState("default", label: '${currentValue}', unit:"W", defaultState: true)
-			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-		}
 	}
 }
 
@@ -65,10 +49,6 @@ def parse(String description) {
     if (name && value) {
         // Update device
         sendEvent(name: name, value: value)
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"

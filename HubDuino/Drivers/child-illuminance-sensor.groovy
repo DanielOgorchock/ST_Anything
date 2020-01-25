@@ -24,6 +24,7 @@
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-07-01  Dan Ogorchock  Added importUrl
+ *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  *
  * 
  */
@@ -31,34 +32,10 @@ metadata {
 	definition (name: "Child Illuminance Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-illuminance-sensor.groovy") {
 		capability "Illuminance Measurement"
 		capability "Sensor"
-        
-        attribute "lastUpdated", "String"
 	}
 
-	simulator {
-
-	}
-    
     preferences {
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
-	}
-
-	tiles(scale: 2) {
-		multiAttributeTile(name: "illuminance", type: "generic", width: 6, height: 4, canChangeIcon: true) {
-			tileAttribute("device.illuminance", key: "PRIMARY_CONTROL") {
-				attributeState("illuminance", label: '${currentValue} ${unit}', unit:"lux", defaultState: true, 
-						backgroundColors: [
-							[value: 9, color: "#767676"],
-							[value: 315, color: "#ffa81e"],
-							[value: 1000, color: "#fbd41b"]
-						])
-			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-             		}
-		}
-		main(["illuminance"])
-        details(["illuminance", "lastUpdated"])
 	}
 }
 
@@ -75,10 +52,6 @@ def parse(String description) {
     if (name && value) {
         // Update device
         sendEvent(name: name, value: value)
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"

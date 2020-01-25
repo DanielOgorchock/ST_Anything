@@ -23,6 +23,7 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-07-01  Dan Ogorchock  Added importUrl
  *    2019-12-17  Dan Ogorchock  Suppress debug logging based on user setting
+ *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  * 
  */
 metadata {
@@ -30,35 +31,13 @@ metadata {
 		capability "Sensor"
 		capability "Presence Sensor"
 
-		attribute "lastUpdated", "String"
         attribute "level", "Number"
 	}
-
-	simulator {
-
-	}
-    
+   
 	preferences {
-		section("Prefs") {
-			input "presenceTriggerValue", "number", title: "(Optional) Presence Trigger Value\nAt what value is presence triggered?", required: false, displayDuringSetup: false
-            input "invertTriggerLogic", "bool", title: "(Optional) Invert Logic", description: "False = Present > Trigger Value\nTrue = Present < Trigger Value", default: false, required: false, displayDuringSetup: false
-            input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
-		}
-	}
-
-	tiles(scale: 2) {
-		multiAttributeTile(name: "presence", type: "generic", width: 2, height: 2, canChangeBackground: true) {
-			tileAttribute ("device.presence", key: "PRIMARY_CONTROL") {
-            	attributeState "present", label: 'Present', icon:"st.tesla.tesla-car", backgroundColor:"#00A0DC"
-				attributeState "not present", label: 'Away', icon:"st.doors.garage.garage-open", backgroundColor:"#ffffff"
-            }
- 			tileAttribute("device.level", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Level ${currentValue}')
-            }
-		}
-        valueTile("lastUpdated", "device.lastUpdated", inactiveLabel: false, decoration: "flat", width: 6, height: 2) {
-    			state "default", label:'Last Updated ${currentValue}', backgroundColor:"#ffffff"
-		}
+        input "presenceTriggerValue", "number", title: "(Optional) Presence Trigger Value\nAt what value is presence triggered?", required: false, displayDuringSetup: false
+        input "invertTriggerLogic", "bool", title: "(Optional) Invert Logic", description: "False = Present > Trigger Value\nTrue = Present < Trigger Value", default: false, required: false, displayDuringSetup: false
+        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
 	}
 }
 
@@ -94,10 +73,6 @@ def parse(String description) {
         }
         // Update device
         sendEvent(name: name, value: value)
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)    
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"

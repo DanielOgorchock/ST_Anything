@@ -22,38 +22,18 @@
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-07-01  Dan Ogorchock  Added importUrl
+ *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  * 
  */
 metadata {
 	definition (name: "Child Generic Sensor", namespace: "ogiewon", author: "Allan (vseven) - based on code by Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-generic-sensor.groovy") {
 		capability "Sensor"
 
-		attribute "lastUpdated", "String"
 		attribute "genericValue", "String"
-	}
-
-	simulator {
-
 	}
 
     preferences {
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
-	}
-
-	tiles(scale: 2) {
-		multiAttributeTile(name: "primaryTile", type: "generic", width: 6, height: 4, canChangeIcon: true) {
-			tileAttribute("device.genericValue", key: "PRIMARY_CONTROL") {
-				attributeState("genericValue", label: '${currentValue}')
-			}
-			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-			}
-		}
-
-		// Since this is a generic DTH there is only the main tile to hold the value and the last updated tile
-		// If you are using multiple values you should add more tiles and update the details line below
-        main(["primaryTile"])
-		details(["primaryTile", "lastUpdated"])
 	}
 }
 
@@ -70,10 +50,6 @@ def parse(String description) {
     if (name && value) {
         // Update device
         sendEvent(name: "genericValue", value: value)
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"

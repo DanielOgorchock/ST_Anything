@@ -23,6 +23,7 @@
  *    2018-11-10  Dan Ogorchock  Corrected Pressure Measurement attribute name
  *    2019-03-10  Dan Ogorchock  Added user preference for unit conversion
  *    2019-07-01  Dan Ogorchock  Added importUrl
+ *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  *
  * 
  */
@@ -30,24 +31,11 @@ metadata {
 	definition (name: "Child Pressure Measurement", namespace: "ogiewon", author: "Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-pressure-measurement.groovy") {
 		capability "PressureMeasurement"
 		capability "Sensor"
-
-		attribute "lastUpdated", "String"
 	}
 
     preferences {
         input "tempUnitConversion", "enum", title: "Pressure Unit Conversion - select hPa to mmHg, hPa to inHg, or no conversion", description: "", defaultValue: "1", required: true, multiple: false, options:[["1":"none"], ["2":"hPa to mm Hg"], ["3":"hPa to in Hg"]], displayDuringSetup: false
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
-	}
-
-	tiles(scale: 2) {
-		multiAttributeTile(name: "pressureMeasurement", type: "generic", width: 6, height: 4, canChangeIcon: true) {
-			tileAttribute("device.pressureMeasurement", key: "PRIMARY_CONTROL") {
-				attributeState("pressureMeasurement", label: '${currentValue} ${unit}', unit: "hPa", defaultState: true)
-			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
-		}
 	}
 }
 
@@ -79,10 +67,6 @@ def parse(String description) {
         // Update device
         tmpValue = tmpValue.round(2)
         sendEvent(name: "pressure", value: tmpValue, unit: dispUnit)
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"

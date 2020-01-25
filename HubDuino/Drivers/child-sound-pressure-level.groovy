@@ -19,6 +19,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2019-07-08  Dan Ogorchock  Original Creation
+ *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  *
  * 
  */
@@ -27,9 +28,6 @@ metadata {
         capability "Sensor"
         capability "Sound Pressure Level"
         capability "Contact Sensor"
-
-
-        attribute "lastUpdated", "String"
 	}
         
     preferences {
@@ -60,10 +58,6 @@ def parse(String description) {
                 sendEvent(name: "contact", value: "open")
             }
         }
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"

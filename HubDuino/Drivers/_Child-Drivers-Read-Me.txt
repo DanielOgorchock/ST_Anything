@@ -1,3 +1,7 @@
 Please make a copy of all of the child-*.groovy device drivers from this folder
 
 and load them into you Hubitat Hub's "Drivers Code" section via the web interface.
+
+You can use the IMPORT feature to specify the RAW URL of each driver and then import the code.
+
+After the initial load of the drivers, you may use the IMPORT feature to update the code from GitHub.

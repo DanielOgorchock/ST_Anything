@@ -20,6 +20,7 @@
  *    ----        ---            ----
  *    2019-10-30  Dan Ogorchock  Original Creation
  *    2019-10-31  Dan Ogorchock  Cleaned up
+ *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  *
  * 
  */
@@ -28,14 +29,16 @@ metadata {
 		capability "Valve"
 		capability "Actuator"
 		capability "Sensor"
-
-//		attribute "lastUpdated", "String"
 	}
 
     preferences {
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
 	}
+}
 
+def logsOff(){
+    log.warn "debug logging disabled..."
+    device.updateSetting("logEnable",[value:"false",type:"bool"])
 }
 
 def open() {
@@ -51,11 +54,6 @@ def sendData(String value) {
     parent.sendData("${name} ${value}")  
 }
 
-def logsOff(){
-    log.warn "debug logging disabled..."
-    device.updateSetting("logEnable",[value:"false",type:"bool"])
-}
-
 def parse(String description) {
     if (logEnable) log.debug "parse(${description}) called"
 	def parts = description.split(" ")
@@ -64,11 +62,6 @@ def parse(String description) {
     if (name && value) {
         // Update device
         sendEvent(name: name, value: value)
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        //sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
-        state.lastUpdated = "${nowDay} at ${nowTime}"
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"

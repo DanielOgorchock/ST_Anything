@@ -24,6 +24,7 @@
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-07-01  Dan Ogorchock  Added importUrl
+ *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  * 
  */
 metadata {
@@ -34,44 +35,8 @@ metadata {
 		attribute "lastUpdated", "String"
 	}
 
-	simulator {
-
-	}
-
     preferences {
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
-	}
-
-
-	tiles(scale: 2) {
-		multiAttributeTile(name: "illuminance", type: "generic", width: 6, height: 4, canChangeIcon: true) {
-			tileAttribute("device.illuminance", key: "PRIMARY_CONTROL") {
-				attributeState("illuminance", label: '${currentValue} ${unit}', unit:"lux", 
-                	backgroundColors: [
-						[value: 9, color: "#767676"],
-						[value: 315, color: "#ffa81e"],
-						[value: 1000, color: "#fbd41b"]
-					])
-			}
-			tileAttribute("device.colorTemperature", key: "SECONDARY_CONTROL") {
-				attributeState("colorTemperature", label: "Color Temp: " + '${currentValue} ${unit}', unit:"K")
-			}   
- 
-		}
-        standardTile("redValue", "device.redValue", inactiveLabel: false, width: 2, height: 2) {
-    		state "default", label:  '${currentValue}' + "\nRed"
-		}
-		standardTile("greenValue", "device.greenValue", inactiveLabel: false, width: 2, height: 2) {
-    		state "default", label: '${currentValue}' + "\nGreen"
-		}
-		standardTile("blueValue", "device.blueValue", inactiveLabel: false, width: 2, height: 2) {
-    		state "default", label: '${currentValue}' + "\nBlue"
-		}
-		standardTile("clearValue", "device.clearValue", inactiveLabel: false, width: 2, height: 2) {
-    		state "default", label: '${currentValue}' + "\nClear"
-		}
-		main(["illuminance"])
-        details(["illuminance", "colorTemperature", "redValue", "greenValue", "blueValue", "clearValue"])
 	}
 }
 
@@ -96,10 +61,6 @@ def parse(String description) {
         sendEvent(name: "greenValue", value: myValues[3])
         sendEvent(name: "blueValue", value: myValues[4])
         sendEvent(name: "clearValue", value: myValues[5])
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"
