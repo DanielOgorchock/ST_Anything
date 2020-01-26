@@ -25,6 +25,7 @@
  *    2019-07-01  Dan Ogorchock  Added importUrl
  *    2020-01-25  Dan Ogorchock  Ensure RATE from user preference section is always used in setLevel() command 
  *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
+ *    2020-01-26  Dan Ogorchock  Add Reverse Direction and OVerride Rate user preferences - thanks @flotsam1! 
  * 
  */
 metadata {
@@ -39,9 +40,11 @@ metadata {
 	}
 
    	preferences {
-            input ("onvalue", "number", title: "On Percentage", required: false, defaultValue: 100, description: "Percentage that should be used for On command.")
-            input ("offvalue", "number", title: "Off Percentage", required: false, defaultValue: 0, description: "Percentage that should be used for Off command.")
-            input ("rateValue", "number", title: "Default Rate (Duration)", required: false, defaultValue: 1000, description: "Time in milliseconds to transition from 0 to 180 degrees (0 = full speed)")
+            input ("onvalue", "number", title: "On Percentage", required: true, defaultValue: 100, description: "Percentage that should be used for On command.")
+            input ("offvalue", "number", title: "Off Percentage", required: true, defaultValue: 0, description: "Percentage that should be used for Off command.")
+            input ("rateValue", "number", title: "Default Rate (Duration)", required: true, defaultValue: 1000, description: "Time in milliseconds to transition from 0 to 180 degrees (0 = full speed)")
+            input ("reverseDirection", "bool", title: "Reverse Servo Direction?", required: true, defaultValue: false, description: "Can be useful for backwards blinds")
+            input ("overrideRate", "bool", title: "Override Rate?", required: true, defaultValue: false, description: "On = always use 'Default Rate'")
             input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
         }
 }
@@ -60,8 +63,10 @@ def logsOff(){
 }
 
 def setLevel(level, rate = null) {
-    //if (rate == null) rate = rateValue.toInteger()
-    rate = rateValue.toInteger()    
+    if (overrideRate == true) rate = rateValue.toInteger()    
+    if (rate == null) rate = rateValue.toInteger()
+
+    if (reverseDirection == true) level = 100 - level
     
 	if (logEnable) log.debug "setLevel >> level: ${level}, rate: ${rate}"
     
@@ -84,6 +89,10 @@ def parse(String description) {
     if (name && value) {   
         // Update device
         def myValues = value.split(':')
+        if (reverseDirection == true) {
+            myValues[0] = 100 - myValues[0].toInteger()
+            myValues[1] = 180 - myValues[1].toInteger()
+        }
         sendEvent(name: "level",value: myValues[0].toInteger())
         sendEvent(name: "angle", value: myValues[1].toInteger())
         sendEvent(name: "rate", value: myValues[2].toInteger())
