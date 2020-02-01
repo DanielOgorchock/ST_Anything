@@ -14,6 +14,7 @@
 //				- bool iState - OPTIONAL - LOW or HIGH - determines which value indicates the interrupt is true
 //				- bool internalPullup - OPTIONAL - true == INTERNAL_PULLUP
 //				- long numReqCounts - OPTIONAL - number of counts before changing state of input (prevent false alarms)
+//              - long inactiveTimeout - OPTIONAL - number of milliseconds motion must be inactive before sending update to hub (default = 0)
 //
 //  Change History:
 //
@@ -23,6 +24,7 @@
 //	  2016-09-03  Dan Ogorchock  Added optional "numReqCounts" constructor argument/capability
 //    2017-01-25  Dan Ogorchock  Corrected issue with INPUT_PULLUP per request of Jiri Culik
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
+//    2020-01-31  Dan Ogorchock  Added optional inactivity timeout
 //
 //
 //******************************************************************************************
@@ -39,12 +41,15 @@ namespace st
 		private:
 			//inherits everything necessary from parent InterruptSensor Class
 			
-			unsigned int timer; 
+			long timer; 
 			bool calibrated;
+			long m_inactiveTimeout;
+			bool m_inactiveTimerRunning;
+			long m_inactiveTimer;
 			
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			IS_Motion(const __FlashStringHelper *name, byte pin, bool iState, bool internalPullup = false, long numReqCounts = 0); //(defaults to NOT using internal pullup resistors, and required counts = 0)
+			IS_Motion(const __FlashStringHelper *name, byte pin, bool iState, bool internalPullup = false, long numReqCounts = 0, long inactiveTimeout = 0); //(defaults to NOT using internal pullup resistors, and required counts = 0)
 			
 			//destructor
 			virtual ~IS_Motion();
