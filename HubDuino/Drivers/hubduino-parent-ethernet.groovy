@@ -45,6 +45,7 @@
  *    2019-09-04  Dan Ogorchock  Automatically detect maximum number of buttons and set numberOfButtons attribute accordingly
  *    2019-09-04  Dan Ogorchock  Eliminate the need for user to supply MAC address of the Arduino. Configure the Parent DNI to use Arduino IP Address instead.
  *    2019-10-30  Dan Ogorchock  Added Child Valve
+ *    2020-02-08  Dan Ogorchock  Added refresh() call to initialize() command
  *	
  */
  
@@ -245,6 +246,7 @@ def uninstalled() {
 
 def initialize() {
 	log.info "Executing 'initialize()'"
+	refresh()
 }
 
 def updated() {
