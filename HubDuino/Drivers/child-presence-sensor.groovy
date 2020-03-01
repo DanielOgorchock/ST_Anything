@@ -24,6 +24,7 @@
  *    2019-07-01  Dan Ogorchock  Added importUrl
  *    2019-12-17  Dan Ogorchock  Suppress debug logging based on user setting
  *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
+ *    2020-03-01  Dan Ogorchock  Incorporated optional feature from @ritchierich to prevent presence value 'flapping'
  * 
  */
 metadata {
@@ -35,6 +36,7 @@ metadata {
 	}
    
 	preferences {
+        input "waitSeconds", "number", title: "Number of seconds to wait to verify presence", required: false
         input "presenceTriggerValue", "number", title: "(Optional) Presence Trigger Value\nAt what value is presence triggered?", required: false, displayDuringSetup: false
         input "invertTriggerLogic", "bool", title: "(Optional) Invert Logic", description: "False = Present > Trigger Value\nTrue = Present < Trigger Value", default: false, required: false, displayDuringSetup: false
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
@@ -72,7 +74,20 @@ def parse(String description) {
             if (value != "present") { value = "not present" }
         }
         // Update device
-        sendEvent(name: name, value: value)
+        if (waitSeconds) {
+            state.lastValue = value
+            if (device.currentValue("presence") != value && state.isScheduled == false) {
+                state.isScheduled = true
+                runIn(waitSeconds, "processDelay")
+                if (logEnable) log.debug "Scheduled delay.  state.lastValue = ${state.lastValue}, scheduled: ${state.isScheduled}"
+            } else if (state.isScheduled == true) {
+                unschedule("processDelay")
+                state.isScheduled = false
+                if (logEnable) log.debug "UnScheduled delay.  state.lastValue = ${state.lastValue}, scheduled: ${state.isScheduled}"
+            }
+        } else {
+            sendEvent(name: name, value: value)
+        }
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"
@@ -85,4 +100,17 @@ def installed() {
 
 def updated() {
     if (logEnable) runIn(1800,logsOff)
+    state.lastUpdated = ""
+    state.isScheduled = false
+    if (waitSeconds) {
+        state.lastValue = ""
+    }
+}
+
+private processDelay() {
+    if (logEnable) log.debug "processDelay currentValue = ${device.currentValue("presence")}, state.lastValue: ${state.lastValue}"
+    state.isScheduled = false
+    if (device.currentValue("presence") != state.lastValue) {
+        sendEvent(name: "presence", value: state.lastValue)
+    }
 }
