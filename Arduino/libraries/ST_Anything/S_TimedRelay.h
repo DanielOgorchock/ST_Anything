@@ -15,7 +15,7 @@
 //				- byte pinOutput - REQUIRED - the Arduino Pin to be used as a digital output
 //				- bool startingState - REQUIRED - the value desired for the initial state of the switch.  LOW = "off", HIGH = "on"
 //				- bool invertLogic - REQUIRED - determines whether the Arduino Digital Ouput should use inverted logic
-//				- long onTime - REQUIRED - the number of milliseconds to keep the output on, DEFGAULTS to 1000 milliseconds
+//				- long onTime - REQUIRED - the number of milliseconds to keep the output on, DEFAULTS to 1000 milliseconds
 //				- long offTime - OPTIONAL - the number of milliseconds to keep the output off, DEFAULTS to 0
 //				- int numCycles - OPTIONAL - the number of times to repeat the on/off cycle, DEFAULTS to 1
 // 				- byte finalState - OPTIONAL - leave in X state after finishing sequence 0 = off, 1 = on , Defaults to 0
