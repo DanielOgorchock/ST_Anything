@@ -9,15 +9,13 @@
 //            as well as all communications with the NodeMCU ESP8266's WiFi.
 //
 //            ST_Anything_MCP23008 implements the following ST Capabilities on a NodeMCU ESP8266
-//            
+//            8 - MCP23008 attached Timed Relay Switches
 //    
 //  Change History:
 //
 //    Date        Who            What
 //    ----        ---            ----
-//    2015-01-03  Dan & Daniel   Original Creation
-//    2018-07-02  Dan Ogorchock  Revised to demonstrate I2C sensors
-//    2020-01-16  M2_            Converted the I2C file to MCP23008  
+//    2020-01-16  Doug (M2)    Converted the I2C file to MCP23008  
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -35,18 +33,6 @@
 #include <InterruptSensor.h> //Generic Interrupt "Sensor" Class, waits for change of state on digital input 
 #include <PollingSensor.h>   //Generic Polling "Sensor" Class, polls Arduino pins periodically
 #include <Everything.h>      //Master Brain of ST_Anything library that ties everything together and performs ST Shield communications
-
-//#include <PS_Illuminance.h>  //Implements a Polling Sensor (PS) to measure light levels via a photo resistor
-//#include <PS_TemperatureHumidity.h>  //Implements a Polling Sensor (PS) to measure Temperature and Humidity via DHT library
-//#include <PS_DS18B20_Temperature.h>  //Implements a Polling Sensor (PS) to measure Temperature via DS18B20 libraries 
-//#include <PS_Water.h>        //Implements a Polling Sensor (PS) to measure presence of water (i.e. leak detector)
-//#include <IS_Motion.h>       //Implements an Interrupt Sensor (IS) to detect motion via a PIR sensor
-//#include <IS_Contact.h>      //Implements an Interrupt Sensor (IS) to monitor the status of a digital input pin
-//#include <IS_Smoke.h>        //Implements an Interrupt Sensor (IS) to monitor the status of a digital input pin
-//#include <IS_DoorControl.h>  //Implements an Interrupt Sensor (IS) and Executor to monitor the status of a digital input pin and control a digital output pin
-//#include <IS_Button.h>       //Implements an Interrupt Sensor (IS) to monitor the status of a digital input pin for button presses
-//#include <EX_Switch.h>       //Implements an Executor (EX) via a digital output to a relay
-//#include <EX_Alarm.h>        //Implements Executor (EX)as an Alarm Siren capability via a digital output to a relay
 
 #include <Adafruit_MCP23008.h>
 #include <S_TimedRelay_MCP.h>    //Implements a Sensor to control a digital output pin with timing capabilities
@@ -86,21 +72,22 @@
 //******************************************************************************************
 //ESP8266 WiFi Information
 //******************************************************************************************
-String str_ssid     = "Your_SSID";                           //  <---You must edit this line!
-String str_password = "Your_Wifi_Password";                   //  <---You must edit this line!
-IPAddress ip(192, 168, 1, xx);       //Device IP Address       //  <---You must edit this line!
+String str_ssid     = "yourSSIDhere";                           //  <---You must edit this line!
+String str_password = "yourWiFiPasswordhere";                   //  <---You must edit this line!
+IPAddress ip(192, 168, 1, 227);       //Device IP Address       //  <---You must edit this line!
 IPAddress gateway(192, 168, 1, 1);    //Router gateway          //  <---You must edit this line!
 IPAddress subnet(255, 255, 255, 0);   //LAN subnet mask         //  <---You must edit this line!
 IPAddress dnsserver(192, 168, 1, 1);  //DNS server              //  <---You must edit this line!
 const unsigned int serverPort = 8090; // port to run the http server on
 
-// Smartthings Hub TCP/IP Address & Port
-//IPAddress hubIp(192, 168, 1, 149);    // smartthings hub ip //  <---You must edit this line!
-//const unsigned int hubPort = 39500;   // smartthings hub port
+// Smarthings Hub Information
+//IPAddress hubIp(192, 168, 1, 149);  // smartthings hub ip       //  <---You must edit this line!
+//const unsigned int hubPort = 39500; // smartthings hub port
 
-//Hubitat Hub TCP/IP Address & Port
-IPAddress hubIp(192, 168, 1, xx);    // hubitat hub ip //  <---You must edit this line!
+// Hubitat Hub Information
+IPAddress hubIp(192, 168, 1, 145);    // hubitat hub ip         //  <---You must edit this line!
 const unsigned int hubPort = 39501;   // hubitat hub port
+
 //******************************************************************************************
 //st::Everything::callOnMsgSend() optional callback routine.  This is a sniffer to monitor 
 //    data being sent to ST.  This allows a user to act on data changes locally within the 
@@ -211,9 +198,7 @@ void setup()
   //*****************************************************************************
   //Add each executor to the "Everything" Class
   //*****************************************************************************
-//  st::Everything::addExecutor(&executor1);
-//  st::Everything::addExecutor(&executor2);
-    
+   
   //*****************************************************************************
   //Initialize each of the devices which were added to the Everything Class
   //*****************************************************************************

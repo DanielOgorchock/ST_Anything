@@ -1,5 +1,5 @@
 //******************************************************************************************
-//  File: ST_Anything_Multiples_ESP8266WiFi.ino
+//  File: ST_Anything_PWM_ESP8266WiFi.ino
 //  Authors: Dan G Ogorchock & Daniel J Ogorchock (Father and Son)
 //
 //  Summary:  This Arduino Sketch, along with the ST_Anything library and the revised SmartThings 
@@ -9,26 +9,13 @@
 //            as well as all communications with the NodeMCU ESP8266's WiFi.
 //
 //            ST_Anything_Multiples implements the following ST Capabilities as a demo of what is possible with a single NodeMCU ESP8266
-//              - 1 x Alarm device (using a simple digital output)
-//              - 1 x Contact Sensor devices (used to monitor magnetic door sensors)
-//              - 1 x Switch devices (used to turn on a digital output (e.g. LED, relay, etc...)
-//              - 1 x Motion devices (used to detect motion)
-//              - 1 x Smoke Detector devices (using simple digital input)
-//              - 1 x Temperature Measurement devices (Temperature from Dallas Semi 1-Wire DS18B20 device)
-//              - 1 x Relay Switch devices (used to turn on a digital output for a set number of cycles And On/Off times (e.g.relay, etc...))
-//              - 2 x Button devices (sends "pushed" if held for less than 1 second, else sends "held"
-//              - 1 x Water Sensor devices (using the 1 analog input pin to measure voltage from a water detector board)
+//              - 1 x PWM device
 //    
 //  Change History:
 //
 //    Date        Who            What
 //    ----        ---            ----
-//    2015-01-03  Dan & Daniel   Original Creation
-//    2017-02-12  Dan Ogorchock  Revised to use the new SMartThings v2.0 library
-//    2017-04-17  Dan Ogorchock  New example showing use of Multiple device of same ST Capability
-//                               used with new Parent/Child Device Handlers (i.e. Composite DH)
-//    2017-05-25  Dan Ogorchock  Revised example sketch, taking into account limitations of NodeMCU GPIO pins
-//    2018-02-09  Dan Ogorchock  Added support for Hubitat Elevation Hub
+//    2020-03-29  DOUG (M2)     Added support for using PWM device without pin for switch device
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -43,6 +30,7 @@
 #include <Device.h>          //Generic Device Class, inherited by Sensor and Executor classes
 #include <Executor.h>        //Generic Executor Class, typically receives data from ST Cloud (e.g. Switch)
 #include <Everything.h>      //Master Brain of ST_Anything library that ties everything together and performs ST Shield communications
+
 #include <EX_PWM_Dim.h>       //Implements an Executor (EX) via a digital output to a relay
 
 //*************************************************************************************************
@@ -70,16 +58,20 @@
 //******************************************************************************************
 //ESP8266 WiFi Information
 //******************************************************************************************
-String str_ssid     = "Your_SSID";                           //  <---You must edit this line!
-String str_password = "Your_WiFi_Password";                   //  <---You must edit this line!
-IPAddress ip(192, 168, 1, xx);       //Device IP Address       //  <---You must edit this line!
+String str_ssid     = "yourSSIDhere";                           //  <---You must edit this line!
+String str_password = "yourWiFiPasswordhere";                   //  <---You must edit this line!
+IPAddress ip(192, 168, 1, 227);       //Device IP Address       //  <---You must edit this line!
 IPAddress gateway(192, 168, 1, 1);    //Router gateway          //  <---You must edit this line!
 IPAddress subnet(255, 255, 255, 0);   //LAN subnet mask         //  <---You must edit this line!
 IPAddress dnsserver(192, 168, 1, 1);  //DNS server              //  <---You must edit this line!
 const unsigned int serverPort = 8090; // port to run the http server on
 
+// Smarthings Hub Information
+//IPAddress hubIp(192, 168, 1, 149);  // smartthings hub ip       //  <---You must edit this line!
+//const unsigned int hubPort = 39500; // smartthings hub port
+
 // Hubitat Hub Information
-IPAddress hubIp(192, 168, 1, xx);    // hubitat hub ip         //  <---You must edit this line!
+IPAddress hubIp(192, 168, 1, 145);    // hubitat hub ip         //  <---You must edit this line!
 const unsigned int hubPort = 39501;   // hubitat hub port
 
 //******************************************************************************************
@@ -153,14 +145,12 @@ void setup()
   //*****************************************************************************
   //Add each sensor to the "Everything" Class
   //*****************************************************************************
-
-      
+  
   //*****************************************************************************
   //Add each executor to the "Everything" Class
   //*****************************************************************************
   st::Everything::addExecutor(&executor1);
 
-    
   //*****************************************************************************
   //Initialize each of the devices which were added to the Everything Class
   //*****************************************************************************
