@@ -23,9 +23,11 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2016-04-30  Dan Ogorchock  Original Creation
-//    2018-08-14  Dan Ogorchock  Modified to avoid compiler errors on ESP32 since it currently does not support "analogWrite()"
 //    2017-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
-//    2017-10-08  Allan (vseven) Modified original code from EX_RGB_Dim to be used for RGB lighting
+//    2017-10-08  Allan (vseven) Modified original code from EX_Switch_Dim to be used for RGB lighting
+//    2018-08-14  Dan Ogorchock  Modified to avoid compiler errors on ESP32 since it currently does not support "analogWrite()"
+//    2020-03-29  DOUG (M2)		 Scaled the 8bit values to 10bit for ESP8266 "analogWrite()"
+//    2020-04-01  Dan Ogorchock  Added back in functionality for traditional Arduino Boards
 //
 //******************************************************************************************
 #include "EX_RGB_Dim.h"
@@ -44,34 +46,49 @@ namespace st
 
 		if (m_bCurrentState == HIGH)
 		{
-		// Our status is on so get the RGB value from the hex
-		String hexstring = m_sCurrentHEX;
-		long number = (long) strtol( &hexstring[1], NULL, 16);
-      	// Split them up into r, g, b values
-      	subStringR = number >> 16;
-      	subStringG = number >> 8 & 0xFF;
-      	subStringB = number & 0xFF;
-	}
-	else
-	{
-		// Status is off so turn off LED
-		subStringR = 00;
-      	subStringG = 00;
-      	subStringB = 00;
-	}
-      	if(m_bCommonAnode)
+		    // Our status is on so get the RGB value from the hex
+		    String hexstring = m_sCurrentHEX;
+		    long number = (long) strtol( &hexstring[1], NULL, 16);
+      	    // Split them up into r, g, b values
+      	    subStringR = number >> 16;
+      	    subStringG = number >> 8 & 0xFF;
+      	    subStringB = number & 0xFF;
+		}
+		else
 		{
-        		// A hex value of 00 will translate to 255 for a common anode.  However the  
-        		// ledcWrite seems to need a 256 to turn off so we are adding one here.
-        		subStringR = 255 - subStringR + 1;
-        		subStringG = 255 - subStringG + 1;
-        		subStringB = 255 - subStringB + 1;
-      	} 
-		// Write to outputs.  Use ledc for ESP32, analogWrite for everything else.
+			// Status is off so turn off LED
+			subStringR = 00;
+			subStringG = 00;
+			subStringB = 00;
+		}
 
+		if(m_bCommonAnode)
+		{
+			// A hex value of 00 will translate to 255 for a common anode.  However the  
+			// ledcWrite seems to need a 256 to turn off so we are adding one here.
+            #if defined(ARDUINO_ARCH_ESP32)
+			    subStringR = 255 - subStringR + 1;
+			    subStringG = 255 - subStringG + 1;
+			    subStringB = 255 - subStringB + 1;
+            #else
+			    subStringR = 255 - subStringR;
+			    subStringG = 255 - subStringG;
+			    subStringB = 255 - subStringB;
+            #endif
+		} 
+
+		// Write to outputs.  Use ledc for ESP32, analogWrite for everything else.
 		if (st::Executor::debug) {
+          #if defined(ARDUINO_ARCH_ESP32)
 			Serial.print(F("subString R:G:B = "));
 			Serial.println(String(subStringR) + ":" + String(subStringG) + ":" + String(subStringB));
+          #elif defined(ARDUINO_ARCH_ESP8266)
+			Serial.print(F("subString 10bit R:G:B = "));
+			Serial.println(String(map(subStringR, 0, 255, 0, 1023)) + ":" + String(map(subStringG, 0, 255, 0, 1023)) + ":" + String(map(subStringB, 0, 255, 0, 1023)));
+          #else
+			Serial.print(F("subString R:G:B = "));
+			Serial.println(String(subStringR) + ":" + String(subStringG) + ":" + String(subStringB));
+          #endif
 		}
 
 		// Any adjustments to the colors can be done here before sending the commands.  For example if red is always too bright reduce it:
@@ -79,21 +96,27 @@ namespace st
 
 		#if defined(ARDUINO_ARCH_ESP32)
 			ledcWrite(m_nChannelR, subStringR);
-		#else
-			analogWrite(m_nPinR, subStringR);
-		#endif
+		#elif defined(ARDUINO_ARCH_ESP8266)
+			analogWrite(m_nPinR, map(subStringR, 0, 255, 0, 1023));
+        #else
+		    analogWrite(m_nPinR, subStringR);
+        #endif
 
 		#if defined(ARDUINO_ARCH_ESP32)
 			ledcWrite(m_nChannelG, subStringG);
-		#else
+		#elif defined(ARDUINO_ARCH_ESP8266)
+			analogWrite(m_nPinG, map(subStringG, 0, 255, 0, 1023));
+        #else
 			analogWrite(m_nPinG, subStringG);
-		#endif
+        #endif
 
 		#if defined(ARDUINO_ARCH_ESP32)
 			ledcWrite(m_nChannelB, subStringB);
-		#else
+		#elif defined(ARDUINO_ARCH_ESP8266)
+			analogWrite(m_nPinB, map(subStringB, 0, 255, 0, 1023));
+        #else
 			analogWrite(m_nPinB, subStringB);
-		#endif
+        #endif
 
 	}
 

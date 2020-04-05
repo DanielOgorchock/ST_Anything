@@ -23,9 +23,11 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2016-04-30  Dan Ogorchock  Original Creation
-//    2018-08-14  Dan Ogorchock  Modified to avoid compiler errors on ESP32 since it currently does not support "analogWrite()"
 //    2017-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2017-10-06  Allan (vseven) Modified original code from EX_Switch_Dim to be used for RGB lighting
+//    2018-08-14  Dan Ogorchock  Modified to avoid compiler errors on ESP32 since it currently does not support "analogWrite()"
+//    2020-03-29  DOUG (M2)		 Scaled the 8bit values to 10bit for ESP8266 "analogWrite()"
+//    2020-04-01  Dan Ogorchock  Added back in functionality for traditional Arduino Boards
 //
 //******************************************************************************************
 #ifndef ST_EX_RGB_DIM
@@ -40,12 +42,12 @@ namespace st
 		private:
 			bool m_bCurrentState;	//HIGH or LOW
 			bool m_bCommonAnode;	//TRUE or FALSE
-			byte m_nPinR;		//Arduino Pin used as a PWM Output for Red
-			byte m_nPinG;		//Arduino Pin used as a PWM Output for Green
-			byte m_nPinB;		//Arduino Pin used as a PWM Output for Blue
-			byte m_nChannelR;	//PWM Channel used for Red output
-			byte m_nChannelG;	//PWM Channel used for Green output
-			byte m_nChannelB;	//PWM Channel used for Blue output
+			byte m_nPinR;		    //Arduino Pin used as a PWM Output for Red
+			byte m_nPinG;		    //Arduino Pin used as a PWM Output for Green
+			byte m_nPinB;		    //Arduino Pin used as a PWM Output for Blue
+			byte m_nChannelR;	    //PWM Channel used for Red output
+			byte m_nChannelG;	    //PWM Channel used for Green output
+			byte m_nChannelB;	    //PWM Channel used for Blue output
 			String m_sCurrentHEX;	//HEX value of color currently set
 
 			void writeRGBToPins();	//function to update the Arduino PWM Output Pins
