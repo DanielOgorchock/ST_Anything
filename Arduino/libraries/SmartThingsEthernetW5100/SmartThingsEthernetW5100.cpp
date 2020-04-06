@@ -8,6 +8,7 @@
 //	2017-02-04  Dan Ogorchock  Created
 //  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
 //  2018-02-03  Dan Ogorchock  Support for Hubitat
+//  2020-04-05  Dan Ogorchock  Tweaked to hopefully prevent lockup
 //*******************************************************************************
 
 #include "SmartThingsEthernetW5100.h"
