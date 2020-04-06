@@ -9,6 +9,7 @@
 //	History
 //	2019-06-23  Dan Ogorchock  Created
 //  2019-08-17  Dan Ogorchock  NANO33IoT 
+//  2020-04-05  Dan Ogorchock  Tweaked to hopefully prevent lockup
 //
 //*******************************************************************************
 
@@ -320,7 +321,7 @@ namespace st
 		//if (_isDebugEnabled) { Serial.println(F("WiFi.send(): Reading for reply data "));}
 		// read any data returned from the POST
 		//while (st_client.connected()) {
-			while (st_client.available()) {
+		while (st_client.available()) {
 				char c = st_client.read(); //gets byte from ethernet buffer
 				//if (_isDebugEnabled) { Serial.print(c); } //prints byte to serial monitor
 			}
