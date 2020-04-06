@@ -251,8 +251,8 @@ namespace st
 
 		//if (_isDebugEnabled) { Serial.println(F("Ethernet.send(): Reading for reply data "));}
 		// read any data returned from the POST
-		while (st_client.connected()) {
-			//while (st_client.available()) {
+		//while (st_client.connected()) {
+		while (st_client.available()) {
 			char c = st_client.read(); //gets byte from ethernet buffer
 									   //if (_isDebugEnabled) { Serial.print(c); } //prints byte to serial monitor
 									   //}
