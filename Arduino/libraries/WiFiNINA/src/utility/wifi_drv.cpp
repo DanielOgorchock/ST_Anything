@@ -328,6 +328,28 @@ int8_t WiFiDrv::disconnect()
     return result;
 }
 
+uint8_t WiFiDrv::getReasonCode()
+{
+    WAIT_FOR_SLAVE_SELECT();
+
+    // Send Command
+    SpiDrv::sendCmd(GET_REASON_CODE_CMD, PARAM_NUMS_0);
+
+    SpiDrv::spiSlaveDeselect();
+    //Wait the reply elaboration
+    SpiDrv::waitForSlaveReady();
+    SpiDrv::spiSlaveSelect();
+
+    // Wait for reply
+    uint8_t _data = 1;
+    uint8_t _dataLen = 0;
+    SpiDrv::waitResponseCmd(GET_REASON_CODE_CMD, PARAM_NUMS_1, &_data, &_dataLen);
+
+    SpiDrv::spiSlaveDeselect();
+
+    return _data;
+}
+
 uint8_t WiFiDrv::getConnectionStatus()
 {
 	WAIT_FOR_SLAVE_SELECT();
@@ -891,6 +913,42 @@ int8_t WiFiDrv::wifiSetApPassphrase(const char* ssid, uint8_t ssid_len, const ch
     uint8_t _data = 0;
     uint8_t _dataLen = 0;
     if (!SpiDrv::waitResponseCmd(SET_AP_PASSPHRASE_CMD, PARAM_NUMS_1, &_data, &_dataLen))
+    {
+        WARN("error waitResponse");
+        _data = WL_FAILURE;
+    }
+    SpiDrv::spiSlaveDeselect();
+    return _data;
+}
+
+int8_t WiFiDrv::wifiSetEnterprise(uint8_t eapType, const char* ssid, uint8_t ssid_len, const char *username, const uint8_t username_len, const char *password, const uint8_t password_len, const char *identity, const uint8_t identity_len, const char* ca_cert, uint16_t ca_cert_len)
+{
+    WAIT_FOR_SLAVE_SELECT();
+    // Send Command
+    SpiDrv::sendCmd(SET_ENT_CMD, PARAM_NUMS_6);
+    SpiDrv::sendBuffer(&eapType, sizeof(eapType));
+    SpiDrv::sendBuffer((uint8_t*)ssid, ssid_len);
+    SpiDrv::sendBuffer((uint8_t*)username, username_len);
+    SpiDrv::sendBuffer((uint8_t*)password, password_len);
+    SpiDrv::sendBuffer((uint8_t*)identity, identity_len);
+    SpiDrv::sendBuffer((uint8_t*)ca_cert, ca_cert_len, LAST_PARAM);
+
+    // pad to multiple of 4
+    int commandSize = 15 + sizeof(eapType) + ssid_len + username_len + password_len + identity_len + ca_cert_len;
+    while (commandSize % 4) {
+        SpiDrv::readChar();
+        commandSize++;
+    }
+
+    SpiDrv::spiSlaveDeselect();
+    //Wait the reply elaboration
+    SpiDrv::waitForSlaveReady();
+    SpiDrv::spiSlaveSelect();
+
+    // Wait for reply
+    uint8_t _data = 0;
+    uint8_t _dataLen = 0;
+    if (!SpiDrv::waitResponseCmd(SET_ENT_CMD, PARAM_NUMS_1, &_data, &_dataLen))
     {
         WARN("error waitResponse");
         _data = WL_FAILURE;

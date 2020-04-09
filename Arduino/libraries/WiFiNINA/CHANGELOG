@@ -1,5 +1,13 @@
 WiFiNINA ?.?.? - ????.??.??
 
+WiFiNINA 1.5.0 - 2019.12.30
+
+* Add WiFi.reasonCode() API to retrieve the deauthentication reason code
+* Use WIFI_FIRMWARE_LATEST_VERSION in example sketch FW version checks
+* Updated firmware updaters for Nano 33 IoT
+* Added Nano 33 IoT to explicit targets list
+* Added WPA2 Enterprise support: PEAP/MSCHAPv2 (depends on NINA f/w 1.3.0)
+
 WiFiNINA 1.4.0 - 2019.03.27
 
 * Improved connection time, by increasing poll time of checking connection status to 100ms on begin

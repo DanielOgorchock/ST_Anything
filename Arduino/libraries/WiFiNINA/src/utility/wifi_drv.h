@@ -144,6 +144,8 @@ public:
      */
     static int8_t disconnect();
 
+    static uint8_t getReasonCode();
+
     /*
      * Disconnect from the network
      *
@@ -275,6 +277,13 @@ public:
 
     static int8_t wifiSetApNetwork(const char* ssid, uint8_t ssid_len, uint8_t channel);
     static int8_t wifiSetApPassphrase(const char* ssid, uint8_t ssid_len, const char *passphrase, const uint8_t len, uint8_t channel);
+    static int8_t wifiSetEnterprise(uint8_t eapType,
+                                    const char* ssid, uint8_t ssid_len,
+                                    const char *username, const uint8_t username_len,
+                                    const char *password, const uint8_t password_len,
+                                    const char *identity, const uint8_t identity_len,
+                                    const char* ca_cert, uint16_t ca_cert_len);
+
 
     static int16_t ping(uint32_t ipAddress, uint8_t ttl);
 

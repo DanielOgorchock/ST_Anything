@@ -45,7 +45,7 @@ void setup() {
   }
 
   String fv = WiFi.firmwareVersion();
-  if (fv < "1.0.0") {
+  if (fv < WIFI_FIRMWARE_LATEST_VERSION) {
     Serial.println("Please upgrade the firmware");
   }
 
@@ -114,7 +114,7 @@ void loop() {
 
     // close the connection:
     client.stop();
-    Serial.println("client disonnected");
+    Serial.println("client disconnected");
   }
 }
 

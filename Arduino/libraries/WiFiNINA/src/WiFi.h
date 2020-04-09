@@ -80,6 +80,10 @@ public:
     uint8_t beginAP(const char *ssid, const char* passphrase);
     uint8_t beginAP(const char *ssid, const char* passphrase, uint8_t channel);
 
+    uint8_t beginEnterprise(const char* ssid, const char* username, const char* password);
+    uint8_t beginEnterprise(const char* ssid, const char* username, const char* password, const char* identity);
+    uint8_t beginEnterprise(const char* ssid, const char* username, const char* password, const char* identity, const char* ca);
+
     /* Change Ip configuration settings disabling the dhcp client
         *
         * param local_ip: 	Static ip configuration
@@ -242,6 +246,13 @@ public:
      * return: one of the value defined in wl_status_t
      */
     uint8_t status();
+
+    /*
+     * Return The deauthentication reason code.
+     *
+     * return: the deauthentication reason code
+     */
+    uint8_t reasonCode();
 
     /*
      * Resolve the given hostname to an IP address.

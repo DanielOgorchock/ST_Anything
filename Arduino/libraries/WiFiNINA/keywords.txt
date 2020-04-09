@@ -21,6 +21,7 @@ WiFiUDP	KEYWORD1
 
 firmwareVersion	KEYWORD2
 status	KEYWORD2
+reasonCode	KEYWORD2
 connect	KEYWORD2
 write	KEYWORD2
 available	KEYWORD2
@@ -47,6 +48,7 @@ remoteIP	KEYWORD2
 remotePort	KEYWORD2
 
 beginAP	KEYWORD2
+beginEnterprise	KEYWORD2
 setHostname	KEYWORD2
 end	KEYWORD2
 getTime	KEYWORD2

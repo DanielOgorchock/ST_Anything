@@ -156,6 +156,37 @@ uint8_t WiFiClass::beginAP(const char *ssid, const char* passphrase, uint8_t cha
     return status;
 }
 
+uint8_t WiFiClass::beginEnterprise(const char* ssid, const char* username, const char* password)
+{
+	return beginEnterprise(ssid, username, password, "");
+}
+
+uint8_t WiFiClass::beginEnterprise(const char* ssid, const char* username, const char* password, const char* identity)
+{
+	return beginEnterprise(ssid, username, password, identity, "");
+}
+
+uint8_t WiFiClass::beginEnterprise(const char* ssid, const char* username, const char* password, const char* identity, const char* ca)
+{
+	uint8_t status = WL_IDLE_STATUS;
+
+	// set passphrase
+	if (WiFiDrv::wifiSetEnterprise(0 /*PEAP/MSCHAPv2*/, ssid, strlen(ssid), username, strlen(username), password, strlen(password), identity, strlen(identity), ca, strlen(ca) + 1)!= WL_FAILURE)
+	{
+		for (unsigned long start = millis(); (millis() - start) < _timeout;)
+		{
+			delay(WL_DELAY_START_CONNECTION);
+			status = WiFiDrv::getConnectionStatus();
+			if ((status != WL_IDLE_STATUS) && (status != WL_NO_SSID_AVAIL) && (status != WL_SCAN_COMPLETED)) {
+				break;
+			}
+		}
+	} else {
+		status = WL_CONNECT_FAILED;
+	}
+	return status;
+}
+
 void WiFiClass::config(IPAddress local_ip)
 {
 	WiFiDrv::config(1, (uint32_t)local_ip, 0, 0);
@@ -299,6 +330,11 @@ uint8_t WiFiClass::channel(uint8_t networkItem)
 uint8_t WiFiClass::status()
 {
     return WiFiDrv::getConnectionStatus();
+}
+
+uint8_t WiFiClass::reasonCode()
+{
+	return WiFiDrv::getReasonCode();
 }
 
 int WiFiClass::hostByName(const char* aHostname, IPAddress& aResult)

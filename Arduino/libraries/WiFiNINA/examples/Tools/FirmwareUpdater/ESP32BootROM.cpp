@@ -79,6 +79,10 @@ int ESP32BootROMClass::begin(unsigned long baudrate)
   delay(10);
   digitalWrite(_resetnPin, LOW);
   delay(100);
+#if defined(ARDUINO_SAMD_NANO_33_IOT)
+  digitalWrite(_resetnPin, HIGH);
+  delay(100);
+#endif
 #endif
 
   int synced = 0;

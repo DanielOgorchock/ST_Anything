@@ -56,6 +56,7 @@ enum {
 	SET_AP_PASSPHRASE_CMD = 0x19,
 	SET_DEBUG_CMD		= 0x1A,
 	GET_TEMPERATURE_CMD = 0x1B,
+	GET_REASON_CODE_CMD = 0x1F,
 
 	GET_CONN_STATUS_CMD	= 0x20,
 	GET_IPADDR_CMD		= 0x21,
@@ -91,6 +92,7 @@ enum {
 	GET_SOCKET_CMD		= 0x3F,
 
     // All command with DATA_FLAG 0x40 send a 16bit Len
+	SET_ENT_CMD			= 0x40,
 
 	SEND_DATA_TCP_CMD		= 0x44,
     GET_DATABUF_TCP_CMD		= 0x45,
@@ -125,6 +127,7 @@ enum numParams{
     PARAM_NUMS_3,
     PARAM_NUMS_4,
     PARAM_NUMS_5,
+    PARAM_NUMS_6,
     MAX_PARAM_NUMS
 };
 
