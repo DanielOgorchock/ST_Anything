@@ -11,6 +11,7 @@
 //  2018-01-01  Dan Ogorchock  Added WiFi.RSSI() data collection
 //  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
 //  2018-02-03  Dan Ogorchock  Support for Hubitat
+//  2020-04-10  Dan Ogorchock  Improved network performance by disabling WiFi Sleep
 //*******************************************************************************
 
 #include "SmartThingsESP32WiFi.h"
@@ -108,7 +109,8 @@ namespace st
 		WiFi.mode(WIFI_STA);
 		//WiFi.setAutoReconnect(true);
 		//WiFi.setAutoConnect(true);
-
+		WiFi.setSleep(false);
+		
 		if (st_DHCP == false)
 		{
 			WiFi.config(st_localIP, st_localGateway, st_localSubnetMask, st_localDNSServer);
