@@ -24,6 +24,7 @@
 metadata {
 	definition (name: "Child Ultrasonic Sensor", namespace: "ogiewon", author: "Daniel Ogorchock") {
 		capability "Sensor"
+        capability "contactSensor"
         
 		attribute "lastUpdated", "String"
         attribute "ultrasonic", "Number"
@@ -40,8 +41,12 @@ metadata {
 						])
 			}
             tileAttribute ("device.liters", key: "SECONDARY_CONTROL") {
-        		attributeState "power", label:'Water capacity: ${currentValue} liters', icon: "http://cdn.device-icons.smartthings.com/Bath/bath6-icn@2x.png"
-            }    
+        		attributeState "power", label:'                  Vol. ${currentValue} L', icon: "http://cdn.device-icons.smartthings.com/Bath/bath6-icn@2x.png"
+            }
+            tileAttribute ("device.contact", key: "SECONDARY_CONTROL") {
+				attributeState "open", label:'${name}', icon:"st.contact.contact.open", backgroundColor:"#e86d13"
+				attributeState "closed", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#00a0dc"
+            }
         }
  		valueTile("lastUpdated", "device.lastUpdated", inactiveLabel: false, decoration: "flat", width: 6, height: 2) {
     			state "default", label:'Last Updated ${currentValue}', backgroundColor:"#ffffff"
@@ -50,7 +55,8 @@ metadata {
     
     preferences {
         input name: "height", type: "number", title: "Height", description: "Enter height of tank in cm", required: true
-        input name: "diameter", type: "number", title: "Diameter", description: "Enter diameter of tank", required: true
+        input name: "diameter", type: "number", title: "Diameter", description: "Enter diameter of tank (cm)", required: true
+	input name: "alarmlvl", type: "number", title: "Alarmpct", description: "Alarm at pct (0 for none)", required: true
     }
 }
 
@@ -62,7 +68,7 @@ def parse(String description) {
     if (name && value) {
         double sensorValue = value as float
         def volume = 3.14159 * (diameter/2) * (diameter/2) * height
-        double capacityLiters = volume / 1000 * 2
+        double capacityLiters = volume / 1000
         capacityLiters = capacityLiters.round(2)
         sendEvent(name: "liters", value: capacityLiters)
         double capacityValue = 100 - (sensorValue/height * 100 )
@@ -70,7 +76,16 @@ def parse(String description) {
         {
             capacityValue = capacityValue.round(2)
             sendEvent(name: name, value: capacityValue)
-        }
+ 			if(alarmlvl > capacityValue)
+            {
+            	/* Send contact sensor */
+            	sendEvent(name: "contact", value: "closed")
+            }
+            else
+            {
+            	sendEvent(name: "contact", value: "open")
+            }
+ 		}
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
