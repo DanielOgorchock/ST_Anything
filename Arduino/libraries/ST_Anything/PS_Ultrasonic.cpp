@@ -81,15 +81,47 @@ namespace st
 		
 		//int m_nSensorValue=map(analogRead(m_nAnalogInputPin), SENSOR_LOW, SENSOR_HIGH, MAPPED_LOW, MAPPED_HIGH);
 		long duration;
-		// Clears the trigPin
-		digitalWrite(m_nDigitalTriggerPin, LOW);
-		delayMicroseconds(2);
-		// Sets the trigPin on HIGH state for 10 micro seconds
-		digitalWrite(m_nDigitalTriggerPin, HIGH);
-		delayMicroseconds(10);
-		digitalWrite(m_nDigitalTriggerPin, LOW);
-		// Reads the echoPin, returns the sound wave travel time in microseconds
-		duration = pulseIn(m_nDigitalEchoPin, HIGH);
+		// conan ford insert a loop here for filtering out outlier values
+		// take the median of 9 samples
+		int t_loopcount, t_loopcount2;
+		int t_min_idx;
+		long t_samploop[9];
+		long t_swap;
+
+		
+		for(t_loopcount=0;t_loopcount<9; t_loopcount++)
+		{
+			// Delay after each loop to allow echos to disapate
+			delay(500);
+			// Clears the trigPin
+			digitalWrite(m_nDigitalTriggerPin, LOW);
+			delayMicroseconds(2);
+			// Sets the trigPin on HIGH state for 10 micro seconds
+			digitalWrite(m_nDigitalTriggerPin, HIGH);
+			delayMicroseconds(10);
+			digitalWrite(m_nDigitalTriggerPin, LOW);
+			// Reads the echoPin, returns the sound wave travel time in microseconds
+			t_samploop[t_loopcount] = pulseIn(m_nDigitalEchoPin, HIGH);
+		}
+		
+		// Now get the median of the samples
+		for(t_loopcount=0;t_loopcount<9; t_loopcount++)
+		{
+			t_min_idx=t_loopcount;
+			for (t_loopcount2=t_loopcount+1; t_loopcount2<9; t_loopcount2++)
+			{
+				if(t_samploop[t_loopcount2] < t_samploop[t_min_idx])
+						t_min_idx=t_loopcount2;
+			}
+			
+			//swap(&t_samploop[t_min_idx], &t_samploop[t_loopcount]);
+			t_swap = t_samploop[t_min_idx];
+			t_samploop[t_min_idx]=t_samploop[t_loopcount];
+			t_samploop[t_loopcount]=t_swap;
+		}
+		
+		// take the middle value
+		duration=t_samploop[4];	
 		// Calculating the distance
 		m_nSensorValue = duration*0.034/2;
 
