@@ -20,6 +20,7 @@
  *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *    2017-08-24  Allan (vseven) Added a lastUpdated attribute that will display on the multitile.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2020-04-11  Dan Ogorchock  Added units to sendEvent() call, removed units from tile label to make it fit better
  *
  * 
  */
@@ -38,7 +39,7 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name: "illuminance", type: "generic", width: 6, height: 4, canChangeIcon: true) {
 			tileAttribute("device.illuminance", key: "PRIMARY_CONTROL") {
-				attributeState("illuminance", label: '${currentValue} ${unit}', unit:"lux", defaultState: true, 
+				attributeState("illuminance", label: '${currentValue}', unit:"lux", defaultState: true, 
 						backgroundColors: [
 							[value: 9, color: "#767676"],
 							[value: 315, color: "#ffa81e"],
@@ -61,7 +62,7 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
         // Update device
-        sendEvent(name: name, value: value)
+        sendEvent(name: name, value: value, unit: "lux")
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
