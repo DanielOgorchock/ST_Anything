@@ -9,16 +9,17 @@
 //  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
 //  2018-02-03  Dan Ogorchock  Support for Hubitat
 //  2020-04-05  Dan Ogorchock  Tweaked to hopefully prevent lockup
+//  2020-04-18  Dan Ogorchock  Unified Arduino Ethernet Shield Class for 5100, 5200, 5500
 //*******************************************************************************
 
-#include "SmartThingsEthernetW5100.h"
+#include "SmartThingsEthernetW5x00.h"
 
 namespace st
 {
 	//*******************************************************************************
 	// SmartThingsEthernet Constructor  
 	//*******************************************************************************
-	SmartThingsEthernetW5100::SmartThingsEthernetW5100(byte mac[], IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
+	SmartThingsEthernetW5x00::SmartThingsEthernetW5x00(byte mac[], IPAddress localIP, IPAddress localGateway, IPAddress localSubnetMask, IPAddress localDNSServer, uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
 		SmartThingsEthernet(localIP, localGateway, localSubnetMask, localDNSServer, serverPort, hubIP, hubPort, callout, shieldType, enableDebug, transmitInterval),
 		st_server(serverPort)
 	{
@@ -32,7 +33,7 @@ namespace st
 	//*******************************************************************************
 	// SmartThingsEthernet Constructor - DHCP 
 	//*******************************************************************************
-	SmartThingsEthernetW5100::SmartThingsEthernetW5100(byte mac[], uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
+	SmartThingsEthernetW5x00::SmartThingsEthernetW5x00(byte mac[], uint16_t serverPort, IPAddress hubIP, uint16_t hubPort, SmartThingsCallout_t *callout, String shieldType, bool enableDebug, int transmitInterval) :
 		SmartThingsEthernet(serverPort, hubIP, hubPort, callout, shieldType, enableDebug, transmitInterval, true),
 		st_server(serverPort)
 	{
@@ -46,7 +47,7 @@ namespace st
 	//*****************************************************************************
 	//SmartThingsEthernet::~SmartThingsEthernet()
 	//*****************************************************************************
-	SmartThingsEthernetW5100::~SmartThingsEthernetW5100()
+	SmartThingsEthernetW5x00::~SmartThingsEthernetW5x00()
 	{
 
 	}
@@ -54,7 +55,7 @@ namespace st
 	//*******************************************************************************
 	/// Initialize SmartThingsEthernet Library 
 	//*******************************************************************************
-	void SmartThingsEthernetW5100::init(void)
+	void SmartThingsEthernetW5x00::init(void)
 	{
 		char buf[20];
 
@@ -100,7 +101,7 @@ namespace st
 	//*****************************************************************************
 	// Run SmartThingsEthernet Library 
 	//*****************************************************************************
-	void SmartThingsEthernetW5100::run(void)
+	void SmartThingsEthernetW5x00::run(void)
 	{
 		String readString;
 		String tempString;
@@ -184,7 +185,7 @@ namespace st
 	//*******************************************************************************
 	/// Send Message out over Ethernet to the Hub 
 	//*******************************************************************************
-	void SmartThingsEthernetW5100::send(String message)
+	void SmartThingsEthernetW5x00::send(String message)
 	{
 		//Make sure the client is stopped, to free up socket for new conenction
 		st_client.stop();
@@ -252,11 +253,13 @@ namespace st
 
 		//if (_isDebugEnabled) { Serial.println(F("Ethernet.send(): Reading for reply data "));}
 		// read any data returned from the POST
-		//while (st_client.connected()) {
-		while (st_client.available()) {
-			char c = st_client.read(); //gets byte from ethernet buffer
-									   //if (_isDebugEnabled) { Serial.print(c); } //prints byte to serial monitor
-									   //}
+		while (st_client.connected()) {
+		    if (st_client.available()) {
+			    char c = st_client.read(); //gets byte from ethernet buffer
+				//if (_isDebugEnabled) { Serial.print(c); } //prints byte to serial monitor
+			} else {
+				break;
+			}
 		}
 
 		delay(1);
