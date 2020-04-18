@@ -266,7 +266,7 @@ def updated() {
     }
     
     //Schedule inactivity timeout
-    log.info "Device inactivity timer started for ${timeOutHubDuino} seconds"
+    log.info "Device inactivity timer started for ${timeOut} seconds"
     runIn(timeOut, timeOutHubDuino)
     
 	//Have the Arduino send an updated value for every device attached.  This will auto-created child devices!
