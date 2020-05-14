@@ -42,6 +42,7 @@
  *    2020-04-11  Dan Ogorchock  Added Delete All Children tile to assist in troubleshooting - uncomment tile and use with care if desired!!!
  *    2020-04-18  Dan Ogorchock  Added Presence Capability and tile to know if the ST_Anything device is online (present) or offline (not present)
  *    2020-04-18  Dan Ogorchock  Removed the Configuration capability and tile as it is no longer used
+ *    2020-05-14  Dan Ogorchock  Removed 'defaultValue' fields on user unputs due to bug in ST Classic App for Android
  *	
  */
  
@@ -55,7 +56,7 @@ metadata {
         capability "Presence Sensor"  //used to determine is the Arduino microcontroller is still reporting data or not
         
         command "sendData", ["string"]
-        command "deleteAllChildDevices"
+        //command "deleteAllChildDevices"
 	}
 
     simulator {
@@ -63,10 +64,10 @@ metadata {
 
     // Preferences
 	preferences {
-		input "ip", "text", title: "Arduino IP Address", description: "IP Address in form 192.168.1.226", required: true, displayDuringSetup: true
-		input "port", "text", title: "Arduino Port", description: "port in form of 8090", defaultValue: "8090", required: true, displayDuringSetup: true
+    	input "ip", "text", title: "Arduino IP Address", description: "IP Address in form 192.168.1.226", required: true, displayDuringSetup: true
+		input "port", "text", title: "Arduino Port", description: "port in form of 8090", required: true, displayDuringSetup: true
 		input "mac", "text", title: "Arduino MAC Addr", description: "MAC Address in form of 02A1B2C3D4E5", required: true, displayDuringSetup: true
-        input "timeOut", "number", title: "Timeout in Seconds", description: "Max time w/o Arduino update before setting device to 'not present'", defaultValue: "900", range: "120..*", required: true, displayDuringSetup:true
+		input "timeOut", "number", title: "Timeout in Seconds", description: "Arduino max time (try 900)", range: "120..*", required: true, displayDuringSetup:true
 	}
 
 	// Tile Definitions
@@ -96,9 +97,9 @@ metadata {
 			)
 		}
         
-		//standardTile("deleteChildren", "device.deleteChildren", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-		//	state "default", label:'Delete Children', action: "deleteAllChildDevices", icon: "st.Seasonal Fall.seasonal-fall-008"
-		//}
+		standardTile("deleteChildren", "device.deleteChildren", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "default", label:'Delete Children', action: "deleteAllChildDevices", icon: "st.Seasonal Fall.seasonal-fall-008"
+		}
 
 
 		childDeviceTiles("all")
