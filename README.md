@@ -176,6 +176,7 @@ Your screen should look like the following image:
   - Port: must match what you hard-coded in your Arduino sketch file
   - MAC Address: must match your Arduino's MAC address, all uppercase, no delimiters (e.g. 06AB12CD34EF)
   - Enter a reasonable 'Presence Timeout' (900 seconds is a good place to start)
+  
 Note:  If you visit the "Recently" page of your Parent Device in your ST App on your phone, you may get an annoying warning that the setup is not complete.  If you've entered all of the required data above, you can safely ignore this message.  Once it scrolls off the 'Recently' list, the pop-ups will stop.
 
 Your screen should look like the following image:
