@@ -31,6 +31,7 @@
  *    2019-02-05  Dan Ogorchock  Added Child Energy Meter
  *    2019-09-08  Dan Ogorchock  Minor tweak to Button logic due to changes in the the Arduino IS_Button.cpp code
  *    2019-10-31  Dan Ogorchock  Added Child Valve
+ *    2020-05-16  Dan Ogorchock  Added support for Sound Pressure Level device
  *	
  */
  
@@ -294,7 +295,10 @@ private void createChildDevice(String deviceName, String deviceNumber) {
          	case "pressure": 
                 deviceHandlerName = "Child Pressure Measurement" 
                 break
-         	case "valve": 
+          	case "soundPressureLevel": 
+                	deviceHandlerName = "Child Sound Pressure Level" 
+                break
+		case "valve": 
                 deviceHandlerName = "Child Valve" 
                 break 
             default: 
