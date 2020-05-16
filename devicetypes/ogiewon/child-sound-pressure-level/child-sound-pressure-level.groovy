@@ -28,11 +28,12 @@ metadata {
         capability "Sensor"
         capability "Sound Pressure Level"
         capability "Contact Sensor"
+		
+		attribute "lastUpdated", "String"
 	}
         
     preferences {
         input "maxSPL", "number", title: "SPL Threshold", description: "SPL values above this threshold will CLOSE the contact sensor attribute.", range: "*..*", displayDuringSetup: true
-        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
 	}
 
 	tiles(scale: 2) {
@@ -47,13 +48,8 @@ metadata {
 	}
 }
 
-def logsOff(){
-    log.warn "debug logging disabled..."
-    device.updateSetting("logEnable",[value:"false",type:"bool"])
-}
-
 def parse(String description) {
-    if (logEnable) log.debug "parse(${description}) called"
+    log.debug "parse(${description}) called"
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
@@ -68,6 +64,10 @@ def parse(String description) {
                 sendEvent(name: "contact", value: "open")
             }
         }
+        // Update lastUpdated date and time
+        def nowDay = new Date().format("MMM dd", location.timeZone)
+        def nowTime = new Date().format("h:mm a", location.timeZone)
+        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"
@@ -75,9 +75,4 @@ def parse(String description) {
 }
 
 def installed() {
-    updated()
-}
-
-def updated() {
-    if (logEnable) runIn(1800,logsOff)
 }
