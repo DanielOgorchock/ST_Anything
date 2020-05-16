@@ -42,7 +42,9 @@
  *    2020-04-11  Dan Ogorchock  Added Delete All Children tile to assist in troubleshooting - uncomment tile and use with care if desired!!!
  *    2020-04-18  Dan Ogorchock  Added Presence Capability and tile to know if the ST_Anything device is online (present) or offline (not present)
  *    2020-04-18  Dan Ogorchock  Removed the Configuration capability and tile as it is no longer used
- *    2020-05-14  Dan Ogorchock  Removed 'defaultValue' fields on user unputs due to bug in ST Classic App for Android
+ *    2020-05-14  Dan Ogorchock  Removed 'defaultValue' fields on user unputs due to bug in ST Classic App for Android 
+ *    2020-05-16  Dan Ogorchock  Added support for Sound Pressure Level device
+ *
  *	
  */
  
@@ -366,6 +368,9 @@ private createChildDevice(String deviceName, String deviceNumber) {
                 	break
          		case "pressure": 
                 		deviceHandlerName = "Child Pressure Measurement" 
+                	break
+         		case "soundPressureLevel": 
+                		deviceHandlerName = "Child Sound Pressure Level" 
                 	break
          		case "valve": 
                 		deviceHandlerName = "Child Valve" 
