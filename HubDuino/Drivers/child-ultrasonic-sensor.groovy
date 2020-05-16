@@ -22,15 +22,18 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-07-01  Dan Ogorchock  Added importUrl
  *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
+ *    2020-05-16  Dan Ogrochock  Improved Capabilities/Attributes to work with other Apps
  *   
  *
  * 
  */
 metadata {
 	definition (name: "Child Ultrasonic Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", importUrl: "https://raw.githubusercontent.com/DanielOgorchock/ST_Anything/master/HubDuino/Drivers/child-ultrasonic-sensor.groovy") {
-		capability "Sensor"
+        capability "Sensor"
+        capability "Voltage Measurement"
         
         attribute "ultrasonic", "Number"
+	attribute "liters", "Number"
     }
 
     preferences {
@@ -51,6 +54,7 @@ def parse(String description) {
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
+        sendEvent(name: "voltage", value: value)
         double sensorValue = value as float
         def volume = 3.14159 * (diameter/2) * (diameter/2) * height
         double capacityLiters = volume / 1000 * 2
