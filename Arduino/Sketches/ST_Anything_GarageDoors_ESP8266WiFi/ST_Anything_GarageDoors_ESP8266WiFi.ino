@@ -89,8 +89,8 @@ const unsigned int serverPort = 8090; // port to run the http server on
 IPAddress hubIp(192, 168, 1, 149);    // smartthings/hubitat hub ip //  <---You must edit this line!
 
 // SmartThings / Hubitat Hub TCP/IP Address: UNCOMMENT line that corresponds to your hub, COMMENT the other
-const unsigned int hubPort = 39500;   // smartthings hub port
-//const unsigned int hubPort = 39501;   // hubitat hub port
+//const unsigned int hubPort = 39500;   // smartthings hub port
+const unsigned int hubPort = 39501;   // hubitat hub port
 
 //******************************************************************************************
 //st::Everything::callOnMsgSend() optional callback routine.  This is a sniffer to monitor 
