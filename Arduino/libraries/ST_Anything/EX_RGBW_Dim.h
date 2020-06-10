@@ -29,6 +29,7 @@
 //    2017-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2017-10-06  Allan (vseven) Modified original code from EX_Switch_Dim to be used for RGB lighting
 //    2017-10-12  Allan (vseven) Modified EX_RGB_Dim for support of a White LEd channel
+//    2020-06-09  Dan Ogorchock  Scaled the 8bit values to 10bit for ESP8266 "analogWrite()"
 //
 //******************************************************************************************
 #ifndef ST_EX_RGBW_Dim

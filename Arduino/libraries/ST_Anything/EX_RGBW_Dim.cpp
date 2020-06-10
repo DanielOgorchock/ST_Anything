@@ -19,7 +19,6 @@
 //				- byte channel_g - OPTIONAL - PWM channel used for Green on a ESP32.
 //				- byte channel_b - OPTIONAL - PWM channel used for Blue on a ESP32.
 //				- byte channel_w - OPTIONAL - PWM channel used for Whitw on a ESP32.
-
 //
 //  Change History:
 //
@@ -31,6 +30,7 @@
 //    2017-10-08  Allan (vseven) Modified original code from EX_RGBW_Dim to be used for RGB lighting
 //    2017-10-12  Allan (vseven) Modified EX_RGBW_Dim for support of a White LED channel
 //    2018-04-02  Dan Ogorchock  Fixed Typo
+//    2020-06-09  Dan Ogorchock  Scaled the 8bit values to 10bit for ESP8266 "analogWrite()"
 //
 //******************************************************************************************
 #include "EX_RGBW_Dim.h"
@@ -68,16 +68,32 @@ namespace st
       	if(m_bCommonAnode) {
         	// A hex value of 00 will translate to 255 for a common anode.  However the  
         	// ledcWrite seems to need a 256 to turn off so we are adding one here.
-        	subStringR = 255 - subStringR + 1;
-        	subStringG = 255 - subStringG + 1;
-        	subStringB = 255 - subStringB + 1;
-        	subStringW = 255 - subStringW + 1;
-      	} 
+
+			#if defined(ARDUINO_ARCH_ESP32)
+				subStringR = 255 - subStringR + 1;
+				subStringG = 255 - subStringG + 1;
+				subStringB = 255 - subStringB + 1;
+				subStringW = 255 - subStringW + 1;
+			#else
+				subStringR = 255 - subStringR;
+				subStringG = 255 - subStringG;
+				subStringB = 255 - subStringB;
+				subStringW = 255 - subStringW;
+			#endif
+		}
 	// Write to outputs.  Use ledc for ESP32, analogWrite for everything else.
 
 	if (st::Executor::debug) {
-		Serial.print(F("subString R:G:B:W = "));
-		Serial.println(String(subStringR) + ":" + String(subStringG) + ":" + String(subStringB) + ":" + String(subStringW));
+		#if defined(ARDUINO_ARCH_ESP32)
+			Serial.print(F("subString R:G:B:W = "));
+			Serial.println(String(subStringR) + ":" + String(subStringG) + ":" + String(subStringB) + ":" + String(subStringW));
+		#elif defined(ARDUINO_ARCH_ESP8266)
+			Serial.print(F("subString R:G:B:W = "));
+			Serial.println(String(map(subStringR, 0, 255, 0, 1023)) + ":" + String(map(subStringG, 0, 255, 0, 1023)) + ":" + String(map(subStringB, 0, 255, 0, 1023)) + ":" + String(map(subStringW, 0, 255, 0, 1023)));
+		#else
+			Serial.print(F("subString R:G:B:W = "));
+			Serial.println(String(subStringR) + ":" + String(subStringG) + ":" + String(subStringB) + ":" + String(subStringW));
+		#endif
 	}
 
 	// Any adjustments to the colors can be done here before sending the commands.  For example if red is always too bright reduce it:
@@ -85,24 +101,32 @@ namespace st
 
 	#if defined(ARDUINO_ARCH_ESP32)
 		ledcWrite(m_nChannelR, subStringR);
+	#elif defined(ARDUINO_ARCH_ESP8266)
+		analogWrite(m_nPinR, map(subStringR, 0, 255, 0, 1023));
 	#else
 		analogWrite(m_nPinR, subStringR);
 	#endif
 
 	#if defined(ARDUINO_ARCH_ESP32)
 		ledcWrite(m_nChannelG, subStringG);
+	#elif defined(ARDUINO_ARCH_ESP8266)
+		analogWrite(m_nPinG, map(subStringG, 0, 255, 0, 1023));
 	#else
 		analogWrite(m_nPinG, subStringG);
 	#endif
 
 	#if defined(ARDUINO_ARCH_ESP32)
 		ledcWrite(m_nChannelB, subStringB);
+	#elif defined(ARDUINO_ARCH_ESP8266)
+		analogWrite(m_nPinB, map(subStringB, 0, 255, 0, 1023));
 	#else
 		analogWrite(m_nPinB, subStringB);
 	#endif
 
 	#if defined(ARDUINO_ARCH_ESP32)
 		ledcWrite(m_nChannelW, subStringW);
+	#elif defined(ARDUINO_ARCH_ESP8266)
+		analogWrite(m_nPinW, map(subStringW, 0, 255, 0, 1023));
 	#else
 		analogWrite(m_nPinW, subStringW);
 	#endif
