@@ -184,7 +184,8 @@ def setLevel(value) {
     sendEvent(name: "level", value: level)
 	
     // Turn on or off based on level selection
-    if (level == 0) { 
+    // Only if both RGB and W levels are 0 switch off
+    if (level == 0 && device.latestValue("whiteLevel") == 0) { 
 	    off() 
     } else {
 	    if (device.latestValue("switch") == "off") { on() }
@@ -197,8 +198,16 @@ def setWhiteLevel(value) {
     //log.debug "setWhiteLevel: ${value}"
     value = Math.min(value as Integer, 100)
     sendEvent(name: "whiteLevel", value: value)
+	
+    // Only if both RGB and W levels are 0 switch off 
+    if (whiteLevel == 0 && device.latestValue("level") == 0) { 
+    	off() 
+    } else {
+    	// whiteLevel >0 so switch on if not already
+    	if (device.latestValue("switch") == "off") { on() }
     def lastColor = device.latestValue("color")
 	adjustColor(lastColor)
+   }
 }
 
 void checkOnOff() {
