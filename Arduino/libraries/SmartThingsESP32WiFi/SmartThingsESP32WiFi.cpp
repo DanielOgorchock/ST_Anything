@@ -12,6 +12,8 @@
 //  2018-01-06  Dan Ogorchock  Simplified the MAC address printout to prevent confusion
 //  2018-02-03  Dan Ogorchock  Support for Hubitat
 //  2020-04-10  Dan Ogorchock  Improved network performance by disabling WiFi Sleep
+//  2020-06-20  Dan Ogorchock  Add user selectable host name (repurposing the old shieldType variable)
+//
 //*******************************************************************************
 
 #include "SmartThingsESP32WiFi.h"
@@ -98,10 +100,13 @@ namespace st
 	//*******************************************************************************
 	void SmartThingsESP32WiFi::init(void)
 	{
+		WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE);
+
 		// delete old config
 		WiFi.disconnect(true);
 		delay(1000);
 		WiFi.onEvent(SmartThingsESP32WiFi::WiFiEvent);
+
 
 		//Turn off Wirelss Access Point
 		Serial.println(F("Disabling ESP32 WiFi Access Point"));
@@ -110,7 +115,25 @@ namespace st
 		//WiFi.setAutoReconnect(true);
 		//WiFi.setAutoConnect(true);
 		WiFi.setSleep(false);
-		
+
+		//get the MAC address
+		String strMAC(WiFi.macAddress());
+		strMAC.replace(":", "");
+
+		//Set the hostname
+		if (_shieldType == "ESP32Wifi") {
+			String("ESP32-" + strMAC).toCharArray(st_devicename, sizeof(st_devicename));
+		}
+		else {
+			_shieldType.toCharArray(st_devicename, sizeof(st_devicename));
+		}
+		Serial.print(F("hostName = "));
+		Serial.println(st_devicename);
+
+		bool result = WiFi.setHostname(st_devicename);
+		Serial.print(F("setHostname returned "));
+		Serial.println(result);
+
 		if (st_DHCP == false)
 		{
 			WiFi.config(st_localIP, st_localGateway, st_localSubnetMask, st_localDNSServer);
@@ -150,8 +173,6 @@ namespace st
 		Serial.print(F("serverPort = "));
 		Serial.println(st_serverPort);
 		Serial.print(F("MAC Address = "));
-		String strMAC(WiFi.macAddress());
-		strMAC.replace(":", "");
 		Serial.println(strMAC);
 		Serial.println(F(""));
 		Serial.print(F("SSID = "));

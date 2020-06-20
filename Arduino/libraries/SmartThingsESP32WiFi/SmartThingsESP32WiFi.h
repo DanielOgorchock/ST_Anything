@@ -11,6 +11,8 @@
 //  2018-01-01  Dan Ogorchock  Added WiFi.RSSI() data collection
 //  2019-05-01  Dan Ogorchock  Changed max transmit rate from every 100ms to every 
 //                             500ms to prevent duplicate child devices
+//  2020-06-20  Dan Ogorchock  Add user selectable host name (repurposing the old shieldType variable)
+//
 //*******************************************************************************
 
 #ifndef __SMARTTHINGSESP32WIFI_H__
@@ -37,6 +39,7 @@ namespace st
 		WiFiClient st_client; //client
 		long previousMillis;
 		long RSSIsendInterval;
+		char st_devicename[50];
 
 		//**************************************************************************************
 		/// Event Handler for ESP32 WiFi Events (needed to implement reconnect logic for now...)
