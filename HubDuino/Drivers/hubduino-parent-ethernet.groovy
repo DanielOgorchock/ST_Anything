@@ -46,6 +46,8 @@
  *    2019-09-04  Dan Ogorchock  Eliminate the need for user to supply MAC address of the Arduino. Configure the Parent DNI to use Arduino IP Address instead.
  *    2019-10-30  Dan Ogorchock  Added Child Valve
  *    2020-02-08  Dan Ogorchock  Added refresh() call to initialize() command
+ *    2020-06-09  Dan Ogorchock  Improved HubDuino board 'Presence' logic
+ *    2020-06-25  Dan Ogorchock  Added Window Shade
  *	
  */
  
@@ -65,7 +67,7 @@ metadata {
 	preferences {
 		input "ip", "text", title: "Arduino IP Address", description: "IP Address in form 192.168.1.226", required: true, displayDuringSetup: true
 		input "port", "text", title: "Arduino Port", description: "port in form of 8090", defaultValue: "8090",required: true, displayDuringSetup: true
-        input "timeOut", "number", title: "Timeout in Seconds", description: "Max time w/o HubDuino update before setting device to 'not present'", defaultValue: "900", required: true, displayDuringSetup:true
+        input "timeOut", "number", title: "Timeout in Seconds", description: "Max time w/o HubDuino update before setting presence to 'not present'", defaultValue: "900", range: "600..*",required: true, displayDuringSetup:true
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
     }
 }
@@ -104,15 +106,9 @@ def parse(String description) {
             sendEvent(name: "presence", value: "present", isStateChange: true, descriptionText: "New update received from HubDuino device")
         }
         
-        if (timeOut != null) {
-            runIn(timeOut, timeOutHubDuino)
-        } else {
-            if (logEnable) log.info "Using 900 second default timeout.  Please set the timeout setting appropriately and then click save."
-            runIn(900, timeOutHubDuino)
-            //log.debug "updating timeOut value to default of 900"
-            //device.updateSetting("timeOut", [value: "900", type: "number"])
-        }
-        
+        //Keep track of when the last update came in from the Arduino board
+        state.parseLastRanAt = now()
+                
 		if (name.startsWith("button")) {
             if (logEnable) log.debug "In parse:  name = ${name}, value = ${value}, btnNum = " + namenum
             if (state.numButtons < namenum.toInteger()) {
@@ -241,12 +237,18 @@ def installed() {
 
 def uninstalled() {
     log.info "Executing 'uninstalled()'"
+    unschedule()
     deleteAllChildDevices()
 }
 
 def initialize() {
 	log.info "Executing 'initialize()'"
-	refresh()
+
+    //Schedule Presence Check Routine
+    runEvery5Minutes("checkHubDuinoPresence")
+    
+    //Have the Arduino send an updated value for every device attached.
+    refresh()
 }
 
 def updated() {
@@ -258,6 +260,8 @@ def updated() {
     log.info "Setting DNI = ${iphex}"
     device.setDeviceNetworkId("${iphex}")
     
+    unschedule()
+    
     if (logEnable) {
         log.info "Enabling Debug Logging for 30 minutes" 
         runIn(1800,logsOff)
@@ -265,9 +269,8 @@ def updated() {
         unschedule(logsoff)
     }
     
-    //Schedule inactivity timeout
-    log.info "Device inactivity timer started for ${timeOut} seconds"
-    runIn(timeOut, timeOutHubDuino)
+    //Schedule Presence Check Routine
+    runEvery5Minutes("checkHubDuinoPresence")
     
 	//Have the Arduino send an updated value for every device attached.  This will auto-created child devices!
     log.info "Sending REFRESH command to Arduino, which will create any missing child devices."
@@ -360,6 +363,9 @@ private void createChildDevice(String deviceName, String deviceNumber) {
          		case "valve": 
                 		deviceHandlerName = "Child Valve" 
                 	break        
+         		case "windowShade": 
+                		deviceHandlerName = "Child Window Shade" 
+                	break        
 			default: 
                 	log.error "No Child Device Handler case for ${deviceName}"
       		}
@@ -392,9 +398,23 @@ def deleteAllChildDevices() {
        }
 }
 
-def timeOutHubDuino() {
-    //If the timeout expires before being reset, mark this Parent Device as 'not present' to allow action to be taken
-    sendEvent(name: "presence", value: "not present", isStateChange: true, descriptionText: "No update received from HubDuino device in past ${timeOut} seconds")
+def checkHubDuinoPresence() {
+    def tmr = 900
+    
+    if (timeOut != null) {
+        if (timeOut >= 600) {
+            tmr = timeOut.toInteger()
+        } else {
+            tmr = 600
+        }
+    }
+   
+    if (now() >= state.parseLastRanAt + (tmr * 1000)) {
+        //If the timeout exceeds the threshold, mark this Parent Device as 'not present' to allow action to be taken
+        if (device.currentValue("presence") != "not present") {
+            sendEvent(name: "presence", value: "not present", isStateChange: true, descriptionText: "No update received from HubDuino device in past ${timeOut} seconds")
+        }
+    }
 }
 
 private String convertIPtoHex(ipAddress) { 
