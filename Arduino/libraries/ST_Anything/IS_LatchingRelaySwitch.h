@@ -22,6 +22,7 @@
 //				- bool invertLogic - REQUIRED - determines whether the Arduino Digital Output should use inverted logic (e.g. active high versus active low relays)
 //				- long Output1Time - REQUIRED - the number of milliseconds to keep the output1 on, DEFAULTS to 1000 milliseconds, 0 = will stay on
 //				- long Output2Time - REQUIRED - the number of milliseconds to keep the output2 on, DEFAULTS to 1000 milliseconds, 0 = will stay on
+//              - bool initializeOutputs - OPTIONAL - determines if the digital outputs are activated during initialization/startup, defaults to 'false'
 //
 //  Change History:
 //
@@ -57,7 +58,7 @@ namespace st
 			
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			IS_LatchingRelaySwitch(const __FlashStringHelper *name, byte pinInput, bool iState, bool internalPullup, long numReqCounts, byte pinOutput1, byte pinOutput2, bool startingState = LOW, bool invertLogic = false, unsigned long Output1Time = 1000, unsigned long Output2Time = 1000);
+			IS_LatchingRelaySwitch(const __FlashStringHelper *name, byte pinInput, bool iState, bool internalPullup, long numReqCounts, byte pinOutput1, byte pinOutput2, bool startingState = LOW, bool invertLogic = false, unsigned long Output1Time = 1000, unsigned long Output2Time = 1000, bool initializeOutputs = false);
 			
 			//destructor
 			virtual ~IS_LatchingRelaySwitch();
@@ -85,8 +86,6 @@ namespace st
 			virtual bool getTimerActive() const { return m_bTimerPending; }
 			virtual bool getStatus() const { return m_bCurrentState; }
 
-			//sets
-			//virtual void setOutputPin(byte pin);
 	};
 }
 

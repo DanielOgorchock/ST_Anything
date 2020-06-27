@@ -22,6 +22,7 @@
 //				- bool invertLogic - REQUIRED - determines whether the Arduino Digital Output should use inverted logic (e.g. active high versus active low relays)
 //				- long Output1Time - REQUIRED - the number of milliseconds to keep the output1 on, DEFAULTS to 1000 milliseconds, 0 = will stay on
 //				- long Output2Time - REQUIRED - the number of milliseconds to keep the output2 on, DEFAULTS to 1000 milliseconds, 0 = will stay on
+//              - bool initializeOutputs - OPTIONAL - determines if the digital outputs are activated during initialization/startup, defaults to 'false'
 //
 //  Change History:
 //
@@ -47,7 +48,7 @@ namespace st
 
 //public
 	//constructor
-	IS_LatchingRelaySwitch::IS_LatchingRelaySwitch(const __FlashStringHelper *name, byte pinInput, bool iState, bool internalPullup, long numReqCounts, byte pinOutput1, byte pinOutput2, bool startingState, bool invertLogic, unsigned long Output1Time, unsigned long Output2Time) :
+	IS_LatchingRelaySwitch::IS_LatchingRelaySwitch(const __FlashStringHelper *name, byte pinInput, bool iState, bool internalPullup, long numReqCounts, byte pinOutput1, byte pinOutput2, bool startingState, bool invertLogic, unsigned long Output1Time, unsigned long Output2Time, bool initializeOutputs) :
 		InterruptSensor(name, pinInput, iState, internalPullup, numReqCounts),  //use parent class' constructor,
 		m_nOutputPin1(pinOutput1),
 		m_nOutputPin2(pinOutput2),
@@ -62,14 +63,26 @@ namespace st
 			//set pin mode
 			pinMode(m_nOutputPin1, OUTPUT);
 			pinMode(m_nOutputPin2, OUTPUT);
-			//update the digital outputs
-			if (((m_bCurrentState == HIGH) && (m_lOutput1Time > 0)) || ((m_bCurrentState == LOW) && (m_lOutput2Time > 0)))
-			{
-				m_bTimerPending = true;
+
+			if (initializeOutputs)
+			{ 
+				//update the digital outputs
+				if (((m_bCurrentState == HIGH) && (m_lOutput1Time > 0)) || ((m_bCurrentState == LOW) && (m_lOutput2Time > 0)))
+				{
+					m_bTimerPending = true;
+				}
+				m_lTimeChanged = millis();
+				writeStateToPin(m_nOutputPin1, m_bCurrentState); 
+				writeStateToPin(m_nOutputPin2, !m_bCurrentState);
 			}
-			m_lTimeChanged = millis();
-			writeStateToPin(m_nOutputPin1, m_bCurrentState);
-			writeStateToPin(m_nOutputPin2, !m_bCurrentState);
+			else
+			{
+				//Make sure both digital outputs are 'off' if initializeOutputs == false
+				writeStateToPin(m_nOutputPin1, LOW);
+				writeStateToPin(m_nOutputPin2, LOW);
+			}
+			
+
 		}
 	
 	//destructor
@@ -180,21 +193,14 @@ namespace st
 
 	void IS_LatchingRelaySwitch::runInterrupt()
 	{
-		Serial.println("IS_LatchingRelaySwitch::runInterrupt()");
 		//add the "closed" event to the buffer to be queued for transfer to the ST Shield
 		Everything::sendSmartString(getName() + F(" off"));
 	}
 	
 	void IS_LatchingRelaySwitch::runInterruptEnded()
 	{
-		Serial.println("IS_LatchingRelaySwitch::runInterruptEnded()");
 		//add the "open" event to the buffer to be queued for transfer to the ST Shield
 		Everything::sendSmartString(getName() + F(" on"));
 	}
-
-	//void IS_LatchingRelaySwitch::setOutputPin(byte pin)
-	//{
-	//	pinMode(pin, OUTPUT);
-	//}
 
 }

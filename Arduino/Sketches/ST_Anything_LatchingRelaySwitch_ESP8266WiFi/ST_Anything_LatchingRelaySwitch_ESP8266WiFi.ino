@@ -118,7 +118,7 @@ void setup()
   //Polling Sensors
 
   //Interrupt Sensors 
-  static st::IS_LatchingRelaySwitch sensor1(F("switch1"), PIN_INPUT, HIGH, true, 500, PIN_RELAY1, PIN_RELAY2, LOW, true, 1000, 1000);
+  static st::IS_LatchingRelaySwitch sensor1(F("switch1"), PIN_INPUT, HIGH, true, 500, PIN_RELAY1, PIN_RELAY2, LOW, true, 1000, 1000, false);
 
   //Special sensors/executors (uses portions of both polling and executor classes)
   
