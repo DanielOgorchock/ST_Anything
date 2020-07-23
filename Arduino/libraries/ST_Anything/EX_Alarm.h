@@ -9,7 +9,7 @@
 //			  TODO:  Possibly add Strobe capability in the future
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_Alarm executor2("alarm1", PIN_ALARM, LOW, true, PIN_STROBE);
+//			  For Example:  st::EX_Alarm executor2(F("alarm1"), PIN_ALARM, LOW, true, PIN_STROBE);
 //
 //			  st::EX_Alarm() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
