@@ -24,6 +24,7 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-07-01  Dan Ogorchock  Added importUrl
  *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
+ *    2020-07-26  Dan Ogorchock  User can now select the number of decimal places stored.
  *
  * 
  */
@@ -35,7 +36,8 @@ metadata {
         
     preferences {
         input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
-	}
+		input name: "numDecimalPlaces", type: "enum", title: "Number of decimal places", description: "", defaultValue: "1", required: true, multiple: false, options:[["0":"0"], ["1":"1"], ["2":"2"], ["3":"3"]], displayDuringSetup: false
+    }
 }
 
 def logsOff(){
@@ -49,8 +51,19 @@ def parse(String description) {
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
-        // Update device
-        sendEvent(name: name, value: value)
+        if (numDecimalPlaces == null) {
+            device.updateSetting("numDecimalPlaces", [value: "1", type: "enum"])
+        }
+        
+        if (numDecimalPlaces == "0") {
+            int tmpValue = Float.parseFloat(value)
+            sendEvent(name: name, value: tmpValue, unit: "V")
+        }
+        else {
+            float tmpValue = Float.parseFloat(value)
+            tmpValue = tmpValue.round(numDecimalPlaces.toInteger())
+            sendEvent(name: name, value: tmpValue, unit: "V")
+        }
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"
