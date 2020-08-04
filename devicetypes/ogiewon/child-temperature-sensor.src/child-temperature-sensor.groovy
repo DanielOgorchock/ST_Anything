@@ -23,10 +23,12 @@
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  * 
  */
+import groovy.json.JsonOutput
 metadata {
 	definition (name: "Child Temperature Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", mnmn: "SmartThings", vid:"generic-temperature-measurement", ocfDeviceType: "oic.d.thermostat") {
 		capability "Temperature Measurement"
 		capability "Sensor"
+        	capability "Health Check"
 
 		attribute "lastUpdated", "String"
 	}
@@ -76,12 +78,13 @@ metadata {
 
 def parse(String description) {
     log.debug "parse(${description}) called"
-	def parts = description.split(" ")
+    def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
     	// Offset the temperature based on preference
         def offsetValue = Math.round((Float.parseFloat(value))*100.0)/100.0d
+	def units = location.getTemperatureScale()
         if (tempOffset) {
             offsetValue = offsetValue + tempOffset
         }
@@ -90,25 +93,39 @@ def parse(String description) {
             //log.debug "tempUnitConversion = ${tempUnitConversion}"
             double tempC = fahrenheitToCelsius(offsetValue.toFloat())  //convert from Fahrenheit to Celsius
             offsetValue = tempC.round(2)
+            units = "C"
         }
 
         if (tempUnitConversion == "3") {
             //log.debug "tempUnitConversion = ${tempUnitConversion}"
             double tempC = celsiusToFahrenheit(offsetValue.toFloat())  //convert from Celsius to Fahrenheit
             offsetValue = tempC.round(2)
+            units = "F"
         }
 
         // Update device
-        sendEvent(name: name, value: offsetValue)
+        sendEvent(name: name, value: offsetValue, unit: units)
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
         sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+        sendEvent(name: "DeviceWatch-DeviceStatus", value: "online")
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"
     }
 }
 
+def updated() {
+	log.debug "updated()"
+	initialize()
+}
+
 def installed() {
+	log.debug "installed()"
+	initialize()
+}
+def initialize() {
+	sendEvent(name: "DeviceWatch-Enroll", value: JsonOutput.toJson([protocol: "cloud", scheme:"untracked"]), displayed: false)
+	updateDataValue("EnrolledUTDH", "true")
 }
