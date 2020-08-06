@@ -52,6 +52,18 @@
 #include <EX_Alarm.h>        //Implements Executor (EX)as an Alarm Siren capability via a digital output to a relay
 
 //******************************************************************************************
+// ESP32 BlueTooth serial monitor support.  Uncomment to use.
+// Note: Adding BT support may require a larger partition.  Do this under Tool -> Partition Scheme -> Huge APP
+//       You will also need a computer with BlueTooth support or a BlueTooth app on your smart phone such 
+//       as "Serial BlueTooth Terminal" (https://play.google.com/store/apps/details?id=de.kai_morich.serial_bluetooth_terminal&hl=en_US)
+//******************************************************************************************
+//#include <BluetoothSerial.h>  //Header File for Serial Bluetooth
+//#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+//#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+//#endif
+//BluetoothSerial SerialBT;     //Object for Bluetooth
+
+//******************************************************************************************
 //Define which Arduino Pins will be used for each device
 //******************************************************************************************
 
@@ -85,6 +97,8 @@ void callback(const String &msg)
 {
   //Serial.print(F("ST_Anything Callback: Sniffed data = "));
   //Serial.println(msg);
+  //SerialBT.print(F("ST_Anything Callback: Sniffed data = "));
+  //SerialBT.println(msg);  // For BlueTooth logging
   
   //TODO:  Add local logic here to take action when a device's value/state is changed
   
@@ -162,6 +176,17 @@ void setup()
   //Initialize each of the devices which were added to the Everything Class
   //*****************************************************************************
   st::Everything::initDevices();
+  
+  //*****************************************************************************
+  //Enable Bluetooth serial monitoring.  Uncomment to use.
+  //*****************************************************************************
+  //Serial.begin(115200);
+  //SerialBT.register_callback(callback);
+  //if(!SerialBT.begin("ESP32_ST_Anything")){  //Name of your Bluetooth Signal.  Use a unique name if you have multiples
+  //  Serial.println("An error occurred initializing Bluetooth");
+  //}else{
+  //  Serial.println("Bluetooth Device is Ready to Pair");
+  //}
 }
 
 //******************************************************************************************
@@ -174,3 +199,20 @@ void loop()
   //*****************************************************************************
   st::Everything::run();
 }
+
+// Callback routine for BlueTooth.  Uncomment to enable
+//void callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
+//  if(event == ESP_SPP_SRV_OPEN_EVT){
+//    Serial.println("Client Connected to BlueTooth!");
+//    Serial.print("Client address is: ");
+//     for (int i = 0; i < 6; i++) {
+//      Serial.printf("%02X", param->srv_open.rem_bda[i]);
+//      if (i < 6) {
+//        Serial.print(":");
+//      }
+//     }
+//  }
+//  if(event == ESP_SPP_CLOSE_EVT ){
+//    Serial.println("Client disconnected from BlueTooth");
+//  }
+// }
