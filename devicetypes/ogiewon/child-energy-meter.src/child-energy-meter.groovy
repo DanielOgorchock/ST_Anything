@@ -17,6 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2019-02-05  Dan Ogorchock  Original Creation
+ *    2020-08-16  Dan Ogorchock  Added units
  * 
  */
 metadata {
@@ -53,7 +54,7 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
         // Update device
-        sendEvent(name: name, value: value)
+        sendEvent(name: name, value: value, unit: "kWh")
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
