@@ -21,6 +21,7 @@
  *	  2017-08-24  Allan (vseven) Added a lastUpdated attribute that will display on the multitile.
  *    2017-09-09  Allan (vseven) Added preference to offset the humidity.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2020-08-16  Dan Ogorchock  Added units
  *
  * 
  */
@@ -79,7 +80,7 @@ def parse(String description) {
             offsetValue = offsetValue + humidityOffset
         }
         // Update device
-        sendEvent(name: name, value: offsetValue)
+        sendEvent(name: name, value: offsetValue, unit: "%")
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
