@@ -31,6 +31,7 @@ metadata {
 	capability "Color Control"
 	capability "Sensor"
 	capability "Light"
+    	capability "Health Check"
 
 	command "softwhite"
 	command "daylight"
@@ -225,6 +226,7 @@ def parse(String description) {
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
         sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+        sendEvent(name: "DeviceWatch-DeviceStatus", value: "online")
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"
@@ -377,5 +379,17 @@ def yellow() 	{ doColorButton("Yellow") }
 def white() 	{ doColorButton("White") }
 
 
-def installed() {
+def updated() {
+	log.debug "updated()"
+	initialize()
 }
+
+def installed() {
+	log.debug "installed()"
+	initialize()
+}
+def initialize() {
+	sendEvent(name: "DeviceWatch-Enroll", value: JsonOutput.toJson([protocol: "cloud", scheme:"untracked"]), displayed: false)
+	updateDataValue("EnrolledUTDH", "true")
+}
+
