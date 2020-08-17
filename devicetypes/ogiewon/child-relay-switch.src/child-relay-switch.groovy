@@ -19,13 +19,14 @@
  *    2017-04-16  Dan Ogorchock  Original Creation
  *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2020-08-16  Dan Ogorchock  Removed "Relay Switch" Capability to make DTH work better with New ST App 
  *
  * 
  */
 metadata {
 	definition (name: "Child Relay Switch", namespace: "ogiewon", author: "Dan Ogorchock") {
 		capability "Switch"
-		capability "Relay Switch"
+		//capability "Relay Switch"
 		capability "Actuator"
 		capability "Sensor"
 

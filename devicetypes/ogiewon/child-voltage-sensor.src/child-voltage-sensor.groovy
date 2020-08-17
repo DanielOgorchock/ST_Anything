@@ -34,7 +34,7 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name: "voltage", type: "generic", width: 6, height: 4, canChangeIcon: true) {
 			tileAttribute("device.voltage", key: "PRIMARY_CONTROL") {
-				attributeState("voltage", label: '${currentValue} ${unit}', unit: "mV", defaultState: true)
+				attributeState("voltage", label: '${currentValue} ${unit}', unit: "V", defaultState: true)
 			}
  			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
     				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
@@ -50,7 +50,7 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
         // Update device
-        sendEvent(name: name, value: value, unit: "mV")
+        sendEvent(name: name, value: value, unit: "V")
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
