@@ -17,9 +17,10 @@
  *    2017-10-01  Allan (vseven) Original Creation (based on Dan Ogorchock's child dimmer switch)
  *    2017-10-06  Allan (vseven) Added preset color buttons and logic behind them.
  *    2017-10-12  Allan (vseven) Added ability to change White and renamed to RGBW from RGB
- *	  2017-12-17  Allan (vseven) Modified setColor to use the newer color attributes of only hue and saturation which
+ *    2017-12-17  Allan (vseven) Modified setColor to use the newer color attributes of only hue and saturation which
  *                               it compatible with values passed in from things like Alexa or Goggle Home.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2020-08-17  Allan (vseven) Cleaned up color conversion code to be more inline with ST standards and added health check
  */
 
 // for the UI
@@ -31,6 +32,7 @@ metadata {
 	capability "Color Control"
 	capability "Sensor"
 	capability "Light"
+   	capability "Health Check"
 
 	command "softwhite"
 	command "daylight"
@@ -44,7 +46,7 @@ metadata {
 	command "purple"
 	command "yellow"
 	command "white"
-    command "setWhiteLevel"
+    	command "setWhiteLevel"
 
     attribute "whiteLevel", "number"
   }
@@ -70,7 +72,7 @@ metadata {
 		}
 		controlTile("whiteSliderControl", "device.whiteLevel", "slider", height: 1, width: 6, inactiveLabel: false) {
 			state "whiteLevel", action:"setWhiteLevel", label:'White Level'
-        }
+        	}
  		valueTile("lastUpdated", "device.lastUpdated", inactiveLabel: false, decoration: "flat", width: 6, height: 2) {
     			state "default", label:'Last Updated ${currentValue}', backgroundColor:"#ffffff"
 		}
@@ -157,25 +159,35 @@ def off() {
    sendData("off")
 }
 
-def setColor(Map color) {
-    log.debug "raw color map passed in: ${color}"
+def setColor(value) {
+    log.debug "setColor: ${value}"
     // Turn off the hard color tiles
     toggleTiles("off") 
     // If the color picker was selected we will have Red, Green, Blue, HEX, Hue, Saturation, and Alpha all present.
     // Any other control will most likely only have Hue and Saturation
-    if (color.hex){
+    if (value.hex){
         // came from the color picker.  Since the color selector takes into account lightness we have to reconvert
         // the color values and adjust the level slider to better represent where it should be at based on the color picked
-        def colorHSL = rgbToHSL(color)
+        def colorHSL = rgbToHSL(value)
         //log.debug "colorHSL: $colorHSL"
         sendEvent(name: "level", value: (colorHSL.l * 100))
-        adjustColor(color.hex)
-    } else if (color.hue && color.saturation) {
+        adjustColor(value.hex)
+    } else if (value.hue && value.saturation) {
         // came from the ST cloud which only contains hue and saturation.  So convert to hex and pass it.
-        def colorRGB = hslToRGB(color.hue, color.saturation, 0.5)
-        def colorHEX = rgbToHex(colorRGB)
-        adjustColor(colorHEX)
+	def rgb = colorUtil.hslToRgb(value.hue / 100, value.saturation / 100, 0.5)
+	rgb = rgb.collect{Math.round(it) as int}
+	value.hex = colorUtil.rgbToHex(*rgb)
+    }    
+    if(value.hue) {
+	sendEvent(name: "hue", value: value.hue, displayed: false)
     }
+    if(value.saturation) {
+	sendEvent(name: "saturation", value: value.saturation, displayed: false)
+    }
+    if(value.hex?.trim()) {
+	sendEvent(name: "color", value: value.hex, displayed: false)
+    } 
+    adjustColor(value.hex)
 }
 
 def setLevel(value) {
@@ -268,7 +280,8 @@ def parse(String description) {
         // Update lastUpdated date and time
         def nowDay = new Date().format("MMM dd", location.timeZone)
         def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)    
+	sendEvent(name: "DeviceWatch-DeviceStatus", value: "online")
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"
@@ -359,49 +372,6 @@ def rgbToHSL(color) {
     hsl
 }
 
-def hslToRGB(float var_h, float var_s, float var_l) {
-	float h = var_h / 100
-    float s = var_s / 100
-    float l = var_l
-
-    def r = 0
-    def g = 0
-    def b = 0
-
-	if (s == 0) {
-    	r = l * 255
-        g = l * 255
-        b = l * 255
-	} else {
-    	float var_2 = 0
-    	if (l < 0.5) {
-        	var_2 = l * (1 + s)
-        } else {
-        	var_2 = (l + s) - (s * l)
-        }
-
-        float var_1 = 2 * l - var_2
-
-        r = 255 * hueToRgb(var_1, var_2, h + (1 / 3))
-        g = 255 * hueToRgb(var_1, var_2, h)
-        b = 255 * hueToRgb(var_1, var_2, h - (1 / 3))
-    }
-
-    def rgb = [:]
-    rgb = [red: Math.round(r), green: Math.round(g), blue: Math.round(b)]
-
-    rgb
-}
-
-def hueToRgb(v1, v2, vh) {
-	if (vh < 0) { vh += 1 }
-	if (vh > 1) { vh -= 1 }
-	if ((6 * vh) < 1) { return (v1 + (v2 - v1) * 6 * vh) }
-    if ((2 * vh) < 1) { return (v2) }
-    if ((3 * vh) < 2) { return (v1 + (v2 - $v1) * ((2 / 3 - vh) * 6)) }
-    return (v1)
-}
-
 def colorNameToRgb(color) {
     final colors = [
 	[name:"Soft White",	red: 255, green: 241,   blue: 224],
@@ -463,5 +433,16 @@ def yellow() 	{ doColorButton("Yellow") }
 def white() 	{ doColorButton("White") }
 
 
+def updated() {
+	log.debug "updated()"
+	initialize()
+}
+
 def installed() {
+	log.debug "installed()"
+	initialize()
+}
+def initialize() {
+	sendEvent(name: "DeviceWatch-Enroll", value: JsonOutput.toJson([protocol: "cloud", scheme:"untracked"]), displayed: false)
+	updateDataValue("EnrolledUTDH", "true")
 }
