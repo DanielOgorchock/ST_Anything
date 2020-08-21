@@ -6,12 +6,12 @@
 //			  It inherits from the st::Executor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_RGB_NeoPixelBus executor1("rgbSwitch1", PIXEL_COUNT, PIN_RGB);
+//			  For Example:  st::EX_RGB_NeoPixelBus executor1("rgbSwitch1", PIXEL_COUNT, OUTPUT_PIN);
 //
 //			  st::EX_RGB_NeoPixelBus() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name.
 //				- uint16_t pixelCount - REQUIRED - the number of programmable pixels in the RGB strip
-//				- uint8_t pinRGB - REQUIRED - the pin to use for data writes
+//				- uint8_t outputPin - REQUIRED - the pin to use for data writes
 //
 //  Change History:
 //
@@ -80,8 +80,6 @@ namespace st
 		if (st::Executor::debug) {
 			Serial.print(F("Total number of pixels reported by strip: "));
 			Serial.println(String(m_nStrip.PixelCount()));
-			//Serial.print(F("Color being sent: "));
-			//Serial.println(String(myColor.r + myColor.g + myColor.b));
 		}
 
 		m_nStrip.ClearTo(myColor);
@@ -96,9 +94,9 @@ namespace st
 
 //public
 	//constructor
-	EX_RGB_NeoPixelBus::EX_RGB_NeoPixelBus(const __FlashStringHelper *name, uint16_t count, uint8_t pin):
+	EX_RGB_NeoPixelBus::EX_RGB_NeoPixelBus(const __FlashStringHelper *name, uint16_t pixelCount, uint8_t outputPin):
 		Executor(name),
-		m_nStrip(count,pin)
+		m_nStrip(pixelCount,outputPin)
 	{
 
 	}
