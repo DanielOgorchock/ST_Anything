@@ -6,12 +6,12 @@
 //			  It inherits from the st::Executor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_RGB_NeoPixelBus executor1("rgbSwitch1", PIXEL_COUNT, PIN_RGB);
+//			  For Example:  st::EX_RGB_NeoPixelBus executor1("rgbSwitch1", PIXEL_COUNT, OUTPUT_PIN);
 //
 //			  st::EX_RGB_NeoPixelBus() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name.
 //				- uint16_t pixelCount - REQUIRED - the number of programmable pixels in the RGB strip
-//				- uint8_t pinRGB- REQUIRED - the pin to use for data writes
+//				- uint8_t outputPin- REQUIRED - the pin to use for data writes
 //
 //  Change History:
 //
@@ -45,7 +45,7 @@ namespace st
 			NeoPixelBus<NeoGrbFeature, Neo800KbpsMethod> m_nStrip;		
 	public:
 			//constructor - called in your sketch's global variable declaration section
-			EX_RGB_NeoPixelBus(const __FlashStringHelper *name, uint16_t pixelCount, uint8_t pinRGB);
+			EX_RGB_NeoPixelBus(const __FlashStringHelper *name, uint16_t pixelCount, uint8_t outputPin);
 			
 			//destructor
 			virtual ~EX_RGB_NeoPixelBus();
