@@ -22,7 +22,7 @@
 //    ----        ---            ----
 //    2017-03-25  Dan            Original Creation
 //    2019-09-7   Dan Ogorchock  Send Button 'init' messages for automatic setting of numberOfButtons attribute
-//
+//    2020-09-19  Dan Ogorchock  Modified to not wait until button is released to send 'held' event, also added released events
 //
 //******************************************************************************************
 
@@ -63,6 +63,23 @@ namespace st
 		Everything::sendSmartString(getName() + F(" init"));
 	}
 
+	void IS_Button::update()
+	{
+		InterruptSensor::update();
+
+		if (getStatus())
+		{
+			if (((millis() - m_lTimeBtnPressed) >= m_lreqNumMillisHeld) && (!m_bHeldSent))
+			{
+				m_bHeldSent = true;
+				//add the "held" event to the buffer to be queued for transfer to SmartThings
+				Everything::sendSmartString(getName() + F(" held"));
+			}
+
+		}
+
+	}
+
 	void IS_Button::runInterrupt()
 	{
 		//Capture time of button down event so we can figure it whether to send "pushed" or "held" on button release
@@ -80,16 +97,15 @@ namespace st
 
 		if (!m_bFirstRun)  //Prevent sending data to SmartThings during initial startup
 		{
-			if (millis() < (m_lTimeBtnPressed + m_lreqNumMillisHeld))
+			if ((millis() - m_lTimeBtnPressed) < m_lreqNumMillisHeld)
 			{
-				//add the "pushed" event to the buffer to be queued for transfer to SmartThings
-				Everything::sendSmartString(getName() + F(" pushed"));
+				//immediately send the "pushed" event to the Hub (to make sure it arrives before the 'released' event)
+				Everything::sendSmartStringNow(getName() + F(" pushed"));
 			}
-			else if (millis() >= (m_lTimeBtnPressed + m_lreqNumMillisHeld))
-			{
-				//add the "held" event to the buffer to be queued for transfer to SmartThings
-				Everything::sendSmartString(getName() + F(" held"));
-			}
+			//add the "released" event to the buffer to be queued for transfer to Hub
+			Everything::sendSmartString(getName() + F(" released"));
+
+			m_bHeldSent = false;
 		}
 		else
 		{

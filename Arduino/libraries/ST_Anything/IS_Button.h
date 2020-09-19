@@ -20,8 +20,8 @@
 //
 //    Date        Who            What
 //    ----        ---            ----
-//    2017-03-25  Dan            Original Creation
-//
+//    2017-03-25  Dan Ogorchock  Original Creation
+//    2020-09-19  Dan Ogorchock  Modified to not wait until button is released to send 'held' event, also added released events
 //
 //******************************************************************************************
 
@@ -38,6 +38,7 @@ namespace st
 			unsigned long m_lTimeBtnPressed;	    //time when the digital input went high
 			unsigned long m_lreqNumMillisHeld;  	//amount of time required to trigger "held" instead of "pushed"
 			bool m_bFirstRun = true;				//used to prevent sending inadvertent button pushed/held message on startup
+			bool m_bHeldSent = false;				//used to prevent sending multiple 'held' messages
 
 		public:
 			//constructor - called in your sketch's global variable declaration section
@@ -57,7 +58,9 @@ namespace st
 
 			//handles what to do when interrupt is ended 
 			virtual void runInterruptEnded();
-	
+
+			//override update method
+			virtual void update();
 	};
 }
 

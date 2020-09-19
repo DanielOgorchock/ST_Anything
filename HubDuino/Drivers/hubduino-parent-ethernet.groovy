@@ -48,6 +48,7 @@
  *    2020-02-08  Dan Ogorchock  Added refresh() call to initialize() command
  *    2020-06-09  Dan Ogorchock  Improved HubDuino board 'Presence' logic
  *    2020-06-25  Dan Ogorchock  Added Window Shade
+ *    2020-09-19  Dan Ogorchock  Added "Releasable Button" Capability (requires new Arduino IS_Button.cpp and .h code)
  *	
  */
  
@@ -56,6 +57,7 @@ metadata {
         capability "Refresh"
         capability "Pushable Button"
         capability "Holdable Button"
+        capability "Releasable Button"
         capability "Signal Strength"
         capability "Presence Sensor"  //used to determine is the HubDuino microcontroller is still reporting data or not
         
