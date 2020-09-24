@@ -27,9 +27,7 @@ metadata {
 	definition (name: "Child Sound Pressure Level", namespace: "ogiewon", author: "Daniel Ogorchock") {
         capability "Sensor"
         capability "Sound Pressure Level"
-        capability "Contact Sensor"
-		
-		attribute "lastUpdated", "String"
+        capability "Contact Sensor"		
 	}
         
     preferences {
@@ -64,10 +62,6 @@ def parse(String description) {
                 sendEvent(name: "contact", value: "open")
             }
         }
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"
