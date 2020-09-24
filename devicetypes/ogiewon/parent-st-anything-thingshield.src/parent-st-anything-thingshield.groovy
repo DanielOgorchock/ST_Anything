@@ -32,6 +32,7 @@
  *    2019-09-08  Dan Ogorchock  Minor tweak to Button logic due to changes in the the Arduino IS_Button.cpp code
  *    2019-10-31  Dan Ogorchock  Added Child Valve
  *    2020-05-16  Dan Ogorchock  Added support for Sound Pressure Level device
+ *    2020-09-24  Dan Ogorchock  Modified to have child devices work better with 'New' ST App
  *	
  */
  
@@ -305,9 +306,12 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 log.error "No Child Device Handler case for ${deviceName}"
         }
         if (deviceHandlerName != "") {
+//            addChildDevice(deviceHandlerName, "${device.deviceNetworkId}-${deviceName}${deviceNumber}", null,
+//                           [completedSetup: true, label: "${device.displayName} (${deviceName}${deviceNumber})", 
+//                            isComponent: false, componentName: "${deviceName}${deviceNumber}", componentLabel: "${deviceName} ${deviceNumber}"])
             addChildDevice(deviceHandlerName, "${device.deviceNetworkId}-${deviceName}${deviceNumber}", null,
                            [completedSetup: true, label: "${device.displayName} (${deviceName}${deviceNumber})", 
-                            isComponent: false, componentName: "${deviceName}${deviceNumber}", componentLabel: "${deviceName} ${deviceNumber}"])
+                            isComponent: false])
         }   
     } catch (e) {
         log.error "Child device creation failed with error = ${e}"

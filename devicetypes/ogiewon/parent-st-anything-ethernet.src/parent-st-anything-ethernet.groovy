@@ -44,6 +44,7 @@
  *    2020-04-18  Dan Ogorchock  Removed the Configuration capability and tile as it is no longer used
  *    2020-05-14  Dan Ogorchock  Removed 'defaultValue' fields on user unputs due to bug in ST Classic App for Android 
  *    2020-05-16  Dan Ogorchock  Added support for Sound Pressure Level device
+ *    2020-09-24  Dan Ogorchock  Modified to have child devices work better with 'New' ST App
  *
  *	
  */
@@ -379,9 +380,12 @@ private createChildDevice(String deviceName, String deviceNumber) {
                 		log.error "No Child Device Handler case for ${deviceName}"
       		}
             if (deviceHandlerName != "") {
+//                return addChildDevice(deviceHandlerName, "${device.deviceNetworkId}-${deviceName}${deviceNumber}", null,
+//         			[completedSetup: true, label: "${device.displayName} (${deviceName}${deviceNumber})", 
+//                	isComponent: false, componentName: "${deviceName}${deviceNumber}", componentLabel: "${deviceName} ${deviceNumber}"])
                 return addChildDevice(deviceHandlerName, "${device.deviceNetworkId}-${deviceName}${deviceNumber}", null,
          			[completedSetup: true, label: "${device.displayName} (${deviceName}${deviceNumber})", 
-                	isComponent: false, componentName: "${deviceName}${deviceNumber}", componentLabel: "${deviceName} ${deviceNumber}"])
+                	isComponent: false])
         	}   
     	} catch (e) {
         	log.error "${deviceName}${deviceNumber} child device creation of type '${deviceHandlerName}' failed with error = ${e}"
