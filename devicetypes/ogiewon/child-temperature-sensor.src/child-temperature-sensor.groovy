@@ -21,16 +21,18 @@
  *    2017-11-04  Dan Ogorchock  Added preference for Temperature Unit Conversion: Fahrenheit to Celsius, Celsius to Fahrenheit, or none 
  *    2018-02-16  Dan Ogorchock  Fixed preferences to work with Hubitat.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2020-09-28  Dan Ogorchock  Tweaked metadata for new ST app, removed lastUpdated attribute
  * 
+ , ocfDeviceType: "oic.d.thermostat"
  */
 import groovy.json.JsonOutput
 metadata {
-	definition (name: "Child Temperature Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", mnmn: "SmartThings", vid:"generic-temperature-measurement", ocfDeviceType: "oic.d.thermostat") {
+	definition (name: "Child Temperature Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", vid:"generic-temperature-measurement") {
 		capability "Temperature Measurement"
 		capability "Sensor"
-        	capability "Health Check"
+//		capability "Health Check"
 
-		attribute "lastUpdated", "String"
+//		attribute "lastUpdated", "String"
 	}
 
 	simulator {
@@ -69,9 +71,9 @@ metadata {
                                 [value: 96, color: "#bc2323"]
 						])
 			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
+// 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+//    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+//            }
 		}
 	}
 }
@@ -105,11 +107,11 @@ def parse(String description) {
 
         // Update device
         sendEvent(name: name, value: offsetValue, unit: units)
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
-        sendEvent(name: "DeviceWatch-DeviceStatus", value: "online")
+//        // Update lastUpdated date and time
+//        def nowDay = new Date().format("MMM dd", location.timeZone)
+//        def nowTime = new Date().format("h:mm a", location.timeZone)
+//        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+//        sendEvent(name: "DeviceWatch-DeviceStatus", value: "online")
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"
@@ -126,6 +128,6 @@ def installed() {
 	initialize()
 }
 def initialize() {
-	sendEvent(name: "DeviceWatch-Enroll", value: JsonOutput.toJson([protocol: "cloud", scheme:"untracked"]), displayed: false)
-	updateDataValue("EnrolledUTDH", "true")
+//	sendEvent(name: "DeviceWatch-Enroll", value: JsonOutput.toJson([protocol: "cloud", scheme:"untracked"]), displayed: false)
+//	updateDataValue("EnrolledUTDH", "true")
 }

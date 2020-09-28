@@ -18,14 +18,15 @@
  *    ----        ---            ----
  *    2019-02-05  Dan Ogorchock  Original Creation
  *    2020-08-16  Dan Ogorchock  Added units
+ *    2020-09-27  Dan Ogorchock  Tweaked metadata for new ST App, remove lastUpdated attribute
  * 
  */
 metadata {
-	definition (name: "Child Energy Meter", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Energy Meter", namespace: "ogiewon", author: "Daniel Ogorchock", ocfDeviceType: "x.com.st.d.energymeter", vid: "generic-energy") {
 		capability "Energy Meter"
 		capability "Sensor"
 
-		attribute "lastUpdated", "String"
+//		attribute "lastUpdated", "String"
 	}
 
 	simulator {
@@ -40,9 +41,9 @@ metadata {
 			tileAttribute("device.energy", key: "PRIMARY_CONTROL") {
 				attributeState("default", label: '${currentValue}', unit:"kWh", defaultState: true)
 			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
+// 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+//    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+//            }
 		}
 	}
 }
@@ -55,10 +56,10 @@ def parse(String description) {
     if (name && value) {
         // Update device
         sendEvent(name: name, value: value, unit: "kWh")
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+//        // Update lastUpdated date and time
+//        def nowDay = new Date().format("MMM dd", location.timeZone)
+//        def nowTime = new Date().format("h:mm a", location.timeZone)
+//        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"
@@ -66,4 +67,5 @@ def parse(String description) {
 }
 
 def installed() {
+sendEvent(name: "energy", value: 99.22, unit: "kWh")
 }

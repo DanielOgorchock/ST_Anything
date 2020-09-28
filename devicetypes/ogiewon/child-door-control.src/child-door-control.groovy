@@ -20,19 +20,20 @@
  *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2019-07-28  Dan Ogorchock  Minor tweak to support option for a switch output instead of just a momentary output - requires updated Arduino Door Control Code!!!
+ *    2020-09-27  Dan Ogorchock  Added 'ocfDeviceType' for the New ST App, removed lastUpdated attribute.
  *
  *
  */
 metadata {
-	definition (name: "Child Door Control", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Door Control", namespace: "ogiewon", author: "Daniel Ogorchock", ocfDeviceType: "oic.d.garagedoor", vid: "generic-contact-4") {
 		capability "Door Control"
 		capability "Garage Door Control"
 		capability "Contact Sensor"
 		capability "Actuator"
 		capability "Sensor"
-		capability "Momentary"
+//		capability "Momentary"
 
-		attribute "lastUpdated", "String"
+//		attribute "lastUpdated", "String"
 	}
 
 	simulator {
@@ -47,16 +48,16 @@ metadata {
                 	attributeState "opening", label: 'Opening', action: "doorControl.close", icon: "st.doors.garage.garage-opening", backgroundColor: "#e86d13", nextState: "closing"
                 	attributeState "closing", label: 'Closing', action: "doorControl.open", icon: "st.doors.garage.garage-closing", backgroundColor: "#00a0dc", nextState: "opening"
             	}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
+// 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+//    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+//            }
         }		
         
 		standardTile("contact", "device.contact", width: 2, height: 2) {
 			state("open", label:'${name}', icon:"st.contact.contact.open", backgroundColor:"#e86d13")
 			state("closed", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#00a0dc")
 		}
-        
+
  		main (["door", "contact"])
 		details (["door", "contact"])
     }
@@ -71,9 +72,9 @@ def close() {
 	sendData("off")
 }
 
-def push() {
-	sendData("on")
-}
+//def push() {
+//	sendData("on")
+//}
 
 def sendData(String value) {
     def name = device.deviceNetworkId.split("-")[-1]
@@ -92,10 +93,10 @@ def parse(String description) {
         if((value == "open") || (value == "closed")) {
             sendEvent(name: "contact", value: value)
         }
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+//        // Update lastUpdated date and time
+//        def nowDay = new Date().format("MMM dd", location.timeZone)
+//        def nowTime = new Date().format("h:mm a", location.timeZone)
+//        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"

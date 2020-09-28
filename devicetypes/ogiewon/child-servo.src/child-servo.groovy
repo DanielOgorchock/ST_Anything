@@ -20,16 +20,17 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-01-30  Jeff Albers	 Set upper level value as 100 instead of 99
  *    2019-02-09  Dan Ogorchock  Updated to support enhanced EX_Servo class - special thanks to Jeff Albers!
+ *    2020-09-27  Dan Ogorchock  Tweaked metadata for new ST app, removed lastUpdated attribute
  * 
  */
 metadata {
-	definition (name: "Child Servo", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Child Servo", namespace: "ogiewon", author: "Dan Ogorchock", vid: "generic-dimmer") {
             capability "Switch"
             capability "Switch Level"
             capability "Actuator"
             capability "Sensor"
 
-            attribute "lastUpdated", "String"
+//            attribute "lastUpdated", "String"
             attribute "angle", "number"
             attribute "rate", "number"
 	}
@@ -55,9 +56,9 @@ metadata {
    			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
 				attributeState "level", action:"switch level.setLevel"
 			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
+// 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+//    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+//            }
 		}
         
  		valueTile("level", "device.level", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
@@ -71,7 +72,7 @@ metadata {
 		}
        
 		main(["switch"])
-		details(["switch", "level", "angle", "rate", "lastUpdated"])       
+		details(["switch", "level", "angle", "rate"])       
 	}
 }
 
@@ -116,10 +117,10 @@ def parse(String description) {
         else {
             sendEvent(name: "switch", value: "on")
         }
-      	// Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+//      	// Update lastUpdated date and time
+//        def nowDay = new Date().format("MMM dd", location.timeZone)
+//        def nowTime = new Date().format("h:mm a", location.timeZone)
+//        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"
@@ -131,5 +132,6 @@ def installed() {
 }
 
 def updated() {
-
+    sendEvent(name: "level",value: 77)
+    sendEvent(name: "switch", value: "on")
 }

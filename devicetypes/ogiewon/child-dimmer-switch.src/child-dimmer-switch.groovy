@@ -20,18 +20,19 @@
  *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *    2018-05-19  Dan Ogorchock  Added support to receive the dimmer level from the microcontroller
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2020-09-27  Dan Ogorchock  Tweaked metadata for new ST app, removed lastUpdated attribute
  *
  * 
  */
 metadata {
-	definition (name: "Child Dimmer Switch", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Child Dimmer Switch", namespace: "ogiewon", author: "Dan Ogorchock", vid: "generic-dimmer") {
 		capability "Switch Level"
         capability "Switch"
-		capability "Relay Switch"
+//		capability "Relay Switch"
 		capability "Actuator"
 		capability "Sensor"
 
-		attribute "lastUpdated", "String"
+//		attribute "lastUpdated", "String"
 	}
 
 	simulator {
@@ -54,12 +55,12 @@ metadata {
  		valueTile("level", "device.level", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "level", label:'${currentValue} %', unit:"%", backgroundColor:"#ffffff"
 		}
- 		valueTile("lastUpdated", "device.lastUpdated", inactiveLabel: false, decoration: "flat", width: 4, height: 2) {
-    		state "default", label:'Last Updated ${currentValue}', backgroundColor:"#ffffff"
-        }
+// 		valueTile("lastUpdated", "device.lastUpdated", inactiveLabel: false, decoration: "flat", width: 4, height: 2) {
+//    		state "default", label:'Last Updated ${currentValue}', backgroundColor:"#ffffff"
+//        }
        
 		main(["switch"])
-		details(["switch", "level", "lastUpdated"])       
+		details(["switch", "level"])       
 	}
 }
 
@@ -102,10 +103,10 @@ def parse(String description) {
         {
             sendEvent(name: "level", value: value)
         }
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+//        // Update lastUpdated date and time
+//        def nowDay = new Date().format("MMM dd", location.timeZone)
+//        def nowTime = new Date().format("h:mm a", location.timeZone)
+//        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"

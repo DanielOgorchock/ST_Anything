@@ -17,6 +17,7 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2018-07-01  Dan Ogorchock  Original Creation - Unique for SmartThings as there is no standard Pressure Measurement Capability
+ *    2020-09-28  Dan Ogorchock  Removed lastUpdated attribute
  *
  * 
  */
@@ -24,7 +25,7 @@ metadata {
 	definition (name: "Child Pressure Measurement", namespace: "ogiewon", author: "Daniel Ogorchock") {
 		capability "Sensor"
 
-		attribute "lastUpdated", "String"
+//		attribute "lastUpdated", "String"
         attribute "pressure", "Number"   //ST does not have a standard Capability for Pressure Measurement
 	}
         
@@ -33,9 +34,9 @@ metadata {
 			tileAttribute("device.pressure", key: "PRIMARY_CONTROL") {
 				attributeState("pressure", label: '${currentValue} ${unit}', unit: "hPa", defaultState: true)
 			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
+// 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+//    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+//            }
 		}
 	}
 }
@@ -48,10 +49,10 @@ def parse(String description) {
     if (name && value) {
         // Update device
         sendEvent(name: name, value: value, unit:"hPa")
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+//        // Update lastUpdated date and time
+//        def nowDay = new Date().format("MMM dd", location.timeZone)
+//        def nowTime = new Date().format("h:mm a", location.timeZone)
+//        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"

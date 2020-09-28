@@ -19,16 +19,17 @@
  *    ----        ---            ----
  *    2019-10-30  Dan Ogorchock  Original Creation
  *    2019-10-31  Dan Ogorchock  Tweaked for SmartThings
+ *    2020-09-28  Dan Ogorchock  Tweaked metadata for new ST app, removed lastUpdated attribute
  *
  * 
  */
 metadata {
-    definition (name: "Child Valve", namespace: "ogiewon", author: "Dan Ogorchock", ocfDeviceType: "oic.d.watervalve" ) {
+    definition (name: "Child Valve", namespace: "ogiewon", author: "Dan Ogorchock", ocfDeviceType: "oic.d.watervalve", vid: "generic-valve") {
         capability "Valve"
         capability "Actuator"
         capability "Sensor"
 
-      attribute "lastUpdated", "String"
+//      attribute "lastUpdated", "String"
     }
 
     simulator {
@@ -45,9 +46,9 @@ metadata {
                 attributeState "open", label: '${name}', action: "valve.close", icon: "st.valves.water.open", backgroundColor: "#00A0DC", nextState:"closed"
                 attributeState "closed", label: '${name}', action: "valve.open", icon: "st.valves.water.closed", backgroundColor: "#ffffff", nextState:"open"
             }
-            tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-                attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
+//            tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+//                attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+//            }
         }
     }
 }
@@ -78,11 +79,10 @@ def parse(String description) {
     if (name && value) {
         // Update device
         sendEvent(name: name, value: value)
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
-        //state.lastUpdated = "${nowDay} at ${nowTime}"
+//        // Update lastUpdated date and time
+//        def nowDay = new Date().format("MMM dd", location.timeZone)
+//        def nowTime = new Date().format("h:mm a", location.timeZone)
+//        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
         log.error "Missing either name or value.  Cannot parse!"

@@ -21,15 +21,16 @@
  *    2017-08-24  Allan (vseven) Added a lastUpdated attribute that will display on the multitile.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2020-04-11  Dan Ogorchock  Added units to sendEvent() call, removed units from tile label to make it fit better
+ *    2020-09-28  Dan Ogorchock  Tweaked metatda for new ST App, removed lastUpdated attribute
  *
  * 
  */
 metadata {
-	definition (name: "Child Illuminance Sensor", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Illuminance Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", vid: "a3fe3c0d-1f51-3d51-9309-566ba1219b4f") {
 		capability "Illuminance Measurement"
 		capability "Sensor"
         
-        attribute "lastUpdated", "String"
+//        attribute "lastUpdated", "String"
 	}
 
 	simulator {
@@ -39,19 +40,19 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name: "illuminance", type: "generic", width: 6, height: 4, canChangeIcon: true) {
 			tileAttribute("device.illuminance", key: "PRIMARY_CONTROL") {
-				attributeState("illuminance", label: '${currentValue}', unit:"lux", defaultState: true, 
+				attributeState("illuminance", label: '${currentValue}', unit:"lx", defaultState: true, 
 						backgroundColors: [
 							[value: 9, color: "#767676"],
 							[value: 315, color: "#ffa81e"],
 							[value: 1000, color: "#fbd41b"]
 						])
 			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-             		}
+// 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+//    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+//             		}
 		}
 		main(["illuminance"])
-        details(["illuminance", "lastUpdated"])
+        details(["illuminance"])
 	}
 }
 
@@ -62,11 +63,11 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
         // Update device
-        sendEvent(name: name, value: value, unit: "lux")
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+        sendEvent(name: name, value: value, unit: "lx")
+//        // Update lastUpdated date and time
+//        def nowDay = new Date().format("MMM dd", location.timeZone)
+//        def nowTime = new Date().format("h:mm a", location.timeZone)
+//        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"

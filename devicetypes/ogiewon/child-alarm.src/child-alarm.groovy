@@ -20,17 +20,18 @@
  *    2017-08-23  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2020-08-16  Dan Ogorchock  Removed Switch Capability to make DTH work with New ST App instead of just Classic ST App
+ *    2020-09-27  Dan Ogorchock  Added "vid" to make DTH work with New ST App instead of just Classic ST App, removed lastUpdated attribute, fixed "switch" attribute to work better in new app
  *
- * 
+ *  
  */
 metadata {
-	//definition (name: "Child Alarm", namespace: "ogiewon", author: "Dan Ogorchock", ocfDeviceType: "x.com.st.d.siren") {
-	definition (name: "Child Alarm", namespace: "ogiewon", author: "Dan Ogorchock") {
+	//definition (name: "Child Alarm", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Child Alarm", namespace: "ogiewon", author: "Dan Ogorchock", ocfDeviceType: "x.com.st.d.siren", vid: "generic-siren") {
 		capability "Actuator"
 		capability "Alarm"
-		//capability "Switch"
+		capability "Switch"
 
-		attribute "lastUpdated", "String"
+//		attribute "lastUpdated", "String"
 
 		command "test"
 	}
@@ -47,9 +48,9 @@ metadata {
                 attributeState "strobe", label:'strobe!', action:'alarm.off', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
                 attributeState "siren", label:'siren!', action:'alarm.off', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
     		}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
+// 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+//    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+//            }
 	}
         standardTile("siren", "device.alarm", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 //            state "default", label:'', action:"alarm.siren", icon:"st.secondary.siren"
@@ -77,9 +78,9 @@ metadata {
 	}
 }
 
-//def on() {
-//    sendData("both")
-//}
+def on() {
+    sendData("both")
+}
 
 def off() {
     sendData("off")
@@ -115,10 +116,15 @@ def parse(String description) {
     if (name && value) {
         // Update device
         sendEvent(name: name, value: value)
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+        if (value == "off") {
+        	sendEvent(name: "switch", value: "off")
+        } else {
+        	sendEvent(name: "switch", value: "on")        
+        }
+//        // Update lastUpdated date and time
+//        def nowDay = new Date().format("MMM dd", location.timeZone)
+//        def nowTime = new Date().format("h:mm a", location.timeZone)
+//        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"

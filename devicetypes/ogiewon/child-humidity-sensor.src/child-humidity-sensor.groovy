@@ -22,15 +22,16 @@
  *    2017-09-09  Allan (vseven) Added preference to offset the humidity.
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
  *    2020-08-16  Dan Ogorchock  Added units
+ *    2020-09-27  Dan Ogrochock  Removed lastUpdated attribute
  *
  * 
  */
 metadata {
-	definition (name: "Child Humidity Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", mnmn:"SmartThings", vid:"generic-humidity-3") {
+	definition (name: "Child Humidity Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", vid:"generic-humidity-3") {
 		capability "Relative Humidity Measurement"
 		capability "Sensor"
         
-        attribute "lastUpdated", "String"
+//        attribute "lastUpdated", "String"
 	}
 
 	simulator {
@@ -59,9 +60,9 @@ metadata {
                     ])
                 }
                 
-             tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-             }
+//             tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+//    			attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+//             }
 		}
 		main(["humidity"])
         details(["humidity", "lastUpdated"])
@@ -81,10 +82,10 @@ def parse(String description) {
         }
         // Update device
         sendEvent(name: name, value: offsetValue, unit: "%")
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+//        // Update lastUpdated date and time
+//        def nowDay = new Date().format("MMM dd", location.timeZone)
+//        def nowTime = new Date().format("h:mm a", location.timeZone)
+//        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"

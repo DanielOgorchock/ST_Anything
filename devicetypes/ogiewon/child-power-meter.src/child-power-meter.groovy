@@ -18,29 +18,30 @@
  *    ----        ---            ----
  *    2018-03-03  Dan Ogorchock  Original Creation
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
- *    2019-05-06  Richard Gross  Added Energy (KWH calcualtions) Basedon  Aeon Home Energy Meter gen-1 (US)	
+ *    2019-05-06  Richard Gross  Added Energy (KWH calculations) based on Aeon Home Energy Meter gen-1 (US)	
+ *    2020-09-28  Dan Ogorchock  Tweaked metatda for new ST App, removed lastUpdated attribute, removed Energy Meter features as it does not show in new ST App (requires custom device which I do not know how to create)
  * 
  */
  
 import groovy.time.TimeCategory 
  
 metadata {
-	definition (name: "Child Power Meter", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Power Meter", namespace: "ogiewon", author: "Daniel Ogorchock", vid: "generic-power") {
 		capability "Power Meter"
 		capability "Sensor"
-		capability "Energy Meter"
+//		capability "Energy Meter"
 
-		attribute "lastUpdated", "String"
-       	attribute "currentKWH", "string" 		// Used to show current kWh since last reset
-    	attribute "currentWATTS", "string"  	// Used to show current watts being used on the main tile
-    	attribute "minWATTS", "string"   		// Used to store/display minimum watts used since last reset
-    	attribute "maxWATTS", "string"   		// Used to store/display maximum watts used since last reset
-    	attribute "resetMessage", "string"  	// Used for messages of what was reset (min, max, energy, or all values)
-    	attribute "kwhCosts", "string"  		// Used to show energy costs since last reset
+//		attribute "lastUpdated", "String"
+//       	attribute "currentKWH", "string" 		// Used to show current kWh since last reset
+//    	attribute "currentWATTS", "string"  	// Used to show current watts being used on the main tile
+//    	attribute "minWATTS", "string"   		// Used to store/display minimum watts used since last reset
+//    	attribute "maxWATTS", "string"   		// Used to store/display maximum watts used since last reset
+//    	attribute "resetMessage", "string"  	// Used for messages of what was reset (min, max, energy, or all values)
+//    	attribute "kwhCosts", "string"  		// Used to show energy costs since last reset
         
-        command "resetkwh"
-        command "resetmin"
-    	command "resetmax"
+//        command "resetkwh"
+//        command "resetmin"
+//    	command "resetmax"
 	}
 
 	simulator {
@@ -53,11 +54,12 @@ metadata {
             	defaultValue: false,
                 required: false,
   	         	displayDuringSetup: true 
-*/            	input "kWhCost", "string",
-            	title: "Enter your cost per kWh (or just use the default, or use 0 to not calculate):",
-            	defaultValue: 0.16,
-                required: false,                
-            	displayDuringSetup: true
+*/
+//				input "kWhCost", "string",
+//            	title: "Enter your cost per kWh (or just use the default, or use 0 to not calculate):",
+//            	defaultValue: 0.16,
+//                required: false,                
+//            	displayDuringSetup: true
     }
     
 	tiles(scale: 2) {
@@ -65,61 +67,62 @@ metadata {
 			tileAttribute("device.power", key: "PRIMARY_CONTROL") {
 				attributeState("default", label: '${currentValue}W', unit:"W", defaultState: true)
 			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
+// 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+//    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
+//            }
 		}        
 
-        standardTile("iconTile", "iconTile", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-			state "default", icon:"https://raw.githubusercontent.com/constjs/jcdevhandlers/master/img/device-activity-tile@2x.png"
-		}
-        valueTile("statusText", "statusText", inactiveLabel: false, decoration: "flat", width: 5, height: 1) {
-			state "default", label:'${currentValue}', backgroundColor:"#ffffff"
-	    }
-        standardTile("iconTile", "iconTile", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
-			state "default", icon:"https://raw.githubusercontent.com/constjs/jcdevhandlers/master/img/device-activity-tile@2x.png"
-		}
-        valueTile("resetMessage", "device.resetMessage", width: 5, height: 1, inactiveLabel: false, decoration: "flat") {
-            state("default", label: '${currentValue}', backgroundColor:"#ffffff")
-        }
-        valueTile("energy", "device.energy", width: 3, height: 1, inactiveLabel: false, decoration: "flat") {
-            state("default", label: '${currentValue}kWh', backgroundColor:"#ffffff")     
-        }
-        valueTile("kwhCosts", "device.kwhCosts", width: 3, height: 1, inactiveLabel: false, decoration: "flat") {
-            state("default", label: '${currentValue}', backgroundColor:"#ffffff")
-        }
-        standardTile("resetmin", "device.resetmin", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
-            state "default", label:'Reset Min', action:"resetmin", icon:"st.secondary.refresh-icon"
-        }
-        standardTile("resetmax", "device.resetmax", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
-            state "default", label:'Reset Max', action:"resetmax", icon:"st.secondary.refresh-icon"
-        }        
-        standardTile("resetkwh", "device.resetkwh", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
-			state "default", label:'Reset Energy', action:"resetkwh", icon:"st.secondary.refresh-icon"
-		}
+//        standardTile("iconTile", "iconTile", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
+//			state "default", icon:"https://raw.githubusercontent.com/constjs/jcdevhandlers/master/img/device-activity-tile@2x.png"
+//		}
+//        valueTile("statusText", "statusText", inactiveLabel: false, decoration: "flat", width: 5, height: 1) {
+//			state "default", label:'${currentValue}', backgroundColor:"#ffffff"
+//	    }
+//        standardTile("iconTile", "iconTile", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
+//			state "default", icon:"https://raw.githubusercontent.com/constjs/jcdevhandlers/master/img/device-activity-tile@2x.png"
+//		}
+//        valueTile("resetMessage", "device.resetMessage", width: 5, height: 1, inactiveLabel: false, decoration: "flat") {
+//            state("default", label: '${currentValue}', backgroundColor:"#ffffff")
+//        }
+//        valueTile("energy", "device.energy", width: 3, height: 1, inactiveLabel: false, decoration: "flat") {
+//            state("default", label: '${currentValue}kWh', backgroundColor:"#ffffff")     
+//        }
+//        valueTile("kwhCosts", "device.kwhCosts", width: 3, height: 1, inactiveLabel: false, decoration: "flat") {
+//            state("default", label: '${currentValue}', backgroundColor:"#ffffff")
+//        }
+//        standardTile("resetmin", "device.resetmin", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
+//            state "default", label:'Reset Min', action:"resetmin", icon:"st.secondary.refresh-icon"
+//        }
+//        standardTile("resetmax", "device.resetmax", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
+//            state "default", label:'Reset Max', action:"resetmax", icon:"st.secondary.refresh-icon"
+//        }        
+//        standardTile("resetkwh", "device.resetkwh", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
+//			state "default", label:'Reset Energy', action:"resetkwh", icon:"st.secondary.refresh-icon"
+//		}
 	}
 
 }
 
 def updated() {
-    state.displayDisabled = ("true" == displayEvents)
-    log.debug "updated (kWhCost: ${kWhCost}, wattsLimit: ${wattsLimit}, reportType: ${reportType}, wattsChanged: ${wattsChanged}, wattsPercent: ${wattsPercent}, secondsWatts: ${secondsWatts}, secondsKwh: ${secondsKwh}, decimalPositions: ${decimalPositions})"
+//    state.displayDisabled = ("true" == displayEvents)
+//    log.debug "updated (kWhCost: ${kWhCost}, wattsLimit: ${wattsLimit}, reportType: ${reportType}, wattsChanged: ${wattsChanged}, wattsPercent: ${wattsPercent}, secondsWatts: ${secondsWatts}, secondsKwh: ${secondsKwh}, decimalPositions: ${decimalPositions})"
 }
 def parse(String description) {
     log.debug "parse(${description}) called"
    	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
-    def KW = value as Double
-    def timeString = new Date().format("MM-dd-yy h:mm a", location.timeZone)
+//    def KW = value as Double
+//    def timeString = new Date().format("MM-dd-yy h:mm a", location.timeZone)
     if (name && value) {
         // Update device
-        sendEvent(name: name, value: value)
-        // Update lastUpdated date and time  
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
-        
+        sendEvent(name: name, value: value, unit:"W")
+//        // Update lastUpdated date and time  
+//        def nowDay = new Date().format("MMM dd", location.timeZone)
+//        def nowTime = new Date().format("h:mm a", location.timeZone)
+//        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+
+/* DGO
         if (state.KWH  != null) {
             state.KWH = ((( now() - state.lastTime )  / 3600000000) * KW)  + state.KWH
             state.kw = KW
@@ -144,16 +147,17 @@ def parse(String description) {
             state.powerLow = state.kw
             sendEvent(name: "minWATTS", value: String.format("%3.0f",state.powerLow) +"w"+ " on " + timeString , unit: "", displayed: false)
 	    }
-       
+*/       
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"
     }
  
-	def statusTextmsg = "Min was ${device.currentState('minWATTS')?.value}.\nMax was ${device.currentState('maxWATTS')?.value}.\n$state.kwhReset"
-    sendEvent("name": "statusText", "value": statusTextmsg)
+//	def statusTextmsg = "Min was ${device.currentState('minWATTS')?.value}.\nMax was ${device.currentState('maxWATTS')?.value}.\n$state.kwhReset"
+//    sendEvent("name": "statusText", "value": statusTextmsg)
 }
 
+/* DGO
 def resetkwh() {
     log.debug "${device.name} reset kWh/Cost values"
 	   state.KWH = 0
@@ -181,6 +185,6 @@ def resetmax() {
     sendEvent(name: "resetMessage", value: "Watts Data Maximum Value Reset On:\n"+timeString, unit: "")    
     sendEvent(name: "maxWATTS", value: "", unit: "")    
 }
-
+*/
 def installed() {
 }

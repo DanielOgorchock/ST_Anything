@@ -18,15 +18,16 @@
  *    ----        ---            ----
  *    2018-02-24  Dan Ogorchock  Original Creation
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2020-09-28  Dan Ogorchock  Tweaked metadata section for new ST App, removed lastUpdated attribute 
  * 
  */
 metadata {
-	definition (name: "Child Presence Sensor", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Presence Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", vid: "generic-arrival-4") {
 		capability "Sensor"
 		capability "Presence Sensor"
 
-		attribute "lastUpdated", "String"
-        attribute "level", "Number"
+//		attribute "lastUpdated", "String"
+//		attribute "level", "Number"
 	}
 
 	simulator {
@@ -50,9 +51,9 @@ metadata {
     				attributeState("default", label:'    Level ${currentValue}')
             }
 		}
-        valueTile("lastUpdated", "device.lastUpdated", inactiveLabel: false, decoration: "flat", width: 6, height: 2) {
-    			state "default", label:'Last Updated ${currentValue}', backgroundColor:"#ffffff"
-		}
+//        valueTile("lastUpdated", "device.lastUpdated", inactiveLabel: false, decoration: "flat", width: 6, height: 2) {
+//    			state "default", label:'Last Updated ${currentValue}', backgroundColor:"#ffffff"
+//		}
 	}
 }
 
@@ -63,7 +64,7 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
         if (value.isNumber()) {
-            sendEvent(name: "level", value: value)
+            //sendEvent(name: "level", value: value)
             if (presenceTriggerValue) {
                 log.debug "Presence received a numeric value. Perform comparison of value: ${Float.valueOf(value.trim())} versus presenceTriggerValue: ${presenceTriggerValue}"
                 if (Float.valueOf(value.trim()) >= presenceTriggerValue) {
@@ -83,10 +84,10 @@ def parse(String description) {
         }
         // Update device
         sendEvent(name: name, value: value)
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)    
+//        // Update lastUpdated date and time
+//        def nowDay = new Date().format("MMM dd", location.timeZone)
+//        def nowTime = new Date().format("h:mm a", location.timeZone)
+//        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)    
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"

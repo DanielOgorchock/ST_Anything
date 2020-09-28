@@ -20,14 +20,20 @@
  *    2017-09-07  Allan (vseven) Added a generateEvent routine that gets info from the parent device.  This routine runs each time the value is updated which can lead to other modifications of the device.
  *    2017-09-07  Allan (vseven) Added color temperature and RGB value tiles
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
+ *    2020-09-28  Dan Ogorchock  Tweaked metatda for new ST App, removed lastUpdated attribute, added custom attribute declarations
  * 
  */
 metadata {
-	definition (name: "Child IlluminanceRGB Sensor", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child IlluminanceRGB Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", vid: "a3fe3c0d-1f51-3d51-9309-566ba1219b4f") {
 		capability "Illuminance Measurement"
 		capability "Sensor"
 
-		attribute "lastUpdated", "String"
+        attribute "colorTemperature", "String"
+        attribute "redValue", "String"
+        attribute "greenValue", "String"
+        attribute "blueValue","String"
+        attribute "clearValue", "String"
+//		attribute "lastUpdated", "String"
 	}
 
 	simulator {
@@ -37,7 +43,7 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name: "illuminance", type: "generic", width: 6, height: 4, canChangeIcon: true) {
 			tileAttribute("device.illuminance", key: "PRIMARY_CONTROL") {
-				attributeState("illuminance", label: '${currentValue} ${unit}', unit:"lux", 
+				attributeState("illuminance", label: '${currentValue} ${unit}', unit:"lx", 
                 	backgroundColors: [
 						[value: 9, color: "#767676"],
 						[value: 315, color: "#ffa81e"],
@@ -76,16 +82,16 @@ def parse(String description) {
         // The value is a string containing all the information seperated by colons.   
         // For a Adafruit TCS34725 the order is  Color Temp, Lux, Red, Green, Blue, then Clear.   Modify as needed.
         def myValues = value.split(':')
-        sendEvent(name: "illuminance",value: myValues[0])
+        sendEvent(name: "illuminance",value: myValues[0], unit: "lx")
         sendEvent(name: "colorTemperature", value: myValues[1])
         sendEvent(name: "redValue", value: myValues[2])
         sendEvent(name: "greenValue", value: myValues[3])
         sendEvent(name: "blueValue", value: myValues[4])
         sendEvent(name: "clearValue", value: myValues[5])
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+//        // Update lastUpdated date and time
+//        def nowDay = new Date().format("MMM dd", location.timeZone)
+//        def nowTime = new Date().format("h:mm a", location.timeZone)
+//        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"

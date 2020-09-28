@@ -20,6 +20,7 @@
  *    2019-07-08  Dan Ogorchock  Original Creation
  *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  *    2020-05-16  Dan Ogorchock  Ported from Hubitat to SmartThings
+ *    2020-09-28  Dan Ogorchock  Clean up
  *
  * 
  */
@@ -39,9 +40,6 @@ metadata {
 			tileAttribute("device.soundPressureLevel", key: "PRIMARY_CONTROL") {
 				attributeState("soundPressureLevel", label: '${currentValue} ${unit}', unit: "dB", defaultState: true)
 			}
- 			tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
-    				attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9")
-            }
 		}
 	}
 }
