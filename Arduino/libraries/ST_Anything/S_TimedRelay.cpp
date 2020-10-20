@@ -27,6 +27,7 @@
 //    2015-12-29  Dan Ogorchock  Original Creation
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2019-06-23  Brian Wilson   Added finalState option
+//    2020-10-20  Dan Ogorchock  Fixed minor bug to ensure proper reporting of device state 
 //
 //
 //******************************************************************************************
@@ -180,6 +181,11 @@ namespace st
 			//update the digital output
 			writeStateToPin();
 		}
+		else
+		{
+			//Queue the relay status update the ST Cloud 
+			Everything::sendSmartString(getName() + " " + (m_bCurrentState == HIGH ? F("on") : F("off")));
+		}	
 		
 	}
 
