@@ -8,7 +8,7 @@
 //            The ST_Anything library takes care of all of the work to schedule device updates
 //            as well as all communications with the NodeMCU ESP8266's WiFi.
 //
-//            ST_Anything_Multiples implements the following ST Capabilities as a demo of what is possible with a single NodeMCU ESP8266
+//            ST_Anything_WindowShade implements the following ST Capabilities as a demo of what is possible with a single NodeMCU ESP8266
 //              - 1 x Window Shade device using two timed digital outputs
 //    
 //  Change History:
