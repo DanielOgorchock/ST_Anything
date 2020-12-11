@@ -23,7 +23,7 @@
  * 
  */
 metadata {
-	definition (name: "Child Window Shade", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Child Window Shade", namespace: "ogiewon", author: "Dan Ogorchock", vid: "generic-shade") {
 		capability "Window Shade"
 		capability "Actuator"
 		capability "Sensor"
