@@ -45,6 +45,7 @@
  *    2020-05-14  Dan Ogorchock  Removed 'defaultValue' fields on user unputs due to bug in ST Classic App for Android 
  *    2020-05-16  Dan Ogorchock  Added support for Sound Pressure Level device
  *    2020-09-24  Dan Ogorchock  Modified to have child devices work better with 'New' ST App
+ *    2020-12-11  Dan Ogorchock  Added Window Shade
  *
  *	
  */
@@ -375,6 +376,9 @@ private createChildDevice(String deviceName, String deviceNumber) {
                 	break
          		case "valve": 
                 		deviceHandlerName = "Child Valve" 
+                	break
+         		case "windowShade": 
+                		deviceHandlerName = "Child Window Shade" 
                 	break        
 			default: 
                 		log.error "No Child Device Handler case for ${deviceName}"
