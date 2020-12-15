@@ -1,7 +1,7 @@
 ST_Anything v2.9.7
 ================
 
-**WARNING** - You must use the SmartThings Classic App with ST_Anything. Without Hub Connected Device documentation from Samsung/SmartThings, I have no way to know how to support the new SmartThings (Connect) App.
+**WARNING** - SmartThings Web IDE GitHub integration is not available in all countries around the globe.
 
 **WARNING** - If using an ESP8266, make sure you are using v2.5.2 of the Arduino ESP8266 Board manager (v2.4/2.4.1 introduced a memory leak causing ST_Anythign to crash after an hour or two) along with Arduino IDE 1.8.9.
 
