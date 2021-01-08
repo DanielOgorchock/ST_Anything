@@ -71,7 +71,7 @@ metadata {
     	input "ip", "text", title: "Arduino IP Address", description: "IP Address in form 192.168.1.226", required: true, displayDuringSetup: true
 		input "port", "text", title: "Arduino Port", description: "port in form of 8090", required: true, displayDuringSetup: true
 		input "mac", "text", title: "Arduino MAC Addr", description: "MAC Address in form of 02A1B2C3D4E5", required: true, displayDuringSetup: true
-		input "timeOut", "number", title: "Timeout in Seconds", description: "Arduino max time (try 900)", range: "120..*", required: true, displayDuringSetup:true
+		input "timeOut", "number", title: "Timeout in Seconds", description: "Arduino max time (try 900)", range: "120..86400", required: true, displayDuringSetup:true
 	}
 
 	// Tile Definitions
