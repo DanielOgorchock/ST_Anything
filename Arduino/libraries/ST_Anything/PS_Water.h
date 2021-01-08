@@ -30,7 +30,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2015-08-23  Dan			 Added optional alarm limit to constructor
 //    2018-10-17  Dan            Added invertLogic parameter to constructor
-//
+//    2020-01-08  Andy A.        Ability to calculate wet/dry from another sensor (e.g. Ultrasonic)
 //
 //******************************************************************************************
 
@@ -48,11 +48,15 @@ namespace st
 			int m_nSensorValue;			//current sensor value
 			int m_nSensorLimit;			//alarm limit
 			bool m_binvertLogic;		//if false use <, if true use > for comparison of AI value versus limit
+            bool m_bSkipInputPin;
 			
 		public:
 			//constructor - called in your sketch's global variable declaration section
 			PS_Water(const __FlashStringHelper *name, unsigned int interval, int offset, byte analogInputPin, int limit = 100, bool invertLogic = false);
 			
+            // alternative constructor, for deriving wet/dry from another sensor (e.g. Ultrasonic)
+			PS_Water(const __FlashStringHelper *name, unsigned int interval, int offset, int limit = 100, bool invertLogic = false);
+
 			//destructor
 			virtual ~PS_Water();
 			
@@ -64,10 +68,11 @@ namespace st
 			
 			//gets
 			inline byte getPin() const {return m_nAnalogInputPin;}
-			inline byte getSensorValue() const {return m_nSensorValue;}
+			inline int getSensorValue() const {return m_nSensorValue;}
 				
 			//sets
 			void setPin(byte pin);
+            void setSensorValue(int newValue);
 	
 	};
 }

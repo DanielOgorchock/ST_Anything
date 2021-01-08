@@ -30,7 +30,7 @@
 //    2015-01-03  Dan & Daniel   Original Creation
 //    2015-08-23  Dan			 Added optional alarm limit to constructor
 //    2018-10-17  Dan            Added invertLogic parameter to constructor
-//
+//    2020-01-08  Andy A.        Ability to calculate wet/dry from sibling Ultrasonic sensor
 //
 //******************************************************************************************
 
@@ -54,8 +54,19 @@ namespace st
 		m_binvertLogic(invertLogic)
 	{
 		setPin(analogInputPin);
+        m_bSkipInputPin = false;
 	}
 	
+    // alternative constructor, for deriving wet/dry from another ultrasonic sensor
+    PS_Water::PS_Water(const __FlashStringHelper *name, unsigned int interval, int offset, int limit, bool invertLogic):
+		PollingSensor(name, interval, offset),
+		m_nSensorValue(0),
+		m_nSensorLimit(limit),
+		m_binvertLogic(invertLogic)
+    {
+        m_bSkipInputPin = true;
+    }
+
 	//destructor
 	PS_Water::~PS_Water()
 	{
@@ -87,14 +98,36 @@ namespace st
 	//function to get data from sensor and queue results for transfer to ST Cloud
 	void PS_Water::getData()
 	{
-		int m_nSensorValue = analogRead(m_nAnalogInputPin);
+        // determine where to read data from
+        if (m_bSkipInputPin) 
+        {
+            // use the existing sensor value (provided by another sensor)
+        } 
+        else 
+        {
+		    m_nSensorValue = analogRead(m_nAnalogInputPin);
+        }
 
 		if (st::PollingSensor::debug)
 		{
-			Serial.print(F("PS_Water::Analog Pin value is "));
+            Serial.print(F("PS_Water::"));
+            if (!m_bSkipInputPin) 
+            {
+			    Serial.print(F("Analog Pin value is "));
+            } 
+            else 
+            {
+                Serial.print(F("Explicit sensor value is "));
+            }
 			Serial.print(m_nSensorValue);
 			Serial.print(F(" vs limit of "));
-			Serial.println(m_nSensorLimit);
+			Serial.print(m_nSensorLimit);
+            Serial.print(F(" ("));
+            if (!m_binvertLogic)
+            {
+                Serial.print(F("not "));
+            }
+            Serial.println(F("inverted)"));
 		}
 
 		//compare the sensor's value is against the limit to determine whether to send "dry" versus "wet".  
@@ -112,4 +145,9 @@ namespace st
 	{
 		m_nAnalogInputPin=pin;
 	}
+
+    void PS_Water::setSensorValue(int newValue) 
+    {
+        m_nSensorValue = newValue;
+    }
 }
