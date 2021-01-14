@@ -46,18 +46,19 @@
  *    2020-05-16  Dan Ogorchock  Added support for Sound Pressure Level device
  *    2020-09-24  Dan Ogorchock  Modified to have child devices work better with 'New' ST App
  *    2020-12-11  Dan Ogorchock  Added Window Shade
+ *    2020-01-14  Andrew Alsup   Improved support for the 'New" SmartThings Mobile App!  Thank you!
  *
  *	
  */
  
 metadata {
-	definition (name: "Parent_ST_Anything_Ethernet", namespace: "ogiewon", author: "Dan Ogorchock") {
+	definition (name: "Parent_ST_Anything_Ethernet", namespace: "ogiewon", author: "Dan Ogorchock", mnmn: "SmartThingsCommunity", vid: "5eb3144b-8bfb-37e4-90b6-021bc1223638") {
         //capability "Configuration"
-        capability "Refresh"
         capability "Button"
         capability "Holdable Button"
         capability "Signal Strength"
         capability "Presence Sensor"  //used to determine is the Arduino microcontroller is still reporting data or not
+        capability "afterwatch06989.refresh"
         
         command "sendData", ["string"]
         //command "deleteAllChildDevices"
@@ -71,42 +72,7 @@ metadata {
     	input "ip", "text", title: "Arduino IP Address", description: "IP Address in form 192.168.1.226", required: true, displayDuringSetup: true
 		input "port", "text", title: "Arduino Port", description: "port in form of 8090", required: true, displayDuringSetup: true
 		input "mac", "text", title: "Arduino MAC Addr", description: "MAC Address in form of 02A1B2C3D4E5", required: true, displayDuringSetup: true
-		input "timeOut", "number", title: "Timeout in Seconds", description: "Arduino max time (try 900)", range: "120..*", required: true, displayDuringSetup:true
-	}
-
-	// Tile Definitions
-	tiles (scale: 2){
-		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-			state "default", label:'Refresh', action: "refresh.refresh", icon: "st.secondary.refresh-icon"
-		}
-
-        valueTile("numberOfButtons", "device.numberOfButtons", inactiveLabel: false, width: 2, height: 2) {
-			state "numberOfButtons", label:'${currentValue} buttons', unit:""
-		}
-
-		standardTile("presence", "device.presence", width: 2, height: 2, canChangeBackground: true) {
-			state "present", labelIcon:"st.presence.tile.present", backgroundColor:"#53a7c0"
-			state "not present", labelIcon:"st.presence.tile.not-present", backgroundColor:"#ebeef2"
-		}
-
-        valueTile("rssi", "device.rssi", width: 2, height: 2) {
-			state("rssi", label:'RSSI ${currentValue}', unit:"",
-				backgroundColors:[
-					[value: -30, color: "#006600"],
-					[value: -45, color: "#009900"],
-					[value: -60, color: "#99cc00"],
-					[value: -70, color: "#ff9900"],
-					[value: -90, color: "#ff0000"]
-				]
-			)
-		}
-        
-		standardTile("deleteChildren", "device.deleteChildren", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-			state "default", label:'Delete Children', action: "deleteAllChildDevices", icon: "st.Seasonal Fall.seasonal-fall-008"
-		}
-
-
-		childDeviceTiles("all")
+		input "timeOut", "number", title: "Timeout in Seconds", description: "Arduino max time (try 900)", range: "120..86400", required: true, displayDuringSetup:true
 	}
 }
 
@@ -215,7 +181,7 @@ def sendData(message) {
 }
 
 def sendEthernet(message) {
-	log.debug "Executing 'sendEthernet' ${message}"
+	log.debug "Executing 'sendEthernet( \"${message}\" )'"
 	if (settings.ip != null && settings.port != null) {
         sendHubCommand(new physicalgraph.device.HubAction(
             method: "POST",
