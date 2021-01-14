@@ -1,0 +1,112 @@
+{
+    "dashboard": {
+        "states": [
+            {
+                "component": "main",
+                "capability": "waterSensor",
+                "version": 1,
+                "values": [],
+                "patch": []
+            }
+        ],
+        "actions": []
+    },
+    "detailView": [
+        {
+            "component": "main",
+            "capability": "waterSensor",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "main",
+            "capability": "afterwatch06989.ultrasonic",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "main",
+            "capability": "afterwatch06989.lastupdated",
+            "version": 1,
+            "values": [],
+            "patch": []
+        }
+    ],
+    "automation": {
+        "conditions": [
+            {
+                "component": "main",
+                "capability": "waterSensor",
+                "version": 1,
+                "values": [],
+                "patch": []
+            },
+            {
+                "component": "main",
+                "capability": "sensor",
+                "version": 1,
+                "values": [],
+                "patch": []
+            },
+            {
+                "component": "main",
+                "capability": "afterwatch06989.ultrasonic",
+                "version": 1,
+                "values": [],
+                "patch": []
+            },
+            {
+                "component": "main",
+                "capability": "afterwatch06989.lastupdated",
+                "version": 1,
+                "values": [],
+                "patch": []
+            }
+        ],
+        "actions": [
+            {
+                "component": "main",
+                "capability": "waterSensor",
+                "version": 1,
+                "values": [],
+                "patch": []
+            },
+            {
+                "component": "main",
+                "capability": "refresh",
+                "version": 1,
+                "values": [],
+                "patch": []
+            },
+            {
+                "component": "main",
+                "capability": "sensor",
+                "version": 1,
+                "values": [],
+                "patch": []
+            },
+            {
+                "component": "main",
+                "capability": "afterwatch06989.ultrasonic",
+                "version": 1,
+                "values": [],
+                "patch": []
+            },
+            {
+                "component": "main",
+                "capability": "afterwatch06989.lastupdated",
+                "version": 1,
+                "values": [],
+                "patch": []
+            }
+        ]
+    },
+    "type": "dth",
+    "presentationId": "c9b3ec68-b299-3513-96b2-497d1f7b8e8d",
+    "manufacturerName": "SmartThingsCommunity",
+    "vid": "c9b3ec68-b299-3513-96b2-497d1f7b8e8d",
+    "mnmn": "SmartThingsCommunity",
+    "version": "0.0.1"
+}

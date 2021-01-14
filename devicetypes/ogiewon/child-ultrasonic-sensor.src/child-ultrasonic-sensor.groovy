@@ -17,40 +17,35 @@
  *    Date        Who            What
  *    ----        ---            ----
  *    2018-06-02  Dan Ogorchock  Revised/Simplified for Hubitat Composite Driver Model
- *   
+ *    2021-01-13  Andy Alsup     Revised for new ST mobile app
  *
  * 
  */
 metadata {
-	definition (name: "Child Ultrasonic Sensor", namespace: "ogiewon", author: "Daniel Ogorchock") {
+	definition (name: "Child Ultrasonic Sensor", namespace: "ogiewon", author: "Daniel Ogorchock", mnmn: "SmartThingsCommunity", vid: "c9b3ec68-b299-3513-96b2-497d1f7b8e8d") {
 		capability "Sensor"
-        
-		attribute "lastUpdated", "String"
-        attribute "ultrasonic", "Number"
+        capability "Refresh"
+        capability "Water Sensor"
+        capability "afterwatch06989.ultrasonic"
+        capability "afterwatch06989.lastupdated"
     }
 
-	tiles(scale: 2) {
-		multiAttributeTile(name: "ultrasonic", type: "generic", width: 6, height: 4, canChangeIcon: true) {
-			tileAttribute("device.ultrasonic", key: "PRIMARY_CONTROL") {
-				attributeState("ultrasonic", label: '${currentValue}%', unit:"%", defaultState: true, 
-						backgroundColors: [
-							[value: 80, color: "#767676"],
-							[value: 50, color: "#ffa81e"],
-							[value: 20, color: "#d04e00"]
-						])
-			}
-            tileAttribute ("device.liters", key: "SECONDARY_CONTROL") {
-        		attributeState "power", label:'Water capacity: ${currentValue} liters', icon: "http://cdn.device-icons.smartthings.com/Bath/bath6-icn@2x.png"
-            }    
-        }
- 		valueTile("lastUpdated", "device.lastUpdated", inactiveLabel: false, decoration: "flat", width: 6, height: 2) {
-    			state "default", label:'Last Updated ${currentValue}', backgroundColor:"#ffffff"
-		}
-    }
-    
     preferences {
-        input name: "height", type: "number", title: "Height", description: "Enter height of tank in cm", required: true
-        input name: "diameter", type: "number", title: "Diameter", description: "Enter diameter of tank", required: true
+        input(
+            name: "wet_limit", 
+            title: "Wet limit", 
+            type: "number", 
+            description: "Enter limit to report wet (in cm)",
+            required: true 
+        )
+        input(
+            name: "wet_condition", 
+            title: "Wet condition", 
+            type: "enum", 
+            options: ["Below limit", "Above limit"],
+            description: "Select condition to report wet", 
+            required: true
+        )
     }
 }
 
@@ -59,22 +54,32 @@ def parse(String description) {
 	def parts = description.split(" ")
     def name  = parts.length>0?parts[0].trim():null
     def value = parts.length>1?parts[1].trim():null
+
     if (name && value) {
-        double sensorValue = value as float
-        def volume = 3.14159 * (diameter/2) * (diameter/2) * height
-        double capacityLiters = volume / 1000 * 2
-        capacityLiters = capacityLiters.round(2)
-        sendEvent(name: "liters", value: capacityLiters)
-        double capacityValue = 100 - (sensorValue/height * 100 )
-        if(capacityValue != 100)
-        {
-            capacityValue = capacityValue.round(2)
-            sendEvent(name: name, value: capacityValue)
+        // Update `ultrasonic`
+        float distance = value as float
+        sendEvent(name: "ultrasonic", value: distance, unit: "cm")
+
+        // Update `water`
+        if (wet_limit && wet_condition) {
+            def water = "dry"
+
+            if ("Below limit".equalsIgnoreCase(wet_condition)) {
+                if (distance < wet_limit) {
+                    water = "wet"
+                }
+            } else {
+                if (distance > wet_limit) {
+                    water = "wet"
+                }
+            }
+            log.debug "water: " + water
+            sendEvent(name: "water", value: water)
         }
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
+
+        // Update `lastUpdated`
+        def nowDateTime = new Date().format("yyyyMMdd HH:mm:ss z", location.timeZone)
+        sendEvent(name: "lastUpdated", value: nowDateTime)
     }
     else {
     	log.debug "Missing either name or value.  Cannot parse!"
