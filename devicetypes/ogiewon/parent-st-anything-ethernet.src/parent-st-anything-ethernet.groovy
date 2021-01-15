@@ -195,7 +195,7 @@ def sendEthernet(message) {
     }
 }
 
-// afterwatch06989.refresh capability -- command
+// refresh capability command callback
 def refresh() {
 	log.debug "Executing 'refresh()'"
 	sendEthernet("refresh")
