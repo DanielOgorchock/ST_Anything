@@ -1,0 +1,22 @@
+{
+    "dashboard": {
+        "states": [
+            {
+                "label": "Refresh"
+            }
+        ],
+        "actions": [],
+        "basicPlus": []        
+    },
+    "detailView": [
+        {
+            "label": "Refresh",
+            "displayType": "pushButton",
+            "pushButton": {
+                "command": "refresh"
+            }
+        }
+    ],
+    "id": "afterwatch06989.refresh",
+    "version": 1
+}
