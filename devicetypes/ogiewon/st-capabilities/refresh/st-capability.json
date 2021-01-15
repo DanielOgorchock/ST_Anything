@@ -1,0 +1,14 @@
+{
+    "id": "afterwatch06989.refresh",
+    "version": 1,
+    "status": "proposed",
+    "name": "Refresh",
+    "attributes": {
+    },
+    "commands": {
+        "refresh": {
+            "name": "refresh",
+            "arguments": []
+        }
+    }
+}

@@ -195,6 +195,7 @@ def sendEthernet(message) {
     }
 }
 
+// refresh capability command callback
 def refresh() {
 	log.debug "Executing 'refresh()'"
 	sendEthernet("refresh")

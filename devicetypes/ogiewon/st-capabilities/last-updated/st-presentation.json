@@ -1,0 +1,23 @@
+{
+    "dashboard": {
+        "states": [
+            {
+                "label": "{{lastUpdated.value}} {{lastUpdated.unit}}"
+            }
+        ],
+        "actions": [],
+        "basicPlus": []        
+    },
+    "detailView": [
+        {
+            "label": "Last Updated",
+            "displayType": "state",
+            "state": {
+                "label": "{{lastUpdated.value}}",
+                "unit": "lastUpdated.unit"
+            }
+        }
+    ],
+    "id": "afterwatch06989.lastupdated",
+    "version": 1
+}

@@ -1,0 +1,33 @@
+{
+    "id": "afterwatch06989.ultrasonic",
+    "version": 1,
+    "status": "proposed",
+    "name": "Ultrasonic",
+    "attributes": {
+        "ultrasonic": {
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "value": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 2000
+                    },
+                    "unit": {
+                        "type": "string",
+                        "enum": [
+                            "cm"
+                        ],
+                        "default": "cm"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "value"
+                ]
+            }
+        }
+    },
+    "commands": {
+    }
+}

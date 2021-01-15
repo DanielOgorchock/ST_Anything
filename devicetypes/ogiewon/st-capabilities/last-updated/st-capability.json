@@ -1,0 +1,31 @@
+{
+    "id": "afterwatch06989.lastupdated",
+    "version": 1,
+    "status": "proposed",
+    "name": "LastUpdated",
+    "attributes": {
+        "lastUpdated": {
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "value": {
+                        "type": "string"
+                    },
+                    "unit": {
+                        "type": "string",
+                        "enum": [
+                            "time"
+                        ],
+                        "default": "time"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "value"
+                ]
+            }
+        }
+    },
+    "commands": {
+    }
+}

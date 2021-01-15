@@ -1,0 +1,23 @@
+{
+    "dashboard": {
+        "states": [
+            {
+                "label": "{{ultrasonic.value}} {{ultrasonic.unit}}"
+            }
+        ],
+        "actions": [],
+        "basicPlus": []        
+    },
+    "detailView": [
+        {
+            "label": "Ultrasonic",
+            "displayType": "state",
+            "state": {
+                "label": "{{ultrasonic.value}}",
+                "unit": "ultrasonic.unit"
+            }
+        }
+    ],
+    "id": "afterwatch06989.ultrasonic",
+    "version": 1
+}
