@@ -23,6 +23,7 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-07-01  Dan Ogorchock  Added importUrl
  *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
+ *    2020-02-23  Dan Ogorchock  Cast value as a float before calling sendEvent()
  * 
  */
 metadata {
@@ -48,7 +49,8 @@ def parse(String description) {
     def value = parts.length>1?parts[1].trim():null
     if (name && value) {
         // Update device
-        sendEvent(name: name, value: value)
+        float tmpValue = Float.parseFloat(value)
+        sendEvent(name: name, value: tmpValue)
     }
     else {
     	log.error "Missing either name or value.  Cannot parse!"
