@@ -46,7 +46,7 @@
  *    2020-05-16  Dan Ogorchock  Added support for Sound Pressure Level device
  *    2020-09-24  Dan Ogorchock  Modified to have child devices work better with 'New' ST App
  *    2020-12-11  Dan Ogorchock  Added Window Shade
- *    2020-01-14  Andrew Alsup   Improved support for the 'New" SmartThings Mobile App!  Thank you!
+ *    2021-01-14  Andrew Alsup   Improved support for the 'New" SmartThings Mobile App!  Thank you!
  *
  *	
  */
