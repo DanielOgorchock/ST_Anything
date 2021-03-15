@@ -145,8 +145,8 @@ WARNING:  If you are using an Arduino UNO, you may need to comment out some of t
   - Branch: master
 - Click on "Update From Repo" from the menu
 - Select "ST_Anything (master)" from the list
-- Select all of the Parent and Child Device Handlers
-- Check the "Publish" check box and click "Execute Update"
+- Select all of the Parent and Child Device Handlers (but be sure to UNSELECT the .json files, as these are only required for the creation of new VIDs for the New ST App via the CLI Tool)
+- Check the "Publish" check box and click "Execute Update" (only click once to avoid creating duplicates)
 - You should now have all of the necessary Device Handlers added to your account
 
 Note: If desired, you can still create all of the Device Handlers manually by copying and pasting code from the GitHub repository files into your ST IDE.  Trust me, the Github integration in SmartThings is so much easier!  And, you will know when new versions of the DHs are available based on the color of each DH in your list of Device Handlers in the IDE.
