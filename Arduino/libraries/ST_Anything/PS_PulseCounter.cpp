@@ -35,6 +35,7 @@
 //    2018-03-03  Dan Ogorchock  Improved code to make generic for all boards, not just Arduino MEGA
 //    2020-01-17  Dan Ogorchock  Improved support for ESP8266 using Arduino IDE Board Manager 2.5.1 and newer
 //    2020-11-15  Dan Ogorchock  Prevent Refresh from sending data for this particular device.
+//    2021-04-12  Dan Ogorchock  Corrected data type for interrupt type to correct compiler error for Nano 33 IoT
 //
 //
 //******************************************************************************************
@@ -64,7 +65,11 @@ void isrPulse() {
 //public
 
 	//constructor - called in your sketch's global variable declaration section
-	PS_PulseCounter::PS_PulseCounter(const __FlashStringHelper *name, unsigned int interval, int offset, byte inputpin, byte inttype, byte inputmode, float cnvslope, float cnvoffset) :
+#ifdef ARDUINO_ARCH_SAMD
+	PS_PulseCounter::PS_PulseCounter(const __FlashStringHelper *name, unsigned int interval, int offset, byte inputpin, PinStatus inttype, byte inputmode, float cnvslope, float cnvoffset) :
+#else
+PS_PulseCounter::PS_PulseCounter(const __FlashStringHelper* name, unsigned int interval, int offset, byte inputpin, int inttype, byte inputmode, float cnvslope, float cnvoffset) :
+#endif
 		PollingSensor(name, interval, offset),
 		m_nInputMode(inputmode),
 		m_nSensorValue(0),
