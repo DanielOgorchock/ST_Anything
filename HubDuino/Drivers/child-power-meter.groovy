@@ -24,6 +24,7 @@
  *    2019-07-01  Dan Ogorchock  Added importUrl
  *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
  *    2020-02-23  Dan Ogorchock  Cast value as a float before calling sendEvent()
+ *    2021-04-12  Dan Ogorchock  Round to one decimal place
  * 
  */
 metadata {
@@ -50,6 +51,7 @@ def parse(String description) {
     if (name && value) {
         // Update device
         float tmpValue = Float.parseFloat(value)
+        tmpValue = tmpValue.round(1)
         sendEvent(name: name, value: tmpValue)
     }
     else {
