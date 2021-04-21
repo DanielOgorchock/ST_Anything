@@ -173,7 +173,7 @@ void setup()
   static st::EX_RGBW_NeoPixelBus_T<NeoGrbwFeature, NeoEsp32Rmt2800KbpsMethod>       executor3(F("rgbSwitch3"), 150, PIN_RGBW1);  
   static st::EX_RGBW_NeoPixelBus_T<NeoGrbwFeature, NeoEsp32Rmt2800KbpsMethod>       executor4(F("rgbSwitch3"), 60, PIN_RGBW2);  
 
-  For the list of Features and Methods please see https://github.com/Makuna/NeoPixelBus/wiki/NeoPixelBus-object
+  //For the list of Features and Methods please see https://github.com/Makuna/NeoPixelBus/wiki/NeoPixelBus-object
   
   //*****************************************************************************
   //  Configure debug print output from each main class 
