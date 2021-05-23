@@ -25,6 +25,7 @@
 //    2017-02-07  Dan Ogorchock  Added support for new SmartThings v2.0 library (ThingShield, W5100, ESP8266)
 //    2019-02-09  Dan Ogorchock  Add update() call to Executors in support of devices like EX_Servo that need a non-blocking mechanism
 //    2019-02-24  Dan Ogorchock  Added new special callOnMsgRcvd2 callback capability. Allows recvd string to be manipulated in the sketch before being processed by Everything.
+//    2021-05-23  Dan Ogorchock  Address EXP8266 v3.0.0 board support package compatibility issue with Strings  
 //
 //******************************************************************************************
 
@@ -76,8 +77,8 @@ namespace st
 			static void initDevices();			//calls the init() routine of every object added to st::Everything in your sketch setup() routine 
 			static void run();					//st::Everything initialization routine called in your sketch loop() routine 
 			
-			static bool sendSmartString(String &str); //sendSmartString() may edit the string reference passed to it - queues messages - preferable
-			static bool sendSmartStringNow(String &str); //sendSmartStringNow() may edit the string reference passed to it - sends messages immediate - only for special circumstances
+			static bool sendSmartString(const String &str); //sendSmartString() may edit the string reference passed to it - queues messages - preferable
+			static bool sendSmartStringNow(const String &str); //sendSmartStringNow() may edit the string reference passed to it - sends messages immediate - only for special circumstances
 
 			static Device* getDeviceByName(const String &str);	//returns pointer to Device object by name
 			

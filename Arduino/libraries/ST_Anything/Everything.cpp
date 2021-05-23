@@ -26,6 +26,7 @@
 //    2019-02-09  Dan Ogorchock  Add update() call to Executors in support of devices like EX_Servo that need a non-blocking mechanism
 //    2019-02-24  Dan Ogorchock  Added new special callOnMsgRcvd2 callback capability. Allows recvd string to be manipulated in the sketch before being processed by Everything.
 //    2021-01-31  Marcus van Ierssel Improved the automatic refresh to prevent it from blocking other updates.
+//    2021-05-23  Dan Ogorchock  Address EXP8266 v3.0.0 board support package compatibility issue with Strings  
 //
 //******************************************************************************************
 
@@ -234,12 +235,12 @@ namespace st
 		}
 	}
 	
-	bool Everything::sendSmartString(String &str)
+	bool Everything::sendSmartString(const String &str)
 	{
-		while(str.length()>1 && str[0]=='|') //get rid of leading pipes (messes up sendStrings()'s parsing technique)
-		{
-			str=str.substring(1);
-		}
+		//while(str.length()>1 && str[0]=='|') //get rid of leading pipes (messes up sendStrings()'s parsing technique)
+		//{
+		//	str=str.substring(1);
+		//}
 		if((str.length()==1 && str[0]=='|') || str.length()==0)
 		{
 			return false;
@@ -262,7 +263,7 @@ namespace st
 		}
 	}
 
-	bool Everything::sendSmartStringNow(String &str)
+	bool Everything::sendSmartStringNow(const String &str)
 	{
 		if (sendSmartString(str)) sendStrings(); //send any pending updates to ST Cloud immediately
 	}
