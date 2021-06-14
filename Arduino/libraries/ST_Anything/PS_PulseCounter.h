@@ -36,6 +36,7 @@
 //    2020-01-17  Dan Ogorchock  Improved support for ESP8266 using Arduino IDE Board Manager 2.5.1 and newer
 //    2020-11-15  Dan Ogorchock  Prevent Refresh from sending data for this particular device.
 //    2021-04-12  Dan Ogorchock  Corrected data type for interrupt type to correct compiler error for Nano 33 IoT
+//    2021-06-14  Dan Ogorchock  Fixed for SAMD Architectures...again
 //
 //
 //******************************************************************************************
@@ -60,13 +61,13 @@ namespace st
 
 		public:
 
-#ifdef ARDUINO_ARCH_SAMD
-			//constructor - called in your sketch's global variable declaration section
-			PS_PulseCounter(const __FlashStringHelper *name, unsigned int interval, int offset, byte inputpin, PinStatus inttype, byte inputmode, float cnvslope, float cnvoffset);
-#else
+//#ifndef ARDUINO_ARCH_SAMD
+//			//constructor - called in your sketch's global variable declaration section
+//			PS_PulseCounter(const __FlashStringHelper *name, unsigned int interval, int offset, byte inputpin, PinStatus inttype, byte inputmode, float cnvslope, float cnvoffset);
+//#else
 			//constructor - called in your sketch's global variable declaration section
 			PS_PulseCounter(const __FlashStringHelper* name, unsigned int interval, int offset, byte inputpin,  int inttype, byte inputmode, float cnvslope, float cnvoffset);
-#endif
+//#endif
 			//destructor
 			virtual ~PS_PulseCounter();
 			
