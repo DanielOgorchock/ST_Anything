@@ -79,7 +79,7 @@ int ESP32BootROMClass::begin(unsigned long baudrate)
   delay(10);
   digitalWrite(_resetnPin, LOW);
   delay(100);
-#if defined(ARDUINO_SAMD_NANO_33_IOT)
+#if defined(ARDUINO_SAMD_NANO_33_IOT) ||defined(ARDUINO_NANO_RP2040_CONNECT)
   digitalWrite(_resetnPin, HIGH);
   delay(100);
 #endif
@@ -95,7 +95,7 @@ int ESP32BootROMClass::begin(unsigned long baudrate)
     return 0;
   }
 
-#if defined(ARDUINO_SAMD_MKRVIDOR4000) || defined(ARDUINO_AVR_UNO_WIFI_REV2)
+#if defined(ARDUINO_SAMD_MKRVIDOR4000) || defined(ARDUINO_AVR_UNO_WIFI_REV2) || defined(ARDUINO_NANO_RP2040_CONNECT)
   (void)baudrate;
 #else
   if (baudrate != 115200) {

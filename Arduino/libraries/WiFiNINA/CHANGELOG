@@ -1,5 +1,24 @@
 WiFiNINA ?.?.? - ????.??.??
 
+WiFiNINA 1.8.0 - 2020.11.18
+
+* Limit the maximum length of the download URL for the OTA binary since the receive buffer on the nina firmware can't hold more than 128 bytes (#131)
+* Introduce WiFiBearSSLClient (offloaded to Nina) (#139)
+* Change WIFI_FIRMWARE_LATEST_VERSION to 1.4.2
+
+WiFiNINA 1.7.1 - 2020.08.26
+
+* Change WIFI_FIRMWARE_LATEST_VERSION to 1.4.1
+
+WiFiNINA 1.7.0 - 2020.08.06
+
+* Add downloadOTA command to download OTA file and verify length/CRC (#124) (to be used together with nina-fw > arduino/nina-fw@d4a2118)
+
+WiFiNINA 1.6.0 - 2020.07.13
+
+* Adding API to make use of file storage/retieval capability available since nina-fw 1.5.0 (#74)
+* Speed up of duration of function ServerDrv::getDataBuf (#84)
+
 WiFiNINA 1.5.0 - 2019.12.30
 
 * Add WiFi.reasonCode() API to retrieve the deauthentication reason code

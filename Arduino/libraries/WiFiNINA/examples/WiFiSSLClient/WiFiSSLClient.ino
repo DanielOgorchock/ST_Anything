@@ -17,7 +17,7 @@ last revision November 2015
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
-int keyIndex = 0;            // your network key Index number (needed only for WEP)
+int keyIndex = 0;            // your network key index number (needed only for WEP)
 
 int status = WL_IDLE_STATUS;
 // if you don't want to use DNS (and reduce your sketch size)
@@ -59,7 +59,7 @@ void setup() {
     // wait 10 seconds for connection:
     delay(10000);
   }
-  Serial.println("Connected to wifi");
+  Serial.println("Connected to WiFi");
   printWiFiStatus();
 
   Serial.println("\nStarting connection to server...");

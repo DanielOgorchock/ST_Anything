@@ -1,6 +1,6 @@
 /*
-  This example connects to an WPA2 Enterprise WiFi network.
-  Then it prints the  MAC address of the WiFi module,
+  This example connects to a WPA2 Enterprise WiFi network.
+  Then it prints the MAC address of the WiFi module,
   the IP address obtained, and other network details.
 
   Based on ConnectWithWPA.ino by dlf (Metodo2 srl) and Tom Igoe
@@ -13,7 +13,7 @@
 char ssid[] = SECRET_SSID;  // your WPA2 enterprise network SSID (name)
 char user[] = SECRET_USER;  // your WPA2 enterprise username
 char pass[] = SECRET_PASS;  // your WPA2 enterprise password
-int status = WL_IDLE_STATUS;     // the Wifi radio's status
+int status = WL_IDLE_STATUS;     // the WiFi radio's status
 
 void setup() {
   //Initialize serial and wait for port to open:
@@ -34,14 +34,13 @@ void setup() {
     Serial.println("Please upgrade the firmware");
   }
 
-  // attempt to connect to Wifi network:
+  // attempt to connect to WiFi network:
   while (status != WL_CONNECTED) {
     Serial.print("Attempting to connect to WPA SSID: ");
     Serial.println(ssid);
     // Connect to WPA2 enterprise network:
-    // - You can optionally provide additional identity and CA cert (string) parameters:
+    // - You can optionally provide additional identity and CA cert (string) parameters if your network requires them:
     //      WiFi.beginEnterprise(ssid, user, pass, identity, caCert)
-    // . if your network requires them.
     status = WiFi.beginEnterprise(ssid, user, pass);
 
     // wait 10 seconds for connection:

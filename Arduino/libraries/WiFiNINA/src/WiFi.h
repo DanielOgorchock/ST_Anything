@@ -21,7 +21,7 @@
 #ifndef WiFi_h
 #define WiFi_h
 
-#define WIFI_FIRMWARE_LATEST_VERSION "1.2.1"
+#define WIFI_FIRMWARE_LATEST_VERSION "1.4.4"
 
 #include <inttypes.h>
 
@@ -34,6 +34,7 @@ extern "C" {
 #include "WiFiClient.h"
 #include "WiFiSSLClient.h"
 #include "WiFiServer.h"
+#include "WiFiStorage.h"
 
 class WiFiClass
 {
@@ -50,13 +51,13 @@ public:
     static const char* firmwareVersion();
 
 
-    /* Start Wifi connection for OPEN networks
+    /* Start WiFi connection for OPEN networks
      *
      * param ssid: Pointer to the SSID string.
      */
     int begin(const char* ssid);
 
-    /* Start Wifi connection with WEP encryption.
+    /* Start WiFi connection with WEP encryption.
      * Configure a key into the device. The key type (WEP-40, WEP-104)
      * is determined by the size of the key (5 bytes for WEP-40, 13 bytes for WEP-104).
      *
@@ -66,7 +67,7 @@ public:
      */
     int begin(const char* ssid, uint8_t key_idx, const char* key);
 
-    /* Start Wifi connection with passphrase
+    /* Start WiFi connection with passphrase
      * the most secure supported mode will be automatically selected
      *
      * param ssid: Pointer to the SSID string.

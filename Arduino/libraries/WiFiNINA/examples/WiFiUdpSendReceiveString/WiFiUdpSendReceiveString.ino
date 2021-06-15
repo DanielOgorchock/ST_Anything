@@ -1,8 +1,7 @@
-
 /*
   WiFi UDP Send and Receive String
 
- This sketch wait an UDP packet on localPort using the WiFi module.
+ This sketch waits for a UDP packet on localPort using the WiFi module.
  When a packet is received an Acknowledge packet is sent to the client on port remotePort
 
  created 30 December 2012
@@ -20,11 +19,11 @@ int status = WL_IDLE_STATUS;
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
-int keyIndex = 0;            // your network key Index number (needed only for WEP)
+int keyIndex = 0;            // your network key index number (needed only for WEP)
 
 unsigned int localPort = 2390;      // local port to listen on
 
-char packetBuffer[255]; //buffer to hold incoming packet
+char packetBuffer[256]; //buffer to hold incoming packet
 char  ReplyBuffer[] = "acknowledged";       // a string to send back
 
 WiFiUDP Udp;
@@ -48,7 +47,7 @@ void setup() {
     Serial.println("Please upgrade the firmware");
   }
 
-  // attempt to connect to Wifi network:
+  // attempt to connect to WiFi network:
   while (status != WL_CONNECTED) {
     Serial.print("Attempting to connect to SSID: ");
     Serial.println(ssid);
@@ -58,7 +57,7 @@ void setup() {
     // wait 10 seconds for connection:
     delay(10000);
   }
-  Serial.println("Connected to wifi");
+  Serial.println("Connected to WiFi");
   printWifiStatus();
 
   Serial.println("\nStarting connection to server...");
@@ -111,7 +110,3 @@ void printWifiStatus() {
   Serial.print(rssi);
   Serial.println(" dBm");
 }
-
-
-
-

@@ -1,5 +1,5 @@
 /*
- * This example check if the firmware loaded on the NINA module
+ * This example checks if the firmware loaded on the NINA module
  * is updated.
  *
  * Circuit:
@@ -47,7 +47,7 @@ void setup() {
     Serial.println("Check result: PASSED");
   } else {
     Serial.println("Check result: NOT PASSED");
-    Serial.println(" - The firmware version on the module do not match the");
+    Serial.println(" - The firmware version on the module does not match the");
     Serial.println("   version required by the library, you may experience");
     Serial.println("   issues or failures.");
   }
@@ -56,4 +56,3 @@ void setup() {
 void loop() {
   // do nothing
 }
-

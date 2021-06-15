@@ -43,7 +43,7 @@
 #define	WIFI_MAX_SOCK_NUM	10
 // Socket not available constant
 #define SOCK_NOT_AVAIL  255
-// Default state value for Wifi state field
+// Default state value for WiFi state field
 #define NA_STATE -1
 
 typedef enum {

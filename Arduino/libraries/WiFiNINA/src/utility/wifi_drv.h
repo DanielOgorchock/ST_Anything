@@ -81,32 +81,32 @@ public:
      * The ssid of the desired network should be specified.
      *
      * param ssid: The ssid of the desired network.
-     * param ssid_len: Lenght of ssid string.
+     * param ssid_len: Length of ssid string.
      * return: WL_SUCCESS or WL_FAILURE
 	 */
     static int8_t wifiSetNetwork(const char* ssid, uint8_t ssid_len);
 
-    /* Start Wifi connection with passphrase
+    /* Start WiFi connection with passphrase
      * the most secure supported mode will be automatically selected
      *
      * param ssid: Pointer to the SSID string.
-     * param ssid_len: Lenght of ssid string.
+     * param ssid_len: Length of ssid string.
      * param passphrase: Passphrase. Valid characters in a passphrase
      *        must be between ASCII 32-126 (decimal).
-     * param len: Lenght of passphrase string.
+     * param len: Length of passphrase string.
      * return: WL_SUCCESS or WL_FAILURE
      */
     static int8_t wifiSetPassphrase(const char* ssid, uint8_t ssid_len, const char *passphrase, const uint8_t len);
 
-    /* Start Wifi connection with WEP encryption.
+    /* Start WiFi connection with WEP encryption.
      * Configure a key into the device. The key type (WEP-40, WEP-104)
      * is determined by the size of the key (5 bytes for WEP-40, 13 bytes for WEP-104).
      *
      * param ssid: Pointer to the SSID string.
-     * param ssid_len: Lenght of ssid string.
+     * param ssid_len: Length of ssid string.
      * param key_idx: The key index to set. Valid values are 0-3.
      * param key: Key input buffer.
-     * param len: Lenght of key string.
+     * param len: Length of key string.
      * return: WL_SUCCESS or WL_FAILURE
      */
     static int8_t wifiSetKey(const char* ssid, uint8_t ssid_len, uint8_t key_idx, const void *key, const uint8_t len);
@@ -292,6 +292,30 @@ public:
     static void pinMode(uint8_t pin, uint8_t mode);
     static void digitalWrite(uint8_t pin, uint8_t value);
     static void analogWrite(uint8_t pin, uint8_t value);
+
+    static int8_t downloadFile(const char* url, uint8_t url_len, const char *filename, uint8_t filename_len);
+    static int8_t downloadOTA(const char* url, uint8_t url_len);
+    static int8_t renameFile(const char * old_file_name, uint8_t const old_file_name_len, const char * new_file_name, uint8_t const new_file_name_len);
+
+    static int8_t fileOperation(uint8_t operation, const char *filename, uint8_t filename_len, uint32_t offset, uint8_t* buffer, uint32_t len);
+
+    static int8_t readFile(const char *filename, uint8_t filename_len, uint32_t offset, uint8_t* buffer, uint32_t buffer_len) {
+        return fileOperation(READ_FILE, filename, filename_len, offset, buffer, buffer_len);
+    };
+    static int8_t writeFile(const char *filename, uint8_t filename_len, uint32_t offset, uint8_t* buffer, uint32_t buffer_len) {
+        return fileOperation(WRITE_FILE, filename, filename_len, offset, buffer, buffer_len);
+    };
+    static int8_t deleteFile(const char *filename, uint8_t filename_len)  {
+        return fileOperation(DELETE_FILE, filename, filename_len, 0, NULL, 0);
+    };
+    static int8_t existsFile(const char *filename, uint8_t filename_len, uint32_t* len)  {
+        int32_t length = 0;
+        fileOperation(EXISTS_FILE, filename, filename_len, 0, (uint8_t*)&length, sizeof(length));
+        *len = length;
+        return length >= 0;
+    };
+
+    static void applyOTA();
 
     friend class WiFiUDP;
     friend class WiFiClient;

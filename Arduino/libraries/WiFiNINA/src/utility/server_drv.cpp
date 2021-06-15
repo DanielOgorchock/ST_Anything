@@ -130,7 +130,7 @@ void ServerDrv::startClient(const char* host, uint8_t host_len, uint32_t ipAddre
 
     SpiDrv::spiSlaveDeselect();
     //Wait the reply elaboration
-    SpiDrv::waitForSlaveReady();
+    SpiDrv::waitForSlaveReady(/* feed_watchdog = */ (protMode == TLS_BEARSSL_MODE));
     SpiDrv::spiSlaveSelect();
 
     // Wait for reply
@@ -323,6 +323,12 @@ bool ServerDrv::getData(uint8_t sock, uint8_t *data, uint8_t peek)
 
 bool ServerDrv::getDataBuf(uint8_t sock, uint8_t *_data, uint16_t *_dataLen)
 {
+    if (!SpiDrv::available())
+    {
+        *_dataLen = 0;
+        return false;
+    }
+    
 	WAIT_FOR_SLAVE_SELECT();
     // Send Command
     SpiDrv::sendCmd(GET_DATABUF_TCP_CMD, PARAM_NUMS_2);

@@ -1,5 +1,5 @@
 /*
-  This file is part of the WiFiNINA library.
+  WiFiStorage.cpp - Library for Arduino boards based on NINA WiFi module.
   Copyright (c) 2018 Arduino SA. All rights reserved.
 
   This library is free software; you can redistribute it and/or
@@ -14,32 +14,17 @@
 
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef WIFISSLCLIENT_H
-#define WIFISSLCLIENT_H
+#include "WiFiStorage.h"
 
-#include "WiFiClient.h"
+WiFiStorageFile WiFiStorageClass::open(const char *filename) {
+	WiFiStorageFile file(filename);
+	file.size();
+	return file;
+}
 
-class WiFiSSLClient : public WiFiClient {
-
-public:
-	WiFiSSLClient();
-	WiFiSSLClient(uint8_t sock);
-
-	virtual int connect(IPAddress ip, uint16_t port);
-	virtual int connect(const char* host, uint16_t port);
-};
-
-class WiFiBearSSLClient : public WiFiClient {
-
-public:
-	WiFiBearSSLClient();
-	WiFiBearSSLClient(uint8_t sock);
-
-	virtual int connect(IPAddress ip, uint16_t port);
-	virtual int connect(const char* host, uint16_t port);
-};
-
-#endif /* WIFISSLCLIENT_H */
+WiFiStorageFile WiFiStorageClass::open(String filename) {
+	return open(filename.c_str());
+}

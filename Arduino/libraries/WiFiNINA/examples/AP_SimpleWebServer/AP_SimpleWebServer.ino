@@ -4,7 +4,7 @@
   A simple web server that lets you blink an LED via the web.
   This sketch will create a new access point (with no password).
   It will then launch a new server and print out the IP address
-  to the Serial monitor. From there, you can open that address in a web browser
+  to the Serial Monitor. From there, you can open that address in a web browser
   to turn on and off the LED on pin 13.
 
   If the IP address of your board is yourAddress:
@@ -22,7 +22,7 @@
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
-int keyIndex = 0;                // your network key Index number (needed only for WEP)
+int keyIndex = 0;                // your network key index number (needed only for WEP)
 
 int led =  LED_BUILTIN;
 int status = WL_IDLE_STATUS;
@@ -51,7 +51,7 @@ void setup() {
     Serial.println("Please upgrade the firmware");
   }
 
-  // by default the local IP address of will be 192.168.4.1
+  // by default the local IP address will be 192.168.4.1
   // you can override it with the following:
   // WiFi.config(IPAddress(10, 0, 0, 1));
 
@@ -99,6 +99,7 @@ void loop() {
     Serial.println("new client");           // print a message out the serial port
     String currentLine = "";                // make a String to hold incoming data from the client
     while (client.connected()) {            // loop while the client's connected
+      delayMicroseconds(10);                // This is required for the Arduino Nano RP2040 Connect - otherwise it will loop so fast that SPI will never be served.
       if (client.available()) {             // if there's bytes to read from the client,
         char c = client.read();             // read a byte, then
         Serial.write(c);                    // print it out the serial monitor

@@ -1,4 +1,3 @@
-
 /*
   Web client
 
@@ -6,10 +5,10 @@
  using the WiFi module.
 
  This example is written for a network using WPA encryption. For
- WEP or WPA, change the Wifi.begin() call accordingly.
+ WEP or WPA, change the WiFi.begin() call accordingly.
 
  This example is written for a network using WPA encryption. For
- WEP or WPA, change the Wifi.begin() call accordingly.
+ WEP or WPA, change the WiFi.begin() call accordingly.
 
  Circuit:
  * Board with NINA module (Arduino MKR WiFi 1010, MKR VIDOR 4000 and UNO WiFi Rev.2)
@@ -28,7 +27,7 @@
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
-int keyIndex = 0;            // your network key Index number (needed only for WEP)
+int keyIndex = 0;            // your network key index number (needed only for WEP)
 
 int status = WL_IDLE_STATUS;
 // if you don't want to use DNS (and reduce your sketch size)
@@ -60,7 +59,7 @@ void setup() {
     Serial.println("Please upgrade the firmware");
   }
 
-  // attempt to connect to Wifi network:
+  // attempt to connect to WiFi network:
   while (status != WL_CONNECTED) {
     Serial.print("Attempting to connect to SSID: ");
     Serial.println(ssid);
@@ -70,7 +69,7 @@ void setup() {
     // wait 10 seconds for connection:
     delay(10000);
   }
-  Serial.println("Connected to wifi");
+  Serial.println("Connected to WiFi");
   printWifiStatus();
 
   Serial.println("\nStarting connection to server...");
@@ -121,8 +120,3 @@ void printWifiStatus() {
   Serial.print(rssi);
   Serial.println(" dBm");
 }
-
-
-
-
-

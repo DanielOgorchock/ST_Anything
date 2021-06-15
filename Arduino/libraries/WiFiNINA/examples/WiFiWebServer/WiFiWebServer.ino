@@ -4,7 +4,7 @@
  A simple web server that shows the value of the analog input pins.
 
  This example is written for a network using WPA encryption. For
- WEP or WPA, change the Wifi.begin() call accordingly.
+ WEP or WPA, change the WiFi.begin() call accordingly.
 
  Circuit:
  * Analog inputs attached to pins A0 through A5 (optional)
@@ -24,7 +24,7 @@
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
-int keyIndex = 0;                 // your network key Index number (needed only for WEP)
+int keyIndex = 0;                 // your network key index number (needed only for WEP)
 
 int status = WL_IDLE_STATUS;
 
@@ -49,7 +49,7 @@ void setup() {
     Serial.println("Please upgrade the firmware");
   }
 
-  // attempt to connect to Wifi network:
+  // attempt to connect to WiFi network:
   while (status != WL_CONNECTED) {
     Serial.print("Attempting to connect to SSID: ");
     Serial.println(ssid);
@@ -70,17 +70,17 @@ void loop() {
   WiFiClient client = server.available();
   if (client) {
     Serial.println("new client");
-    // an http request ends with a blank line
+    // an HTTP request ends with a blank line
     boolean currentLineIsBlank = true;
     while (client.connected()) {
       if (client.available()) {
         char c = client.read();
         Serial.write(c);
         // if you've gotten to the end of the line (received a newline
-        // character) and the line is blank, the http request has ended,
+        // character) and the line is blank, the HTTP request has ended,
         // so you can send a reply
         if (c == '\n' && currentLineIsBlank) {
-          // send a standard http response header
+          // send a standard HTTP response header
           client.println("HTTP/1.1 200 OK");
           client.println("Content-Type: text/html");
           client.println("Connection: close");  // the connection will be closed after completion of the response
@@ -135,4 +135,3 @@ void printWifiStatus() {
   Serial.print(rssi);
   Serial.println(" dBm");
 }
-

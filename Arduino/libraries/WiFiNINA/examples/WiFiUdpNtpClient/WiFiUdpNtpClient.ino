@@ -1,5 +1,4 @@
 /*
-
  Udp NTP Client
 
  Get the time from a Network Time Protocol (NTP) time server
@@ -25,13 +24,13 @@ int status = WL_IDLE_STATUS;
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
-int keyIndex = 0;            // your network key Index number (needed only for WEP)
+int keyIndex = 0;            // your network key index number (needed only for WEP)
 
 unsigned int localPort = 2390;      // local port to listen for UDP packets
 
 IPAddress timeServer(129, 6, 15, 28); // time.nist.gov NTP server
 
-const int NTP_PACKET_SIZE = 48; // NTP time stamp is in the first 48 bytes of the message
+const int NTP_PACKET_SIZE = 48; // NTP timestamp is in the first 48 bytes of the message
 
 byte packetBuffer[ NTP_PACKET_SIZE]; //buffer to hold incoming and outgoing packets
 
@@ -57,7 +56,7 @@ void setup() {
     Serial.println("Please upgrade the firmware");
   }
 
-  // attempt to connect to Wifi network:
+  // attempt to connect to WiFi network:
   while (status != WL_CONNECTED) {
     Serial.print("Attempting to connect to SSID: ");
     Serial.println(ssid);
@@ -68,7 +67,7 @@ void setup() {
     delay(10000);
   }
 
-  Serial.println("Connected to wifi");
+  Serial.println("Connected to WiFi");
   printWifiStatus();
 
   Serial.println("\nStarting connection to server...");
@@ -85,7 +84,7 @@ void loop() {
     Udp.read(packetBuffer, NTP_PACKET_SIZE); // read the packet into the buffer
 
     //the timestamp starts at byte 40 of the received packet and is four bytes,
-    // or two words, long. First, esxtract the two words:
+    // or two words, long. First, extract the two words:
 
     unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
     unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);
@@ -172,13 +171,3 @@ void printWifiStatus() {
   Serial.print(rssi);
   Serial.println(" dBm");
 }
-
-
-
-
-
-
-
-
-
-

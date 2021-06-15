@@ -1,5 +1,4 @@
 /*
-
   This example  prints the board's MAC address, and
   scans for available WiFi networks using the NINA module.
   Every ten seconds, it scans again. It doesn't actually

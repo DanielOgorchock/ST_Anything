@@ -1,7 +1,6 @@
 /*
-
-  This example connects to a encrypted WiFi network (WPA/WPA2).
-  Then it prints the  MAC address of the board,
+  This example connects to an encrypted WiFi network (WPA/WPA2).
+  Then it prints the MAC address of the board,
   the IP address obtained, and other network details.
   Then it continuously pings given host specified by IP Address or name.
 

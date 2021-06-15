@@ -1,5 +1,5 @@
 /*
-  Repeating Wifi Web Client
+  Repeating WiFi Web Client
 
  This sketch connects to a a web server and makes a request
  using a WiFi equipped Arduino board.
@@ -21,11 +21,11 @@
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
-int keyIndex = 0;            // your network key Index number (needed only for WEP)
+int keyIndex = 0;            // your network key index number (needed only for WEP)
 
 int status = WL_IDLE_STATUS;
 
-// Initialize the Wifi client library
+// Initialize the WiFi client library
 WiFiClient client;
 
 // server address:
@@ -54,7 +54,7 @@ void setup() {
     Serial.println("Please upgrade the firmware");
   }
 
-  // attempt to connect to Wifi network:
+  // attempt to connect to WiFi network:
   while (status != WL_CONNECTED) {
     Serial.print("Attempting to connect to SSID: ");
     Serial.println(ssid);
@@ -88,13 +88,13 @@ void loop() {
 // this method makes a HTTP connection to the server:
 void httpRequest() {
   // close any connection before send a new request.
-  // This will free the socket on the Nina module
+  // This will free the socket on the NINA module
   client.stop();
 
   // if there's a successful connection:
   if (client.connect(server, 80)) {
     Serial.println("connecting...");
-    // send the HTTP PUT request:
+    // send the HTTP GET request:
     client.println("GET / HTTP/1.1");
     client.println("Host: example.org");
     client.println("User-Agent: ArduinoWiFi/1.1");

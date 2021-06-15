@@ -58,4 +58,3 @@ uint32_t toNetwork32(uint32_t to) {
 uint16_t toNetwork16(uint16_t to) {
   return fromNetwork16(to);
 }
-

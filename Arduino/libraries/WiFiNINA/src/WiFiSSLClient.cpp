@@ -38,3 +38,23 @@ int WiFiSSLClient::connect(const char* host, uint16_t port)
 {
 	return WiFiClient::connectSSL(host, port);
 }
+
+WiFiBearSSLClient::WiFiBearSSLClient() :
+	WiFiClient()
+{
+}
+
+WiFiBearSSLClient::WiFiBearSSLClient(uint8_t sock) :
+	WiFiClient(sock)
+{
+}
+
+int WiFiBearSSLClient::connect(IPAddress ip, uint16_t port)
+{
+	return WiFiClient::connectBearSSL(ip, port);
+}
+
+int WiFiBearSSLClient::connect(const char* host, uint16_t port)
+{
+	return WiFiClient::connectBearSSL(host, port);
+}

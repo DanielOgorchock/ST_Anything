@@ -30,7 +30,7 @@
 // yes, so use the existing VidorFPGA include
 #include <VidorFPGA.h>
 #else
-// otherwise, fallback to VidorPeripherals and it's bistream
+// otherwise, fallback to VidorPeripherals and it's bitstream
 #include <VidorPeripherals.h>
 #endif
 
@@ -61,7 +61,19 @@ static bool inverted_reset = false;
 #define SPIWIFI SPI
 #endif
 
+#ifndef NINA_GPIOIRQ
+#define NINA_GPIOIRQ    NINA_GPIO0
+#endif
+
 bool SpiDrv::initialized = false;
+
+__attribute__((weak)) void wifi_nina_feed_watchdog()
+{
+    /* This function can be overwritten by a "strong" implementation
+     * in a higher level application, such as the ArduinoIoTCloud
+     * firmware stack.
+     */
+}
 
 void SpiDrv::begin()
 {
@@ -90,7 +102,6 @@ void SpiDrv::begin()
       }      
 #endif
 
-      SPIWIFI.begin();
       pinMode(SLAVESELECT, OUTPUT);
       pinMode(SLAVEREADY, INPUT);
       pinMode(SLAVERESET, OUTPUT);
@@ -104,7 +115,9 @@ void SpiDrv::begin()
       delay(750);
 
       digitalWrite(NINA_GPIO0, LOW);
-      pinMode(NINA_GPIO0, INPUT);
+      pinMode(NINA_GPIOIRQ, INPUT);
+
+      SPIWIFI.begin();
 
 #ifdef _DEBUG_
 	  INIT_TRIGGER()
@@ -207,9 +220,17 @@ void SpiDrv::waitForSlaveSign()
 	while (!waitSlaveSign());
 }
 
-void SpiDrv::waitForSlaveReady()
+void SpiDrv::waitForSlaveReady(bool const feed_watchdog)
 {
-	while (!waitSlaveReady());
+    unsigned long const start = millis();
+	while (!waitSlaveReady())
+    {
+        if (feed_watchdog) {
+            if ((millis() - start) < 10000) {
+                wifi_nina_feed_watchdog();
+            }
+        }
+    }
 }
 
 void SpiDrv::getParam(uint8_t* param)
@@ -449,6 +470,22 @@ int SpiDrv::waitResponse(uint8_t cmd, uint8_t* numParamRead, uint8_t** params, u
     return 1;
 }
 
+void SpiDrv::sendParamNoLen(uint8_t* param, size_t param_len, uint8_t lastParam)
+{
+    size_t i = 0;
+    // Send Spi paramLen
+    sendParamLen8(0);
+
+    // Send Spi param data
+    for (i=0; i<param_len; ++i)
+    {
+        spiTransfer(param[i]);
+    }
+
+    // if lastParam==1 Send Spi END CMD
+    if (lastParam == 1)
+        spiTransfer(END_CMD);
+}
 
 void SpiDrv::sendParam(uint8_t* param, uint8_t param_len, uint8_t lastParam)
 {
@@ -562,7 +599,7 @@ void SpiDrv::sendCmd(uint8_t cmd, uint8_t numParam)
 
 int SpiDrv::available()
 {
-    return (digitalRead(NINA_GPIO0) != LOW);
+    return (digitalRead(NINA_GPIOIRQ) != LOW);
 }
 
 SpiDrv spiDrv;
