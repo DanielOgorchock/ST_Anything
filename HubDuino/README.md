@@ -1,7 +1,7 @@
 HubDuino v1.1.7
 ================
 
-**WARNING** - If using an ESP8266, make sure you are using v2.7.4 of the Arduino ESP8266 Board manager along with Arduino IDE v1.8.15. Version 3.0.0 of the ESP8266 Board package for the Arduino IDE has made some significant breaking changes.  
+**WARNING** - If using an ESP8266, make sure you are using v2.7.4 of the Arduino ESP8266 Board manager along with Arduino IDE v1.8.16. Version 3.0.0+ of the ESP8266 Board package for the Arduino IDE has made some significant breaking changes.  
 
 **Recent History:**
 - 2019-09-14 HubDuino v1.1.7 - Significant changes to the Parent Drivers.  MAC Address is no longer required - only the IP address/port of the micro-controller is needed.  Added Presence Capability to the Parent Device - This indicates whether or not the device has had an update from the microcontroller within a user selectable timeout period via a new setting.  NumberOfButtons setting is removed as it now auto-populates.  This release also requires an update to the ST_Anything library's IS_Button.cpp file.
