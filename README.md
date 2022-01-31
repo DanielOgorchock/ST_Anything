@@ -5,6 +5,8 @@ ST_Anything v2.9.7
 
 **WARNING** - If using an ESP8266, make sure you are using v2.7.4 of the Arduino ESP8266 Board manager along with Arduino IDE v1.8.16. Version 3.0.0+ of the ESP8266 Board package for the Arduino IDE has made some significant breaking changes. 
 
+**WARNING** - If using an ESP32, make sure you are using v1.06 of the Arduino ESP8266 Board manager along with Arduino IDE v1.8.16. Version 2.0.0+ of the ESP32 Board package for the Arduino IDE has made some significant breaking changes. 
+
 **Recent History:**
 - v2.9.7 - Minor Parent DTH change due to change in the IS_Button.cpp device
 - v2.9.6 - Added support for Arduino NANO33IoT
