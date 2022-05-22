@@ -15,11 +15,19 @@
 #define IO_REG_TYPE uint8_t
 #define IO_REG_BASE_ATTR asm("r30")
 #define IO_REG_MASK_ATTR
+#if defined(__AVR_ATmega4809__)
+#define DIRECT_READ(base, mask)         (((*(base)) & (mask)) ? 1 : 0)
+#define DIRECT_MODE_INPUT(base, mask)   ((*((base)-8)) &= ~(mask))
+#define DIRECT_MODE_OUTPUT(base, mask)  ((*((base)-8)) |= (mask))
+#define DIRECT_WRITE_LOW(base, mask)    ((*((base)-4)) &= ~(mask))
+#define DIRECT_WRITE_HIGH(base, mask)   ((*((base)-4)) |= (mask))
+#else
 #define DIRECT_READ(base, mask)         (((*(base)) & (mask)) ? 1 : 0)
 #define DIRECT_MODE_INPUT(base, mask)   ((*((base)+1)) &= ~(mask))
 #define DIRECT_MODE_OUTPUT(base, mask)  ((*((base)+1)) |= (mask))
 #define DIRECT_WRITE_LOW(base, mask)    ((*((base)+2)) &= ~(mask))
 #define DIRECT_WRITE_HIGH(base, mask)   ((*((base)+2)) |= (mask))
+#endif
 
 #elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK66FX1M0__) || defined(__MK64FX512__)
 #define PIN_TO_BASEREG(pin)             (portOutputRegister(pin))
@@ -44,6 +52,18 @@
 #define DIRECT_MODE_OUTPUT(base, mask)  (*((base)+20) |= (mask))
 #define DIRECT_WRITE_LOW(base, mask)    (*((base)+8) = (mask))
 #define DIRECT_WRITE_HIGH(base, mask)   (*((base)+4) = (mask))
+
+#elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
+#define PIN_TO_BASEREG(pin)             (portOutputRegister(pin))
+#define PIN_TO_BITMASK(pin)             (digitalPinToBitMask(pin))
+#define IO_REG_TYPE uint32_t
+#define IO_REG_BASE_ATTR
+#define IO_REG_MASK_ATTR
+#define DIRECT_READ(base, mask)         ((*((base)+2) & (mask)) ? 1 : 0)
+#define DIRECT_MODE_INPUT(base, mask)   (*((base)+1) &= ~(mask))
+#define DIRECT_MODE_OUTPUT(base, mask)  (*((base)+1) |= (mask))
+#define DIRECT_WRITE_LOW(base, mask)    (*((base)+34) = (mask))
+#define DIRECT_WRITE_HIGH(base, mask)   (*((base)+33) = (mask))
 
 #elif defined(__SAM3X8E__) || defined(__SAM3A8C__) || defined(__SAM3A4C__)
 // Arduino 1.5.1 may have a bug in delayMicroseconds() on Arduino Due.
@@ -107,10 +127,14 @@
 static inline __attribute__((always_inline))
 IO_REG_TYPE directRead(IO_REG_TYPE pin)
 {
+#if CONFIG_IDF_TARGET_ESP32C3
+    return (GPIO.in.val >> pin) & 0x1;
+#else // plain ESP32
     if ( pin < 32 )
         return (GPIO.in >> pin) & 0x1;
-    else if ( pin < 40 )
+    else if ( pin < 46 )
         return (GPIO.in1.val >> (pin - 32)) & 0x1;
+#endif
 
     return 0;
 }
@@ -118,26 +142,38 @@ IO_REG_TYPE directRead(IO_REG_TYPE pin)
 static inline __attribute__((always_inline))
 void directWriteLow(IO_REG_TYPE pin)
 {
+#if CONFIG_IDF_TARGET_ESP32C3
+    GPIO.out_w1tc.val = ((uint32_t)1 << pin);
+#else // plain ESP32
     if ( pin < 32 )
         GPIO.out_w1tc = ((uint32_t)1 << pin);
-    else if ( pin < 34 )
+    else if ( pin < 46 )
         GPIO.out1_w1tc.val = ((uint32_t)1 << (pin - 32));
+#endif
 }
 
 static inline __attribute__((always_inline))
 void directWriteHigh(IO_REG_TYPE pin)
 {
+#if CONFIG_IDF_TARGET_ESP32C3
+    GPIO.out_w1ts.val = ((uint32_t)1 << pin);
+#else // plain ESP32
     if ( pin < 32 )
         GPIO.out_w1ts = ((uint32_t)1 << pin);
-    else if ( pin < 34 )
+    else if ( pin < 46 )
         GPIO.out1_w1ts.val = ((uint32_t)1 << (pin - 32));
+#endif
 }
 
 static inline __attribute__((always_inline))
 void directModeInput(IO_REG_TYPE pin)
 {
+#if CONFIG_IDF_TARGET_ESP32C3
+    GPIO.enable_w1tc.val = ((uint32_t)1 << (pin));
+#else
     if ( digitalPinIsValid(pin) )
     {
+#if ESP_IDF_VERSION_MAJOR < 4      // IDF 3.x ESP32/PICO-D4
         uint32_t rtc_reg(rtc_gpio_desc[pin].reg);
 
         if ( rtc_reg ) // RTC pins PULL settings
@@ -145,27 +181,25 @@ void directModeInput(IO_REG_TYPE pin)
             ESP_REG(rtc_reg) = ESP_REG(rtc_reg) & ~(rtc_gpio_desc[pin].mux);
             ESP_REG(rtc_reg) = ESP_REG(rtc_reg) & ~(rtc_gpio_desc[pin].pullup | rtc_gpio_desc[pin].pulldown);
         }
-
+#endif
+	// Input
         if ( pin < 32 )
             GPIO.enable_w1tc = ((uint32_t)1 << pin);
         else
             GPIO.enable1_w1tc.val = ((uint32_t)1 << (pin - 32));
-
-        uint32_t pinFunction((uint32_t)2 << FUN_DRV_S); // what are the drivers?
-        pinFunction |= FUN_IE; // input enable but required for output as well?
-        pinFunction |= ((uint32_t)2 << MCU_SEL_S);
-
-        ESP_REG(DR_REG_IO_MUX_BASE + esp32_gpioMux[pin].reg) = pinFunction;
-
-        GPIO.pin[pin].val = 0;
     }
+#endif
 }
 
 static inline __attribute__((always_inline))
 void directModeOutput(IO_REG_TYPE pin)
 {
+#if CONFIG_IDF_TARGET_ESP32C3
+    GPIO.enable_w1ts.val = ((uint32_t)1 << (pin));
+#else
     if ( digitalPinIsValid(pin) && pin <= 33 ) // pins above 33 can be only inputs
     {
+#if ESP_IDF_VERSION_MAJOR < 4      // IDF 3.x ESP32/PICO-D4
         uint32_t rtc_reg(rtc_gpio_desc[pin].reg);
 
         if ( rtc_reg ) // RTC pins PULL settings
@@ -173,20 +207,14 @@ void directModeOutput(IO_REG_TYPE pin)
             ESP_REG(rtc_reg) = ESP_REG(rtc_reg) & ~(rtc_gpio_desc[pin].mux);
             ESP_REG(rtc_reg) = ESP_REG(rtc_reg) & ~(rtc_gpio_desc[pin].pullup | rtc_gpio_desc[pin].pulldown);
         }
-
+#endif
+        // Output
         if ( pin < 32 )
             GPIO.enable_w1ts = ((uint32_t)1 << pin);
         else // already validated to pins <= 33
             GPIO.enable1_w1ts.val = ((uint32_t)1 << (pin - 32));
-
-        uint32_t pinFunction((uint32_t)2 << FUN_DRV_S); // what are the drivers?
-        pinFunction |= FUN_IE; // input enable but required for output as well?
-        pinFunction |= ((uint32_t)2 << MCU_SEL_S);
-
-        ESP_REG(DR_REG_IO_MUX_BASE + esp32_gpioMux[pin].reg) = pinFunction;
-
-        GPIO.pin[pin].val = 0;
     }
+#endif
 }
 
 #define DIRECT_READ(base, pin)          directRead(pin)
@@ -206,6 +234,18 @@ void directModeOutput(IO_REG_TYPE pin)
 #define interrupts() portEXIT_CRITICAL(&mux);}
 //#warning "ESP32 OneWire testing"
 
+#elif defined(ARDUINO_ARCH_STM32)
+#define PIN_TO_BASEREG(pin)             (0)
+#define PIN_TO_BITMASK(pin)             ((uint32_t)digitalPinToPinName(pin))
+#define IO_REG_TYPE uint32_t
+#define IO_REG_BASE_ATTR
+#define IO_REG_MASK_ATTR
+#define DIRECT_READ(base, pin)          digitalReadFast((PinName)pin)
+#define DIRECT_WRITE_LOW(base, pin)     digitalWriteFast((PinName)pin, LOW)
+#define DIRECT_WRITE_HIGH(base, pin)    digitalWriteFast((PinName)pin, HIGH)
+#define DIRECT_MODE_INPUT(base, pin)    pin_function((PinName)pin, STM_PIN_DATA(STM_MODE_INPUT, GPIO_NOPULL, 0))
+#define DIRECT_MODE_OUTPUT(base, pin)   pin_function((PinName)pin, STM_PIN_DATA(STM_MODE_OUTPUT_PP, GPIO_NOPULL, 0))
+
 #elif defined(__SAMD21G18A__)
 #define PIN_TO_BASEREG(pin)             portModeRegister(digitalPinToPort(pin))
 #define PIN_TO_BITMASK(pin)             (digitalPinToBitMask(pin))
@@ -217,6 +257,23 @@ void directModeOutput(IO_REG_TYPE pin)
 #define DIRECT_MODE_OUTPUT(base, mask)  ((*((base)+2)) = (mask))
 #define DIRECT_WRITE_LOW(base, mask)    ((*((base)+5)) = (mask))
 #define DIRECT_WRITE_HIGH(base, mask)   ((*((base)+6)) = (mask))
+
+#elif defined(__ASR6501__)
+#define PIN_IN_PORT(pin)    (pin % PIN_NUMBER_IN_PORT)
+#define PORT_FROM_PIN(pin)  (pin / PIN_NUMBER_IN_PORT)
+#define PORT_OFFSET(port)   (PORT_REG_SHFIT * port)
+#define PORT_ADDRESS(pin)   (CYDEV_GPIO_BASE + PORT_OFFSET(PORT_FROM_PIN(pin)))
+
+#define PIN_TO_BASEREG(pin)             (0)
+#define PIN_TO_BITMASK(pin)             (pin)
+#define IO_REG_TYPE uint32_t
+#define IO_REG_BASE_ATTR
+#define IO_REG_MASK_ATTR
+#define DIRECT_READ(base, pin)          CY_SYS_PINS_READ_PIN(PORT_ADDRESS(pin)+4, PIN_IN_PORT(pin))
+#define DIRECT_WRITE_LOW(base, pin)     CY_SYS_PINS_CLEAR_PIN(PORT_ADDRESS(pin), PIN_IN_PORT(pin))
+#define DIRECT_WRITE_HIGH(base, pin)    CY_SYS_PINS_SET_PIN(PORT_ADDRESS(pin), PIN_IN_PORT(pin))
+#define DIRECT_MODE_INPUT(base, pin)    CY_SYS_PINS_SET_DRIVE_MODE(PORT_ADDRESS(pin)+8, PIN_IN_PORT(pin), CY_SYS_PINS_DM_DIG_HIZ)
+#define DIRECT_MODE_OUTPUT(base, pin)   CY_SYS_PINS_SET_DRIVE_MODE(PORT_ADDRESS(pin)+8, PIN_IN_PORT(pin), CY_SYS_PINS_DM_STRONG)
 
 #elif defined(RBL_NRF51822)
 #define PIN_TO_BASEREG(pin)             (0)

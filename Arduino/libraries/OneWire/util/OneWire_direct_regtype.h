@@ -11,6 +11,9 @@
 #elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK66FX1M0__) || defined(__MK64FX512__)
 #define IO_REG_TYPE uint8_t
 
+#elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
+#define IO_REG_TYPE uint32_t
+
 #elif defined(__MKL26Z64__)
 #define IO_REG_TYPE uint8_t
 
@@ -27,7 +30,13 @@
 #define IO_REG_TYPE uint32_t
 #define IO_REG_MASK_ATTR
 
+#elif defined(ARDUINO_ARCH_STM32)
+#define IO_REG_TYPE uint32_t
+
 #elif defined(__SAMD21G18A__)
+#define IO_REG_TYPE uint32_t
+
+#elif defined(__ASR6501__)
 #define IO_REG_TYPE uint32_t
 
 #elif defined(RBL_NRF51822)
