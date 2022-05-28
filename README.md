@@ -1,13 +1,14 @@
-ST_Anything v2.9.7
+ST_Anything v2.9.8
 ================
 
 **WARNING** - SmartThings Web IDE GitHub integration is not available in all countries around the globe.
 
-**WARNING** - If using an ESP8266, make sure you are using v2.7.4 of the Arduino ESP8266 Board manager along with Arduino IDE v1.8.16. Version 3.0.0+ of the ESP8266 Board package for the Arduino IDE has made some significant breaking changes. 
+**NOTE** - ST_Anything v2.9.8 was tested using Arduino IDE 1.8.16 + ESP8266 v3.0.2
 
-**WARNING** - If using an ESP32, make sure you are using v1.06 of the Arduino ESP32 Board manager along with Arduino IDE v1.8.16. Version 2.0.0+ of the ESP32 Board package for the Arduino IDE has made some significant breaking changes. 
+**NOTE** - ST_Anything v2.9.8 was tested using Arduino IDE 1.8.16 + ESP32 v2.0.3
 
 **Recent History:**
+- v2.9.8 - Fixed compiler errors when using ESP8266 3.0.2 and ESP32 2.0.3 board support packages
 - v2.9.7 - Minor Parent DTH change due to change in the IS_Button.cpp device
 - v2.9.6 - Added support for Arduino NANO33IoT
 - v2.9.5 - Added support for Arduino MKR1010, Arduino 1.8.9, ESP8266 v2.5.2, updated numerous libraries, etc...
@@ -18,7 +19,7 @@ ST_Anything v2.9.7
 
 ![screenshot](https://cloud.githubusercontent.com/assets/5206084/25318949/d00b08b4-2865-11e7-82f6-9a355bb9082b.PNG)
 
-Note: ST_Anything v2.9.7 was built using the Arduino IDE v1.8.9.  Please make sure to upgrade your IDE.
+Note: ST_Anything v2.9.8 was built using the Arduino IDE v1.8.16.  Please make sure to upgrade your IDE.
 
 Turn your Arduino UNO/MEGA/MKR1000/MKR1010/NANO33IoT, ESP8266, or ESP32 into Anything you can imagine! ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
