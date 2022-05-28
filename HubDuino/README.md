@@ -1,9 +1,9 @@
 HubDuino v1.1.9
 ================
 
-**NOTE** - ST_Anything v2.9.8 was tested using Arduino IDE 1.8.16 + ESP8266 v3.0.2  
+**NOTE** - HubDuino v1.1.9 was tested using Arduino IDE 1.8.16 + ESP8266 v3.0.2  
 
-**NOTE** - ST_Anything v2.9.8 was tested using Arduino IDE 1.8.16 + ESP32 v2.0.3
+**NOTE** - HubDuino v1.1.9 was tested using Arduino IDE 1.8.16 + ESP32 v2.0.3
 
 **Recent History:**
 - 2022-05-28 HubDuino v1.1.9 - Fixed compiler errors when using ESP8266 3.0.2 and ESP32 2.0.3 board support packages
@@ -17,7 +17,7 @@ HubDuino v1.1.9
 
 ![screenshot](https://user-images.githubusercontent.com/5206084/41016005-e382479e-691a-11e8-871f-e62964c0e0c0.png)
 
-Note: The HubDuino v1.1.9 release is based on the ST_Anything v2.9.8 baseline and was built using the Arduino IDE v1.8.16.  Please make sure to upgrade your Arduino IDE.
+Note: The HubDuino v1.1.9 release is based on the ST_Anything v2.9.9 baseline and was built using the Arduino IDE v1.8.16.  Please make sure to upgrade your Arduino IDE.
 
 Turn your Arduino UNO/MEGA/MKR1000/MKR1010/NANO33IoT, ESP8266, or ESP32 into Anything you can imagine! HubDuino/ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
