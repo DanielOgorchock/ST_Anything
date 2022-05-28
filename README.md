@@ -1,11 +1,11 @@
-ST_Anything v2.9.8
+ST_Anything v2.9.9
 ================
 
 **WARNING** - SmartThings Web IDE GitHub integration is not available in all countries around the globe.
 
-**NOTE** - ST_Anything v2.9.8 was tested using Arduino IDE 1.8.16 + ESP8266 v3.0.2
+**NOTE** - ST_Anything v2.9.9 was tested using Arduino IDE 1.8.16 + ESP8266 v3.0.2
 
-**NOTE** - ST_Anything v2.9.8 was tested using Arduino IDE 1.8.16 + ESP32 v2.0.3
+**NOTE** - ST_Anything v2.9.9 was tested using Arduino IDE 1.8.16 + ESP32 v2.0.3
 
 **Recent History:**
 - v2.9.8 - Fixed compiler errors when using ESP8266 3.0.2 and ESP32 2.0.3 board support packages
@@ -19,7 +19,7 @@ ST_Anything v2.9.8
 
 ![screenshot](https://cloud.githubusercontent.com/assets/5206084/25318949/d00b08b4-2865-11e7-82f6-9a355bb9082b.PNG)
 
-Note: ST_Anything v2.9.8 was built using the Arduino IDE v1.8.16.  Please make sure to upgrade your IDE.
+Note: ST_Anything v2.9.9 was built using the Arduino IDE v1.8.16.  Please make sure to upgrade your IDE.
 
 Turn your Arduino UNO/MEGA/MKR1000/MKR1010/NANO33IoT, ESP8266, or ESP32 into Anything you can imagine! ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
