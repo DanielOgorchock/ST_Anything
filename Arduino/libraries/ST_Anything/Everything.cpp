@@ -265,7 +265,9 @@ namespace st
 
 	bool Everything::sendSmartStringNow(const String &str)
 	{
-		if (sendSmartString(str)) sendStrings(); //send any pending updates to ST Cloud immediately
+		bool queued = sendSmartString(str);
+		if (queued) sendStrings(); //send any pending updates to ST Cloud immediately
+		return queued;
 	}
 
 	Device* Everything::getDeviceByName(const String &str)
