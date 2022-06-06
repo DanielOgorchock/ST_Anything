@@ -1,11 +1,12 @@
-HubDuino v1.1.7
+HubDuino v1.1.9
 ================
 
-**WARNING** - If using an ESP8266, make sure you are using v2.7.4 of the Arduino ESP8266 Board manager along with Arduino IDE v1.8.16. Version 3.0.0+ of the ESP8266 Board package for the Arduino IDE has made some significant breaking changes.  
+**NOTE** - HubDuino v1.1.9 was tested using Arduino IDE 1.8.16 + ESP8266 v3.0.2  
 
-**WARNING** - If using an ESP32, make sure you are using v1.06 of the Arduino ESP32 Board manager along with Arduino IDE v1.8.16. Version 2.0.0+ of the ESP32 Board package for the Arduino IDE has made some significant breaking changes. 
+**NOTE** - HubDuino v1.1.9 was tested using Arduino IDE 1.8.16 + ESP32 v2.0.3
 
 **Recent History:**
+- 2022-05-28 HubDuino v1.1.9 - Fixed compiler errors when using ESP8266 3.0.2 and ESP32 2.0.3 board support packages
 - 2019-09-14 HubDuino v1.1.7 - Significant changes to the Parent Drivers.  MAC Address is no longer required - only the IP address/port of the micro-controller is needed.  Added Presence Capability to the Parent Device - This indicates whether or not the device has had an update from the microcontroller within a user selectable timeout period via a new setting.  NumberOfButtons setting is removed as it now auto-populates.  This release also requires an update to the ST_Anything library's IS_Button.cpp file.
 - 2019-08-17 HubDuino v1.1.6 - Added support for Arduino NANO33IoT
 - 2019-06-28 HubDuino v1.1.5 - Added support for MKR1010, Arduino 1.8.9, ESP8266 v2.5.2, updated numerous libraries, etc...
@@ -16,7 +17,7 @@ HubDuino v1.1.7
 
 ![screenshot](https://user-images.githubusercontent.com/5206084/41016005-e382479e-691a-11e8-871f-e62964c0e0c0.png)
 
-Note: The HubDuino v1.1.7 release is based on the ST_Anything v2.9.7 baseline and was built using the Arduino IDE v1.8.9.  Please make sure to upgrade your Arduino IDE.
+Note: The HubDuino v1.1.9 release is based on the ST_Anything v2.9.9 baseline and was built using the Arduino IDE v1.8.16.  Please make sure to upgrade your Arduino IDE.
 
 Turn your Arduino UNO/MEGA/MKR1000/MKR1010/NANO33IoT, ESP8266, or ESP32 into Anything you can imagine! HubDuino/ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
