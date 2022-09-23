@@ -52,8 +52,8 @@ class PS_Adafruit_MPR121 : public InterruptSensor {
   const __FlashStringHelper *_HELD = F(" held");
   const __FlashStringHelper *_RELEASED = F(" released");
 
-  u_int16_t _ACTIVATION_THRESOLD = 2000;
-  u_int16_t _ACTIVE_TIMEOUT = 1200;
+  u_int16_t _ACTIVATION_THRESOLD = 1000;
+  u_int16_t _ACTIVE_TIMEOUT = 2000;
   u_int16_t HOLD_THRESOLD = 800;
   boolean isActive = false;
 

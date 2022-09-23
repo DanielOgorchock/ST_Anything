@@ -17,7 +17,7 @@
 //  Change History:
 //
 //    Date        Who            What
-//    ----        ---            ----
+//    2022-09-23  Luca Masera    Corrected bugs within inizialization and check of buttons status
 //    2022-09-22  Luca Masera    Original creation
 //
 //******************************************************************************************
@@ -55,7 +55,7 @@ void PS_Adafruit_MPR121::init() {
 
   // Default address is 0x5A, if tied to 3.3V its 0x5B
   // If tied to SDA its 0x5C and if SCL then 0x5D
-  if (!cap.begin(0x5A, m_sensibility5C, m_sensibility5D)) {
+  if (!cap.begin(m_sensibility5C, m_sensibility5D, 0x5A)) {
     Serial.println(F("MPR121 not found, check wiring?"));
 
   } else {
@@ -94,12 +94,12 @@ if (!isBlockedStatus) {
   // A) if not active...
   if (!isActive) {
     // B) if the touch is to activate the sensor (ACTIVATE_BUTTON)... 
-    if (bitRead(curr_touched, activateButtonId) && !(bitRead(curr_touched, activateButtonId))) {
+    if (bitRead(curr_touched, activateButtonId) && !(bitRead(old_touched, activateButtonId))) {
       //    register activation time and ...
       Serial.println(F("activation touched"));
       activationStart = currentTime;
     
-    } else if (!(bitRead(old_touched, activateButtonId)) && bitRead(curr_touched, activateButtonId)) {
+    } else if ((bitRead(old_touched, activateButtonId)) && bitRead(old_touched, activateButtonId)) {
       // C) if the activation time is bigger than the ACTIVATION_THRESOLD... 
       if (currentTime - activationStart > _ACTIVATION_THRESOLD) {
         // activate the sensor and register active time
@@ -158,13 +158,13 @@ if (!isBlockedStatus) {
             Serial.println(currentButton);
             Everything::sendSmartString(getName() + String(currentButton) + _RELEASED);
             }
+          }
         }
-      }
-
-      old_touched = curr_touched;
       }
     }
   }
+  
+  old_touched = curr_touched;
 }
   
 
