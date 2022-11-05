@@ -25,6 +25,7 @@
  *    2018-09-22  Dan Ogorchock  Added preference for debug logging
  *    2019-07-01  Dan Ogorchock  Added importUrl
  *    2020-01-25  Dan Ogorchock  Remove custom lastUpdated attribute & general code cleanup
+ *    2022-11-04  ss41812        Add custom attribute definitions
  * 
  */
 metadata {
@@ -32,7 +33,11 @@ metadata {
 		capability "Illuminance Measurement"
 		capability "Sensor"
 
-		attribute "lastUpdated", "String"
+		attribute "redValue", "Number"
+		attribute "greenValue", "Number"
+		attribute "blueValue", "Number"
+		attribute "colorTemperature", "Number"
+		attribute "clearValue", "Number"
 	}
 
     preferences {
