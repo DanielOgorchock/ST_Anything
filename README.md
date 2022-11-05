@@ -54,7 +54,7 @@ This package currently implements the following SmartThings Device Capabilities:
 - Temperature Measurement (via the Adafruit MAX31855 Thermocouple library, included in this repo)
 - Temperature Measurement (via the Arduino MKR THERM Thermocouple library, included in this repo)
 - Temperature Measurement (using AM2320 sensor) (also does humidity)
-- Water Sensor (using an analog input a a simple moisture sesnsor such as http://amzn.com/B00HTSL7QC or http://a.co/eZNTyIH)
+- Water Sensor (using an analog input a simple moisture sensor such as http://amzn.com/B00HTSL7QC or http://a.co/eZNTyIH)
 - Door Control / Garage Door Control (i.e. Garage Door Contact Sensor + Relay Output) - See 'ST_Anything_Doors' example
 - Smoke Detector (as a simple digital input)
 - Smoke Detector (using the MQ2 sensor)
@@ -174,7 +174,7 @@ Your screen should look like the following image:
 - On your phone's SmartThings app, select Things view, find and select your New Device
   - You may receive a "Device not fully configured" pop-up with the ST app.  We're about to take care of that!
 - In the Arduino Device, click the "Gear Icon" in the top right of the screen
-- Enter the folowing data from your Arduino
+- Enter the following data from your Arduino
   - IP Address:  must match what you hard-coded in your Arduino sketch file
   - Port: must match what you hard-coded in your Arduino sketch file
   - MAC Address: must match your Arduino's MAC address, all uppercase, no delimiters (e.g. 06AB12CD34EF)
@@ -260,7 +260,7 @@ Your screen should look like the following image:
 
 
 ## Final Notes for now...
-Plese refer to the header files of the ST_Anything library for explanation of specific classes, constructor arguments, etc... ST_Anything devices support inverted logic, default power-on states, debounce logic, etc...  Read through the top section of the .h files found on the libraries\ST_Anything... folders for more information!
+Please refer to the header files of the ST_Anything library for explanation of specific classes, constructor arguments, etc... ST_Anything devices support inverted logic, default power-on states, debounce logic, etc...  Read through the top section of the .h files found on the libraries\ST_Anything... folders for more information!
 
 Look at the documentation in the 'ST_Anything_Multiples_xxxx.ino' files for explanation and examples of the general use of the library.  
 
@@ -272,7 +272,7 @@ Look at the documentation in the 'ST_Anything_Multiples_xxxx.ino' files for expl
 - v1.4  2015-04-14 Memory Optimizations
 - v1.5  2015-12-06 Added Alarm_Panel MEGA 2560 example, as well as adding Smoke Detector capability
 - v1.6  2017-02-11 Final release prior to the new version 2.0 baseline
-- v2.0  2017-02-12 Initial release of v2.x platform with additonal support for Ethernet connectivity to SmartThings
+- v2.0  2017-02-12 Initial release of v2.x platform with additional support for Ethernet connectivity to SmartThings
 - v2.1  2017-02-20 Added support for using the ESP-01 as WiFi communications for Arduino MEGA 2560 (SmartThings and ST_Anything libraries updated)
 - v2.2  2017-03-25 Added new IS_Button class, sample sketches, updated Device Handler, etc... to support ST "Button" capability
 - v2.5  2017-04-23 New SmartThings Composite Device Handler (i.e. Parent/Child Device Handlers) which eliminates the need for the Multiplexer SmartApps!  Also added Carbon Monoxide, Alarm with Strobe, and Voltage Measurement capabilities. Support for LAN devices only at this time.
@@ -288,5 +288,5 @@ Look at the documentation in the 'ST_Anything_Multiples_xxxx.ino' files for expl
 Note: The ST_Anything v1.6 release was created on 2017-02-11 to make sure everyone can still get back to the original ThingShield-only code if necessary.  
 Note: If you want the old ST_Anything v2.2 code, please pull it by the v2.2 release number and follow the old v2.2 ReadMe 
 
-v2.0 Note:  There are some significant changes as compared to the old v1.x platform.  A signiciant rewrite of the "SmartThings" Arduino library was completed to incorporate Ethernet communications support.  To use ST_Anything v2.x, you must also use all of the other supporting libaries found in this GitHub repository.  Included is a the new SmartThings v2.x Arduino library which can be used standalone (examples are included in the library), or in conjunction with the ST_Anything library.
+v2.0 Note:  There are some significant changes as compared to the old v1.x platform.  A signiciant rewrite of the "SmartThings" Arduino library was completed to incorporate Ethernet communications support.  To use ST_Anything v2.x, you must also use all of the other supporting libraries found in this GitHub repository.  Included is a the new SmartThings v2.x Arduino library which can be used standalone (examples are included in the library), or in conjunction with the ST_Anything library.
 v2.6 Note:  Version 2.6 builds upon the changes in v2.x to incorporate SmartThings new Composite Device Handler (DH).  This new functionality allows one Parent DH to create many Child Devices (using Child DHs).  This allows more than one of each SmartThings capability per Arduino.  Previously, this was only possible through the use of a Multiplexer SmartApp and virtual devices.  The only manual device that has to be create within the ST IDE is the Parent.  The ST_Anything Parent DH has been written to automagically create Child Devices that exist, or are added to, the Arduino ST_Anything sketch.
