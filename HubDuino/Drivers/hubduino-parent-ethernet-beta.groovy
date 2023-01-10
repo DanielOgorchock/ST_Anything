@@ -295,8 +295,10 @@ private void createChildDevice(String deviceName, String deviceNumber) {
     
 		log.info "createChildDevice:  Creating Child Device '${device.displayName} (${deviceName}${deviceNumber})'"
         
+        def deviceHandlerName = ""
+    
 		try {
-        	def deviceHandlerName = ""
+        	
             def deviceNameSpace = "hubitat"
         	switch (deviceName) {
          		case "contact": 
@@ -407,7 +409,7 @@ private void createChildDevice(String deviceName, String deviceNumber) {
         	}   
     	} catch (e) {
         	log.error "Child device creation failed with error = ${e}"
-        	log.error "Child device creation failed. Please make sure that the '${deviceHandlerName}' is installed."
+        	log.error "Child device creation failed. Please make sure that the '${deviceHandlerName}' driver is installed."
     	}
 }
 
