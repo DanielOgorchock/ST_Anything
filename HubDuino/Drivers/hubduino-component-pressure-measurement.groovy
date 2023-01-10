@@ -88,37 +88,6 @@ void parse(List<Map> description) {
     }
 }
 
-/*
-def parse(String description) {
-    if (logEnable) log.debug "parse(${description}) called"
-	def parts = description.split(" ")
-    def name  = parts.length>0?parts[0].trim():null
-    def value = parts.length>1?parts[1].trim():null
-    def dispUnit = "hPa"
-    if (name && value) {
-        float tmpValue = Float.parseFloat(value)
-        if (tempUnitConversion == "2") {
-            //if (logEnable) log.debug "tempUnitConversion = ${tempUnitConversion}"
-            tmpValue = tmpValue * 0.75006  //convert from hPa to mm Hg
-            dispUnit = "mmHg"
-        }
-
-        if (tempUnitConversion == "3") {
-            //if (logEnable) log.debug "tempUnitConversion = ${tempUnitConversion}"
-            tmpValue = tmpValue * 0.02953  //convert from hPa to in Hg
-            dispUnit = "inHg"
-        }
-
-        // Update device
-        tmpValue = tmpValue.round(2)
-        sendEvent(name: "pressure", value: tmpValue, unit: dispUnit)
-    }
-    else {
-    	log.error "Missing either name or value.  Cannot parse!"
-    }
-}
-*/
-
 void refresh() {
     parent?.componentRefresh(this.device)
 }

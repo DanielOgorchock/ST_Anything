@@ -340,7 +340,7 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	break
          		case "illuminancergb": 
                         deviceNameSpace = "ogiewon"
-                		deviceHandlerName = "HubDuino Component IlluminanceRGB Sensor" //TODO - Needs to be tested ********************************
+                		deviceHandlerName = "HubDuino Component IlluminanceRGB Sensor"
                 	break
          		case "voltage": 
                 		deviceHandlerName = "Generic Component Voltage Sensor" 
@@ -378,16 +378,16 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 	break
          		case "pressure": 
                         deviceNameSpace = "ogiewon"
-                		deviceHandlerName = "HubDuino Component Pressure Measurement" //TODO - Test  ********************************
+                		deviceHandlerName = "HubDuino Component Pressure Measurement"
                 	break
 //         		case "soundPressureLevel": 
 //                        deviceNameSpace = "ogiewon"
 //                		deviceHandlerName = "Child Sound Pressure Level" 
 //                	break        
-//         		case "valve": 
-//                        deviceNameSpace = "ogiewon"
-//                		deviceHandlerName = "Child Valve" 
-//                	break        
+         		case "valve": 
+                        deviceNameSpace = "ogiewon"
+                		deviceHandlerName = "HubDuino Component Valve" 
+                	break        
          		case "windowShade": 
                 		deviceHandlerName = "Generic Component Window Shade" //TODO - Test  ********************************
                 	break        
