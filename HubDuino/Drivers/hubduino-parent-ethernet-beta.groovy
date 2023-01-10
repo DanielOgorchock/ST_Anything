@@ -389,7 +389,7 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                 		deviceHandlerName = "HubDuino Component Valve" 
                 	break        
          		case "windowShade": 
-                		deviceHandlerName = "Generic Component Window Shade" //TODO - Test  ********************************
+                		deviceHandlerName = "Generic Component Window Shade"
                 	break        
 //         		case "weight": 
 //                        deviceNameSpace = "ogiewon"
@@ -528,3 +528,23 @@ def componentOpen(cd){
     def name = cd.deviceNetworkId.split("-")[-1]
     sendEthernet("${name} open")
 }
+
+def componentSetPosition(cd, position){
+    if (logEnable) log.debug "received setPosition request from DN = ${cd.displayName}, DNI = ${cd.deviceNetworkId}, position = ${position}"
+    def name = cd.deviceNetworkId.split("-")[-1]
+    sendEthernet("${name} ${position}")
+}
+    
+def componentStartPositionChange(cd, position){
+    if (logEnable) log.debug "received startPositionChange request from DN = ${cd.displayName}, DNI = ${cd.deviceNetworkId}, position = ${position}"
+    def name = cd.deviceNetworkId.split("-")[-1]
+    sendEthernet("${name} start${position}")
+}    
+    
+def componentStopPositionChange(cd){
+    if (logEnable) log.debug "received stopPositionChange request from DN = ${cd.displayName}, DNI = ${cd.deviceNetworkId}"
+    def name = cd.deviceNetworkId.split("-")[-1]
+    sendEthernet("${name} stop")
+}    
+    
+    
