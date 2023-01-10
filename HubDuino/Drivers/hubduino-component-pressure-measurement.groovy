@@ -68,7 +68,7 @@ void parse(List<Map> description) {
         if (it.name in ["pressure"]) {
             if (txtEnable) log.info it.descriptionText
             def dispUnit = "hPa"
-            float tmpValue = Float.parseFloat(value)
+            float tmpValue = Float.parseFloat(it.value)
             if (tempUnitConversion == "2") {
                 //if (logEnable) log.debug "tempUnitConversion = ${tempUnitConversion}"
                 tmpValue = tmpValue * 0.75006  //convert from hPa to mm Hg
