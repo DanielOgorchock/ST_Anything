@@ -191,9 +191,10 @@ def parse(String description) {
             }
             else  //must not be a child, perform normal update
             {
-                results = createEvent(name: name, value: value)
-                if (logEnable) log.debug results
-                return results
+                log.error "No child found for name = ${name}, value = ${value}. Please make sure all HubDuino Component drivers are installed."  
+//                results = createEvent(name: name, value: value)
+//                if (logEnable) log.debug results
+//                return results
             }
 		}
         catch (e) {
@@ -545,6 +546,4 @@ def componentStopPositionChange(cd){
     if (logEnable) log.debug "received stopPositionChange request from DN = ${cd.displayName}, DNI = ${cd.deviceNetworkId}"
     def name = cd.deviceNetworkId.split("-")[-1]
     sendEthernet("${name} stop")
-}    
-    
-    
+}
