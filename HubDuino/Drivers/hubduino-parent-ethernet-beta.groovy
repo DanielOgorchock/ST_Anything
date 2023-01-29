@@ -51,7 +51,7 @@
  *    2020-09-19  Dan Ogorchock  Added "Releasable Button" Capability (requires new Arduino IS_Button.cpp and .h code)
  *    2022-02-08  Dan Ogorchock  Added support for new custom "weight measurement" child device
  *    2023-01-10  Dan Ogorchock  Use Built-In Hubitat "Generic Component ..." drivers wherever possible
- *    2023-01-29  Dan Ogorchock  Add support for Capability "Carbon Dioxide Measurement"
+ *    2023-01-29  Dan Ogorchock  Add support for standard capability "Carbon Dioxide Measurement" and custom "Weight Measurement"
  *	
  */
 
@@ -65,9 +65,6 @@ metadata {
         capability "Presence Sensor"  //used to determine is the HubDuino microcontroller is still reporting data or not
         
         //command "sendData", ["string"]
-        //command "componentOn"
-        //command "componentOff"
-        //command "componentRefresh"
         //command "deleteAllChildDevices"
 	}
 
@@ -213,7 +210,7 @@ private getHostAddress() {
 }
 
 def sendData(message) {
-    log.trace "sendData called with message = " + message
+    if (logEnable) log.trace "sendData called with message = " + message
     sendEthernet(message) 
 }
 
@@ -384,10 +381,10 @@ private void createChildDevice(String deviceName, String deviceNumber) {
                         deviceNameSpace = "ogiewon"
                 		deviceHandlerName = "HubDuino Component Pressure Measurement"
                 	break
-//         		case "soundPressureLevel": 
-//                        deviceNameSpace = "ogiewon"
-//                		deviceHandlerName = "Child Sound Pressure Level" 
-//                	break        
+         		case "soundPressureLevel": 
+                        deviceNameSpace = "ogiewon"
+                		deviceHandlerName = "HubDuino Component Sound Pressure Level" 
+                	break        
          		case "valve": 
                         deviceNameSpace = "ogiewon"
                 		deviceHandlerName = "HubDuino Component Valve" 
@@ -395,10 +392,10 @@ private void createChildDevice(String deviceName, String deviceNumber) {
          		case "windowShade": 
                 		deviceHandlerName = "Generic Component Window Shade"
                 	break        
-//         		case "weight": 
-//                        deviceNameSpace = "ogiewon"
-//                		deviceHandlerName = "Child Weight Measurement" 
-//                	break        
+         		case "weight": 
+                        deviceNameSpace = "ogiewon"
+                		deviceHandlerName = "HubDuino Component Weight Measurement" 
+                	break        
          		case "carbonDioxide": 
                 		deviceHandlerName = "Generic Component Carbon Dioxide Detector"
                 	break        
