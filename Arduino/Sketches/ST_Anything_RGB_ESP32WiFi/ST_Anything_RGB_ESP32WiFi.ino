@@ -20,6 +20,7 @@
 //    2017-10-06  Allan (vseven) Modified for RGB example
 //    2017-10-13  Allan (vseven) Modified for RGBW example
 //    2018-02-09  Dan Ogorchock  Added support for Hubitat Elevation Hub
+//    2023-11-04  Dan Ogorchock  Corrected the ESP32 Pin Assignments
 //
 //   Special thanks to Joshua Spain for his contributions in porting ST_Anything to the ESP32!
 //
@@ -83,16 +84,16 @@
 //Analog Pins
 
 //Digital Pins
-#define PIN_RGB1_Red           A0  //(GPIO 36) SmartThings Capability "Color Control"
-#define PIN_RGB1_Green         A3  //(GPIO 39) SmartThings Capability "Color Control"
-#define PIN_RGB1_Blue          A6  //(GPIO 34) SmartThings Capability "Color Control"
-#define PIN_RGB2_Red           A4  //(GPIO 32) SmartThings Capability "Color Control"
-#define PIN_RGB2_Green         A5  //(GPIO 33) SmartThings Capability "Color Control"
-#define PIN_RGB2_Blue          A18 //(GPIO 25) SmartThings Capability "Color Control"
-#define PIN_RGBW1_Red          A19 //(GPIO 32) SmartThings Capability "Color Control"
-#define PIN_RGBW1_Green        A17 //(GPIO 33) SmartThings Capability "Color Control"
-#define PIN_RGBW1_Blue         A16 //(GPIO 25) SmartThings Capability "Color Control"
-#define PIN_RGBW1_White        A15 //(GPIO 25) SmartThings Capability "Color Control"
+#define PIN_RGB1_Red           16  //(GPIO 16) SmartThings Capability "Color Control"
+#define PIN_RGB1_Green         17  //(GPIO 17) SmartThings Capability "Color Control"
+#define PIN_RGB1_Blue          18  //(GPIO 18) SmartThings Capability "Color Control"
+#define PIN_RGB2_Red           19  //(GPIO 19) SmartThings Capability "Color Control"
+#define PIN_RGB2_Green         21  //(GPIO 21) SmartThings Capability "Color Control"
+#define PIN_RGB2_Blue          22  //(GPIO 22) SmartThings Capability "Color Control"
+#define PIN_RGBW1_Red          23  //(GPIO 23) SmartThings Capability "Color Control"
+#define PIN_RGBW1_Green        25  //(GPIO 25) SmartThings Capability "Color Control"
+#define PIN_RGBW1_Blue         26  //(GPIO 26) SmartThings Capability "Color Control"
+#define PIN_RGBW1_White        27  //(GPIO 27) SmartThings Capability "Color Control"
 
 //******************************************************************************************
 //ESP832 WiFi Information
@@ -109,8 +110,8 @@ const unsigned int serverPort = 8090; // port to run the http server on
 IPAddress hubIp(192, 168, 1, 149);    // smartthings/hubitat hub ip //  <---You must edit this line!
 
 // SmartThings / Hubitat Hub TCP/IP Address: UNCOMMENT line that corresponds to your hub, COMMENT the other
-const unsigned int hubPort = 39500;   // smartthings hub port
-//const unsigned int hubPort = 39501;   // hubitat hub port
+//const unsigned int hubPort = 39500;   // smartthings hub port
+const unsigned int hubPort = 39501;   // hubitat hub port
 
 //******************************************************************************************
 //st::Everything::callOnMsgSend() optional callback routine.  This is a sniffer to monitor 
