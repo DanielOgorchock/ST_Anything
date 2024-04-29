@@ -12,6 +12,7 @@
 //  2019-05-01  Dan Ogorchock  Changed max transmit rate from every 100ms to every 
 //                             500ms to prevent duplicate child devices
 //  2020-06-20  Dan Ogorchock  Add user selectable host name (repurposing the old shieldType variable)
+//  2024-04-28  Dan Ogorchock  Added OTA update capability
 //
 //*******************************************************************************
 
@@ -24,6 +25,7 @@
 // Using ESP32 WiFi
 //*******************************************************************************
 #include <WiFi.h>
+#include <ArduinoOTA.h>
 
 namespace st
 {

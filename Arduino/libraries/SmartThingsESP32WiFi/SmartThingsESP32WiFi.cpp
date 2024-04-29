@@ -13,6 +13,7 @@
 //  2018-02-03  Dan Ogorchock  Support for Hubitat
 //  2020-04-10  Dan Ogorchock  Improved network performance by disabling WiFi Sleep
 //  2020-06-20  Dan Ogorchock  Add user selectable host name (repurposing the old shieldType variable)
+//  2024-04-28  Dan Ogorchock  Added OTA update capability
 //
 //*******************************************************************************
 
@@ -192,6 +193,41 @@ namespace st
 		RSSIsendInterval = 5000;
 		previousMillis = millis() - RSSIsendInterval;
 
+        // Setup OTA Updates
+
+        // Port defaults to 8266
+        // ArduinoOTA.setPort(8266);
+
+        // Hostname defaults to esp8266-[ChipID]
+        ArduinoOTA.setHostname(st_devicename);
+
+        // No authentication by default
+        //ArduinoOTA.setPassword((const char*)"123");
+
+        ArduinoOTA.onStart([]() {
+            Serial.println("Start");
+        });
+        ArduinoOTA.onEnd([]() {
+            Serial.println("\nEnd");
+        });
+        ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+            Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+        });
+        ArduinoOTA.onError([](ota_error_t error) {
+            Serial.printf("Error[%u]: ", error);
+            if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+            else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+            else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+            else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+            else if (error == OTA_END_ERROR) Serial.println("End Failed");
+        });
+        ArduinoOTA.begin();
+        Serial.println("ArduinoOTA Ready");
+        Serial.print("IP address: ");
+        Serial.println(WiFi.localIP());
+        Serial.print("ArduionOTA Host Name: ");
+        Serial.println(ArduinoOTA.getHostname());
+        Serial.println();
 	}
 
 	//*****************************************************************************
@@ -199,7 +235,10 @@ namespace st
 	//*****************************************************************************
 	void SmartThingsESP32WiFi::run(void)
 	{
-		String readString;
+        
+        ArduinoOTA.handle();
+        
+        String readString;
 		String tempString;
 		String strRSSI;
 
