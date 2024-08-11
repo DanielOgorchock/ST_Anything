@@ -53,7 +53,7 @@
 #include <PollingSensor.h>   //Generic Polling "Sensor" Class, polls Arduino pins periodically
 #include <Everything.h>      //Master Brain of ST_Anything library that ties everything together and performs ST Shield communications
 
-#include <PS_DS18B20_Temperature.h>  //Implements a Polling Sesnor (PS) to measure Temperature via DS18B20 libraries 
+#include <PS_DS18B20_Temperature.h>  //Implements a Polling Sensor (PS) to measure Temperature via DS18B20 libraries 
 #include <PS_Illuminance.h>  //Implements a Polling Sensor (PS) to measure light levels via a photo resistor on an analog input pin 
 #include <PS_Voltage.h>      //Implements a Polling Sensor (PS) to measure voltage on an analog input pin 
 #include <PS_TemperatureHumidity.h>  //Implements a Polling Sensor (PS) to measure Temperature and Humidity via DHT library
