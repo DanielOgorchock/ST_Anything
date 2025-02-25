@@ -31,6 +31,7 @@
 //    2017-10-12  Allan (vseven) Modified EX_RGBW_Dim for support of a White LED channel
 //    2018-04-02  Dan Ogorchock  Fixed Typo
 //    2020-06-09  Dan Ogorchock  Scaled the 8bit values to 10bit for ESP8266 "analogWrite()"
+//    2025-02-23  Dan Ogorchock  Modified to work with the ESP32 v3.0 and newer board manager package
 //
 //******************************************************************************************
 #include "EX_RGBW_Dim.h"
@@ -193,8 +194,9 @@ namespace st
 		m_nChannelR = channel;
 
 		#if defined(ARDUINO_ARCH_ESP32)
-			ledcAttachPin(m_nPinR, m_nChannelR);
-  			ledcSetup(m_nChannelR, 5000, 8);
+			//ledcAttachPin(m_nPinR, m_nChannelR);
+  			//ledcSetup(m_nChannelR, 5000, 8);
+			ledcAttach(m_nPinR, 5000, 8);
 		#else
 			pinMode(m_nPinR, OUTPUT);
 		#endif
@@ -205,8 +207,9 @@ namespace st
 		m_nChannelG = channel;
 
 		#if defined(ARDUINO_ARCH_ESP32)
-			ledcAttachPin(m_nPinG, m_nChannelG);
-  			ledcSetup(m_nChannelG, 5000, 8);
+			//ledcAttachPin(m_nPinG, m_nChannelG);
+  			//ledcSetup(m_nChannelG, 5000, 8);
+			ledcAttach(m_nPinG, 5000, 8);
 		#else
 			pinMode(m_nPinG, OUTPUT);
 		#endif
@@ -217,8 +220,9 @@ namespace st
 		m_nChannelB = channel;
 
 		#if defined(ARDUINO_ARCH_ESP32)
-			ledcAttachPin(m_nPinB, m_nChannelB);
-  			ledcSetup(m_nChannelB, 5000, 8);
+			//ledcAttachPin(m_nPinB, m_nChannelB);
+  			//ledcSetup(m_nChannelB, 5000, 8);
+			ledcAttach(m_nPinB, 5000, 8);
 		#else
 			pinMode(m_nPinB, OUTPUT);
 		#endif
@@ -229,8 +233,9 @@ namespace st
 		m_nChannelW = channel;
 
 		#if defined(ARDUINO_ARCH_ESP32)
-			ledcAttachPin(m_nPinW, m_nChannelW);
-  			ledcSetup(m_nChannelW, 5000, 8);
+			//ledcAttachPin(m_nPinW, m_nChannelW);
+  			//ledcSetup(m_nChannelW, 5000, 8);
+			ledcAttach(m_nPinW, 5000, 8);
 		#else
 			pinMode(m_nPinW, OUTPUT);
 		#endif

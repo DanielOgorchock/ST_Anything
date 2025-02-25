@@ -13,6 +13,7 @@
 //                             500ms to prevent duplicate child devices
 //  2020-06-20  Dan Ogorchock  Add user selectable host name (repurposing the old shieldType variable)
 //  2024-04-28  Dan Ogorchock  Added OTA update capability
+//  2025-02-23  Dan Ogorchock  Modified to work with the ESP32 v3.0 and newer board manager package
 //
 //*******************************************************************************
 

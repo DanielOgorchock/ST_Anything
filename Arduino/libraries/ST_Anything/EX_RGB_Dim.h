@@ -28,6 +28,7 @@
 //    2018-08-14  Dan Ogorchock  Modified to avoid compiler errors on ESP32 since it currently does not support "analogWrite()"
 //    2020-03-29  DOUG (M2)		 Scaled the 8bit values to 10bit for ESP8266 "analogWrite()"
 //    2020-04-01  Dan Ogorchock  Added back in functionality for traditional Arduino Boards
+//    2025-02-23  Dan Ogorchock  Modified to work with the ESP32 v3.0 and newer board manager package
 //
 //******************************************************************************************
 #ifndef ST_EX_RGB_DIM

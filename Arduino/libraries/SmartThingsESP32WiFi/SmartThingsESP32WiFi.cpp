@@ -14,6 +14,7 @@
 //  2020-04-10  Dan Ogorchock  Improved network performance by disabling WiFi Sleep
 //  2020-06-20  Dan Ogorchock  Add user selectable host name (repurposing the old shieldType variable)
 //  2024-04-28  Dan Ogorchock  Added OTA update capability
+//  2025-02-23  Dan Ogorchock  Modified to work with the ESP32 v3.0 and newer board manager package
 //
 //*******************************************************************************
 
@@ -71,12 +72,14 @@ namespace st
 		Serial.printf("[WiFi-event] event: %d\n", event);
 
 		switch (event) {
-		case SYSTEM_EVENT_STA_GOT_IP:
+		//case SYSTEM_EVENT_STA_GOT_IP:
+		case ARDUINO_EVENT_WIFI_STA_GOT_IP:
 			Serial.println("WiFi connected");
 			Serial.println("IP address: ");
 			Serial.println(WiFi.localIP());
 			break;
-		case SYSTEM_EVENT_STA_DISCONNECTED:
+		//case SYSTEM_EVENT_STA_DISCONNECTED:
+		case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
 			Serial.println("WiFi lost connection.  Attempting to reconnect...");
 			WiFi.reconnect();
 			disconnectCounter++;
@@ -85,10 +88,12 @@ namespace st
 				ESP.restart();
 			}
 			break;
-		case SYSTEM_EVENT_STA_START:
+		//case SYSTEM_EVENT_STA_START:
+		case ARDUINO_EVENT_WIFI_STA_START:
 			Serial.println("ESP32 station start");
 			break;
-		case SYSTEM_EVENT_STA_CONNECTED:
+		//case SYSTEM_EVENT_STA_CONNECTED:
+		case ARDUINO_EVENT_WIFI_STA_CONNECTED:
 			Serial.println("ESP32 station connected to AP");
 			disconnectCounter = 0;
 			break;
