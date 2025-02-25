@@ -1,4 +1,6 @@
-ST_Anything v2.9.9
+No lonnger supported on the SmartThings Platform as the Groovy IDE has been retired on ST.  Still supported on the Hubitat platform.  Please see the HubDuino ReadMe.
+
+ST_Anything v2.9.9 - 
 ================
 
 **WARNING** - SmartThings Web IDE GitHub integration is not available in all countries around the globe.
