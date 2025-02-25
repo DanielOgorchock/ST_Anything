@@ -1,11 +1,12 @@
-HubDuino v1.1.9
+HubDuino v1.1.10
 ================
 
-**NOTE** - HubDuino v1.1.9 was tested using Arduino IDE 1.8.16 + ESP8266 v3.0.2  
+**NOTE** - HubDuino v1.1.10 was tested using Arduino IDE 2.3.4 + ESP8266 v3.1.2  
 
-**NOTE** - HubDuino v1.1.9 was tested using Arduino IDE 1.8.16 + ESP32 v2.0.3
+**NOTE** - HubDuino v1.1.10 was tested using Arduino IDE 2.3.4 + ESP32 v3.1.3
 
 **Recent History:**
+- 2022-05-28 HubDuino v1.1.10 - Fixed compiler errors when using ESP8266 3.1.2 and ESP32 3.1.3 board support packages
 - 2022-05-28 HubDuino v1.1.9 - Fixed compiler errors when using ESP8266 3.0.2 and ESP32 2.0.3 board support packages
 - 2019-09-14 HubDuino v1.1.7 - Significant changes to the Parent Drivers.  MAC Address is no longer required - only the IP address/port of the micro-controller is needed.  Added Presence Capability to the Parent Device - This indicates whether or not the device has had an update from the microcontroller within a user selectable timeout period via a new setting.  NumberOfButtons setting is removed as it now auto-populates.  This release also requires an update to the ST_Anything library's IS_Button.cpp file.
 - 2019-08-17 HubDuino v1.1.6 - Added support for Arduino NANO33IoT
@@ -17,7 +18,7 @@ HubDuino v1.1.9
 
 ![screenshot](https://user-images.githubusercontent.com/5206084/41016005-e382479e-691a-11e8-871f-e62964c0e0c0.png)
 
-Note: The HubDuino v1.1.9 release is based on the ST_Anything v2.9.9 baseline and was built using the Arduino IDE v1.8.16.  Please make sure to upgrade your Arduino IDE.
+Note: The HubDuino v1.1.10 release was built using the Arduino IDE v2.3.4.  Please make sure to upgrade your Arduino IDE.
 
 Turn your Arduino UNO/MEGA/MKR1000/MKR1010/NANO33IoT, ESP8266, or ESP32 into Anything you can imagine! HubDuino/ST_Anything is an Arduino library, sketch, and Device Handlers that works with your hardware to create an all-in-one SmartThings device. 
 - Arduino with SmartThings ThingShield
@@ -117,7 +118,7 @@ HubDuino/ST_Anything consists of four main parts:
   - Make sure you select the correct model of board you are compiling for. 
   - If building for a standalone ESP8266 board, make sure you have configured the Arduino IDE to include support for these boards.  Follow the guide at https://learn.sparkfun.com/tutorials/esp8266-thing-hookup-guide/installing-the-esp8266-arduino-addon
   
-**NOTE: Arduino IDE v1.8.9 + v2.5.2 ESP8266 Board support package for the Arduino IDE appears to have corrected the earlier memory leak. Please use this combination of software which has been successfully tested.**  
+**NOTE: Arduino IDE v1.8.9 + v2.5.2 ESP8266 Board support package for the Arduino IDE appears to have corrected the earlier memory leak. Please use this combination of software (or newer) which has been successfully tested.**  
   
   - If building for a standalone ESP32 board, make sure you have configured the Arduino IDE to include support for these boards.  Follow the guide at https://github.com/espressif/arduino-esp32/blob/master/README.md
 - If using a LAN-to-Hub (WiFi or Cat5 Ethernet) based device
