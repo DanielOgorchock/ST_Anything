@@ -6,7 +6,7 @@
 //			  It inherits from the st::Executor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_RGB_Dim executor1("rgbSwitch1", PIN_R, PIN_G, PIN_B, true, 0, 1, 2);
+//			  For Example:  st::EX_RGB_Dim executor1("rgbSwitch1", PIN_R, PIN_G, PIN_B, true, 0, 1, 2, 1023);
 //
 //			  st::EX_RGB_Dim() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name.
@@ -17,6 +17,7 @@
 //				- byte channel_r - OPTIONAL - PWM channel used for Red on a ESP32.
 //				- byte channel_g - OPTIONAL - PWM channel used for Green on a ESP32.
 //				- byte channel_b - OPTIONAL - PWM channel used for Blue on a ESP32.
+//              - unsigned short analogWriteRangeVal - OPTIONAL - determines the range of input values for the analogWrite() call for only the ESP8266 boards.  Defaults to 1023 for backwards compatibility.
 //
 //  Change History:
 //
@@ -29,6 +30,8 @@
 //    2020-03-29  DOUG (M2)		 Scaled the 8bit values to 10bit for ESP8266 "analogWrite()"
 //    2020-04-01  Dan Ogorchock  Added back in functionality for traditional Arduino Boards
 //    2025-02-23  Dan Ogorchock  Modified to work with the ESP32 v3.0 and newer board manager package
+//    2025-11-29  Dan Ogorchock  Added special handling for ESP8266 0-1023 PWM range, as the v3.x ESP8266 Arduino
+//                               board support package reverted the default range to 0-255 to match all other Arduino boards 
 //
 //******************************************************************************************
 #ifndef ST_EX_RGB_DIM
@@ -50,12 +53,13 @@ namespace st
 			byte m_nChannelG;	    //PWM Channel used for Green output
 			byte m_nChannelB;	    //PWM Channel used for Blue output
 			String m_sCurrentHEX;	//HEX value of color currently set
+			unsigned short m_analogWriteRange; //Used for the ESP8266 boards only
 
 			void writeRGBToPins();	//function to update the Arduino PWM Output Pins
 
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			EX_RGB_Dim(const __FlashStringHelper *name, byte pinR, byte pinG, byte pinB, bool commonAnode, byte channelR = 0, byte channelG = 0, byte channelB = 0);
+			EX_RGB_Dim(const __FlashStringHelper *name, byte pinR, byte pinG, byte pinB, bool commonAnode, byte channelR = 0, byte channelG = 0, byte channelB = 0, unsigned short analogWriteRangeVal = 1023);
 			
 			//destructor
 			virtual ~EX_RGB_Dim();

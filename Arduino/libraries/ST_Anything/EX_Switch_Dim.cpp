@@ -6,7 +6,7 @@
 //			  It inherits from the st::Executor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_Switch_Dim executor1(F("dimmerSwitch1"), PIN_SWITCH, PIN_LEVEL, LOW, true);
+//			  For Example:  st::EX_Switch_Dim executor1(F("dimmerSwitch1"), PIN_SWITCH, PIN_LEVEL, LOW, true, 1023);
 //
 //			  st::EX_Switch_Dim() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -14,6 +14,7 @@
 //				- byte pin_pwm - REQUIRED - the Arduino Pin to be used as a pwm output
 //				- bool startingState - OPTIONAL - the value desired for the initial state of the switch.  LOW = "off", HIGH = "on"
 //				- bool invertLogic - OPTIONAL - determines whether the Arduino Digital Output should use inverted logic
+//              - unsigned short analogWriteRangeVal - OPTIONAL - determines the range of input values for the analogWrite() call for only the ESP8266 boards.  Defaults to 1023 for backwards compatibility.
 //
 //  Change History:
 //
@@ -25,7 +26,8 @@
 //    2018-08-30  Dan Ogorchock  Adding reporting of 'level'
 //    2018-12-06  Dan Ogorchock  Fixed Comments
 //    2019-04-10  Dan Ogorchock  Corrected analogWrite() call for ESP8266 platform
-//
+//    2025-11-29  Dan Ogorchock  Added special handling for ESP8266 0-1023 PWM range, as the v3.x ESP8266 Arduino
+//                               board support package reverted the default range to 0-255 to match all other Arduino boards 
 //
 //******************************************************************************************
 #include "EX_Switch_Dim.h"
@@ -48,7 +50,7 @@ namespace st
 			Serial.println(F("EX_Switch_Dim:: analogWrite not currently supported on ESP32!"));
 		}
 #elif defined(ARDUINO_ARCH_ESP8266)
-		analogWrite(m_nPinPWM, map(m_nCurrentLevel, 0, 100, 0, 1023));
+		analogWrite(m_nPinPWM, map(m_nCurrentLevel, 0, 100, 0, m_analogWriteRange));
 #else
 		analogWrite(m_nPinPWM, map(m_nCurrentLevel, 0, 100, 0, 255));
 #endif
@@ -56,14 +58,18 @@ namespace st
 
 	//public
 	//constructor
-	EX_Switch_Dim::EX_Switch_Dim(const __FlashStringHelper *name, byte pinSwitch, byte pinPWM, bool startingState, bool invertLogic) :
+	EX_Switch_Dim::EX_Switch_Dim(const __FlashStringHelper *name, byte pinSwitch, byte pinPWM, bool startingState, bool invertLogic, unsigned short analogWriteRangeVal) :
 		Executor(name),
 		m_bCurrentState(startingState),
-		m_bInvertLogic(invertLogic)
+		m_bInvertLogic(invertLogic),
+		m_analogWriteRange(analogWriteRangeVal)
 	{
 		m_nCurrentLevel = startingState == HIGH ? 100 : 0;
 		setSwitchPin(pinSwitch);
 		setPWMPin(pinPWM);
+#if defined(ARDUINO_ARCH_ESP8266)
+		analogWriteRange(m_analogWriteRange);
+#endif		
 	}
 
 	//destructor

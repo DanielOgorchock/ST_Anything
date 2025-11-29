@@ -16,6 +16,7 @@
 //    Date        Who            What
 //    ----        ---            ----
 //    2020-03-29  DOUG (M2)     Added support for using PWM device without pin for switch device
+//    2025-11-29  Dan Ogorchock Added support for optional analogWriteRange parameter for ESP8266 
 //
 //******************************************************************************************
 //******************************************************************************************
@@ -114,7 +115,7 @@ void setup()
   //******************************************************************************************
   
   //Executors
-  static st::EX_PWM_Dim executor1(F("dimmerSwitch1"), PIN_LEVEL_1, LOW, false);
+  static st::EX_PWM_Dim executor1(F("dimmerSwitch1"), PIN_LEVEL_1, LOW, false, 1023);
   
   //*****************************************************************************
   //  Configure debug print output from each main class 

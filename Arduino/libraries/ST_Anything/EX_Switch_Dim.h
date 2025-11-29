@@ -6,7 +6,7 @@
 //			  It inherits from the st::Executor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_Switch_Dim executor1(F("dimmerSwitch1"), PIN_SWITCH, PIN_LEVEL, LOW, true);
+//			  For Example:  st::EX_Switch_Dim executor1(F("dimmerSwitch1"), PIN_SWITCH, PIN_LEVEL, LOW, true, 1023);
 //
 //			  st::EX_Switch_Dim() constructor requires the following arguments
 //				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
@@ -14,6 +14,7 @@
 //				- byte pin_pwm - REQUIRED - the Arduino Pin to be used as a pwm output
 //				- bool startingState - OPTIONAL - the value desired for the initial state of the switch.  LOW = "off", HIGH = "on"
 //				- bool invertLogic - OPTIONAL - determines whether the Arduino Digital Output should use inverted logic
+//              - unsigned short analogWriteRangeVal - OPTIONAL - determines the range of input values for the analogWrite() call for only the ESP8266 boards.  Defaults to 1023 for backwards compatibility.
 //
 //  Change History:
 //
@@ -24,7 +25,8 @@
 //    2018-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
 //    2018-12-06  Dan Ogorchock  Fixed Comments
 //    2019-04-10  Dan Ogorchock  Corrected analogWrite() call for ESP8266 platform
-//
+//    2025-11-29  Dan Ogorchock  Added special handling for ESP8266 0-1023 PWM range, as the v3.x ESP8266 Arduino
+//                               board support package reverted the default range to 0-255 to match all other Arduino boards 
 //
 //******************************************************************************************
 #ifndef ST_EX_SWITCH_DIM
@@ -42,13 +44,14 @@ namespace st
 			byte m_nPinSwitch;		//Arduino Pin used as a Digital Output for the switch - often connected to a relay or an LED
 			byte m_nPinPWM;			//Arduino Pin used as a PWM Output for the switch level capability
 			byte m_nCurrentLevel;	//Switch Level value from SmartThings (0 to 100)
+			unsigned short m_analogWriteRange; //Used for the ESP8266 boards only
 
 			void writeStateToPin();	//function to update the Arduino Digital Output Pin
 			void writeLevelToPin();	//function to update the Arduino PWM Output Pin
 
 		public:
 			//constructor - called in your sketch's global variable declaration section
-			EX_Switch_Dim(const __FlashStringHelper *name, byte pinSwitch, byte pinPWM, bool startingState = LOW, bool invertLogic = false);
+			EX_Switch_Dim(const __FlashStringHelper *name, byte pinSwitch, byte pinPWM, bool startingState = LOW, bool invertLogic = false, unsigned short analogWriteRangeVal = 1023);
 			
 			//destructor
 			virtual ~EX_Switch_Dim();

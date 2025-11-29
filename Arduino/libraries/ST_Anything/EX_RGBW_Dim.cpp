@@ -6,10 +6,10 @@
 //			  It inherits from the st::Executor class.
 //
 //			  Create an instance of this class in your sketch's global variable section
-//			  For Example:  st::EX_RGBW_Dim executor1("rgbwSwitch1", PIN_R, PIN_G, PIN_B, PIN_W, true, 0, 1, 2, 3);
+//			  For Example:  st::EX_RGBW_Dim executor1("rgbwSwitch1", PIN_R, PIN_G, PIN_B, PIN_W, true, 0, 1, 2, 3, 1023);
 //
 //			  st::EX_RGBW_Dim() constructor requires the following arguments
-//				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name
+//				- String &name - REQUIRED - the name of the object - must match the Groovy ST_Anything DeviceType tile name.
 //				- byte pin_r - REQUIRED - the Arduino Pin to be used as a digital output for Red.
 //				- byte pin_g - REQUIRED - the Arduino Pin to be used as a digital output for Green.
 //				- byte pin_b - REQUIRED - the Arduino Pin to be used as a digital output for Blue.
@@ -19,6 +19,7 @@
 //				- byte channel_g - OPTIONAL - PWM channel used for Green on a ESP32.
 //				- byte channel_b - OPTIONAL - PWM channel used for Blue on a ESP32.
 //				- byte channel_w - OPTIONAL - PWM channel used for Whitw on a ESP32.
+//              - unsigned short analogWriteRangeVal - OPTIONAL - determines the range of input values for the analogWrite() call for only the ESP8266 boards.  Defaults to 1023 for backwards compatibility.
 //
 //  Change History:
 //
@@ -27,11 +28,12 @@
 //    2016-04-30  Dan Ogorchock  Original Creation
 //    2018-08-14  Dan Ogorchock  Modified to avoid compiler errors on ESP32 since it currently does not support "analogWrite()"
 //    2017-08-30  Dan Ogorchock  Modified comment section above to comply with new Parent/Child Device Handler requirements
-//    2017-10-08  Allan (vseven) Modified original code from EX_RGBW_Dim to be used for RGB lighting
-//    2017-10-12  Allan (vseven) Modified EX_RGBW_Dim for support of a White LED channel
-//    2018-04-02  Dan Ogorchock  Fixed Typo
+//    2017-10-06  Allan (vseven) Modified original code from EX_Switch_Dim to be used for RGB lighting
+//    2017-10-12  Allan (vseven) Modified EX_RGB_Dim for support of a White LEd channel
 //    2020-06-09  Dan Ogorchock  Scaled the 8bit values to 10bit for ESP8266 "analogWrite()"
 //    2025-02-23  Dan Ogorchock  Modified to work with the ESP32 v3.0 and newer board manager package
+//    2025-11-29  Dan Ogorchock  Added special handling for ESP8266 0-1023 PWM range, as the v3.x ESP8266 Arduino
+//                               board support package reverted the default range to 0-255 to match all other Arduino boards 
 //
 //******************************************************************************************
 #include "EX_RGBW_Dim.h"
@@ -90,7 +92,7 @@ namespace st
 			Serial.println(String(subStringR) + ":" + String(subStringG) + ":" + String(subStringB) + ":" + String(subStringW));
 		#elif defined(ARDUINO_ARCH_ESP8266)
 			Serial.print(F("subString R:G:B:W = "));
-			Serial.println(String(map(subStringR, 0, 255, 0, 1023)) + ":" + String(map(subStringG, 0, 255, 0, 1023)) + ":" + String(map(subStringB, 0, 255, 0, 1023)) + ":" + String(map(subStringW, 0, 255, 0, 1023)));
+			Serial.println(String(map(subStringR, 0, 255, 0, m_analogWriteRange)) + ":" + String(map(subStringG, 0, 255, 0, m_analogWriteRange)) + ":" + String(map(subStringB, 0, 255, 0, m_analogWriteRange)) + ":" + String(map(subStringW, 0, 255, 0, m_analogWriteRange)));
 		#else
 			Serial.print(F("subString R:G:B:W = "));
 			Serial.println(String(subStringR) + ":" + String(subStringG) + ":" + String(subStringB) + ":" + String(subStringW));
@@ -103,7 +105,7 @@ namespace st
 	#if defined(ARDUINO_ARCH_ESP32)
 		ledcWrite(m_nChannelR, subStringR);
 	#elif defined(ARDUINO_ARCH_ESP8266)
-		analogWrite(m_nPinR, map(subStringR, 0, 255, 0, 1023));
+		analogWrite(m_nPinR, map(subStringR, 0, 255, 0, m_analogWriteRange));
 	#else
 		analogWrite(m_nPinR, subStringR);
 	#endif
@@ -111,7 +113,7 @@ namespace st
 	#if defined(ARDUINO_ARCH_ESP32)
 		ledcWrite(m_nChannelG, subStringG);
 	#elif defined(ARDUINO_ARCH_ESP8266)
-		analogWrite(m_nPinG, map(subStringG, 0, 255, 0, 1023));
+		analogWrite(m_nPinG, map(subStringG, 0, 255, 0, m_analogWriteRange));
 	#else
 		analogWrite(m_nPinG, subStringG);
 	#endif
@@ -119,7 +121,7 @@ namespace st
 	#if defined(ARDUINO_ARCH_ESP32)
 		ledcWrite(m_nChannelB, subStringB);
 	#elif defined(ARDUINO_ARCH_ESP8266)
-		analogWrite(m_nPinB, map(subStringB, 0, 255, 0, 1023));
+		analogWrite(m_nPinB, map(subStringB, 0, 255, 0, m_analogWriteRange));
 	#else
 		analogWrite(m_nPinB, subStringB);
 	#endif
@@ -127,7 +129,7 @@ namespace st
 	#if defined(ARDUINO_ARCH_ESP32)
 		ledcWrite(m_nChannelW, subStringW);
 	#elif defined(ARDUINO_ARCH_ESP8266)
-		analogWrite(m_nPinW, map(subStringW, 0, 255, 0, 1023));
+		analogWrite(m_nPinW, map(subStringW, 0, 255, 0, m_analogWriteRange));
 	#else
 		analogWrite(m_nPinW, subStringW);
 	#endif
@@ -136,14 +138,18 @@ namespace st
 
 //public
 	//constructor
-	EX_RGBW_Dim::EX_RGBW_Dim(const __FlashStringHelper *name, byte pinR, byte pinG, byte pinB, byte pinW, bool commonAnode, byte channelR, byte channelG, byte channelB, byte channelW):
+	EX_RGBW_Dim::EX_RGBW_Dim(const __FlashStringHelper *name, byte pinR, byte pinG, byte pinB, byte pinW, bool commonAnode, byte channelR, byte channelG, byte channelB, byte channelW, unsigned short analogWriteRangeVal):
 		Executor(name),
-		m_bCommonAnode(commonAnode)
+		m_bCommonAnode(commonAnode),
+		m_analogWriteRange(analogWriteRangeVal)
 	{
 		setRedPin(pinR, channelR);
 		setGreenPin(pinG, channelG);
 		setBluePin(pinB, channelB);
 		setWhitePin(pinW, channelW);
+#if defined(ARDUINO_ARCH_ESP8266)
+		analogWriteRange(m_analogWriteRange);
+#endif		
 	}
 
 	//destructor
