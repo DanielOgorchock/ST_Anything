@@ -15,7 +15,7 @@ DallasTemperature sensors(&oneWire);
 // arrays to hold device addresses
 DeviceAddress insideThermometer, outsideThermometer;
 
-// Assign address manually. The addresses below will beed to be changed
+// Assign address manually. The addresses below will need to be changed
 // to valid device addresses on your bus. Device address can be retrieved
 // by using either oneWire.search(deviceAddress) or individually via
 // sensors.getAddress(deviceAddress, index)
@@ -102,6 +102,11 @@ void printAddress(DeviceAddress deviceAddress)
 void printTemperature(DeviceAddress deviceAddress)
 {
   float tempC = sensors.getTempC(deviceAddress);
+  if (tempC == DEVICE_DISCONNECTED_C)
+  {
+    Serial.println("Error: Could not read temperature data");
+    return;
+  }
   Serial.print("Temp C: ");
   Serial.print(tempC);
   Serial.print(" Temp F: ");
