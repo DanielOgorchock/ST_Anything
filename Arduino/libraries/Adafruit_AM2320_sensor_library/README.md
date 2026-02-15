@@ -1,6 +1,6 @@
-# Adafruit AM2320 Library [![Build Status](https://travis-ci.org/adafruit/Adafruit_AM2320.svg?branch=master)](https://travis-ci.org/adafruit/Adafruit_AM2320)
+# Adafruit AM2320 Sensor Driver for Arduino [![Build Status](https://github.com/adafruit/Adafruit_AM2320/workflows/Arduino%20Library%20CI/badge.svg)](https://github.com/adafruit/Adafruit_AM2320/actions)[![Documentation](https://github.com/adafruit/ci-arduino/blob/master/assets/doxygen_badge.svg)](http://adafruit.github.io/Adafruit_AM2320/html/index.html)
 
-<img src="https://cdn-shop.adafruit.com/970x728/1947-05.jpg" height="300"/>
+<img src="https://cdn-shop.adafruit.com/970x728/3721-00.jpg" height="300"/>
 
 This is a library for the Adafruit AM2320 Temperature & Humidity Unified Sensor
   * https://www.adafruit.com/products/3721

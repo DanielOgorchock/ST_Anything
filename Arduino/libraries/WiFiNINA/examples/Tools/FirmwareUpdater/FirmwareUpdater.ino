@@ -1,6 +1,6 @@
 /*
   FirmwareUpdater - Firmware Updater for the 
-  Arduino MKR WiFi 1010, Arduino MKR Vidor 4000, and Arduino UNO WiFi Rev.2.
+  Arduino MKR WiFi 1010, Arduino MKR Vidor 4000, and Arduino Uno WiFi Rev.2.
   
   Copyright (c) 2018 Arduino SA. All rights reserved.
   
@@ -60,7 +60,7 @@ void receivePacket(UartPacket *pkt, uint8_t *payload) {
     l--;
   }
 
-  // Convert parameters from network byte order to cpu byte order
+  // Convert parameters from network byte order to CPU byte order
   pkt->address = fromNetwork32(pkt->address);
   pkt->arg1 = fromNetwork32(pkt->arg1);
   pkt->payloadLength = fromNetwork16(pkt->payloadLength);

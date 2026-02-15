@@ -2,7 +2,7 @@
   This is a library for the BME280 humidity, temperature & pressure sensor
 
   Designed specifically to work with the Adafruit BME280 Breakout
-  ----> http://www.adafruit.com/products/2650
+  ----> http://www.adafruit.com/products/2652
 
   These sensors use I2C or SPI to communicate, 2 or 4 pins are required
   to interface. The device's I2C address is either 0x76 or 0x77.
@@ -13,6 +13,7 @@
 
   Written by Limor Fried & Kevin Townsend for Adafruit Industries.
   BSD license, all text above must be included in any redistribution
+  See the LICENSE file for details.
  ***************************************************************************/
 
 #include <Wire.h>
@@ -37,7 +38,7 @@ void setup() {
     Serial.begin(9600);
     Serial.println(F("BME280 test"));
 
-    if (! bme.begin(&Wire)) {
+    if (! bme.begin(0x77, &Wire)) {
         Serial.println("Could not find a valid BME280 sensor, check wiring!");
         while (1);
     }

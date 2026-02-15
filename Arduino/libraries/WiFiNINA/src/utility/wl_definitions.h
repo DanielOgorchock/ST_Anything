@@ -1,5 +1,5 @@
 /*
-  wl_definitions.h - Library for Arduino Wifi shield.
+  wl_definitions.h - Library for Arduino WiFi shield.
   Copyright (c) 2018 Arduino SA. All rights reserved.
   Copyright (c) 2011-2014 Arduino.  All right reserved.
 
@@ -39,7 +39,7 @@
 #define WL_IPV4_LENGTH 4
 // Maximum size of a SSID list
 #define WL_NETWORKS_LIST_MAXNUM	10
-// Maxmium number of socket
+// Maximum number of socket
 #define	WIFI_MAX_SOCK_NUM	10
 // Socket not available constant
 #define SOCK_NOT_AVAIL  255

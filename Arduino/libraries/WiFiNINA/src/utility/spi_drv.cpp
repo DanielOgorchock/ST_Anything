@@ -1,5 +1,5 @@
 /*
-  spi_drv.cpp - Library for Arduino Wifi shield.
+  spi_drv.cpp - Library for Arduino WiFi shield.
   Copyright (c) 2018 Arduino SA. All rights reserved.
   Copyright (c) 2011-2014 Arduino.  All right reserved.
 
@@ -22,6 +22,7 @@
 #include <SPI.h>
 #include "utility/spi_drv.h"
 #include "pins_arduino.h"
+#include "WiFi.h"
 
 #ifdef ARDUINO_SAMD_MKRVIDOR4000
 
@@ -30,7 +31,7 @@
 // yes, so use the existing VidorFPGA include
 #include <VidorFPGA.h>
 #else
-// otherwise, fallback to VidorPeripherals and it's bitstream
+// otherwise, fallback to VidorPeripherals and its bitstream
 #include <VidorPeripherals.h>
 #endif
 
@@ -67,13 +68,7 @@ static bool inverted_reset = false;
 
 bool SpiDrv::initialized = false;
 
-__attribute__((weak)) void wifi_nina_feed_watchdog()
-{
-    /* This function can be overwritten by a "strong" implementation
-     * in a higher level application, such as the ArduinoIoTCloud
-     * firmware stack.
-     */
-}
+extern WiFiClass WiFi;
 
 void SpiDrv::begin()
 {
@@ -227,7 +222,7 @@ void SpiDrv::waitForSlaveReady(bool const feed_watchdog)
     {
         if (feed_watchdog) {
             if ((millis() - start) < 10000) {
-                wifi_nina_feed_watchdog();
+                WiFi.feedWatchdog();
             }
         }
     }
@@ -473,16 +468,16 @@ int SpiDrv::waitResponse(uint8_t cmd, uint8_t* numParamRead, uint8_t** params, u
 void SpiDrv::sendParamNoLen(uint8_t* param, size_t param_len, uint8_t lastParam)
 {
     size_t i = 0;
-    // Send Spi paramLen
+    // Send SPI paramLen
     sendParamLen8(0);
 
-    // Send Spi param data
+    // Send SPI param data
     for (i=0; i<param_len; ++i)
     {
         spiTransfer(param[i]);
     }
 
-    // if lastParam==1 Send Spi END CMD
+    // if lastParam==1 Send SPI END CMD
     if (lastParam == 1)
         spiTransfer(END_CMD);
 }
@@ -490,29 +485,29 @@ void SpiDrv::sendParamNoLen(uint8_t* param, size_t param_len, uint8_t lastParam)
 void SpiDrv::sendParam(uint8_t* param, uint8_t param_len, uint8_t lastParam)
 {
     int i = 0;
-    // Send Spi paramLen
+    // Send SPI paramLen
     sendParamLen8(param_len);
 
-    // Send Spi param data
+    // Send SPI param data
     for (i=0; i<param_len; ++i)
     {
         spiTransfer(param[i]);
     }
 
-    // if lastParam==1 Send Spi END CMD
+    // if lastParam==1 Send SPI END CMD
     if (lastParam == 1)
         spiTransfer(END_CMD);
 }
 
 void SpiDrv::sendParamLen8(uint8_t param_len)
 {
-    // Send Spi paramLen
+    // Send SPI paramLen
     spiTransfer(param_len);
 }
 
 void SpiDrv::sendParamLen16(uint16_t param_len)
 {
-    // Send Spi paramLen
+    // Send SPI paramLen
     spiTransfer((uint8_t)((param_len & 0xff00)>>8));
     spiTransfer((uint8_t)(param_len & 0xff));
 }
@@ -542,16 +537,16 @@ void SpiDrv::sendBuffer(uint8_t* param, uint16_t param_len, uint8_t lastParam)
 {
     uint16_t i = 0;
 
-    // Send Spi paramLen
+    // Send SPI paramLen
     sendParamLen16(param_len);
 
-    // Send Spi param data
+    // Send SPI param data
     for (i=0; i<param_len; ++i)
     {
         spiTransfer(param[i]);
     }
 
-    // if lastParam==1 Send Spi END CMD
+    // if lastParam==1 Send SPI END CMD
     if (lastParam == 1)
         spiTransfer(END_CMD);
 }
@@ -559,13 +554,13 @@ void SpiDrv::sendBuffer(uint8_t* param, uint16_t param_len, uint8_t lastParam)
 
 void SpiDrv::sendParam(uint16_t param, uint8_t lastParam)
 {
-    // Send Spi paramLen
+    // Send SPI paramLen
     sendParamLen8(2);
 
     spiTransfer((uint8_t)((param & 0xff00)>>8));
     spiTransfer((uint8_t)(param & 0xff));
 
-    // if lastParam==1 Send Spi END CMD
+    // if lastParam==1 Send SPI END CMD
     if (lastParam == 1)
         spiTransfer(END_CMD);
 }
@@ -579,16 +574,16 @@ void SpiDrv::sendParam(uint16_t param, uint8_t lastParam)
 
 void SpiDrv::sendCmd(uint8_t cmd, uint8_t numParam)
 {
-    // Send Spi START CMD
+    // Send SPI START CMD
     spiTransfer(START_CMD);
 
-    // Send Spi C + cmd
+    // Send SPI C + cmd
     spiTransfer(cmd & ~(REPLY_FLAG));
 
-    // Send Spi totLen
+    // Send SPI totLen
     //spiTransfer(totLen);
 
-    // Send Spi numParam
+    // Send SPI numParam
     spiTransfer(numParam);
 
     // If numParam == 0 send END CMD

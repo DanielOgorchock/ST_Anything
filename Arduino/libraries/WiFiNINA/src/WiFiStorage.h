@@ -59,7 +59,7 @@ public:
 		return true;
 	}
     static bool downloadOTA(const char * url, uint8_t * res_ota_download = NULL) {
-		/* The buffer within the nina firmware allows a maximum
+		/* The buffer within the NINA firmware allows a maximum
 		 * url size of 128 bytes. It's better to prevent the
 		 * transmission of over-sized URL as soon as possible.
 		 */

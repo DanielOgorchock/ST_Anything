@@ -1,5 +1,5 @@
 /*
-  WiFi.h - Library for Arduino Wifi shield.
+  WiFi.h - Library for Arduino WiFi shield.
   Copyright (c) 2018 Arduino SA. All rights reserved.
   Copyright (c) 2011-2014 Arduino LLC.  All right reserved.
 
@@ -21,7 +21,8 @@
 #ifndef WiFi_h
 #define WiFi_h
 
-#define WIFI_FIRMWARE_LATEST_VERSION "1.4.4"
+#define WIFI_FIRMWARE_LATEST_VERSION "2.0.0"
+#define WIFI_HAS_FEED_WATCHDOG_FUNC
 
 #include <inttypes.h>
 
@@ -36,12 +37,15 @@ extern "C" {
 #include "WiFiServer.h"
 #include "WiFiStorage.h"
 
+typedef void(*FeedHostProcessorWatchdogFuncPointer)();
+
 class WiFiClass
 {
 private:
 
     static void init();
     unsigned long _timeout;
+    FeedHostProcessorWatchdogFuncPointer _feed_watchdog_func;
 public:
     WiFiClass();
 
@@ -85,46 +89,46 @@ public:
     uint8_t beginEnterprise(const char* ssid, const char* username, const char* password, const char* identity);
     uint8_t beginEnterprise(const char* ssid, const char* username, const char* password, const char* identity, const char* ca);
 
-    /* Change Ip configuration settings disabling the dhcp client
+    /* Change IP configuration settings disabling the DHCP client
         *
-        * param local_ip: 	Static ip configuration
+        * param local_ip: 	Static IP configuration
         */
     void config(IPAddress local_ip);
 
-    /* Change Ip configuration settings disabling the dhcp client
+    /* Change IP configuration settings disabling the DHCP client
         *
-        * param local_ip: 	Static ip configuration
+        * param local_ip: 	Static IP configuration
 	* param dns_server:     IP configuration for DNS server 1
         */
     void config(IPAddress local_ip, IPAddress dns_server);
 
-    /* Change Ip configuration settings disabling the dhcp client
+    /* Change IP configuration settings disabling the DHCP client
         *
-        * param local_ip: 	Static ip configuration
+        * param local_ip: 	Static IP configuration
 	* param dns_server:     IP configuration for DNS server 1
         * param gateway : 	Static gateway configuration
         */
     void config(IPAddress local_ip, IPAddress dns_server, IPAddress gateway);
 
-    /* Change Ip configuration settings disabling the dhcp client
+    /* Change IP configuration settings disabling the DHCP client
         *
-        * param local_ip: 	Static ip configuration
+        * param local_ip: 	Static IP configuration
 	* param dns_server:     IP configuration for DNS server 1
         * param gateway: 	Static gateway configuration
         * param subnet:		Static Subnet mask
         */
     void config(IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet);
 
-    /* Change DNS Ip configuration
+    /* Change DNS IP configuration
      *
-     * param dns_server1: ip configuration for DNS server 1
+     * param dns_server1: IP configuration for DNS server 1
      */
     void setDNS(IPAddress dns_server1);
 
-    /* Change DNS Ip configuration
+    /* Change DNS IP configuration
      *
-     * param dns_server1: ip configuration for DNS server 1
-     * param dns_server2: ip configuration for DNS server 2
+     * param dns_server1: IP configuration for DNS server 1
+     * param dns_server2: IP configuration for DNS server 2
      *
      */
     void setDNS(IPAddress dns_server1, IPAddress dns_server2);
@@ -156,7 +160,7 @@ public:
     /*
      * Get the interface IP address.
      *
-     * return: Ip address value
+     * return: IP address value
      */
     IPAddress localIP();
 
@@ -168,11 +172,19 @@ public:
     IPAddress subnetMask();
 
     /*
-     * Get the gateway ip address.
+     * Get the gateway IP address.
      *
-     * return: gateway ip address value
+     * return: gateway IP address value
      */
    IPAddress gatewayIP();
+
+   /*
+    * Get the DNS server IP address.
+    * param n: index of the DNS server
+    * return: DNS server IP address value
+    * requires firmware version > 1.5.0
+    */
+   IPAddress dnsIP(int n = 0);
 
     /*
      * Return the current SSID associated with the network
@@ -190,7 +202,7 @@ public:
     uint8_t* BSSID(uint8_t* bssid);
 
     /*
-      * Return the current RSSI /Received Signal Strength in dBm)
+      * Return the current RSSI/Received Signal Strength in dBm)
       * associated with the network
       *
       * return: signed value
@@ -216,7 +228,7 @@ public:
      *
      * param networkItem: specify from which network item want to get the information
 	 *
-     * return: ssid string of the specified item on the networks scanned list
+     * return: SSID string of the specified item on the networks scanned list
      */
     const char*	SSID(uint8_t networkItem);
 
@@ -274,6 +286,9 @@ public:
     int ping(IPAddress host, uint8_t ttl = 128);
 
     void setTimeout(unsigned long timeout);
+
+    void setFeedWatchdogFunc(FeedHostProcessorWatchdogFuncPointer func);
+    void feedWatchdog();
 };
 
 extern WiFiClass WiFi;

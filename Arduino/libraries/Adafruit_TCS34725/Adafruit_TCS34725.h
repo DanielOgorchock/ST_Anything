@@ -39,7 +39,7 @@
 #include <WProgram.h>
 #endif
 
-#include <Wire.h>
+#include <Adafruit_I2CDevice.h>
 
 #define TCS34725_ADDRESS (0x29)     /**< I2C address **/
 #define TCS34725_COMMAND_BIT (0x80) /**< Command bit **/
@@ -138,20 +138,48 @@
 #define TCS34725_BDATAH (0x1B) /**< Blue channel data high byte */
 
 /** Integration time settings for TCS34725 */
-typedef enum {
-  TCS34725_INTEGRATIONTIME_2_4MS =
-      0xFF, /**<  2.4ms - 1 cycle    - Max Count: 1024  */
-  TCS34725_INTEGRATIONTIME_24MS =
-      0xF6, /**<  24ms  - 10 cycles  - Max Count: 10240 */
-  TCS34725_INTEGRATIONTIME_50MS =
-      0xEB, /**<  50ms  - 20 cycles  - Max Count: 20480 */
-  TCS34725_INTEGRATIONTIME_101MS =
-      0xD5, /**<  101ms - 42 cycles  - Max Count: 43008 */
-  TCS34725_INTEGRATIONTIME_154MS =
-      0xC0, /**<  154ms - 64 cycles  - Max Count: 65535 */
-  TCS34725_INTEGRATIONTIME_700MS =
-      0x00 /**<  700ms - 256 cycles - Max Count: 65535 */
-} tcs34725IntegrationTime_t;
+/*
+ * 60-Hz period: 16.67ms, 50-Hz period: 20ms
+ * 100ms is evenly divisible by 50Hz periods and by 60Hz periods
+ */
+#define TCS34725_INTEGRATIONTIME_2_4MS                                         \
+  (0xFF) /**< 2.4ms - 1 cycle - Max Count: 1024 */
+#define TCS34725_INTEGRATIONTIME_24MS                                          \
+  (0xF6) /**< 24.0ms - 10 cycles - Max Count: 10240 */
+#define TCS34725_INTEGRATIONTIME_50MS                                          \
+  (0xEB) /**< 50.4ms - 21 cycles - Max Count: 21504 */
+#define TCS34725_INTEGRATIONTIME_60MS                                          \
+  (0xE7) /**< 60.0ms - 25 cycles - Max Count: 25700 */
+#define TCS34725_INTEGRATIONTIME_101MS                                         \
+  (0xD6) /**< 100.8ms - 42 cycles - Max Count: 43008 */
+#define TCS34725_INTEGRATIONTIME_120MS                                         \
+  (0xCE) /**< 120.0ms - 50 cycles - Max Count: 51200 */
+#define TCS34725_INTEGRATIONTIME_154MS                                         \
+  (0xC0) /**< 153.6ms - 64 cycles - Max Count: 65535 */
+#define TCS34725_INTEGRATIONTIME_180MS                                         \
+  (0xB5) /**< 180.0ms - 75 cycles - Max Count: 65535 */
+#define TCS34725_INTEGRATIONTIME_199MS                                         \
+  (0xAD) /**< 199.2ms - 83 cycles - Max Count: 65535 */
+#define TCS34725_INTEGRATIONTIME_240MS                                         \
+  (0x9C) /**< 240.0ms - 100 cycles - Max Count: 65535 */
+#define TCS34725_INTEGRATIONTIME_300MS                                         \
+  (0x83) /**< 300.0ms - 125 cycles - Max Count: 65535 */
+#define TCS34725_INTEGRATIONTIME_360MS                                         \
+  (0x6A) /**< 360.0ms - 150 cycles - Max Count: 65535 */
+#define TCS34725_INTEGRATIONTIME_401MS                                         \
+  (0x59) /**< 400.8ms - 167 cycles - Max Count: 65535 */
+#define TCS34725_INTEGRATIONTIME_420MS                                         \
+  (0x51) /**< 420.0ms - 175 cycles - Max Count: 65535 */
+#define TCS34725_INTEGRATIONTIME_480MS                                         \
+  (0x38) /**< 480.0ms - 200 cycles - Max Count: 65535 */
+#define TCS34725_INTEGRATIONTIME_499MS                                         \
+  (0x30) /**< 499.2ms - 208 cycles - Max Count: 65535 */
+#define TCS34725_INTEGRATIONTIME_540MS                                         \
+  (0x1F) /**< 540.0ms - 225 cycles - Max Count: 65535 */
+#define TCS34725_INTEGRATIONTIME_600MS                                         \
+  (0x06) /**< 600.0ms - 250 cycles - Max Count: 65535 */
+#define TCS34725_INTEGRATIONTIME_614MS                                         \
+  (0x00) /**< 614.4ms - 256 cycles - Max Count: 65535 */
 
 /** Gain settings for TCS34725  */
 typedef enum {
@@ -167,15 +195,13 @@ typedef enum {
  */
 class Adafruit_TCS34725 {
 public:
-  Adafruit_TCS34725(tcs34725IntegrationTime_t = TCS34725_INTEGRATIONTIME_2_4MS,
+  Adafruit_TCS34725(uint8_t = TCS34725_INTEGRATIONTIME_2_4MS,
                     tcs34725Gain_t = TCS34725_GAIN_1X);
 
-  boolean begin(uint8_t addr, TwoWire *theWire);
-  boolean begin(uint8_t addr);
-  boolean begin();
+  boolean begin(uint8_t addr = TCS34725_ADDRESS, TwoWire *theWire = &Wire);
   boolean init();
 
-  void setIntegrationTime(tcs34725IntegrationTime_t it);
+  void setIntegrationTime(uint8_t it);
   void setGain(tcs34725Gain_t gain);
   void getRawData(uint16_t *r, uint16_t *g, uint16_t *b, uint16_t *c);
   void getRGB(float *r, float *g, float *b);
@@ -184,7 +210,7 @@ public:
   uint16_t calculateColorTemperature_dn40(uint16_t r, uint16_t g, uint16_t b,
                                           uint16_t c);
   uint16_t calculateLux(uint16_t r, uint16_t g, uint16_t b);
-  void write8(uint8_t reg, uint32_t value);
+  void write8(uint8_t reg, uint8_t value);
   uint8_t read8(uint8_t reg);
   uint16_t read16(uint8_t reg);
   void setInterrupt(boolean flag);
@@ -194,11 +220,10 @@ public:
   void disable();
 
 private:
-  TwoWire *_wire;
-  uint8_t _i2caddr;
+  Adafruit_I2CDevice *i2c_dev = NULL; ///< Pointer to I2C bus interface
   boolean _tcs34725Initialised;
   tcs34725Gain_t _tcs34725Gain;
-  tcs34725IntegrationTime_t _tcs34725IntegrationTime;
+  uint8_t _tcs34725IntegrationTime;
 };
 
 #endif

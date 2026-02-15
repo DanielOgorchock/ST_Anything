@@ -14,9 +14,9 @@ const uint16_t PixelCount = 16; // make sure to set this to the number of pixels
 const uint8_t PixelPin = 2;  // make sure to set this to the correct pin, ignored for Esp8266
 const RgbColor CylonEyeColor(HtmlColor(0x7f0000));
 
-NeoPixelBus<NeoGrbFeature, Neo800KbpsMethod> strip(PixelCount, PixelPin);
+NeoPixelBus<NeoGrbFeature, NeoWs2812xMethod> strip(PixelCount, PixelPin);
 // for esp8266 omit the pin
-//NeoPixelBus<NeoGrbFeature, Neo800KbpsMethod> strip(PixelCount);
+//NeoPixelBus<NeoGrbFeature, NeoWs2812xMethod> strip(PixelCount);
 
 NeoPixelAnimator animations(2); // only ever need 2 animations
 
@@ -40,7 +40,7 @@ void FadeAll(uint8_t darkenBy)
     RgbColor color;
     for (uint16_t indexPixel = 0; indexPixel < strip.PixelCount(); indexPixel++)
     {
-        color = strip.GetPixelColor(indexPixel);
+        color = strip.GetPixelColor<RgbColor>(indexPixel);
         color.Darken(darkenBy);
         strip.SetPixelColor(indexPixel, color);
     }

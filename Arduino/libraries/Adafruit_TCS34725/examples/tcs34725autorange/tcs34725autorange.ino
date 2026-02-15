@@ -39,7 +39,7 @@ class tcs34725 {
 private:
   struct tcs_agc {
     tcs34725Gain_t ag;
-    tcs34725IntegrationTime_t at;
+    uint8_t at;
     uint16_t mincnt;
     uint16_t maxcnt;
   };
@@ -71,7 +71,7 @@ public:
 // the start and end of the list.
 //
 const tcs34725::tcs_agc tcs34725::agc_lst[] = {
-  { TCS34725_GAIN_60X, TCS34725_INTEGRATIONTIME_700MS,     0, 20000 },
+  { TCS34725_GAIN_60X, TCS34725_INTEGRATIONTIME_614MS,     0, 20000 },
   { TCS34725_GAIN_60X, TCS34725_INTEGRATIONTIME_154MS,  4990, 63000 },
   { TCS34725_GAIN_16X, TCS34725_INTEGRATIONTIME_154MS, 16790, 63000 },
   { TCS34725_GAIN_4X,  TCS34725_INTEGRATIONTIME_154MS, 15740, 63000 },

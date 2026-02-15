@@ -1,17 +1,38 @@
-#include <Adafruit_SPIDevice.h>
-#include <Arduino.h>
+#include "Adafruit_SPIDevice.h"
 
-//#define DEBUG_SERIAL Serial
+// #define DEBUG_SERIAL Serial
+
+#ifdef BUSIO_USE_FAST_PINIO
+#define BUSIO_SET_CLOCK_LOW() (*clkPort = *clkPort & ~clkPinMask)
+#define BUSIO_SET_CLOCK_HIGH() (*clkPort = *clkPort | clkPinMask)
+#define BUSIO_READ_MISO() (*misoPort & misoPinMask)
+#define BUSIO_WRITE_MOSI(value)                                                \
+  do {                                                                         \
+    if (value)                                                                 \
+      *mosiPort = *mosiPort | mosiPinMask;                                     \
+    else                                                                       \
+      *mosiPort = *mosiPort & ~mosiPinMask;                                    \
+  } while (0)
+#else
+#define BUSIO_SET_CLOCK_LOW() digitalWrite(_sck, LOW)
+#define BUSIO_SET_CLOCK_HIGH() digitalWrite(_sck, HIGH)
+#define BUSIO_READ_MISO() digitalRead(_miso)
+#define BUSIO_WRITE_MOSI(value) digitalWrite(_mosi, value)
+#endif
 
 /*!
- *    @brief  Create an SPI device with the given CS pin and settins
+ *    @brief  Create an SPI device with the given CS pin and settings
  *    @param  cspin The arduino pin number to use for chip select
  *    @param  freq The SPI clock frequency to use, defaults to 1MHz
- *    @param  dataOrder The SPI data order to use for bits within each byte, defaults to SPI_BITORDER_MSBFIRST
+ *    @param  dataOrder The SPI data order to use for bits within each byte,
+ * defaults to SPI_BITORDER_MSBFIRST
  *    @param  dataMode The SPI mode to use, defaults to SPI_MODE0
  *    @param  theSPI The SPI bus to use, defaults to &theSPI
  */
-Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq, BitOrder dataOrder, uint8_t dataMode, SPIClass *theSPI) {
+Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq,
+                                       BusIOBitOrder dataOrder,
+                                       uint8_t dataMode, SPIClass *theSPI) {
+#ifdef BUSIO_HAS_HW_SPI
   _cs = cspin;
   _sck = _mosi = _miso = -1;
   _spi = theSPI;
@@ -20,50 +41,91 @@ Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, uint32_t freq, BitOrder dat
   _freq = freq;
   _dataOrder = dataOrder;
   _dataMode = dataMode;
+#else
+  // unused, but needed to suppress compiler warns
+  (void)cspin;
+  (void)freq;
+  (void)dataOrder;
+  (void)dataMode;
+  (void)theSPI;
+#endif
 }
 
 /*!
- *    @brief  Create an SPI device with the given CS pin and settins
+ *    @brief  Create an SPI device with the given CS pin and settings
  *    @param  cspin The arduino pin number to use for chip select
  *    @param  sckpin The arduino pin number to use for SCK
- *    @param  misopin The arduino pin number to use for MISO, set to -1 if not used
- *    @param  mosipin The arduino pin number to use for MOSI, set to -1 if not used
+ *    @param  misopin The arduino pin number to use for MISO, set to -1 if not
+ * used
+ *    @param  mosipin The arduino pin number to use for MOSI, set to -1 if not
+ * used
  *    @param  freq The SPI clock frequency to use, defaults to 1MHz
- *    @param  dataOrder The SPI data order to use for bits within each byte, defaults to SPI_BITORDER_MSBFIRST
+ *    @param  dataOrder The SPI data order to use for bits within each byte,
+ * defaults to SPI_BITORDER_MSBFIRST
  *    @param  dataMode The SPI mode to use, defaults to SPI_MODE0
  */
-Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, int8_t sckpin, int8_t misopin, int8_t mosipin, 
-				       uint32_t freq, BitOrder dataOrder, uint8_t dataMode) {
+Adafruit_SPIDevice::Adafruit_SPIDevice(int8_t cspin, int8_t sckpin,
+                                       int8_t misopin, int8_t mosipin,
+                                       uint32_t freq, BusIOBitOrder dataOrder,
+                                       uint8_t dataMode) {
   _cs = cspin;
   _sck = sckpin;
   _miso = misopin;
   _mosi = mosipin;
+
+#ifdef BUSIO_USE_FAST_PINIO
+  csPort = (BusIO_PortReg *)portOutputRegister(digitalPinToPort(cspin));
+  csPinMask = digitalPinToBitMask(cspin);
+  if (mosipin != -1) {
+    mosiPort = (BusIO_PortReg *)portOutputRegister(digitalPinToPort(mosipin));
+    mosiPinMask = digitalPinToBitMask(mosipin);
+  }
+  if (misopin != -1) {
+    misoPort = (BusIO_PortReg *)portInputRegister(digitalPinToPort(misopin));
+    misoPinMask = digitalPinToBitMask(misopin);
+  }
+  clkPort = (BusIO_PortReg *)portOutputRegister(digitalPinToPort(sckpin));
+  clkPinMask = digitalPinToBitMask(sckpin);
+#endif
+
   _freq = freq;
   _dataOrder = dataOrder;
   _dataMode = dataMode;
   _begun = false;
-  _spiSetting = new SPISettings(freq, dataOrder, dataMode);
-  _spi = NULL;
 }
 
+/*!
+ *    @brief  Release memory allocated in constructors
+ */
+Adafruit_SPIDevice::~Adafruit_SPIDevice() {
+  if (_spiSetting)
+    delete _spiSetting;
+}
 
 /*!
  *    @brief  Initializes SPI bus and sets CS pin high
- *    @return Always returns true because there's no way to test success of SPI init
+ *    @return Always returns true because there's no way to test success of SPI
+ * init
  */
 bool Adafruit_SPIDevice::begin(void) {
-  pinMode(_cs, OUTPUT);
-  digitalWrite(_cs, HIGH);
+  if (_cs != -1) {
+    pinMode(_cs, OUTPUT);
+    digitalWrite(_cs, HIGH);
+  }
 
   if (_spi) { // hardware SPI
+#ifdef BUSIO_HAS_HW_SPI
     _spi->begin();
+#endif
   } else {
     pinMode(_sck, OUTPUT);
 
-    if (_dataMode==SPI_MODE0) {
-      digitalWrite(_sck, HIGH);
-    } else {
+    if ((_dataMode == SPI_MODE0) || (_dataMode == SPI_MODE1)) {
+      // idle low on mode 0 and 1
       digitalWrite(_sck, LOW);
+    } else {
+      // idle high on mode 2 or 3
+      digitalWrite(_sck, HIGH);
     }
     if (_mosi != -1) {
       pinMode(_mosi, OUTPUT);
@@ -73,76 +135,142 @@ bool Adafruit_SPIDevice::begin(void) {
       pinMode(_miso, INPUT);
     }
   }
-    
+
   _begun = true;
   return true;
 }
 
-
 /*!
- *    @brief  Transfer (send/receive) one byte over hard/soft SPI
+ *    @brief  Transfer (send/receive) a buffer over hard/soft SPI, without
+ * transaction management
  *    @param  buffer The buffer to send and receive at the same time
  *    @param  len    The number of bytes to transfer
  */
 void Adafruit_SPIDevice::transfer(uint8_t *buffer, size_t len) {
+  //
+  // HARDWARE SPI
+  //
   if (_spi) {
-    // hardware SPI is easy
+#ifdef BUSIO_HAS_HW_SPI
+#if defined(SPARK)
+    _spi->transfer(buffer, buffer, len, nullptr);
+#elif defined(STM32)
+    for (size_t i = 0; i < len; i++) {
+      _spi->transfer(buffer[i]);
+    }
+#else
     _spi->transfer(buffer, len);
+#endif
     return;
+#endif
   }
 
-  // for softSPI we'll do it by hand
-  for (size_t i=0; i<len; i++) {
-    // software SPI
+  //
+  // SOFTWARE SPI
+  //
+  uint8_t startbit;
+  if (_dataOrder == SPI_BITORDER_LSBFIRST) {
+    startbit = 0x1;
+  } else {
+    startbit = 0x80;
+  }
+
+  bool towrite, lastmosi = !(buffer[0] & startbit);
+  uint8_t bitdelay_us = (1000000 / _freq) / 2;
+
+  for (size_t i = 0; i < len; i++) {
     uint8_t reply = 0;
     uint8_t send = buffer[i];
 
-    if (_dataOrder == SPI_BITORDER_LSBFIRST) {
-      // LSB is rare, if it happens we'll just flip the bits around for them
-      uint8_t temp = 0;
-      for (uint8_t b=0; b<8; b++) {
-	temp |= ((send >> b) & 0x1) << (7-b);
-      }
-      send = temp;
-    }
-    for (int b=7; b>=0; b--) {
-      reply <<= 1;
-      if (_dataMode == SPI_MODE0) {
-	digitalWrite(_sck, LOW);
-	digitalWrite(_mosi, send & (1<<b));
-	digitalWrite(_sck, HIGH);
-	if ((_miso != -1) && digitalRead(_miso)) {
-	  reply |= 1;
-	}
-      }
-      if (_dataMode == SPI_MODE1) {
-	digitalWrite(_sck, HIGH);
-	digitalWrite(_mosi, send & (1<<b));
-	digitalWrite(_sck, LOW);
-	if ((_miso != -1) && digitalRead(_miso)) {
-	  reply |= 1;
-	}
-      }
-    }
+    /*
+    Serial.print("\tSending software SPI byte 0x");
+    Serial.print(send, HEX);
+    Serial.print(" -> 0x");
+    */
 
-    if (_dataOrder == SPI_BITORDER_LSBFIRST) {
-      // LSB is rare, if it happens we'll just flip the bits around for them
-      uint8_t temp = 0;
-      for (uint8_t b=0; b<8; b++) {
-	temp |= ((reply >> b) & 0x1) << (7-b);
-      }
-      reply = temp;
-    }
+    // Serial.print(send, HEX);
+    for (uint8_t b = startbit; b != 0;
+         b = (_dataOrder == SPI_BITORDER_LSBFIRST) ? b << 1 : b >> 1) {
 
-    buffer[i] = reply;
+      if (bitdelay_us) {
+        delayMicroseconds(bitdelay_us);
+      }
+
+      if (_dataMode == SPI_MODE0 || _dataMode == SPI_MODE2) {
+        towrite = send & b;
+        if ((_mosi != -1) && (lastmosi != towrite)) {
+          BUSIO_WRITE_MOSI(towrite);
+          lastmosi = towrite;
+        }
+
+        BUSIO_SET_CLOCK_HIGH();
+
+        if (bitdelay_us) {
+          delayMicroseconds(bitdelay_us);
+        }
+
+        if (_miso != -1) {
+          if (BUSIO_READ_MISO())
+            reply |= b;
+        }
+
+        BUSIO_SET_CLOCK_LOW();
+
+      } else if (_dataMode == SPI_MODE3) {
+
+        if (_mosi != -1) { // transmit on falling edge
+          BUSIO_WRITE_MOSI(send & b);
+        }
+
+        BUSIO_SET_CLOCK_LOW();
+
+        if (bitdelay_us) {
+          delayMicroseconds(bitdelay_us);
+        }
+
+        BUSIO_SET_CLOCK_HIGH();
+
+        if (bitdelay_us) {
+          delayMicroseconds(bitdelay_us);
+        }
+
+        if (_miso != -1) { // read on rising edge
+          if (BUSIO_READ_MISO()) {
+            reply |= b;
+          }
+        }
+
+      } else { // || _dataMode == SPI_MODE1)
+
+        BUSIO_SET_CLOCK_HIGH();
+
+        if (bitdelay_us) {
+          delayMicroseconds(bitdelay_us);
+        }
+
+        if (_mosi != -1) {
+          BUSIO_WRITE_MOSI(send & b);
+        }
+
+        BUSIO_SET_CLOCK_LOW();
+
+        if (_miso != -1) {
+          if (BUSIO_READ_MISO()) {
+            reply |= b;
+          }
+        }
+      }
+    }
+    if (_miso != -1) {
+      buffer[i] = reply;
+    }
   }
   return;
 }
 
-
-
 /*!
- *    @brief  Transfer (send/receive) one byte over hard/soft SPI
+ *    @brief  Transfer (send/receive) one byte over hard/soft SPI, without
+ * transaction management
  *    @param  send The byte to send
  *    @return The byte received while transmitting
  */
@@ -152,48 +280,110 @@ uint8_t Adafruit_SPIDevice::transfer(uint8_t send) {
   return data;
 }
 
+/*!
+ *    @brief  Manually begin a transaction (calls beginTransaction if hardware
+ * SPI)
+ */
+void Adafruit_SPIDevice::beginTransaction(void) {
+  if (_spi) {
+#ifdef BUSIO_HAS_HW_SPI
+    _spi->beginTransaction(*_spiSetting);
+#endif
+  }
+}
 
 /*!
- *    @brief  Write a buffer or two to the SPI device.
+ *    @brief  Manually end a transaction (calls endTransaction if hardware SPI)
+ */
+void Adafruit_SPIDevice::endTransaction(void) {
+  if (_spi) {
+#ifdef BUSIO_HAS_HW_SPI
+    _spi->endTransaction();
+#endif
+  }
+}
+
+/*!
+ *    @brief  Assert/Deassert the CS pin if it is defined
+ *    @param  value The state the CS is set to
+ */
+void Adafruit_SPIDevice::setChipSelect(int value) {
+  if (_cs != -1) {
+    digitalWrite(_cs, value);
+  }
+}
+
+/*!
+ *    @brief  Write a buffer or two to the SPI device, with transaction
+ * management.
+ *    @brief  Manually begin a transaction (calls beginTransaction if hardware
+ *            SPI) with asserting the CS pin
+ */
+void Adafruit_SPIDevice::beginTransactionWithAssertingCS() {
+  beginTransaction();
+  setChipSelect(LOW);
+}
+
+/*!
+ *    @brief  Manually end a transaction (calls endTransaction if hardware SPI)
+ *            with deasserting the CS pin
+ */
+void Adafruit_SPIDevice::endTransactionWithDeassertingCS() {
+  setChipSelect(HIGH);
+  endTransaction();
+}
+
+/*!
+ *    @brief  Write a buffer or two to the SPI device, with transaction
+ * management.
  *    @param  buffer Pointer to buffer of data to write
  *    @param  len Number of bytes from buffer to write
- *    @param  prefix_buffer Pointer to optional array of data to write before buffer.
+ *    @param  prefix_buffer Pointer to optional array of data to write before
+ * buffer.
  *    @param  prefix_len Number of bytes from prefix buffer to write
- *    @return Always returns true because there's no way to test success of SPI writes
+ *    @return Always returns true because there's no way to test success of SPI
+ * writes
  */
-bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len, uint8_t *prefix_buffer, size_t prefix_len) {
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
-  }
+bool Adafruit_SPIDevice::write(const uint8_t *buffer, size_t len,
+                               const uint8_t *prefix_buffer,
+                               size_t prefix_len) {
+  beginTransactionWithAssertingCS();
 
-  digitalWrite(_cs, LOW);
   // do the writing
-  for (size_t i=0; i<prefix_len; i++) {
-    transfer(prefix_buffer[i]);
-  }
-  for (size_t i=0; i<len; i++) {
-    transfer(buffer[i]);
-  }
-  digitalWrite(_cs, HIGH);
-
+#if defined(ARDUINO_ARCH_ESP32)
   if (_spi) {
-    _spi->endTransaction();
+    if (prefix_len > 0) {
+      _spi->transferBytes((uint8_t *)prefix_buffer, nullptr, prefix_len);
+    }
+    if (len > 0) {
+      _spi->transferBytes((uint8_t *)buffer, nullptr, len);
+    }
+  } else
+#endif
+  {
+    for (size_t i = 0; i < prefix_len; i++) {
+      transfer(prefix_buffer[i]);
+    }
+    for (size_t i = 0; i < len; i++) {
+      transfer(buffer[i]);
+    }
   }
+  endTransactionWithDeassertingCS();
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Wrote: "));
-  if ((prefix_len != 0) && (prefix_buffer != NULL)) {
-    for (uint16_t i=0; i<prefix_len; i++) {
-      DEBUG_SERIAL.print(F("0x")); 
-      DEBUG_SERIAL.print(prefix_buffer[i], HEX); 
+  if ((prefix_len != 0) && (prefix_buffer != nullptr)) {
+    for (uint16_t i = 0; i < prefix_len; i++) {
+      DEBUG_SERIAL.print(F("0x"));
+      DEBUG_SERIAL.print(prefix_buffer[i], HEX);
       DEBUG_SERIAL.print(F(", "));
     }
   }
-  for (uint16_t i=0; i<len; i++) {
-    DEBUG_SERIAL.print(F("0x")); 
-    DEBUG_SERIAL.print(buffer[i], HEX); 
+  for (uint16_t i = 0; i < len; i++) {
+    DEBUG_SERIAL.print(F("0x"));
+    DEBUG_SERIAL.print(buffer[i], HEX);
     DEBUG_SERIAL.print(F(", "));
-    if (len % 32 == 31) {
+    if (i % 32 == 31) {
       DEBUG_SERIAL.println();
     }
   }
@@ -204,30 +394,27 @@ bool Adafruit_SPIDevice::write(uint8_t *buffer, size_t len, uint8_t *prefix_buff
 }
 
 /*!
- *    @brief  Read from SPI into a buffer from the SPI device.
+ *    @brief  Read from SPI into a buffer from the SPI device, with transaction
+ * management.
  *    @param  buffer Pointer to buffer of data to read into
  *    @param  len Number of bytes from buffer to read.
- *    @param  sendvalue The 8-bits of data to write when doing the data read, defaults to 0xFF
- *    @return Always returns true because there's no way to test success of SPI writes
+ *    @param  sendvalue The 8-bits of data to write when doing the data read,
+ * defaults to 0xFF
+ *    @return Always returns true because there's no way to test success of SPI
+ * writes
  */
 bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
-  memset(buffer, sendvalue, len);  // clear out existing buffer
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
-  }
-  digitalWrite(_cs, LOW);
-  transfer(buffer, len); 
-  digitalWrite(_cs, HIGH);
+  memset(buffer, sendvalue, len); // clear out existing buffer
 
-  if (_spi) {
-    _spi->endTransaction();
-  }
+  beginTransactionWithAssertingCS();
+  transfer(buffer, len);
+  endTransactionWithDeassertingCS();
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Read: "));
-  for (uint16_t i=0; i<len; i++) {
-    DEBUG_SERIAL.print(F("0x")); 
-    DEBUG_SERIAL.print(buffer[i], HEX); 
+  for (uint16_t i = 0; i < len; i++) {
+    DEBUG_SERIAL.print(F("0x"));
+    DEBUG_SERIAL.print(buffer[i], HEX);
     DEBUG_SERIAL.print(F(", "));
     if (len % 32 == 31) {
       DEBUG_SERIAL.println();
@@ -239,32 +426,42 @@ bool Adafruit_SPIDevice::read(uint8_t *buffer, size_t len, uint8_t sendvalue) {
   return true;
 }
 
-
 /*!
- *    @brief  Write some data, then read some data from SPI into another buffer. The buffers can point to same/overlapping locations. This does not transmit-receive at the same time!
+ *    @brief  Write some data, then read some data from SPI into another buffer,
+ * with transaction management. The buffers can point to same/overlapping
+ * locations. This does not transmit-receive at the same time!
  *    @param  write_buffer Pointer to buffer of data to write from
  *    @param  write_len Number of bytes from buffer to write.
  *    @param  read_buffer Pointer to buffer of data to read into.
  *    @param  read_len Number of bytes from buffer to read.
- *    @param  sendvalue The 8-bits of data to write when doing the data read, defaults to 0xFF
- *    @return Always returns true because there's no way to test success of SPI writes
+ *    @param  sendvalue The 8-bits of data to write when doing the data read,
+ * defaults to 0xFF
+ *    @return Always returns true because there's no way to test success of SPI
+ * writes
  */
-bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer, size_t write_len, uint8_t *read_buffer, size_t read_len, uint8_t sendvalue) {
-  if (_spi) {
-    _spi->beginTransaction(*_spiSetting);
-  }
-
-  digitalWrite(_cs, LOW);
+bool Adafruit_SPIDevice::write_then_read(const uint8_t *write_buffer,
+                                         size_t write_len, uint8_t *read_buffer,
+                                         size_t read_len, uint8_t sendvalue) {
+  beginTransactionWithAssertingCS();
   // do the writing
-  for (size_t i=0; i<write_len; i++) {
-    transfer(write_buffer[i]);
+#if defined(ARDUINO_ARCH_ESP32)
+  if (_spi) {
+    if (write_len > 0) {
+      _spi->transferBytes((uint8_t *)write_buffer, nullptr, write_len);
+    }
+  } else
+#endif
+  {
+    for (size_t i = 0; i < write_len; i++) {
+      transfer(write_buffer[i]);
+    }
   }
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Wrote: "));
-  for (uint16_t i=0; i<write_len; i++) {
-    DEBUG_SERIAL.print(F("0x")); 
-    DEBUG_SERIAL.print(write_buffer[i], HEX); 
+  for (uint16_t i = 0; i < write_len; i++) {
+    DEBUG_SERIAL.print(F("0x"));
+    DEBUG_SERIAL.print(write_buffer[i], HEX);
     DEBUG_SERIAL.print(F(", "));
     if (write_len % 32 == 31) {
       DEBUG_SERIAL.println();
@@ -274,15 +471,15 @@ bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer, size_t write_len
 #endif
 
   // do the reading
-  for (size_t i=0; i<read_len; i++) {
+  for (size_t i = 0; i < read_len; i++) {
     read_buffer[i] = transfer(sendvalue);
   }
 
 #ifdef DEBUG_SERIAL
   DEBUG_SERIAL.print(F("\tSPIDevice Read: "));
-  for (uint16_t i=0; i<read_len; i++) {
-    DEBUG_SERIAL.print(F("0x")); 
-    DEBUG_SERIAL.print(read_buffer[i], HEX); 
+  for (uint16_t i = 0; i < read_len; i++) {
+    DEBUG_SERIAL.print(F("0x"));
+    DEBUG_SERIAL.print(read_buffer[i], HEX);
     DEBUG_SERIAL.print(F(", "));
     if (read_len % 32 == 31) {
       DEBUG_SERIAL.println();
@@ -291,11 +488,25 @@ bool Adafruit_SPIDevice::write_then_read(uint8_t *write_buffer, size_t write_len
   DEBUG_SERIAL.println();
 #endif
 
-  digitalWrite(_cs, HIGH);
+  endTransactionWithDeassertingCS();
 
-  if (_spi) {
-    _spi->endTransaction();
-  }
+  return true;
+}
+
+/*!
+ *    @brief  Write some data and read some data at the same time from SPI
+ * into the same buffer, with transaction management. This is basicaly a wrapper
+ * for transfer() with CS-pin and transaction management. This /does/
+ * transmit-receive at the same time!
+ *    @param  buffer Pointer to buffer of data to write/read to/from
+ *    @param  len Number of bytes from buffer to write/read.
+ *    @return Always returns true because there's no way to test success of SPI
+ * writes
+ */
+bool Adafruit_SPIDevice::write_and_read(uint8_t *buffer, size_t len) {
+  beginTransactionWithAssertingCS();
+  transfer(buffer, len);
+  endTransactionWithDeassertingCS();
 
   return true;
 }

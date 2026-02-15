@@ -16,7 +16,7 @@ WiFiNINA 1.7.0 - 2020.08.06
 
 WiFiNINA 1.6.0 - 2020.07.13
 
-* Adding API to make use of file storage/retieval capability available since nina-fw 1.5.0 (#74)
+* Adding API to make use of file storage/retrieval capability available since nina-fw 1.5.0 (#74)
 * Speed up of duration of function ServerDrv::getDataBuf (#84)
 
 WiFiNINA 1.5.0 - 2019.12.30

@@ -10,7 +10,7 @@
 const uint16_t PixelCount = 16; // make sure to set this to the number of pixels in your strip
 const uint8_t PixelPin = 2;  // make sure to set this to the correct pin, ignored for Esp8266
 
-NeoPixelBus<NeoGrbFeature, Neo800KbpsMethod> strip(PixelCount, PixelPin);
+NeoPixelBus<NeoGrbFeature, NeoWs2812xMethod> strip(PixelCount, PixelPin);
 // For Esp8266, the Pin is omitted and it uses GPIO3 due to DMA hardware use.  
 // There are other Esp8266 alternative methods that provide more pin options, but also have
 // other side effects.
@@ -76,7 +76,7 @@ void PickRandom(float luminance)
         // we use HslColor object as it allows us to easily pick a color
         // with the same saturation and luminance 
         uint16_t time = random(100, 400);
-        animationState[pixel].StartingColor = strip.GetPixelColor(pixel);
+        animationState[pixel].StartingColor = strip.GetPixelColor<RgbColor>(pixel);
         animationState[pixel].EndingColor = HslColor(random(360) / 360.0f, 1.0f, luminance);
 
         animations.StartAnimation(pixel, time, BlendAnimUpdate);

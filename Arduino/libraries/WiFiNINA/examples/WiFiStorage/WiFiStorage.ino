@@ -1,6 +1,6 @@
 /*
   This example shows how to interact with NINA internal memory partition
-  APIs are modeled on SerialFlash library (not on SD) to speedup operations and avoid buffers.
+  APIs are modeled on SerialFlash library (not on SD) to speed up operations and avoid buffers.
 */
 
 #include <WiFiNINA.h>

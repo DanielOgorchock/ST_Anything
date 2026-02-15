@@ -1,4 +1,4 @@
-Adafruit_VEML7700 [![Build Status](https://travis-ci.com/adafruit/Adafruit_VEML7700.svg?branch=master)](https://travis-ci.com/adafruit/Adafruit_VEML7700)
+Adafruit_VEML7700 [![Build Status](https://github.com/adafruit/Adafruit_VEML7700/workflows/Arduino%20Library%20CI/badge.svg)](https://github.com/adafruit/Adafruit_VEML7700/actions)
 ================
 
 This is the Adafruit VEML7700 Lux sensor library

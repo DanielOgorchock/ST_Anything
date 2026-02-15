@@ -1,5 +1,5 @@
 /*
-  wifi_drv.cpp - Library for Arduino Wifi shield.
+  wifi_drv.cpp - Library for Arduino WiFi shield.
   Copyright (c) 2018 Arduino SA. All rights reserved.
   Copyright (c) 2011-2014 Arduino.  All right reserved.
 
@@ -416,6 +416,39 @@ void WiFiDrv::getIpAddress(IPAddress& ip)
  {
 	getNetworkData(_localIp, _subnetMask, _gatewayIp);
 	ip = _gatewayIp;
+ }
+
+ void WiFiDrv::getDNS(IPAddress& dnsip0, IPAddress& dnsip1)
+ {
+   uint8_t ip0[WL_IPV4_LENGTH] = {0};
+   uint8_t ip1[WL_IPV4_LENGTH] = {0};
+
+   tParam params[PARAM_NUMS_2] = { {0, (char*)ip0}, {0, (char*)ip1}};
+
+   WAIT_FOR_SLAVE_SELECT();
+
+   // Send Command
+   SpiDrv::sendCmd(GET_DNS_CONFIG_CMD, PARAM_NUMS_1);
+
+   uint8_t _dummy = DUMMY_DATA;
+   SpiDrv::sendParam(&_dummy, sizeof(_dummy), LAST_PARAM);
+
+   // pad to multiple of 4
+   SpiDrv::readChar();
+   SpiDrv::readChar();
+
+   SpiDrv::spiSlaveDeselect();
+   //Wait the reply elaboration
+   SpiDrv::waitForSlaveReady();
+   SpiDrv::spiSlaveSelect();
+
+   // Wait for reply
+   SpiDrv::waitResponseParams(GET_DNS_CONFIG_CMD, PARAM_NUMS_2, params);
+
+   SpiDrv::spiSlaveDeselect();
+
+   dnsip0 = ip0;
+   dnsip1 = ip1;
  }
 
 const char* WiFiDrv::getCurrentSSID()
@@ -1060,6 +1093,38 @@ void WiFiDrv::pinMode(uint8_t pin, uint8_t mode)
     SpiDrv::spiSlaveDeselect();
 }
 
+PinStatus WiFiDrv::digitalRead(uint8_t pin)
+{
+    WAIT_FOR_SLAVE_SELECT();
+    // Send Command
+    SpiDrv::sendCmd(GET_DIGITAL_READ, PARAM_NUMS_1);
+    SpiDrv::sendParam((uint8_t*)&pin, 1, LAST_PARAM);
+
+    // pad to multiple of 4
+    SpiDrv::readChar();
+    SpiDrv::readChar();
+
+    SpiDrv::spiSlaveDeselect();
+    //Wait the reply elaboration
+    SpiDrv::waitForSlaveReady();
+    SpiDrv::spiSlaveSelect();
+
+    // Wait for reply
+    uint8_t _data = 0;
+    uint8_t _dataLen = 0;
+    if (!SpiDrv::waitResponseCmd(GET_DIGITAL_READ, PARAM_NUMS_1, &_data, &_dataLen))
+    {
+        WARN("error waitResponse");
+        _data = WL_FAILURE;
+    }
+    SpiDrv::spiSlaveDeselect();
+
+    if (_data == 1)
+        return HIGH;
+    else
+        return LOW;
+}
+
 void WiFiDrv::digitalWrite(uint8_t pin, uint8_t value)
 {
     WAIT_FOR_SLAVE_SELECT();
@@ -1085,6 +1150,34 @@ void WiFiDrv::digitalWrite(uint8_t pin, uint8_t value)
         _data = WL_FAILURE;
     }
     SpiDrv::spiSlaveDeselect();
+}
+
+uint16_t WiFiDrv::analogRead(uint8_t adc_channel)
+{
+    WAIT_FOR_SLAVE_SELECT();
+    // Send Command
+    SpiDrv::sendCmd(GET_ANALOG_READ, PARAM_NUMS_1);
+    SpiDrv::sendParam((uint8_t*)&adc_channel, 1, LAST_PARAM);
+
+    // pad to multiple of 4
+    SpiDrv::readChar();
+    SpiDrv::readChar();
+
+    SpiDrv::spiSlaveDeselect();
+    //Wait the reply elaboration
+    SpiDrv::waitForSlaveReady();
+    SpiDrv::spiSlaveSelect();
+
+    // Wait for reply
+    uint16_t adc_raw = 0;
+    uint8_t adc_raw_len = 0;
+    if (!SpiDrv::waitResponseCmd(GET_ANALOG_READ, PARAM_NUMS_1, (uint8_t*)&adc_raw, &adc_raw_len))
+    {
+        WARN("error waitResponse");
+    }
+    SpiDrv::spiSlaveDeselect();
+
+    return adc_raw;
 }
 
 void WiFiDrv::analogWrite(uint8_t pin, uint8_t value)

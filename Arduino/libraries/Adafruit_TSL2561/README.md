@@ -1,4 +1,4 @@
-# Adafruit TSL2561 Light Sensor Driver  [![Build Status](https://travis-ci.com/adafruit/Adafruit_TSL2561.svg?branch=master)](https://travis-ci.com/adafruit/Adafruit_TSL2561)
+# Adafruit TSL2561 Light Sensor Driver  [![Build Status](https://github.com/adafruit/Adafruit_TSL2561/workflows/Arduino%20Library%20CI/badge.svg)](https://github.com/adafruit/Adafruit_TSL2561/actions)[![Documentation](https://github.com/adafruit/ci-arduino/blob/master/assets/doxygen_badge.svg)](http://adafruit.github.io/Adafruit_TSL2561/html/index.html)
 
 This driver is for the Adafruit TSL2561 Breakout, and is based on Adafruit's Unified Sensor Library (Adafruit_Sensor).
 

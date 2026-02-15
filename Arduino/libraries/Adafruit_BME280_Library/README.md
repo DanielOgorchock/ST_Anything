@@ -1,63 +1,54 @@
-# Adafruit BME280 Library [![Build Status](https://travis-ci.org/adafruit/Adafruit_BME280_Library.svg?branch=master)](https://travis-ci.org/adafruit/Adafruit_BME280_Library)
+# Adafruit BME280 Library [![Build Status](https://github.com/adafruit/Adafruit_BME280_Library/workflows/Arduino%20Library%20CI/badge.svg)](https://github.com/adafruit/Adafruit_BME280_Library/actions)[![Documentation](https://github.com/adafruit/ci-arduino/blob/master/assets/doxygen_badge.svg)](http://adafruit.github.io/Adafruit_BME280_Library/html/index.html)
 
-<img src="https://cdn-shop.adafruit.com/970x728/2652-00.jpg" height="300"/>
+
+<a href="http://www.adafruit.com/products/2652"><img src="./assets/board.jpg" width="500"/></a>
 
 This is a library for the Adafruit BME280 Humidity, Barometric Pressure + Temp sensor
 
 Designed specifically to work with the Adafruit BME280 Breakout 
  * http://www.adafruit.com/products/2652
 
-These sensors use I2C or SPI to communicate, up to 4 pins are required to interface
+Adafruit invests time and resources providing this open source code, please support Adafruit and open-source hardware by purchasing products from Adafruit!
 
-Use of this library also requires [Adafruit_Sensor](https://github.com/adafruit/Adafruit_Sensor)
-to be installed on your local system.
+# Installation
+To install, use the Arduino Library Manager and search for "Adafruit BME280" and install the library.
 
-Adafruit invests time and resources providing this open source code, 
-please support Adafruit and open-source hardware by purchasing 
-products from Adafruit!
+## Dependencies
+ * [Adafruit Unified Sensor Driver](https://github.com/adafruit/Adafruit_Sensor)
 
-Check out the links above for our tutorials and wiring diagrams 
+# Contributing
 
-Written by Limor Fried/Ladyada for Adafruit Industries.  
-BSD license, all text above must be included in any redistribution
+Contributions are welcome! Please read our [Code of Conduct](https://github.com/adafruit/Adafruit_PM25AQI/blob/master/CODE_OF_CONDUCT.md>)
+before contributing to help this project stay welcoming.
 
-To download. click the DOWNLOAD ZIP button, rename the uncompressed folder Adafruit_BME280. 
-Check that the Adafruit_BME280 folder contains Adafruit_BME280.cpp and Adafruit_BME280.h
+## Documentation and doxygen
+Documentation is produced by doxygen. Contributions should include documentation for any new code added.
 
-Place the Adafruit_BME280 library folder your arduinosketchfolder/libraries/ folder. 
-You may need to create the libraries subfolder if its your first library. Restart the IDE.
+Some examples of how to use doxygen can be found in these guide pages:
 
-We also have a great tutorial on Arduino library installation at:
-http://learn.adafruit.com/adafruit-all-about-arduino-libraries-install-use
-<!-- START COMPATIBILITY TABLE -->
+https://learn.adafruit.com/the-well-automated-arduino-library/doxygen
 
-## Compatibility
+https://learn.adafruit.com/the-well-automated-arduino-library/doxygen-tips
 
-MCU                | Tested Works | Doesn't Work | Not Tested  | Notes
------------------- | :----------: | :----------: | :---------: | -----
-Atmega328 @ 16MHz  |      X       |             |            | 
-Atmega328 @ 12MHz  |      X       |             |            | 
-Atmega32u4 @ 16MHz |      X       |             |            | Use SDA/SCL on pins D2 &amp; D3
-Atmega32u4 @ 8MHz  |      X       |             |            | Use SDA/SCL on pins D2 &amp; D3
-ESP8266            |      X       |             |            | I2C: just works, SPI: SDA/SCL default to pins 4 &amp; 5 but any two pins can be assigned as SDA/SCL using Wire.begin(SDA,SCL)
-ESP32              |      X       |             |            | I2C: just works, SPI: SDA/SCL default to pins 4 &amp; 5 but any two pins can be assigned as SDA/SCL using Wire.begin(SDA,SCL) 
-Atmega2560 @ 16MHz |      X       |             |            | Use SDA/SCL on pins 20 &amp; 21
-ATSAM3X8E          |      X       |             |            | Use SDA/SCL on pins 20 &amp; 21
-ATSAM21D           |      X       |             |            | 
-ATtiny85 @ 16MHz   |              |     X       |            | 
-ATtiny85 @ 8MHz    |              |     X       |            | 
-Intel Curie @ 32MHz |             |             |     X      | 
-STM32F2            |              |             |     X      | 
+## Formatting and clang-format
+This library uses [`clang-format`](https://releases.llvm.org/download.html) to standardize the formatting of `.cpp` and `.h` files.
+Contributions should be formatted using `clang-format`:
 
-  * ATmega328 @ 16MHz : Arduino UNO, Adafruit Pro Trinket 5V, Adafruit Metro 328, Adafruit Metro Mini
-  * ATmega328 @ 12MHz : Adafruit Pro Trinket 3V
-  * ATmega32u4 @ 16MHz : Arduino Leonardo, Arduino Micro, Arduino Yun, Teensy 2.0
-  * ATmega32u4 @ 8MHz : Adafruit Flora, Bluefruit Micro
-  * ESP8266 : Adafruit Huzzah
-  * ATmega2560 @ 16MHz : Arduino Mega
-  * ATSAM3X8E : Arduino Due
-  * ATSAM21D : Arduino Zero, M0 Pro
-  * ATtiny85 @ 16MHz : Adafruit Trinket 5V
-  * ATtiny85 @ 8MHz : Adafruit Gemma, Arduino Gemma, Adafruit Trinket 3V
+The `-i` flag will make the changes to the file.
+```bash
+clang-format -i *.cpp *.h
+```
+If you prefer to make the changes yourself, running `clang-format` without the `-i` flag will print out a formatted version of the file. You can save this to a file and diff it against the original to see the changes.
 
-<!-- END COMPATIBILITY TABLE -->
+Note that the formatting output by `clang-format` is what the automated formatting checker will expect. Any diffs from this formatting will result in a failed build until they are addressed. Using the `-i` flag is highly recommended.
+
+### clang-format resources
+  * [Binary builds and source available on the LLVM downloads page](https://releases.llvm.org/download.html)
+  * [Documentation and IDE integration](https://clang.llvm.org/docs/ClangFormat.html)
+
+## About this Driver
+Written by Ladyada for Adafruit Industries.
+
+BSD license, check license.txt for more information
+
+All text above must be included in any redistribution

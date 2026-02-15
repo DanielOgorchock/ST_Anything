@@ -1,5 +1,5 @@
 /*
-  WiFi.cpp - Library for Arduino Wifi shield.
+  WiFi.cpp - Library for Arduino WiFi shield.
   Copyright (c) 2018 Arduino SA. All rights reserved.
   Copyright (c) 2011-2014 Arduino LLC.  All right reserved.
 
@@ -27,7 +27,7 @@ extern "C" {
   #include "utility/debug.h"
 }
 
-WiFiClass::WiFiClass() : _timeout(50000)
+WiFiClass::WiFiClass() : _timeout(50000), _feed_watchdog_func(0)
 {
 }
 
@@ -49,6 +49,7 @@ int WiFiClass::begin(const char* ssid)
    {
 	   for (unsigned long start = millis(); (millis() - start) < _timeout;)
 	   {
+		   feedWatchdog();
 		   delay(WL_DELAY_START_CONNECTION);
 		   status = WiFiDrv::getConnectionStatus();
 		   if ((status != WL_IDLE_STATUS) && (status != WL_NO_SSID_AVAIL) && (status != WL_SCAN_COMPLETED)) {
@@ -71,6 +72,7 @@ int WiFiClass::begin(const char* ssid, uint8_t key_idx, const char *key)
    {
 	   for (unsigned long start = millis(); (millis() - start) < _timeout;)
 	   {
+		   feedWatchdog();
 		   delay(WL_DELAY_START_CONNECTION);
 		   status = WiFiDrv::getConnectionStatus();
 		   if ((status != WL_IDLE_STATUS) && (status != WL_NO_SSID_AVAIL) && (status != WL_SCAN_COMPLETED)) {
@@ -92,6 +94,7 @@ int WiFiClass::begin(const char* ssid, const char *passphrase)
     {
 	   for (unsigned long start = millis(); (millis() - start) < _timeout;)
  	   {
+		   feedWatchdog();
  		   delay(WL_DELAY_START_CONNECTION);
  		   status = WiFiDrv::getConnectionStatus();
 		   if ((status != WL_IDLE_STATUS) && (status != WL_NO_SSID_AVAIL) && (status != WL_SCAN_COMPLETED)) {
@@ -263,6 +266,16 @@ IPAddress WiFiClass::gatewayIP()
 	return ret;
 }
 
+IPAddress WiFiClass::dnsIP(int n)
+{
+  if (n > 1)
+    return IPAddress(0,0,0,0);
+  IPAddress dnsip0;
+  IPAddress dnsip1;
+  WiFiDrv::getDNS(dnsip0, dnsip1);
+  return n ? dnsip1 : dnsip0;
+}
+
 const char* WiFiClass::SSID()
 {
     return WiFiDrv::getCurrentSSID();
@@ -382,4 +395,16 @@ void WiFiClass::setTimeout(unsigned long timeout)
 {
 	_timeout = timeout;
 }
+
+void WiFiClass::setFeedWatchdogFunc(FeedHostProcessorWatchdogFuncPointer func)
+{
+  _feed_watchdog_func = func;
+}
+
+void WiFiClass::feedWatchdog()
+{
+  if (_feed_watchdog_func)
+	_feed_watchdog_func();
+}
+
 WiFiClass WiFi;

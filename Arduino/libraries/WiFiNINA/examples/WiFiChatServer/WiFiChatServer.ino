@@ -2,7 +2,7 @@
  Chat  Server
 
  A simple server that distributes any incoming messages to all
- connected clients.  To use, telnet to your device's IP address and type.
+ connected clients. To use, telnet to your device's IP address and type.
  You can see the client's input in the serial monitor as well.
 
  This example is written for a network using WPA encryption. For
@@ -10,7 +10,7 @@
 
 
  Circuit:
- * Board with NINA module (Arduino MKR WiFi 1010, MKR VIDOR 4000 and UNO WiFi Rev.2)
+ * Board with NINA module (Arduino MKR WiFi 1010, MKR VIDOR 4000 and Uno WiFi Rev.2)
 
  created 18 Dec 2009
  by David A. Mellis

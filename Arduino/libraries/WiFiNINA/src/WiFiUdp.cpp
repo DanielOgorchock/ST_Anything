@@ -1,5 +1,5 @@
 /*
-  WiFiUdp.cpp - Library for Arduino Wifi shield.
+  WiFiUdp.cpp - Library for Arduino WiFi shield.
   Copyright (c) 2018 Arduino SA. All rights reserved.
   Copyright (c) 2011-2014 Arduino LLC.  All right reserved.
 

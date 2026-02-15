@@ -1,0 +1,51 @@
+#######################################
+# Syntax Coloring Map For BMPE80
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+BME280	KEYWORD1
+Adafruit_BME280	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+Adafruit_Sensor	KEYWORD2
+Adafruit_BME280	KEYWORD2
+readPressure	KEYWORD2
+readAltitude	KEYWORD2
+readTemperature	KEYWORD2
+readHumidity	KEYWORD2
+setSampling	KEYWORD2
+sealLevelForAltitude	KEYWORD2
+bme	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+MODE_SLEEP	LITERAL1
+MODE_FORCED	LITERAL1
+MODE_NORMAL	LITERAL1
+SAMPLING_NONE	LITERAL1
+SAMPLING_X1	LITERAL1
+SAMPLING_X2	LITERAL1
+SAMPLING_X4	LITERAL1
+SAMPLING_X8	LITERAL1
+SAMPLING_X16	LITERAL1
+FILTER_OFF	LITERAL1
+FILTER_X2	LITERAL1
+FILTER_X4	LITERAL1
+FILTER_X8	LITERAL1
+FILTER_X16	LITERAL1
+STANDBY_MS_0_5	LITERAL1
+STANDBY_MS_10	LITERAL1
+STANDBY_MS_20	LITERAL1
+STANDBY_MS_62_5	LITERAL1
+STANDBY_MS_125	LITERAL1
+STANDBY_MS_250	LITERAL1
+STANDBY_MS_500	LITERAL1
+STANDBY_MS_1000	LITERAL1
+
+#######################################

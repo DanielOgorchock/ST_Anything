@@ -4,7 +4,7 @@ NeoPixelBus library wrapper template class that provides overall brightness cont
 Written by Michael C. Miller.
 
 I invest time and resources providing this open source code,
-please support me by dontating (see https://github.com/Makuna/NeoPixelBus)
+please support me by donating (see https://github.com/Makuna/NeoPixelBus)
 
 -------------------------------------------------------------------------
 This file is part of the Makuna/NeoPixelBus library.
@@ -28,13 +28,18 @@ License along with NeoPixel.  If not, see
 
 #include "NeoPixelBus.h"
 
-template<typename T_COLOR_FEATURE, typename T_METHOD> class NeoPixelBrightnessBus : 
+
+template<typename T_COLOR_FEATURE, typename T_METHOD> class [[deprecated("Use NeoPixelBusLg instead.")]] NeoPixelBrightnessBus :
     public NeoPixelBus<T_COLOR_FEATURE, T_METHOD>
 {
 private:
 
     void ScaleColor(uint16_t scale, typename T_COLOR_FEATURE::ColorObject* color)
     {
+        // This is the similiar as calling Dim on the color object
+        // there is an assumption that all color elements are byte aligned
+        // so if any future color object gets introduced that is not it will 
+        // cause a problem
         uint8_t* ptr = (uint8_t*)color;
         uint8_t* ptrEnd = ptr + sizeof(typename T_COLOR_FEATURE::ColorObject);
 
@@ -47,12 +52,17 @@ private:
 
     void ConvertColor(typename T_COLOR_FEATURE::ColorObject* color)
     {
+        // This is the same as calling Dim on the color object
         uint16_t scale = _brightness + 1;
         ScaleColor(scale, color);
     }
 
     void RecoverColor(typename T_COLOR_FEATURE::ColorObject* color) const
     {
+        // this is the same as calling Brighton on the color object
+        // there is an assumption that all color elements are byte aligned
+        // so if any future color object gets introduced that is not it will 
+        // cause a problem
         uint8_t* ptr = (uint8_t*)color;
         uint8_t* ptrEnd = ptr + sizeof(typename T_COLOR_FEATURE::ColorObject);
         uint16_t scale = _brightness + 1;
@@ -70,9 +80,21 @@ public:
         _brightness(255)
     {
     }
+    
+    NeoPixelBrightnessBus(uint16_t countPixels, uint8_t pin, NeoBusChannel channel) :
+        NeoPixelBus<T_COLOR_FEATURE, T_METHOD>(countPixels, pin, channel),
+        _brightness(255)
+    {
+    }
 
     NeoPixelBrightnessBus(uint16_t countPixels, uint8_t pinClock, uint8_t pinData) :
         NeoPixelBus<T_COLOR_FEATURE, T_METHOD>(countPixels, pinClock, pinData),
+        _brightness(255)
+    {
+    }
+
+    NeoPixelBrightnessBus(uint16_t countPixels, uint8_t pinClock, uint8_t pinData, uint8_t pinLatch, uint8_t pinOutputEnable = NOT_A_PIN) :
+        NeoPixelBus<T_COLOR_FEATURE, T_METHOD>(countPixels, pinClock, pinData, pinLatch, pinOutputEnable),
         _brightness(255)
     {
     }
@@ -88,7 +110,7 @@ public:
         // Only update if there is a change
         if (brightness != _brightness)
         { 
-            uint16_t scale = (((uint16_t)brightness + 1) << 8) / ((uint16_t)_brightness + 1);
+            uint16_t scale = ((static_cast<uint16_t>(brightness) + 1) << 8) / (static_cast<uint16_t>(_brightness) + 1);
 
             // scale existing pixels
             //

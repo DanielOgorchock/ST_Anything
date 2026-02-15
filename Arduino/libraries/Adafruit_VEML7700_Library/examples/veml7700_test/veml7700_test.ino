@@ -3,8 +3,8 @@
 Adafruit_VEML7700 veml = Adafruit_VEML7700();
 
 void setup() {
-  while (!Serial) { delay(10); }
   Serial.begin(115200);
+  while (!Serial) { delay(10); }
   Serial.println("Adafruit VEML7700 Test");
 
   if (!veml.begin()) {
@@ -13,8 +13,12 @@ void setup() {
   }
   Serial.println("Sensor found");
 
-  veml.setGain(VEML7700_GAIN_1);
-  veml.setIntegrationTime(VEML7700_IT_800MS);
+  // == OPTIONAL =====
+  // Can set non-default gain and integration time to
+  // adjust for different lighting conditions.
+  // =================
+  // veml.setGain(VEML7700_GAIN_1_8);
+  // veml.setIntegrationTime(VEML7700_IT_100MS);
 
   Serial.print(F("Gain: "));
   switch (veml.getGain()) {
@@ -34,25 +38,22 @@ void setup() {
     case VEML7700_IT_800MS: Serial.println("800"); break;
   }
 
-  //veml.powerSaveEnable(true);
-  //veml.setPowerSaveMode(VEML7700_POWERSAVE_MODE4);
-
   veml.setLowThreshold(10000);
   veml.setHighThreshold(20000);
   veml.interruptEnable(true);
 }
 
 void loop() {
-  Serial.print("Lux: "); Serial.println(veml.readLux());
-  Serial.print("White: "); Serial.println(veml.readWhite());
-  Serial.print("Raw ALS: "); Serial.println(veml.readALS());
+  Serial.print("raw ALS: "); Serial.println(veml.readALS());
+  Serial.print("raw white: "); Serial.println(veml.readWhite());
+  Serial.print("lux: "); Serial.println(veml.readLux());
 
   uint16_t irq = veml.interruptStatus();
   if (irq & VEML7700_INTERRUPT_LOW) {
-    Serial.println("** Low threshold"); 
+    Serial.println("** Low threshold");
   }
   if (irq & VEML7700_INTERRUPT_HIGH) {
-    Serial.println("** High threshold"); 
+    Serial.println("** High threshold");
   }
   delay(500);
 }

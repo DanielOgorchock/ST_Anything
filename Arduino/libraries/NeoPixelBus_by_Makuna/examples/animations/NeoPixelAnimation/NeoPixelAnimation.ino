@@ -25,7 +25,7 @@
 const uint16_t PixelCount = 4; // make sure to set this to the number of pixels in your strip
 const uint8_t PixelPin = 2;  // make sure to set this to the correct pin, ignored for Esp8266
 
-NeoPixelBus<NeoGrbFeature, Neo800KbpsMethod> strip(PixelCount, PixelPin);
+NeoPixelBus<NeoGrbFeature, NeoWs2812xMethod> strip(PixelCount, PixelPin);
 // For Esp8266, the Pin is omitted and it uses GPIO3 due to DMA hardware use.  
 // There are other Esp8266 alternative methods that provide more pin options, but also have
 // other side effects.
@@ -139,7 +139,7 @@ void SetupAnimationSet()
         uint16_t time = random(100, 400);
 
         // each animation starts with the color that was present
-        RgbColor originalColor = strip.GetPixelColor(pixel);
+        RgbColor originalColor = strip.GetPixelColor<RgbColor>(pixel);
         // and ends with a random color
         RgbColor targetColor = RgbColor(random(peak), random(peak), random(peak));
         // with the random ease function
@@ -180,7 +180,7 @@ void SetupAnimationSet()
         //
         // we use this progress value to define how we want to animate in this case
         // we call RgbColor::LinearBlend which will return a color blended between
-        // the values given, by the amount passed, hich is also a float value from 0.0-1.0.
+        // the values given, by the amount passed, which is also a float value from 0.0-1.0.
         // then we set the color.
         //
         // There is no need for the MyAnimationState struct as the compiler takes care

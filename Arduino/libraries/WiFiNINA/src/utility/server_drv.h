@@ -1,5 +1,5 @@
 /*
-  server_drv.h - Library for Arduino Wifi shield.
+  server_drv.h - Library for Arduino WiFi shield.
   Copyright (c) 2018 Arduino SA. All rights reserved.
   Copyright (c) 2011-2014 Arduino.  All right reserved.
 
@@ -57,7 +57,7 @@ public:
 
     static uint16_t availData(uint8_t sock);
 
-    static uint8_t availServer(uint8_t sock);
+    static uint8_t availServer(uint8_t sock, uint8_t accept = false);
 
     static uint8_t checkDataSent(uint8_t sock);
 

@@ -1,0 +1,57 @@
+#######################################
+# Syntax Coloring Map for BMP280 library
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+Adafruit_BMP280	KEYWORD1
+Adafruit_BMP280_Temp	KEYWORD1
+Adafruit_BMP280_Pressure	KEYWORD1
+bmp280_calib_data	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin	KEYWORD2
+reset	KEYWORD2
+getStatus	KEYWORD2
+sensorID	KEYWORD2
+getEvent	KEYWORD2
+getSensor	KEYWORD2
+readTemperature	KEYWORD2
+readPressure	KEYWORD2
+readAltitude	KEYWORD2
+seaLevelForAltitude	KEYWORD2
+waterBoilingPoint	KEYWORD2
+takeForcedMeasurement	KEYWORD2
+getTemperatureSensor	KEYWORD2
+getPressureSensor	KEYWORD2
+setSampling	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+SAMPLING_NONE	LITERAL1
+SAMPLING_X1	LITERAL1
+SAMPLING_X2	LITERAL1
+SAMPLING_X4	LITERAL1
+SAMPLING_X8	LITERAL1
+SAMPLING_X16	LITERAL1
+MODE_SLEEP	LITERAL1
+MODE_FORCED	LITERAL1
+MODE_NORMAL	LITERAL1
+MODE_SOFT_RESET_CODE	LITERAL1
+FILTER_OFF	LITERAL1
+FILTER_X2	LITERAL1
+FILTER_X4	LITERAL1
+FILTER_X8	LITERAL1
+FILTER_X16	LITERAL1
+STANDBY_MS_1	LITERAL1
+STANDBY_MS_63	LITERAL1
+STANDBY_MS_125	LITERAL1
+STANDBY_MS_250	LITERAL1
+STANDBY_MS_500	LITERAL1
+STANDBY_MS_1000	LITERAL1
+STANDBY_MS_2000	LITERAL1
+STANDBY_MS_4000	LITERAL1

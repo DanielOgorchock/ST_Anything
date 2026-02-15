@@ -31,12 +31,9 @@ void setup() {
 
   // use these three pins to drive an LED
 #if defined(ARDUINO_ARCH_ESP32)
-  ledcAttachPin(redpin, 1);
-  ledcSetup(1, 12000, 8);
-  ledcAttachPin(greenpin, 2);
-  ledcSetup(2, 12000, 8);
-  ledcAttachPin(bluepin, 3);
-  ledcSetup(3, 12000, 8);
+  ledcAttach(redpin, 12000, 8);
+  ledcAttach(greenpin, 12000, 8);
+  ledcAttach(bluepin, 12000, 8);
 #else
   pinMode(redpin, OUTPUT);
   pinMode(greenpin, OUTPUT);

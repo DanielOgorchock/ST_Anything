@@ -1,5 +1,5 @@
 /*
-  wifi_spi.h - Library for Arduino Wifi shield.
+  wifi_spi.h - Library for Arduino WiFi shield.
   Copyright (c) 2018 Arduino SA. All rights reserved.
   Copyright (c) 2011-2014 Arduino.  All right reserved.
 
@@ -33,7 +33,7 @@
 
 #define TIMEOUT_CHAR    1000
 
-//#define	MAX_SOCK_NUM		4	/**< Maxmium number of socket  */
+//#define	MAX_SOCK_NUM		4	/**< Maximum number of socket  */
 #define NO_SOCKET_AVAIL     255
 
 #define START_CMD   0xE0
@@ -56,6 +56,7 @@ enum {
 	SET_AP_PASSPHRASE_CMD = 0x19,
 	SET_DEBUG_CMD		= 0x1A,
 	GET_TEMPERATURE_CMD = 0x1B,
+	GET_DNS_CONFIG_CMD = 0x1E,
 	GET_REASON_CODE_CMD = 0x1F,
 
 	GET_CONN_STATUS_CMD	= 0x20,
@@ -102,6 +103,8 @@ enum {
     SET_PIN_MODE		= 0x50,
     SET_DIGITAL_WRITE	= 0x51,
     SET_ANALOG_WRITE	= 0x52,
+    GET_DIGITAL_READ    = 0x53,
+	GET_ANALOG_READ     = 0x54,
 
     // regular format commands
     WRITE_FILE			= 0x60,
